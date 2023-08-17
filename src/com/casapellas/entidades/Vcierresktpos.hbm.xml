@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 22, 2011 8:46:16 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vcierresktpos" table="VCIERRESKTPOS">
+        <composite-id name="id" class="com.casapellas.entidades.VcierresktposId">
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="noarqueo" type="int">
+                <column name="NOARQUEO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="afiliado" type="string">
+                <column name="AFILIADO" length="150" />
+            </key-property>
+            <key-property name="termId" type="string">
+                <column name="TERM_ID" length="8" />
+            </key-property>
+            <key-property name="autorizacion" type="string">
+                <column name="AUTORIZACION" length="6" />
+            </key-property>
+            <key-property name="purshtrans" type="int">
+                <column name="PURSHTRANS" precision="6" scale="0" />
+            </key-property>
+            <key-property name="purshamount" type="big_decimal">
+                <column name="PURSHAMOUNT" precision="12" />
+            </key-property>
+            <key-property name="rettrans" type="int">
+                <column name="RETTRANS" precision="6" scale="0" />
+            </key-property>
+            <key-property name="retamount" type="big_decimal">
+                <column name="RETAMOUNT" precision="12" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

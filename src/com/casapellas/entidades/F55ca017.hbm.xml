@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 1/07/2009 17:55:55 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca017" table="F55CA017">
+        <comment>Maestro de linea de Negocio</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca017Id">
+            <key-property name="c7id" type="int">
+                <column name="C7ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c7co" type="string">
+                <column name="C7CO" length="5" />
+            </key-property>
+            <key-property name="c7mcul" type="string">
+                <column name="C7MCUL" length="12" />
+            </key-property>
+            <key-property name="c7stat" type="char">
+                <column name="C7STAT" length="1" />
+            </key-property>
+            <key-property name="c7locn" type="string">
+                <column name="C7LOCN" length="20" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

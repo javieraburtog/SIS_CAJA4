@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 4/02/2009 17:10:08 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca02" table="F55CA02"  >
+        <comment>'Maestro de tipos de afiliados</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca02Id">
+            <key-property name="coopid" type="string">
+                <column name="COOPID" length="3" />
+            </key-property>
+            <key-property name="coopdc" type="string">
+                <column name="COOPDC" length="30" />
+            </key-property>
+            <key-property name="cofiva" type="char">
+                <column name="COFIVA" length="1" />
+            </key-property>
+            <key-property name="cotrtc" type="char">
+                <column name="COTRTC" length="1" />
+            </key-property>
+            <key-property name="costat" type="char">
+                <column name="COSTAT" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

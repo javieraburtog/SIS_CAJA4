@@ -1,0 +1,162 @@
+/*=======================================================*/
+/*                    Trendy Theme                       */ 
+/*=======================================================*/
+
+.igdw_Control
+{
+	background-color:Transparent;
+}
+
+.igdw_HeaderArea
+{
+	cursor:default;
+	color:White;
+	font-size:1px;
+}
+
+.igdw_BodyContent
+{
+	background-color:White;
+	border:solid 1px #139C47;
+	padding:10px;
+	overflow-x:auto;
+	overflow-y:auto;
+}
+
+.igdw_HeaderButton
+{
+	cursor:pointer;
+}
+
+.igdw_HeaderCaption
+{
+	font-weight:bold;
+	color:white;
+	white-space:nowrap;
+}
+
+.igdw_HeaderButtonArea
+{
+	width:80px;
+	vertical-align:middle;
+	text-align:right;
+	height:29px;
+	white-space:nowrap;
+}
+
+.igdw_HeaderImage
+{
+	cursor:default;
+}
+
+.igdw_ModalBackground
+{
+	filter:alpha(opacity:50);
+	opacity:0.5;
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:100%;
+	height:100%;
+	background-color:white;
+}
+
+.igdw_ResizingHandle {
+}
+
+/* used only when header visible */
+.igdw_HeaderCornerLeft
+{
+	background-position:top left ;
+	background-image:url(webdialogwindow/igdw_TopLeft.gif);
+	font-size:1px;
+	width: 4px;
+}
+
+/* used only when header visible */
+.igdw_HeaderContent
+{
+	background-image:url(webdialogwindow/igdw_Top.gif);
+	height: 29px;
+}
+
+/* used only when header visible */
+.igdw_HeaderCornerRight
+{
+	background-position:top right ;
+	background-image:url(webdialogwindow/igdw_TopRight.gif);
+	font-size:1px;
+	width: 4px;
+}
+
+/* used only when header hidden */
+.igdw_BodyCornerTopLeft
+{
+	background-position:top left ;
+	background-image:url(webdialogwindow/igdw_TopLeft.gif);
+	font-size:1px;
+	height: 11px;
+	width: 4px;
+}
+
+/* used only when header hidden */
+.igdw_BodyEdgeTop
+{
+	background-image:url(webdialogwindow/igdw_TopHidden.gif);
+	font-size:1px;
+	height: 11px;
+}
+
+/* used only when header hidden */
+.igdw_BodyCornerTopRight
+{
+	background-position:top right ;
+	background-image:url(webdialogwindow/igdw_TopRight.gif);
+	font-size:1px;
+	height: 11px;
+	width: 4px;
+}
+
+.igdw_BodyEdgeLeft
+{
+	background-position:top left ;
+	background-image:url(webdialogwindow/igdw_EdgeLeft.gif);
+	font-size:1px;
+	width: 4px;
+}
+
+.igdw_BodyEdgeRight
+{
+	background-position:top right ;
+	background-image:url(webdialogwindow/igdw_EdgeRight.gif);
+	font-size:1px;
+	width: 4px;
+}
+
+.igdw_BodyCornerBottomLeft
+{
+	background-image:url(webdialogwindow/igdw_BottomLeft.gif);
+	font-size:1px;
+	width: 4px;
+	height: 12px;
+}
+
+.igdw_BodyContentArea
+{
+	vertical-align:top;
+}
+
+.igdw_BodyCornerBottomRight
+{
+	background-image:url(webdialogwindow/igdw_BottomRight.gif);
+	font-size:1px;
+	width: 4px;
+	height: 12px;
+}
+
+.igdw_BodyEdgeBottom
+{
+	background-image:url(webdialogwindow/igdw_Bottom.gif);
+	font-size:1px;
+	height: 12px;
+}

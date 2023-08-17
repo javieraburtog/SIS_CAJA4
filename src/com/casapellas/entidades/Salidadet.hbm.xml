@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 02-09-2009 11:21:48 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Salidadet" table="SALIDADET"  >
+        <comment>DETALLE DE SALIDA</comment>
+        <composite-id name="id" class="com.casapellas.entidades.SalidadetId">
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="sucu" type="string">
+                <column name="SUCU" length="5" />
+            </key-property>
+            <key-property name="numsal" type="int">
+                <column name="NUMSAL" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="8" not-null="true">
+                <comment>MONTO</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

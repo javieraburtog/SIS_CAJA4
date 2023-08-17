@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 2, 2011 11:36:52 AM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Salida" table="SALIDA">
+        <comment>SALIDAS DE DINERO DE CAJA</comment>
+        <composite-id name="id" class="com.casapellas.entidades.SalidaId">
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="numsal" type="int">
+                <column name="NUMSAL" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="codsol" type="int">
+            <column name="CODSOL" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL SOLICITANTE</comment>
+            </column>
+        </property>
+        <property name="codcaj" type="int">
+            <column name="CODCAJ" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL CAJERO</comment>
+            </column>
+        </property>
+        <property name="codapr" type="int">
+            <column name="CODAPR" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL APROBADOR</comment>
+            </column>
+        </property>
+        <property name="concepto" type="string">
+            <column name="CONCEPTO" length="250" not-null="true">
+                <comment>CONCEPTO</comment>
+            </column>
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="1" not-null="true">
+                <comment>ESTADO DE SAL (A/E/D/P)</comment>
+            </column>
+        </property>
+        <property name="fsolicitud" type="timestamp">
+            <column name="FSOLICITUD" length="26" not-null="true">
+                <comment>ESTADO DE SAL (A/E/D/P)</comment>
+            </column>
+        </property>
+        <property name="faproba" type="timestamp">
+            <column name="FAPROBA" length="26" not-null="true">
+                <comment>FECHA DE APROBACION</comment>
+            </column>
+        </property>
+        <property name="fproceso" type="timestamp">
+            <column name="FPROCESO" length="26" not-null="true">
+                <comment>FECHA DE PROCESO</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA DE LA OPERACION</comment>
+            </column>
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="10" not-null="true">
+                <comment>MONTO DE LA OPERACION</comment>
+            </column>
+        </property>
+        <property name="operacion" type="string">
+            <column name="OPERACION" length="1" not-null="true">
+                <comment>OPERACION DE LA SALIDA (5/Q)</comment>
+            </column>
+        </property>
+        <property name="tasa" type="big_decimal">
+            <column name="TASA" precision="15" scale="7" not-null="true">
+                <comment>TASA DE LA OPERACION</comment>
+            </column>
+        </property>
+        <property name="equiv" type="big_decimal">
+            <column name="EQUIV" precision="10" not-null="true">
+                <comment>EQUIVALENTE</comment>
+            </column>
+        </property>
+        <property name="refer1" type="string">
+            <column name="REFER1" length="30">
+                <comment>REFERENCIA 1</comment>
+            </column>
+        </property>
+        <property name="refer2" type="string">
+            <column name="REFER2" length="30">
+                <comment>REFERENCIA 2</comment>
+            </column>
+        </property>
+        <property name="refer3" type="string">
+            <column name="REFER3" length="150">
+                <comment>REFERENCIA 3</comment>
+            </column>
+        </property>
+        <property name="refer4" type="string">
+            <column name="REFER4" length="150">
+                <comment>REFERENCIA 4</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

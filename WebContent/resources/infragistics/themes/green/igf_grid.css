@@ -1,0 +1,114 @@
+/*=======================================================*/
+/*                      GREEN THEME                      */ 
+/*=======================================================*/
+.igGrid  {
+	background-color: white;
+	border: 1px solid #BBD6BC;
+	border-collapse: collapse;
+	empty-cells: show;
+	color:#135E04;
+}
+
+.igGridHeader {
+	background-color: #FFFFFF;
+	background-image:url(webgrid/igwg_gridheader.gif);
+	background-position:center;
+	font-weight: bold;
+	padding: 5px 10px 5px 10px;	
+	color : #135E04;
+	text-align:left;
+	white-space: nowrap;
+}
+.igGridFooter {
+	border-top: 1px solid #DCDCDC;
+}
+.igGridColumn {
+	border-bottom: 1px solid #BBD6BC;
+	padding: 5px 10px 5px 10px;
+	white-space: nowrap;
+}
+.igGridColumnCaret {
+	background-color: red;
+	width: 2px;
+}
+.igGridColumnHeader {
+    background-color: #e6e6e6;
+	background-image:url(webgrid/igwg_columnheader.gif);
+	background-position:top;
+	padding: 5px 10px 5px 10px;	
+	font-weight: bold;
+	text-align: left;
+	color : #ffffff;
+	white-space: nowrap;
+}
+.igGridColumnHeader A IMG
+{
+vertical-align: middle;
+}
+
+.igGridColumnHeader A {
+	color: white;
+}
+.igGridColumnHeader A LABEL {
+	cursor:pointer;
+}
+.igGridColumnFooter {
+	white-space: nowrap;
+}
+.igGridRow {
+}
+.igGridRowAlternate {
+	background-color: #fafafa;
+	
+}
+.igGridRowHover {
+	/*background-color: #f1f1f1;*/
+	background-image:url(webgrid/igwg_rowhover.gif);
+	background-position:center;
+}
+.igGridRowSelected {
+	background-color: #316AC5;
+	color: white;
+}
+.igGridRowExpanded {
+	padding: 0px 0px 0px 32px;
+}
+.igGridCellEdit {
+	font-family:Verdana,Geneva,Arial,Helvetica,Sans-Serif;
+	font-size:8pt;
+	padding: 4px 8px 4px 8px;
+	color: #000000;;
+}
+.igGridColumnFilter {
+	background-image:url(webgrid/igwg_gridheader.gif);
+    background-color: #AACD04;
+    background-position: top;
+	padding:0px 10px 0px 10px;	
+	height:5px;
+	font-weight: bold;
+	text-align: left;
+	color : #000000;
+	white-space: nowrap;
+}
+.igGridColumnFilterButton { 
+	height:20px;
+	width:20px;
+	border:none;
+	background-color:transparent;
+}
+.igGridFilterDropDownItem {
+	font-size:11px;
+	font-family: Verdana;
+	padding:1px 3px 1px 3px;
+	cursor: default;
+}
+.igGridFilterDropDown {
+	background-color:#FCFCFC;
+	border:solid 1px #ACACAC;
+	overflow: auto;
+	width: 150px;
+	max-height: 150px;
+	height: auto !important;
+	height: 150px;
+}
+

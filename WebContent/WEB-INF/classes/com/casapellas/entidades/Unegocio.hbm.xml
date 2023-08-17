@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/09/2009 16:17:35 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Unegocio" table="UNEGOCIO">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.UnegocioId">
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="5" />
+            </key-property>
+            <key-property name="desc" type="string">
+                <column name="DESC" length="30" />
+            </key-property>
+            <key-property name="tipo" type="string">
+                <column name="TIPO" length="2" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="linea" type="string">
+                <column name="LINEA" length="2" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/07/2009 11:36:12 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Log" table="LOG">
+        <comment>LOG DE ACCIONES DE APLICACIONES</comment>
+        <composite-id name="id" class="com.casapellas.entidades.LogId">
+            <key-property name="codlog" type="string">
+                <column name="CODLOG" length="3" />
+            </key-property>
+            <key-property name="numlog" type="int">
+                <column name="NUMLOG" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="coduser" type="string">
+            <column name="CODUSER" length="10" not-null="true">
+                <comment>CODIGO DE USUARIO</comment>
+            </column>
+        </property>
+        <property name="codapp" type="string">
+            <column name="CODAPP" length="10" not-null="true">
+                <comment>CODIGO DE APLICACION</comment>
+            </column>
+        </property>
+        <property name="codsec" type="string">
+            <column name="CODSEC" length="10" not-null="true">
+                <comment>CODIGO DE SECCION</comment>
+            </column>
+        </property>
+        <property name="accion" type="string">
+            <column name="ACCION" length="1" not-null="true">
+                <comment>ACCION C-R-U-D</comment>
+            </column>
+        </property>
+        <property name="fregistro" type="timestamp">
+            <column name="FREGISTRO" length="26" not-null="true">
+                <comment>FECHA DE REGISTRO</comment>
+            </column>
+        </property>
+        <property name="exito" type="short">
+            <column name="EXITO" not-null="true">
+                <comment>EXITO DE ACCION 1/0</comment>
+            </column>
+        </property>
+        <property name="mensaje" type="string">
+            <column name="MENSAJE" length="256" not-null="true">
+                <comment>MENSAJE DE ERROR</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 14, 2011 5:23:06 PM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.F55ca03" table="F55CA03">
+		<comment>Maestro de tipos de afiliados</comment>
+		<composite-id name="id" class="com.casapellas.entidades.F55ca03Id">
+			<key-property name="cxcafi" type="string">
+				<column name="CXCAFI" length="15" />
+			</key-property>
+			<key-property name="cxdcafi" type="string">
+				<column name="CXDCAFI" length="40" />
+			</key-property>
+			<key-property name="cxmcu" type="string">
+				<column name="CXMCU" length="12" />
+			</key-property>
+			<key-property name="cxobj" type="string">
+				<column name="CXOBJ" length="6" />
+			</key-property>
+			<key-property name="cxsub" type="string">
+				<column name="CXSUB" length="8" />
+			</key-property>
+			<key-property name="cxcomi" type="big_decimal">
+				<column name="CXCOMI" precision="5" />
+			</key-property>
+			<key-property name="cxstat" type="char">
+				<column name="CXSTAT" length="1" />
+			</key-property>
+			<key-property name="cxrp01" type="string">
+				<column name="CXRP01" length="3" />
+			</key-property>
+			<key-property name="codb" type="int">
+				<column name="CODB" precision="8" scale="0" />
+			</key-property>
+			<key-property name="cxclasificamarca" type="int">
+				<column name="cxclasificamarca"  />
+			</key-property>
+		</composite-id>
+	</class>
+</hibernate-mapping>

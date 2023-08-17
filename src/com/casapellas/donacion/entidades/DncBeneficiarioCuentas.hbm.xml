@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-19-2015 10:22:08 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="com.casapellas.donacion.entidades.DncBeneficiarioCuentas" table="DNC_BENEFICIARIO_CUENTAS">
+        <id name="idcuentabeneficiario" type="int">
+            <column name="IDCUENTABENEFICIARIO" />
+            <generator class="identity" />
+        </id>
+        <property name="idbeneficiario" type="int">
+            <column name="IDBENEFICIARIO" not-null="true" />
+        </property>
+        <property name="codigobnf" type="int">
+            <column name="CODIGOBNF" not-null="true" />
+        </property>
+        <property name="idcuenta" type="int">
+            <column name="IDCUENTA" not-null="true" />
+        </property>
+        <property name="unegocio" type="string">
+            <column name="UNEGOCIO" length="12" not-null="true" />
+        </property>
+        <property name="objeto" type="string">
+            <column name="OBJETO" length="12" not-null="true" />
+        </property>
+        <property name="subsidiaria" type="string">
+            <column name="SUBSIDIARIA" length="12" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="3" not-null="true" />
+        </property>
+        <property name="estado" type="int">
+            <column name="ESTADO" not-null="true" />
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true" />
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true" />
+        </property>
+        <property name="usuariocrea" type="int">
+            <column name="USUARIOCREA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="usuariomod" type="int">
+            <column name="USUARIOMOD" precision="8" scale="0" not-null="true" />
+        </property>
+         <property name="idcuentaliquidacion" type="int">
+            <column name="idcuentaliquidacion" not-null="true" />
+        </property>
+        <property name="uninegliq" type="string">
+            <column name="uninegliq" length="12" not-null="true" />
+        </property>
+        <property name="ctaobjliq" type="string">
+            <column name="ctaobjliq" length="12" not-null="true" />
+        </property>
+        <property name="ctasubliq" type="string">
+            <column name="ctasubliq" length="12" not-null="true" />
+        </property>
+         <property name="cuentabancodnc" type="int">
+            <column name="cuentabancodnc" not-null="true" />
+        </property>
+         <property name="tipodocumento" type="string">
+            <column name="tipodocumento" not-null="true" length="10"  />
+        </property>
+        
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 10-22-2009 04:07:12 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vdetallecambiorec" table="VDETALLECAMBIOREC" >
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VdetallecambiorecId">
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="montoapl" type="big_decimal">
+                <column name="MONTOAPL" precision="8" />
+            </key-property>
+            <key-property name="montorec" type="big_decimal">
+                <column name="MONTOREC" precision="8" />
+            </key-property>
+            <key-property name="cambio" type="big_decimal">
+                <column name="CAMBIO" precision="8" />
+            </key-property>
+            <key-property name="cliente" type="string">
+                <column name="CLIENTE" length="50" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="monedacamb" type="string">
+                <column name="MONEDACAMB" length="3" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="2" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

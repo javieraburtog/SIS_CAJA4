@@ -1,0 +1,155 @@
+/*=======================================================*/
+	/*                     Peach Theme                        */
+	/*=======================================================*/
+	/*=======================================================*/
+	/* LOOK AND FEEL OF A MENU BAR (top horizontal menu)     */
+	/*=======================================================*/
+	/* look and feel of the menu bar */
+.igMenuBar { /*white-space: nowrap;*/
+	
+}
+
+/* default look and feel of a menu item nested inside a menu bar */
+.igMenuBarItem {
+	background-image: url(webmenu/igwm_header.gif);
+	background-position: center;
+	height: 20px;
+	color: #67431F;
+}
+
+.igMenuBarItem a {
+	color: #67431F;
+	text-decoration: none;
+}
+
+/* hover look and feel of a menu item nested inside a menu bar */
+.igMenuBarItemHover {
+	background-color: #3366cc;
+	background-image: url(webmenu/igwm_headerhover.gif);
+	background-position: center;
+	height: 20px;
+}
+
+.igMenuBarItemHover a {
+	color: #B37435;
+	text-decoration: none;
+}
+
+/*=======================================================*/
+	/* LOOK AND FEEL OF A MENU                               */
+	/*=======================================================*/
+	/* look and feel of a menu */
+.igMenu {
+	border: 1px solid #999999;
+	white-space: nowrap;
+	background-image: url(webmenu/igwm_menu.gif);
+}
+
+/* default look and feel of a menu item */
+.igMenuItem {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	height: 20px;
+	text-align: left;
+}
+
+.igMenuItem a {
+	color: #67431F;
+	text-decoration: none;
+}
+
+/* hover look and feel of a menu item */
+.igMenuItemHover {
+	background-color: #ff0000;
+	background-image: url(webmenu/igwm_headerhover.gif);
+	background-position: center;
+	border-bottom: 1px solid #BBBBBB;
+	border-top: 1px solid #BBBBBB;
+	height: 20px;
+}
+
+.igMenuItemHover a {
+	color: #000000;
+	text-decoration: none;
+}
+
+/*=======================================================*/
+	/*             WEBMENU - COMMON TO ALL THEMES            */
+	/*                                                       */
+	/* The following css is applied to all menus regardless  */
+	/* of the Theme that is being used                       */
+	/*=======================================================*/
+	/*=======================================================*/
+	/*          Menu Items nested inside a MenuBar           */
+	/*=======================================================*/
+	/* class applied to checkmark icons */
+.owmhc {
+	
+}
+
+/* class applied to regular icons   */
+.owmhi {
+	
+}
+
+/* class applied to labels          */
+.owmhl {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+/* class applied to menu item separators */
+.owmhseparator {
+	background-image: url(webmenu/igwm_separator.gif);
+	background-position: center;
+	padding: 0px;
+	height: 2em;
+	width: 1px;
+}
+
+/*=======================================================*/
+	/*                   Regular Menu Items                  */
+	/*=======================================================*/
+	/* class applied to checkmark icons */
+td.owmc {
+	border-right: 0px !important;
+	padding-right: 0px !important;
+	text-decoration: none !important;
+}
+
+/* class applied to regular icons   */
+td.owmi {
+	border-left: 0px !important;
+	border-right: 0px !important;
+	padding-left: 4px !important;
+	padding-right: 2px !important;
+	text-decoration: none !important;
+}
+
+/* class applied to labels          */
+td.owml {
+	border-left-style: none !important;
+	border-right-style: none !important;
+	padding-left: 5px !important;
+	padding-right: 0px !important;
+}
+
+/* class applied to the 'hasChildren' icons */
+td.owmm {
+	border-left-style: none !important;
+	padding-left: 0px !important;
+	text-decoration: none !important;
+}
+
+td.owmm img {
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+}
+
+/* class applied to vertical separators */
+.owmseparator {
+	background-color: #999999;
+	height: 1px;
+	margin: 3px 2px 3px 0px;
+	padding: 0px;
+}

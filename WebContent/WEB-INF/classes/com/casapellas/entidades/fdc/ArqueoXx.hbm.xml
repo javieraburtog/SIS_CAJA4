@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.fdc.ArqueoXx" table="_ARQUEO_XX" catalog="Transferencias_New">
+        <composite-id name="id" class="com.casapellas.entidades.fdc.ArqueoXxId">
+            <key-property name="codComp" type="string">
+                <column name="CodComp" length="3" />
+            </key-property>
+            <key-property name="codSuc" type="string">
+                <column name="CodSuc" length="5" />
+            </key-property>
+            <key-property name="noArqueo" type="int">
+                <column name="NoArqueo" />
+            </key-property>
+            <key-property name="caId" type="int">
+                <column name="CaID" />
+            </key-property>
+            <key-property name="fecha" type="string">
+                <column name="Fecha" length="10" />
+            </key-property>
+        </composite-id>
+        <property name="hora" type="string">
+            <column name="Hora" length="12" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="1" not-null="true" />
+        </property>
+        <property name="codCajero" type="int">
+            <column name="CodCajero" not-null="true" />
+        </property>
+        <property name="tingreso" type="big_decimal">
+            <column name="TIngreso" scale="4" not-null="true" />
+        </property>
+        <property name="tegresos" type="big_decimal">
+            <column name="TEgresos" scale="4" not-null="true" />
+        </property>
+        <property name="netoRec" type="big_decimal">
+            <column name="NetoRec" scale="4" not-null="true" />
+        </property>
+        <property name="minimo" type="big_decimal">
+            <column name="Minimo" scale="4" not-null="true" />
+        </property>
+        <property name="dsugerido" type="big_decimal">
+            <column name="DSugerido" scale="4" not-null="true" />
+        </property>
+        <property name="efectCaja" type="big_decimal">
+            <column name="EfectCaja" scale="4" not-null="true" />
+        </property>
+        <property name="sf" type="big_decimal">
+            <column name="SF" scale="4" not-null="true" />
+        </property>
+        <property name="dfinal" type="big_decimal">
+            <column name="DFinal" scale="4" not-null="true" />
+        </property>
+        <property name="tpagos" type="big_decimal">
+            <column name="TPagos" scale="4" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="Moneda" length="3" not-null="true" />
+        </property>
+        <property name="fechaMod" type="string">
+            <column name="FechaMod" length="10" not-null="true" />
+        </property>
+        <property name="horaMod" type="string">
+            <column name="HoraMod" length="12" not-null="true" />
+        </property>
+        <property name="codUser" type="string">
+            <column name="CodUser" length="10" not-null="true" />
+        </property>
+        <property name="motivo" type="string">
+            <column name="Motivo" length="50" not-null="true" />
+        </property>
+        <property name="referDep" type="string">
+            <column name="ReferDep" length="10" />
+        </property>
+        <property name="minuta1" type="string">
+            <column name="Minuta1" length="10" />
+        </property>
+        <property name="valMinuta1" type="big_decimal">
+            <column name="ValMinuta1" scale="4" not-null="true" />
+        </property>
+        <property name="minuta2" type="string">
+            <column name="Minuta2" length="10" />
+        </property>
+        <property name="valMinuta2" type="big_decimal">
+            <column name="ValMinuta2" scale="4" not-null="true" />
+        </property>
+        <property name="minuta3" type="string">
+            <column name="Minuta3" length="10" />
+        </property>
+        <property name="valMinuta3" type="big_decimal">
+            <column name="ValMinuta3" scale="4" not-null="true" />
+        </property>
+        <property name="flwSts" type="string">
+            <column name="FlwSts" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

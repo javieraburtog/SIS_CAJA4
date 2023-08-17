@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 31, 2011 11:36:47 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.Recibodet" table="RECIBODET">
+		<comment>DETALLE DEL RECIBO</comment>
+		<composite-id name="id" class="com.casapellas.entidades.RecibodetId">
+			<key-property name="tiporec" type="string">
+				<column name="TIPOREC" length="20" />
+			</key-property>
+			<key-property name="codsuc" type="string">
+				<column name="CODSUC" length="5" />
+			</key-property>
+			<key-property name="caid" type="int">
+				<column name="CAID" precision="8" scale="0" />
+			</key-property>
+			<key-property name="codcomp" type="string">
+				<column name="CODCOMP" length="10" />
+			</key-property>
+			<key-property name="refer4" type="string">
+				<column name="REFER4" length="150" />
+			</key-property>
+			<key-property name="refer3" type="string">
+				<column name="REFER3" length="150" />
+			</key-property>
+			<key-property name="refer2" type="string">
+				<column name="REFER2" length="150" />
+			</key-property>
+			<key-property name="refer1" type="string">
+				<column name="REFER1" length="150" />
+			</key-property>
+			<key-property name="mpago" type="string">
+				<column name="MPAGO" length="3" />
+			</key-property>
+			<key-property name="moneda" type="string">
+				<column name="MONEDA" length="3" />
+			</key-property>
+			<key-property name="numrec" type="int">
+				<column name="NUMREC" precision="8" scale="0" />
+			</key-property>
+		</composite-id>
+		<property name="monto" type="big_decimal">
+			<column name="MONTO" precision="10" not-null="true">
+				<comment>MONTO DEL METODO</comment>
+			</column>
+		</property>
+		<property name="tasa" type="big_decimal">
+			<column name="TASA" precision="15" scale="7" not-null="true">
+				<comment>TASA DE METODO DE PAGO</comment>
+			</column>
+		</property>
+		<property name="equiv" type="big_decimal">
+			<column name="EQUIV" precision="10" not-null="true">
+				<comment>EQUIVALENTE EN MONEDA DOMESTICA</comment>
+			</column>
+		</property>
+		<property name="numrecm" type="int">
+			<column name="NUMRECM" precision="8" scale="0" not-null="true">
+				<comment>NUMERO DE RECIBO MANUAL</comment>
+			</column>
+		</property>
+
+		<property name="vmanual" type="string">
+			<column name="VMANUAL" length="3" not-null="true">
+				<comment>PAGO CON VOUCHER MANUAL</comment>
+			</column>
+		</property>
+		<property name="caidpos" type="int">
+			<column name="CAIDPOS" precision="8" scale="0" not-null="true">
+				<comment>CODIGO CAJA DE ORIGEN POS</comment>
+			</column>
+		</property>
+
+		<property name="refer5" type="string">
+			<column name="REFER5" length="150">
+				<comment>REFERENCIA 5</comment>
+			</column>
+		</property>
+		<property name="refer6" type="string">
+			<column name="REFER6" length="150">
+				<comment>REFERENCIA 6</comment>
+			</column>
+		</property>
+		<property name="refer7" type="string">
+			<column name="REFER7" length="150">
+				<comment>REFERENCIA 7</comment>
+			</column>
+		</property>
+		<property name="nombre" type="string">
+			<column name="NOMBRE" length="40" not-null="true" />
+		</property>
+
+		<property name="referencenumber" type="int">
+			<column name="REFERENCENUMBER" precision="8" scale="0"
+				not-null="true">
+				<comment>NUMERO REFERENCIA ORIGINAL DEL DEPOSITO </comment>
+			</column>
+		</property>
+
+		<property name="depctatran" type="int">
+			<column name="DEPCTATRAN" precision="1" scale="0" not-null="true">
+				<comment>PAGO A CUENTA TRANSITO</comment>
+			</column>
+		</property>
+
+		<property name="codigomarcatarjeta" type="string">
+			<column name="codigomarcatarjeta"  not-null="true" />
+		</property>
+		<property name="marcatarjeta" type="string">
+			<column name="marcatarjeta" not-null="true" />
+		</property>
+		<property name="liquidarpormarca" type="int">
+			<column name="liquidarpormarca" precision="1" scale="0" not-null="true" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

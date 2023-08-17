@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 1, 2013 4:28:00 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Solecheque" table="SOLECHEQUE">
+        <comment>SOLICITUD DE CHEQUES</comment>
+        <composite-id name="id" class="com.casapellas.entidades.SolechequeId">
+            <key-property name="nosol" type="int">
+                <column name="NOSOL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+        </composite-id>
+        <property name="numfac" type="int">
+            <column name="NUMFAC" precision="8" scale="0" not-null="true">
+                <comment>N&#218;MERO DE FACTURA</comment>
+            </column>
+        </property>
+        <property name="tipofactura" type="string">
+            <column name="TIPOFACTURA" length="2" not-null="true">
+                <comment>TIPO DE FACTURA</comment>
+            </column>
+        </property>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="10" not-null="true">
+                <comment>FECHA DE SOLICITUD</comment>
+            </column>
+        </property>
+        <property name="hora" type="time">
+            <column name="HORA" length="8" not-null="true">
+                <comment>HORA DE SOLICITUD</comment>
+            </column>
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="1" not-null="true">
+                <comment>ESTADO DE LA SOLICITUD</comment>
+            </column>
+        </property>
+        <property name="codemp" type="int">
+            <column name="CODEMP" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL CAJERO</comment>
+            </column>
+        </property>
+        <property name="usuariomod" type="java.lang.Integer">
+            <column name="USUARIOMOD" precision="8" scale="0">
+                <comment>USUARIO QUE MODIFICA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26">
+                <comment>FECHA EN QUE SE MODIFICA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="observacion" type="string">
+            <column name="OBSERVACION" length="100">
+                <comment>OBSERVACIONES DEL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="mpago" type="string">
+            <column name="MPAGO" length="3" not-null="true">
+                <comment>METODO DE PAGO DE LA EMISION</comment>
+            </column>
+        </property>
+        <property name="tipoemision" type="string">
+            <column name="TIPOEMISION" length="3" not-null="true">
+                <comment>TIPO DE EMISI&#211;N SOLICITADA</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA DE LA EMISION SOLICITADA</comment>
+            </column>
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="8">
+                <comment>MONTO DE LA EMISON</comment>
+            </column>
+        </property>
+        <property name="codautoriz" type="string">
+            <column name="CODAUTORIZ" length="150" not-null="true">
+                <comment>C&#211;DIGO DE LA AUTORIZACI&#211;N DE PAGO refer4</comment>
+            </column>
+        </property>
+        <property name="notarjeta" type="string">
+            <column name="NOTARJETA" length="150" not-null="true">
+                <comment>N&#218;MERO DE LA TARJETA DE CREDITO refer5</comment>
+            </column>
+        </property>
+        <property name="fechapago" type="string">
+            <column name="FECHAPAGO" length="150" not-null="true">
+                <comment>FECHA DEL PAGO CON TARJETA DE CREDITO refer6</comment>
+            </column>
+        </property>
+        <property name="idafiliado" type="string">
+            <column name="IDAFILIADO" length="150" not-null="true">
+                <comment>ID DEL AFILIADO USADO EN EL PAGO refer1</comment>
+            </column>
+        </property>
+        <property name="tasacambio" type="big_decimal">
+            <column name="TASACAMBIO" precision="15" scale="7" not-null="true">
+                <comment>TASA DE CAMBIO USADA EN EL PAGO</comment>
+            </column>
+        </property>
+        <property name="codcli" type="int">
+            <column name="CODCLI" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL CLIENTE</comment>
+            </column>
+        </property>
+        <property name="fechafac" type="int">
+            <column name="FECHAFAC" precision="6" scale="0" not-null="true">
+                <comment>FECHA DE FACTURA EN JULIANO</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 25, 2010 11:05:19 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Recibo" table="RECIBO">
+        <comment>RECIBO DE CAJA</comment>
+        <composite-id name="id" class="com.casapellas.entidades.ReciboId">
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="montoapl" type="big_decimal">
+            <column name="MONTOAPL" precision="10" not-null="true">
+                <comment>MONTO A APLICAR</comment>
+            </column>
+        </property>
+        <property name="montorec" type="big_decimal">
+            <column name="MONTOREC" precision="10" not-null="true">
+                <comment>MONTO RECIBIDO</comment>
+            </column>
+        </property>
+        <property name="concepto" type="string">
+            <column name="CONCEPTO" length="250">
+                <comment>CONCEPTO DE RECIBO</comment>
+            </column>
+        </property>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="10" not-null="true">
+                <comment>FECHA DE RECIBO</comment>
+            </column>
+        </property>
+        <property name="cliente" type="string">
+            <column name="CLIENTE" length="50" not-null="true">
+                <comment>NOMBRE DE CLIENTE</comment>
+            </column>
+        </property>
+        <property name="codcli" type="int">
+            <column name="CODCLI" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DE CLIENTE</comment>
+            </column>
+        </property>
+        <property name="cajero" type="string">
+            <column name="CAJERO" length="50" not-null="true">
+                <comment>NOMBRE DE CAJERO</comment>
+            </column>
+        </property>
+        <property name="hora" type="time">
+            <column name="HORA" length="8" not-null="true">
+                <comment>HORA DE RECIBO</comment>
+            </column>
+        </property>
+        <property name="numrecm" type="int">
+            <column name="NUMRECM" precision="8" scale="0" not-null="true">
+                <comment>NUMERO DE RECIBO MANUAL</comment>
+            </column>
+        </property>
+        <property name="recjde" type="int">
+            <column name="RECJDE" precision="8" scale="0" not-null="true">
+                <comment>NUMERO DE RECIBO DE FICHA</comment>
+            </column>
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="2" not-null="true">
+                <comment>ESTADO DE RECIBO A = ANULADO</comment>
+            </column>
+        </property>
+        <property name="motivo" type="string">
+            <column name="MOTIVO" length="256" not-null="true">
+                <comment>MOTIVO DE ANULACION</comment>
+            </column>
+        </property>
+        <property name="codusera" type="string">
+            <column name="CODUSERA" length="10" not-null="true">
+                <comment>CODIGO DE USUARIO ANULADOR</comment>
+            </column>
+        </property>
+        <property name="horamod" type="time">
+            <column name="HORAMOD" length="8" not-null="true">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="coduser" type="string">
+            <column name="CODUSER" length="10" not-null="true">
+                <comment>COD. USUARIO DE RECIBO</comment>
+            </column>
+        </property>
+        <property name="nodoco" type="int">
+            <column name="NODOCO" precision="8" scale="0" not-null="true">
+                <comment>No de recibo original</comment>
+            </column>
+        </property>
+        <property name="tipodoco" type="string">
+            <column name="TIPODOCO" length="3">
+                <comment>Tipo de recibo original</comment>
+            </column>
+        </property>
+        <property name="fecham" type="date">
+            <column name="FECHAM" length="10">
+                <comment>FECHA DE RECIBO MANUAL</comment>
+            </column>
+        </property>
+        <property name="codunineg" type="string">
+            <column name="CODUNINEG" length="12" not-null="true">
+                <comment>UNIDAD DE NEGOCIO DEL RECIBO</comment>
+            </column>
+        </property>
+        <property name="motivoct" type="string">
+            <column name="MOTIVOCT">
+                <comment>MOTIVO DEL CAMBIO DE TASA AL RECIBO</comment>
+            </column>
+        </property>
+         <property name="monedaapl" type="string">
+            <column name="MONEDAAPL" length="3" not-null="true">
+                <comment>MONEDA APLICADA AL RECIBO POR LINEA O FACTURA</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

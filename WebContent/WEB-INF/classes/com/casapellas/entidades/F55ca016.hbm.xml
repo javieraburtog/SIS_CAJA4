@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 4/02/2009 17:10:08 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca016" table="F55CA016" >
+        <comment>Maestro de afiliados por caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca016Id">
+            <key-property name="c6id" type="int">
+                <column name="C6ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c6rp01" type="string">
+                <column name="C6RP01" length="3" />
+            </key-property>
+            <key-property name="c6rp07" type="string">
+                <column name="C6RP07" length="3" />
+            </key-property>
+            <key-property name="c6afil" type="string">
+                <column name="C6AFIL" length="30" />
+            </key-property>
+            <key-property name="c6cot" type="big_decimal">
+                <column name="C6COT" precision="7" scale="3" />
+            </key-property>
+            <key-property name="c6rmk" type="string">
+                <column name="C6RMK" length="30" />
+            </key-property>
+            <key-property name="c6stat" type="char">
+                <column name="C6STAT" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

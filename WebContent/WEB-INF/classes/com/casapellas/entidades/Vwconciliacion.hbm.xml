@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 30, 2011 3:49:47 PM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vwconciliacion" table="VWCONCILIACION" >
+        <composite-id name="id" class="com.casapellas.entidades.VwconciliacionId">
+            <key-property name="idconciliacion" type="int">
+                <column name="IDCONCILIACION" />
+            </key-property>
+            <key-property name="idarchivo" type="int">
+                <column name="IDARCHIVO" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="10" />
+            </key-property>
+            <key-property name="nobatch" type="int">
+                <column name="NOBATCH" />
+            </key-property>
+            <key-property name="noreferencia" type="int">
+                <column name="NOREFERENCIA" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="tipodoc" type="string">
+                <column name="TIPODOC" length="3" />
+            </key-property>
+            <key-property name="idcuenta" type="int">
+                <column name="IDCUENTA" />
+            </key-property>
+            <key-property name="estado" type="int">
+                <column name="ESTADO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="usrcrea" type="int">
+                <column name="USRCREA" />
+            </key-property>
+            <key-property name="usrmod" type="int">
+                <column name="USRMOD" />
+            </key-property>
+            <key-property name="fechamod" type="timestamp">
+                <column name="FECHAMOD" length="26" />
+            </key-property>
+            <key-property name="fechacrea" type="timestamp">
+                <column name="FECHACREA" length="26" />
+            </key-property>
+            <key-property name="estadoconc" type="string">
+                <column name="ESTADOCONC" length="80" />
+            </key-property>
+            <key-property name="usuariocrea" type="string">
+                <column name="USUARIOCREA" length="40" />
+            </key-property>
+            <key-property name="archivo" type="string">
+                <column name="ARCHIVO" length="100" />
+            </key-property>
+            <key-property name="fechaarchivo" type="timestamp">
+                <column name="FECHAARCHIVO" length="26" />
+            </key-property>
+            <key-property name="descripcion" type="string">
+                <column name="DESCRIPCION" length="40" />
+            </key-property>
+            <key-property name="tipoconfirma" type="string">
+                <column name="TIPOCONFIRMA" length="80" />
+            </key-property>
+            <key-property name="usuario" type="string">
+                <column name="USUARIO" length="32" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

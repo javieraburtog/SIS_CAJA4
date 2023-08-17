@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 11, 2015 6:30:41 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.conciliacion.entidades.PcdExcepcionDeposito" table="PCD_EXCEPCION_DEPOSITO" >
+        <id name="idexcepciondeposito" type="int">
+            <column name="IDEXCEPCIONDEPOSITO" />
+            <generator class="identity" />
+        </id>
+        <property name="iddeposito" type="int">
+            <column name="IDDEPOSITO" not-null="true" />
+        </property>
+        <property name="numeroreferencia" type="int">
+            <column name="NUMEROREFERENCIA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="tipodeposito" type="boolean">
+            <column name="TIPODEPOSITO" precision="1" scale="0" not-null="true" />
+        </property>
+        <property name="numerocuenta" type="long">
+            <column name="NUMEROCUENTA" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="codigobanco" type="long">
+            <column name="CODIGOBANCO" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="15" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="fechadeposito" type="date">
+            <column name="FECHADEPOSITO" length="10" not-null="true" />
+        </property>
+        <property name="tiposolicitud" type="string">
+            <column name="TIPOSOLICITUD" length="10" not-null="true" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="excepcionvalida" type="int">
+            <column name="EXCEPCIONVALIDA" not-null="true" />
+        </property>
+        <property name="usuariovalida" type="int">
+            <column name="USUARIOVALIDA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numerocomparaciones" type="int">
+            <column name="NUMEROCOMPARACIONES" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="fechaultimacomparacion" type="date">
+            <column name="FECHAULTIMACOMPARACION" length="10" not-null="true" />
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true" />
+        </property>
+        <property name="usuariocrea" type="int">
+            <column name="USUARIOCREA" precision="8" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

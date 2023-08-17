@@ -1,0 +1,7 @@
+// (c) 2008 Infragistics - Do NOT modify the content of this file
+// Version 9.2.20092.1000
+
+if(document.body.igf_bootstrap!=="true"){function igScripts(root,srcs){for(var i=0;i<srcs.length;i++){document.write('<script src="',root+"/"+"igf_"+srcs[i]+".js",'" type="text/JavaScript"><\/script>');}}
+function igStyleSheets(root,srcs){for(var i=0;i<srcs.length;i++){var link=document.createElement("link");link.href=root+"/"+"igf_"+srcs[i]+".css";link.rel='stylesheet';link.type='text/css';document.getElementsByTagName('head')[0].appendChild(link);}}
+function igBootstrap(scriptUrl,cssUrl){if(document.body.igf_bootstrapped!=="true"){igScripts(scriptUrl,["msajax","mswebforms","core","ui","controlmain","objects","callback","enums","collections","behaviors","client_state_manager","property_managers","animations","bar","date","grid_base","editors","grid_editing","grid_filtering","grid_activation","grid","input","menu","tab","tree_base","tree","tree_editing","tree_updating","dialogwindow","dropdownbehavior","dropdown","dragdrop","chart","igWebDataGrid"]);igStyleSheets(cssUrl,["bar","grid","input","menu","shared","tab","tree","dialogwindow","dropdown","splitter"]);document.body.igf_bootstrapped="true";}}
+document.body.igf_bootstrap="true";}

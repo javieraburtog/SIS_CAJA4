@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 08-25-2009 04:41:56 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Valorcatalogo" table="VALORCATALOGO" schema="ENS">
+        <comment>Valores de catalogos b&#225;sicos</comment>
+        <id name="codvalorcatalogo" type="int">
+            <column name="CODVALORCATALOGO" precision="8" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="catalogo" class="com.casapellas.entidades.Catalogo" fetch="select">
+            <column name="CODCATALOGO" precision="8" scale="0" not-null="true">
+                <comment>c&#243;digo del catalogo al que pertenece</comment>
+            </column>
+        </many-to-one>
+        <property name="codigointerno" type="string">
+            <column name="CODIGOINTERNO" length="15" not-null="true">
+                <comment>Codigo interno del valor</comment>
+            </column>
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="30">
+                <comment>Descripci&#243;n del valor</comment>
+            </column>
+        </property>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1" not-null="true">
+                <comment>Estado del valor, 1:activo, 0:inactivo</comment>
+            </column>
+        </property>
+        <property name="usuariocreacion" type="string">
+            <column name="USUARIOCREACION" length="10" not-null="true">
+                <comment>Usuario que crea el registro</comment>
+            </column>
+        </property>
+        <property name="usuariomodificacion" type="string">
+            <column name="USUARIOMODIFICACION" length="10">
+                <comment>Usuario que modifica el registro</comment>
+            </column>
+        </property>
+        <property name="fechacreacion" type="timestamp">
+            <column name="FECHACREACION" length="26" not-null="true">
+                <comment>fecha en que se crea el registro</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26">
+                <comment>fecha en que se modifica el registro</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

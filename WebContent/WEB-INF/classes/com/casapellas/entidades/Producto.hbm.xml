@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 23/12/2009 2:08:59 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Producto" table="PRODUCTO">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.ProductoId">
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="nosol" type="int">
+                <column name="NOSOL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiposol" type="string">
+                <column name="TIPOSOL" length="2" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codprod" type="string">
+                <column name="CODPROD" length="3" />
+            </key-property>
+            <key-property name="descprod" type="string">
+                <column name="DESCPROD" length="30" />
+            </key-property>
+            <key-property name="codmarca" type="string">
+                <column name="CODMARCA" length="6" />
+            </key-property>
+            <key-property name="descmarca" type="string">
+                <column name="DESCMARCA" length="30" />
+            </key-property>
+            <key-property name="codmodelo" type="string">
+                <column name="CODMODELO" length="6" />
+            </key-property>
+            <key-property name="descmodelo" type="string">
+                <column name="DESCMODELO" length="30" />
+            </key-property>
+            <key-property name="cant" type="long">
+                <column name="CANT" precision="15" scale="0" />
+            </key-property>
+            <key-property name="r2uprc" type="big_decimal">
+                <column name="R2UPRC" precision="10" />
+            </key-property>
+            <key-property name="r2fup" type="big_decimal">
+                <column name="R2FUP" precision="10" />
+            </key-property>
+            <key-property name="precioun" type="big_decimal">
+                <column name="PRECIOUN" precision="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

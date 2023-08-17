@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 22, 2014 9:03:39 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Minsemitidas" table="MINSEMITIDAS">
+        <id name="idemision" type="long">
+            <column name="IDEMISION" />
+            <generator class="identity" />
+        </id>
+        <property name="cajero" type="int">
+            <column name="CAJERO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="3" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="nminuta" type="int">
+            <column name="NMINUTA" not-null="true" />
+        </property>
+        <property name="cuenta" type="string">
+            <column name="CUENTA" length="20" not-null="true" />
+        </property>
+        <property name="fechaemision" type="date">
+            <column name="FECHAEMISION" length="10" not-null="true" />
+        </property>
+        <property name="horaemision" type="time">
+            <column name="HORAEMISION" length="8" not-null="true" />
+        </property>
+        <property name="fechareal" type="timestamp">
+            <column name="FECHAREAL" length="26" not-null="true" />
+        </property>
+        <property name="enviadoa" type="string">
+            <column name="ENVIADOA" length="100" not-null="true" />
+        </property>
+        <property name="tipominuta" type="int">
+            <column name="TIPOMINUTA" precision="2" scale="0" not-null="true" />
+        </property>
+        <property name="motivomn" type="string">
+            <column name="MOTIVOMN" length="200" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="1" not-null="true" />
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="20" not-null="true" />
+        </property>
+        <property name="noarqueo" type="int">
+            <column name="NOARQUEO" not-null="true" />
+        </property>
+        <property name="nombredoc" type="string">
+            <column name="NOMBREDOC" length="100" not-null="true" />
+        </property>
+        <property name="fileformat" type="int">
+            <column name="FILEFORMAT" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="itemtype" type="int">
+            <column name="ITEMTYPE" precision="8" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

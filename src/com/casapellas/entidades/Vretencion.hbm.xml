@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-06-2010 10:18:27 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vretencion" table="VRETENCION">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VretencionId">
+            <key-property name="nofactura" type="java.lang.Long">
+                <column name="NOFACTURA" precision="11" scale="0" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="unineg" type="string">
+                <column name="UNINEG" length="30" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="nomcomp" type="string">
+                <column name="NOMCOMP" length="30" />
+            </key-property>
+            <key-property name="subtotal" type="big_decimal">
+                <column name="SUBTOTAL" precision="10" />
+            </key-property>
+            <key-property name="iva" type="big_decimal">
+                <column name="IVA" precision="10" />
+            </key-property>
+            <key-property name="total" type="big_decimal">
+                <column name="TOTAL" precision="10" />
+            </key-property>
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="mpago" type="string">
+                <column name="MPAGO" length="3" />
+            </key-property>
+            <key-property name="montotc" type="big_decimal">
+                <column name="MONTOTC" precision="10" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="equiv" type="big_decimal">
+                <column name="EQUIV" precision="10" />
+            </key-property>
+            <key-property name="afiliado" type="string">
+                <column name="AFILIADO" length="150" />
+            </key-property>
+            <key-property name="referencia" type="string">
+                <column name="REFERENCIA" length="150" />
+            </key-property>
+            <key-property name="comision" type="big_decimal">
+                <column name="COMISION" precision="5" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="tipofactura" type="string">
+                <column name="TIPOFACTURA" length="2" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

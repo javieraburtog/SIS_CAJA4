@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-19-2015 10:22:08 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="com.casapellas.donacion.entidades.DncBeneficiario" table="DNC_BENEFICIARIO">
+        <id name="idbeneficiario" type="int">
+            <column name="IDBENEFICIARIO" precision="8" scale="0" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="int">
+            <column name="CODIGO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="100" not-null="true" />
+        </property>
+        <property name="nombrecorto" type="string">
+            <column name="NOMBRECORTO" length="100" not-null="true" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="200" not-null="true" />
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true" />
+        </property>
+        <property name="fechacmod" type="timestamp">
+            <column name="FECHACMOD" length="26" not-null="true" />
+        </property>
+        <property name="usrcrea" type="int">
+            <column name="USRCREA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="usrmod" type="int">
+            <column name="USRMOD" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="estado" type="int">
+            <column name="ESTADO" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="3" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

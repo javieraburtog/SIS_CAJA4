@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 01-05-2010 02:37:36 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Solicitud" table="SOLICITUD" >
+        <comment>solicitud de autorizacion de montos en caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.SolicitudId">
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="referencia" type="string">
+                <column name="REFERENCIA" length="15" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="numsol" type="int">
+                <column name="NUMSOL" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="autoriza" type="int">
+            <column name="AUTORIZA" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DE AUTORIZADOR</comment>
+            </column>
+        </property>
+        <property name="fecha" type="timestamp">
+            <column name="FECHA" length="26" not-null="true">
+                <comment>FECHA DE SOLICITUD</comment>
+            </column>
+        </property>
+        <property name="obs" type="string">
+            <column name="OBS" length="250">
+                <comment>OBSERVACIONES DE SOLICITUD</comment>
+            </column>
+        </property>
+        <property name="mpago" type="string">
+            <column name="MPAGO" length="3" not-null="true">
+                <comment>CODIGO DE METODO DE PAGO</comment>
+            </column>
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="10" not-null="true">
+                <comment>MONTO AUTORIZADO</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

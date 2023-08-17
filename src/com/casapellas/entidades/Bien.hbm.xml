@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 28, 2016 3:48:39 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Bien" table="BIEN" >
+        <composite-id name="id" class="com.casapellas.entidades.BienId">
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="tipoprod" type="string">
+            <column name="TIPOPROD" length="10" not-null="true" />
+        </property>
+        <property name="marca" type="string">
+            <column name="MARCA" length="10" not-null="true" />
+        </property>
+        <property name="modelo" type="string">
+            <column name="MODELO" length="10" not-null="true" />
+        </property>
+        <property name="noitem" type="string">
+            <column name="NOITEM" length="25" not-null="true" />
+        </property>
+        <property name="sucursalDocumento" type="string">
+            <column name="SUCURSAL_DOCUMENTO" length="5" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

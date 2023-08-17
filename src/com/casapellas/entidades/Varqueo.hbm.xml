@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 16, 2015 12:23:53 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Varqueo" table="VARQUEO">
+        <composite-id name="id" class="com.casapellas.entidades.VarqueoId">
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="noarqueo" type="int">
+                <column name="NOARQUEO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="1" />
+            </key-property>
+            <key-property name="codcajero" type="int">
+                <column name="CODCAJERO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tingreso" type="big_decimal">
+                <column name="TINGRESO" precision="12" />
+            </key-property>
+            <key-property name="tegresos" type="big_decimal">
+                <column name="TEGRESOS" precision="10" />
+            </key-property>
+            <key-property name="netorec" type="big_decimal">
+                <column name="NETOREC" precision="12" />
+            </key-property>
+            <key-property name="minimo" type="big_decimal">
+                <column name="MINIMO" precision="10" />
+            </key-property>
+            <key-property name="dsugerido" type="big_decimal">
+                <column name="DSUGERIDO" precision="12" />
+            </key-property>
+            <key-property name="efectcaja" type="big_decimal">
+                <column name="EFECTCAJA" precision="12" />
+            </key-property>
+            <key-property name="sf" type="big_decimal">
+                <column name="SF" precision="8" />
+            </key-property>
+            <key-property name="dfinal" type="big_decimal">
+                <column name="DFINAL" precision="12" />
+            </key-property>
+            <key-property name="tpagos" type="big_decimal">
+                <column name="TPAGOS" precision="12" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="fechamod" type="date">
+                <column name="FECHAMOD" length="10" />
+            </key-property>
+            <key-property name="horamod" type="time">
+                <column name="HORAMOD" length="8" />
+            </key-property>
+            <key-property name="coduser" type="string">
+                <column name="CODUSER" length="10" />
+            </key-property>
+            <key-property name="motivo" type="string">
+                <column name="MOTIVO" length="250" />
+            </key-property>
+            <key-property name="referdep" type="string">
+                <column name="REFERDEP" length="50" />
+            </key-property>
+            <key-property name="referencenumber" type="int">
+                <column name="REFERENCENUMBER" precision="8" scale="0" />
+            </key-property>
+            <key-property name="depctatran" type="int">
+                <column name="DEPCTATRAN" precision="1" scale="0" />
+            </key-property>
+            <key-property name="codusermod" type="int">
+                <column name="CODUSERMOD" precision="8" scale="0" />
+            </key-property>
+            <key-property name="datapcinfo" type="string">
+                <column name="DATAPCINFO" length="750" />
+            </key-property>
+            <key-property name="nombrecomp" type="string">
+                <column name="NOMBRECOMP" length="30" />
+            </key-property>
+            <key-property name="nombresuc" type="string">
+                <column name="NOMBRESUC" length="30" />
+            </key-property>
+            <key-property name="nombrecajero" type="string">
+                <column name="NOMBRECAJERO" length="40" />
+            </key-property>
+            <key-property name="caname" type="string">
+                <column name="CANAME" length="40" />
+            </key-property>
+            <key-property name="estadodesc" type="string">
+                <column name="ESTADODESC" length="80" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 20, 2013 11:20:20 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Monedaxlinea" table="MONEDAXLINEA" >
+        <comment>MONEDA EN QUE FACTURA LA LINEA DE NEGOCIO</comment>
+        <id name="idmonedaxlinea" type="int">
+            <column name="IDMONEDAXLINEA" />
+            <generator class="identity" />
+        </id>
+        <property name="lineaneg" type="string">
+            <column name="LINEANEG" length="12" not-null="true">
+                <comment>linea de negocio</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>moneda en la que factura la linea</comment>
+            </column>
+        </property>
+        <property name="codusuario" type="int">
+            <column name="CODUSUARIO" precision="8" scale="0" not-null="true">
+                <comment>codigo del usuario que grabo el registro</comment>
+            </column>
+        </property>
+        <property name="usuario" type="string">
+            <column name="USUARIO" length="10" not-null="true">
+                <comment>cuenta de usuario que grabo</comment>
+            </column>
+        </property>
+        <property name="fechacrea" type="date">
+            <column name="FECHACREA" length="10" not-null="true">
+                <comment>FECHA EN QUE SE GRABO EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="date">
+            <column name="FECHAMOD" length="10" not-null="true">
+                <comment>FECHA EN QUE SE MODIFICO EL REGISTRO</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

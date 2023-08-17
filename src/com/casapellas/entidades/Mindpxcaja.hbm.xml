@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 20, 2012 8:51:22 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Mindpxcaja" table="MINDPXCAJA" >
+        <comment>configuracion de minuta por caja</comment>
+        <id name="idcfgxmdp" type="int">
+            <column name="IDCFGXMDP" />
+            <generator class="identity" />
+        </id>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true">
+                <comment>codigo de caja</comment>
+            </column>
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="10" not-null="true">
+                <comment>codigo de compania</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>moneda de la minuta</comment>
+            </column>
+        </property>
+        <property name="nocfgmd" type="int">
+            <column name="NOCFGMD" not-null="true">
+                <comment>codigo de la configuracion de minuta</comment>
+            </column>
+        </property>
+        <property name="usrceate" type="string">
+            <column name="USRCEATE" length="10" not-null="true">
+                <comment>codigo de usuario que crea el registro</comment>
+            </column>
+        </property>
+        <property name="usrmod" type="string">
+            <column name="USRMOD" length="10" not-null="true">
+                <comment>codigo de usuario que modifica el registro</comment>
+            </column>
+        </property>
+        <property name="fechacrea" type="date">
+            <column name="FECHACREA" length="10" not-null="true">
+                <comment>FECHA QUE CREA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="date">
+            <column name="FECHAMOD" length="10" not-null="true">
+                <comment>FECHA QUE SE que modifica el registro</comment>
+            </column>
+        </property>
+        <property name="estado" type="int">
+            <column name="ESTADO" not-null="true">
+                <comment>ESTADO DEL REGISTRO 1:ACTIVO 0:INACTIVO</comment>
+            </column>
+        </property>
+        
+        <property name="numerosiguiente" type="int">
+            <column name="numerosiguiente" not-null="true" />
+        </property>
+        
+         <property name="horamod" type="time">
+            <column name="HORAMOD" length="8" not-null="true">
+                <comment>HORA DE MODIFICACION</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

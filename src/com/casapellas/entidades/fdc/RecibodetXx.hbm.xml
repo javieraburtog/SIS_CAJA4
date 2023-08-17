@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.fdc.RecibodetXx" table="_RECIBODET_XX"  catalog="Transferencias_New">
+        <composite-id name="id" class="com.casapellas.entidades.fdc.RecibodetXxId">
+            <key-property name="numRec" type="int">
+                <column name="NumRec" />
+            </key-property>
+            <key-property name="codComp" type="string">
+                <column name="CodComp" length="3" />
+            </key-property>
+            <key-property name="caId" type="int">
+                <column name="CaID" />
+            </key-property>
+            <key-property name="codSuc" type="string">
+                <column name="CodSuc" length="5" />
+            </key-property>
+            <key-property name="tipoRec" type="string">
+                <column name="TipoRec" length="3" />
+            </key-property>
+            <key-property name="mpago" type="string">
+                <column name="MPago" length="1" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="Moneda" length="3" />
+            </key-property>
+        </composite-id>
+        <property name="monto" type="big_decimal">
+            <column name="Monto" scale="4" not-null="true" />
+        </property>
+        <property name="tasa" type="big_decimal">
+            <column name="Tasa" scale="4" not-null="true" />
+        </property>
+        <property name="equiv" type="big_decimal">
+            <column name="Equiv" scale="4" not-null="true" />
+        </property>
+        <property name="refer1" type="string">
+            <column name="Refer1" length="40" not-null="true" />
+        </property>
+        <property name="refer2" type="string">
+            <column name="Refer2" length="40" not-null="true" />
+        </property>
+        <property name="refer3" type="string">
+            <column name="Refer3" length="40" not-null="true" />
+        </property>
+        <property name="refer4" type="string">
+            <column name="Refer4" length="40" not-null="true" />
+        </property>
+        <property name="refer5" type="string">
+            <column name="Refer5" length="40" not-null="true" />
+        </property>
+        <property name="refer6" type="string">
+            <column name="Refer6" length="40" not-null="true" />
+        </property>
+        <property name="refer7" type="string">
+            <column name="Refer7" length="40" not-null="true" />
+        </property>
+        <property name="numRecM" type="int">
+            <column name="NumRecM" not-null="true" />
+        </property>
+        <property name="flwSts" type="string">
+            <column name="FlwSts" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

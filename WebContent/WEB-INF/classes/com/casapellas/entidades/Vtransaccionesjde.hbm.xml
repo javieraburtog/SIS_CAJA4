@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 11-16-2009 11:36:06 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vtransaccionesjde" table="VTRANSACCIONESJDE" >
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VtransaccionesjdeId">
+            <key-property name="numfac" type="long">
+                <column name="NUMFAC" precision="11" scale="0" />
+            </key-property>
+            <key-property name="numrefer" type="string">
+                <column name="NUMREFER" length="15" />
+            </key-property>
+            <key-property name="numrecdep" type="int">
+                <column name="NUMRECDEP" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nodocumento" type="int">
+                <column name="NODOCUMENTO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nobatch" type="int">
+                <column name="NOBATCH" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipodocumento" type="string">
+                <column name="TIPODOCUMENTO" length="1" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="15" />
+            </key-property>
+            <key-property name="restado" type="string">
+                <column name="RESTADO" length="2" />
+            </key-property>
+            <key-property name="fecharec" type="date">
+                <column name="FECHAREC" length="10" />
+            </key-property>
+            <key-property name="horarec" type="time">
+                <column name="HORAREC" length="8" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

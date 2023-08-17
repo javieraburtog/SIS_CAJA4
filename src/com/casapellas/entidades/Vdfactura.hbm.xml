@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/10/2009 11:30:27 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vdfactura" table="VDFACTURA">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VdfacturaId">
+            <key-property name="nofactura" type="int">
+                <column name="NOFACTURA" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipofactura" type="string">
+                <column name="TIPOFACTURA" length="2" />
+            </key-property>
+            <key-property name="coditem" type="string">
+                <column name="CODITEM" length="25" />
+            </key-property>
+            <key-property name="descitem" type="string">
+                <column name="DESCITEM" length="30" />
+            </key-property>
+            <key-property name="preciounit" type="long">
+                <column name="PRECIOUNIT" precision="15" scale="0" />
+            </key-property>
+            <key-property name="cant" type="long">
+                <column name="CANT" precision="15" scale="0" />
+            </key-property>
+            <key-property name="impuesto" type="string">
+                <column name="IMPUESTO" length="10" />
+            </key-property>
+            <key-property name="factor" type="int">
+                <column name="FACTOR" precision="7" scale="0" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

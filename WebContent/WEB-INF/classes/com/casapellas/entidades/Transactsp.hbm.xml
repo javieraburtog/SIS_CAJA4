@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 9, 2013 3:43:45 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Transactsp" table="TRANSACTSP">
+        <comment>TRANSACCIONES DEL SOCKET POS</comment>
+        <id name="idtransact" type="int">
+            <column name="IDTRANSACT" />
+            <generator class="identity" />
+        </id>
+        <property name="termid" type="string">
+            <column name="TERMID" length="8" not-null="true">
+                <comment>terminal number</comment>
+            </column>
+        </property>
+        <property name="acqnumber" type="string">
+            <column name="ACQNUMBER" length="20" not-null="true">
+                <comment>adquirent number</comment>
+            </column>
+        </property>
+        <property name="systraceno" type="string">
+            <column name="SYSTRACENO" length="10" not-null="true">
+                <comment>system trace number from credomatic</comment>
+            </column>
+        </property>
+        <property name="authorizationid" type="string">
+            <column name="AUTHORIZATIONID" length="10" not-null="true">
+                <comment>authorization transaction number</comment>
+            </column>
+        </property>
+        <property name="cardnumber" type="string">
+            <column name="CARDNUMBER" length="20" not-null="true">
+                <comment>card number</comment>
+            </column>
+        </property>
+        <property name="amount" type="big_decimal">
+            <column name="AMOUNT" precision="12" not-null="true">
+                <comment>amount</comment>
+            </column>
+        </property>
+        <property name="expirationdate" type="string">
+            <column name="EXPIRATIONDATE" length="4" not-null="true">
+                <comment>Expiration date</comment>
+            </column>
+        </property>
+        <property name="referencenumber" type="string">
+            <column name="REFERENCENUMBER" length="12" not-null="true">
+                <comment>retrieval reference number</comment>
+            </column>
+        </property>
+        <property name="transtime" type="time">
+            <column name="TRANSTIME" length="8" not-null="true">
+                <comment>transaction time</comment>
+            </column>
+        </property>
+        <property name="transdate" type="date">
+            <column name="TRANSDATE" length="10" not-null="true">
+                <comment>transaction date</comment>
+            </column>
+        </property>
+        <property name="currency" type="string">
+            <column name="CURRENCY" length="10" not-null="true">
+                <comment>CURRENCY transaction</comment>
+            </column>
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true">
+                <comment>cashbox</comment>
+            </column>
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="10" not-null="true">
+                <comment>company</comment>
+            </column>
+        </property>
+        <property name="clientname" type="string">
+            <column name="CLIENTNAME" length="100" not-null="true">
+                <comment>client name</comment>
+            </column>
+        </property>
+        <property name="responsecode" type="string">
+            <column name="RESPONSECODE" length="6" not-null="true">
+                <comment>RESPONSE CODE</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="10" not-null="true">
+                <comment>TRANSACTION STATUS</comment>
+            </column>
+        </property>
+        
+        <property name="tiporec" type="string">
+            <column name="TIPOREC" length="10" not-null="true">
+                <comment>receipt type</comment>
+            </column>
+        </property>
+
+		<property name="statcred" type="int">
+			<column name="STAT_CRED" precision="8" scale="0" not-null="true">
+				<comment>status payment</comment>
+			</column>
+		</property>
+        
+        
+    </class>
+</hibernate-mapping>

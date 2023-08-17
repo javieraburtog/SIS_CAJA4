@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.fdc.ArqueofactXx" table="_ARQUEOFACT_XX" catalog="Transferencias_New">
+        <composite-id name="id" class="com.casapellas.entidades.fdc.ArqueofactXxId">
+            <key-property name="codComp" type="string">
+                <column name="CodComp" length="3" />
+            </key-property>
+            <key-property name="codSuc" type="string">
+                <column name="CodSuc" length="5" />
+            </key-property>
+            <key-property name="caId" type="int">
+                <column name="CaID" />
+            </key-property>
+            <key-property name="noArqueo" type="int">
+                <column name="NoArqueo" />
+            </key-property>
+            <key-property name="numFac" type="int">
+                <column name="NumFac" />
+            </key-property>
+            <key-property name="partida" type="string">
+                <column name="Partida" length="3" />
+            </key-property>
+            <key-property name="tipo" type="string">
+                <column name="Tipo" length="2" />
+            </key-property>
+            <key-property name="codUniNeg" type="string">
+                <column name="CodUniNeg" length="12" />
+            </key-property>
+        </composite-id>
+        <property name="flwSts" type="string">
+            <column name="FlwSts" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

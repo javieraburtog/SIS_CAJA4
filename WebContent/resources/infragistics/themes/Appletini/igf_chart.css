@@ -1,0 +1,84 @@
+.chart {
+	border: 1 solid #A3C736; padding: 2;
+	background: #F8FDE8 vertical #ffffff 
+
+}
+
+.pane {
+	margin: 2; border: solid 1 #A3C736; padding: 2;
+	background: #FFFFFF #E8E7E6 vertical
+}
+		
+.caption {
+	margin: 2; padding: 4; border: solid 0 #006600;
+	color: #85A003; font-family: Arial; font-size: 16; font-weight: bold;
+	 /* shadow-color: #40808080; */
+	/* background: url(webchart/igwc_header.gif) */
+}
+		
+.legend {
+	margin: 2; padding: 4; border: solid 1 #A3C736;
+	background: #F0F0F0 vertical #ffffff
+}
+
+.legendCaption {
+}
+
+.legendHeader {
+	margin-bottom: 4;
+	color: #85A003; shadow-color: #40808080; font-family: verdana; font-size: 12; font-weight: bold;
+	background: url(webchart/igwc_header.gif)
+}
+
+.legendItem {
+	color: #333333; font-family: verdana; font-size: 11
+}
+
+.axis {
+	border: solid #cccccc
+}
+
+.axisGrid {
+	border: solid #cccccc
+}
+
+.axisTick {
+	shadow-color: #40808080; font-family: Verdana; font-size: 10;
+	color: #333333
+	border: solid #333333; 
+}
+
+.series {
+	color: black; shadow-color: #40ffffff; font-family: verdana; font-size: 10;	 
+	border: 1 solid white; border-join-style: join-miter; border-cap-style: cap-round;
+	background:#c098C208;
+}
+
+.series_max {
+	color: black; shadow-color: #40ffffff; font-family: verdana; font-size: 10;	 
+	border: 1 solid white; border-join-style: join-miter; border-cap-style: cap-round;
+	background:#c0F8FDE8; 
+}
+
+.candlestick {
+	color: black; shadow-color: #40ffffff; font-family: verdana; font-size: 10;	 
+	border: 1 solid #A3C736; border-join-style: join-miter; border-cap-style: cap-round;
+	background:#c098C208;
+}
+
+.candlestick_max {
+	color: black; shadow-color: #40ffffff; font-family: verdana; font-size: 10;	 
+	border: 1 solid #A3C736; border-join-style: join-miter; border-cap-style: cap-round;
+	background:#c0F8FDE8; 
+}
+.ohlc {
+	color: black; shadow-color: #40ffffff; font-family: verdana; font-size: 10;	 
+	border: 1 solid #A3C736; border-join-style: join-miter; border-cap-style: cap-round;
+	background:#c098C208;
+}
+
+.ohlc_max {
+	color: black; shadow-color: #40ffffff; font-family: verdana; font-size: 10;	 
+	border: 1 solid #A3C736; border-join-style: join-miter; border-cap-style: cap-round;
+	background:#c0F8FDE8; 
+}

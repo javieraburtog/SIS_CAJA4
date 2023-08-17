@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 7/02/2009 11:18:13 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Metpago" table="METPAGO" >
+        <comment>VISTA DE METODOS DE PAGO DEL F0005</comment>
+        <composite-id name="id" class="com.casapellas.entidades.MetpagoId">
+            <key-property name="codigo" type="string">
+                <column name="CODIGO" length="10" />
+            </key-property>
+            <key-property name="mpago" type="string">
+                <column name="MPAGO" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

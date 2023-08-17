@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 7, 2009 10:58:25 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Perfil" table="PERFIL" schema="ENS">
+        <comment>GRUPOS DE USUARIOS</comment>
+        <id name="codper" type="string">
+            <column name="CODPER" length="6" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="aplicacion" class="com.casapellas.entidades.Aplicacion" fetch="select">
+            <column name="CODAPP" length="6">
+                <comment>CODIGO DE APLICACION</comment>
+            </column>
+        </many-to-one>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="32" not-null="true">
+                <comment>NOMBRE DE PERFIL</comment>
+            </column>
+        </property>
+        <property name="descrip" type="string">
+            <column name="DESCRIP" length="120" not-null="true">
+                <comment>DESCRIPCION DE PERFIL</comment>
+            </column>
+        </property>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1">
+                <comment>ACTIVO/INACTIVO USUARIO</comment>
+            </column>
+        </property>
+        <set name="persecauts" inverse="true">
+            <key>
+                <column name="CODPER" length="6" not-null="true">
+                    <comment>CODIGO DE PERFIL</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Persecaut" />
+        </set>
+        <set name="usrpers" inverse="true">
+            <key>
+                <column name="CODPER" length="6" not-null="true">
+                    <comment>CODIGO DE PERFIL</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Usrper" />
+        </set>
+    </class>
+</hibernate-mapping>

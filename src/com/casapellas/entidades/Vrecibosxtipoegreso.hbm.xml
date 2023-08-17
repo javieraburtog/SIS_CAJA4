@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 6, 2016 11:14:49 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vrecibosxtipoegreso" table="VRECIBOSXTIPOEGRESO" >
+        <composite-id name="id" class="com.casapellas.entidades.VrecibosxtipoegresoId">
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="rfecha" type="date">
+                <column name="RFECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="montoapl" type="big_decimal">
+                <column name="MONTOAPL" precision="10" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="10" />
+            </key-property>
+            <key-property name="mpago" type="string">
+                <column name="MPAGO" length="3" />
+            </key-property>
+            <key-property name="equiv" type="big_decimal">
+                <column name="EQUIV" precision="10" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="rmoneda" type="string">
+                <column name="RMONEDA" length="3" />
+            </key-property>
+            <key-property name="fmoneda" type="string">
+                <column name="FMONEDA" length="3" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="cliente" type="string">
+                <column name="CLIENTE" length="50" />
+            </key-property>
+            <key-property name="refer1" type="string">
+                <column name="REFER1" length="150" />
+            </key-property>
+            <key-property name="refer2" type="string">
+                <column name="REFER2" length="150" />
+            </key-property>
+            <key-property name="refer3" type="string">
+                <column name="REFER3" length="150" />
+            </key-property>
+            <key-property name="refer4" type="string">
+                <column name="REFER4" length="150" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="2" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="referencenumber" type="int">
+                <column name="REFERENCENUMBER" precision="8" scale="0" />
+            </key-property>
+            <key-property name="depctatran" type="boolean">
+                <column name="DEPCTATRAN" precision="1" scale="0" />
+            </key-property>
+            <key-property name="codigomarcatarjeta" type="string">
+                <column name="CODIGOMARCATARJETA" length="20" />
+            </key-property>
+            <key-property name="marcatarjeta" type="string">
+                <column name="MARCATARJETA" length="50" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

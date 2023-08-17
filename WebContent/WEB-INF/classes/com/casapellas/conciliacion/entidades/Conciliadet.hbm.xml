@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 7, 2011 4:09:23 PM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.conciliacion.entidades.Conciliadet" table="CONCILIADET" >
+        <comment>ASOCIACION DEPOSITOS CAJA BANCO</comment>
+        <id name="idconciliadet" type="int">
+            <column name="IDCONCILIADET" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="deposito" class="com.casapellas.entidades.Deposito" fetch="select">
+            <column name="IDDEPOSITOCJA" not-null="true" />
+        </many-to-one>
+        <many-to-one name="conciliacion" class="com.casapellas.conciliacion.entidades.Conciliacion" fetch="select">
+            <column name="IDCONCILIACION" not-null="true">
+                <comment>MAESTRO DEL REGISTRO EN CONCILIACION</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="depbancodet" class="com.casapellas.conciliacion.entidades.Depbancodet" fetch="select">
+            <column name="IDDEPOSITOBCO" not-null="true">
+                <comment>IDENTIFICADOR DEL DEPOSITO DE BANCO</comment>
+            </column>
+        </many-to-one>
+        <property name="referdcaja" type="string">
+            <column name="REFERDCAJA" length="10" not-null="true">
+                <comment>NUMERO DE REFERENCIA REGISTRADO EN CAJA</comment>
+            </column>
+        </property>
+        <property name="nodeposito" type="int">
+            <column name="NODEPOSITO" precision="8" scale="0" not-null="true">
+                <comment>numero del deposito en caja</comment>
+            </column>
+        </property>
+        <property name="codsuc" type="string">
+            <column name="CODSUC" length="5" not-null="true">
+                <comment>SUCURSAL DEL PAGO EN CAJA</comment>
+            </column>
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="10" not-null="true">
+                <comment>COMPANIA APLICADA EN EL PAGO EN CAJA</comment>
+            </column>
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true">
+                <comment>CAJA DONDE SE REALIZO EL PAGO</comment>
+            </column>
+        </property>
+        <property name="usrcrea" type="int">
+            <column name="USRCREA" not-null="true">
+                <comment>USUARIO DE CREACION DEL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="usrmod" type="int">
+            <column name="USRMOD" not-null="true">
+                <comment>USUARIO DE MODIFICACION DEL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true">
+                <comment>FECHA DE MODIFICACION DEL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true">
+                <comment>FECHA DE CREACION DEL REGISTRO</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

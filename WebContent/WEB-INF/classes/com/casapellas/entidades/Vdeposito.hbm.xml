@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 11, 2012 10:20:55 AM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vdeposito" table="VDEPOSITO">
+        <composite-id name="id" class="com.casapellas.entidades.VdepositoId">
+            <key-property name="nodeposito" type="int">
+                <column name="NODEPOSITO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="15" />
+            </key-property>
+            <key-property name="referencia" type="string">
+                <column name="REFERENCIA" length="15" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="fechamod" type="date">
+                <column name="FECHAMOD" length="10" />
+            </key-property>
+            <key-property name="horamod" type="time">
+                <column name="HORAMOD" length="8" />
+            </key-property>
+            <key-property name="coduser" type="string">
+                <column name="CODUSER" length="10" />
+            </key-property>
+            <key-property name="tipodep" type="string">
+                <column name="TIPODEP" length="2" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="consecutivo" type="int">
+                <column name="CONSECUTIVO" />
+            </key-property>
+            <key-property name="mpagodep" type="string">
+                <column name="MPAGODEP" length="3" />
+            </key-property>
+            <key-property name="referdep" type="string">
+                <column name="REFERDEP" length="10" />
+            </key-property>
+            <key-property name="estadocnfr" type="string">
+                <column name="ESTADOCNFR" length="3" />
+            </key-property>
+            <key-property name="tipoconfr" type="string">
+                <column name="TIPOCONFR" length="3" />
+            </key-property>
+            <key-property name="usrconfr" type="int">
+                <column name="USRCONFR" precision="8" scale="0" />
+            </key-property>
+            <key-property name="usrcreate" type="int">
+                <column name="USRCREATE" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcajero" type="int">
+                <column name="CODCAJERO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="idbanco" type="int">
+                <column name="IDBANCO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="usrcreacion" type="string">
+                <column name="USRCREACION" length="40" />
+            </key-property>
+            <key-property name="usrconfirm" type="string">
+                <column name="USRCONFIRM" length="40" />
+            </key-property>
+            <key-property name="nombrecomp" type="string">
+                <column name="NOMBRECOMP" length="30" />
+            </key-property>
+            <key-property name="nombresuc" type="string">
+                <column name="NOMBRESUC" length="30" />
+            </key-property>
+            <key-property name="metododesc" type="string">
+                <column name="METODODESC" length="30" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="80" />
+            </key-property>
+            <key-property name="nomcaja" type="string">
+                <column name="NOMCAJA" length="40" />
+            </key-property>
+            <key-property name="nobatch" type="int">
+                <column name="NOBATCH" precision="8" scale="0" />
+            </key-property>
+            <key-property name="recjde" type="int">
+                <column name="RECJDE" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cajero" type="string">
+                <column name="CAJERO" length="40" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

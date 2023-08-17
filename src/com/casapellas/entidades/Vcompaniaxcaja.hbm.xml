@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 09-01-2009 03:16:52 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vcompaniaxcaja" table="VCOMPANIAXCAJA" >
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VcompaniaxcajaId">
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caname" type="string">
+                <column name="CANAME" length="40" />
+            </key-property>
+            <key-property name="caco" type="string">
+                <column name="CACO" length="5" />
+            </key-property>
+            <key-property name="caan8" type="int">
+                <column name="CAAN8" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cacati" type="int">
+                <column name="CACATI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caauti" type="int">
+                <column name="CAAUTI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caausu" type="int">
+                <column name="CAAUSU" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cacont" type="int">
+                <column name="CACONT" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cajobn" type="string">
+                <column name="CAJOBN" length="15" />
+            </key-property>
+            <key-property name="carmk" type="string">
+                <column name="CARMK" length="30" />
+            </key-property>
+            <key-property name="carmk1" type="string">
+                <column name="CARMK1" length="30" />
+            </key-property>
+            <key-property name="castat" type="char">
+                <column name="CASTAT" length="1" />
+            </key-property>
+            <key-property name="caprnt" type="string">
+                <column name="CAPRNT" length="20" />
+            </key-property>
+            <key-property name="c4id" type="int">
+                <column name="C4ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c4rp01" type="string">
+                <column name="C4RP01" length="3" />
+            </key-property>
+            <key-property name="c4rp01d1" type="string">
+                <column name="C4RP01D1" length="30" />
+            </key-property>
+            <key-property name="c4nnbe" type="long">
+                <column name="C4NNBE" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4nnfi" type="long">
+                <column name="C4NNFI" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4nncu" type="long">
+                <column name="C4NNCU" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4stat" type="char">
+                <column name="C4STAT" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

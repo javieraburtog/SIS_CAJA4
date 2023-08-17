@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-10-2012 02:02:53 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55detinte" table="F55DETINTE">
+        <comment>Detalle de intereses aplicados</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55detinteId">
+            <key-property name="r5clase" type="string">
+                <column name="R5CLASE" length="2" />
+            </key-property>
+            <key-property name="r5tipoin" type="string">
+                <column name="R5TIPOIN" length="2" />
+            </key-property>
+            <key-property name="r5sucur" type="string">
+                <column name="R5SUCUR" length="5" />
+            </key-property>
+            <key-property name="r5coclte" type="int">
+                <column name="R5COCLTE" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r5rpmcu" type="string">
+                <column name="R5RPMCU" length="12" />
+            </key-property>
+            <key-property name="r5moneda" type="string">
+                <column name="R5MONEDA" length="3" />
+            </key-property>
+            <key-property name="r5numdoc" type="int">
+                <column name="R5NUMDOC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r5nobatch" type="int">
+                <column name="R5NOBATCH" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r5rpsfx" type="string">
+                <column name="R5RPSFX" length="3" />
+            </key-property>
+            <key-property name="r5fecfac" type="int">
+                <column name="R5FECFAC" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5fecven" type="int">
+                <column name="R5FECVEN" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5tipdoco" type="string">
+                <column name="R5TIPDOCO" length="2" />
+            </key-property>
+            <key-property name="r5numdoco" type="int">
+                <column name="R5NUMDOCO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r5nobatcho" type="int">
+                <column name="R5NOBATCHO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r5fecfaco" type="int">
+                <column name="R5FECFACO" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5fecveno" type="int">
+                <column name="R5FECVENO" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5montou" type="big_decimal">
+                <column name="R5MONTOU" precision="15" />
+            </key-property>
+            <key-property name="r5intereu" type="big_decimal">
+                <column name="R5INTEREU" precision="15" />
+            </key-property>
+            <key-property name="r5impuesu" type="big_decimal">
+                <column name="R5IMPUESU" precision="15" />
+            </key-property>
+            <key-property name="r5montoc" type="big_decimal">
+                <column name="R5MONTOC" precision="15" />
+            </key-property>
+            <key-property name="r5interec" type="big_decimal">
+                <column name="R5INTEREC" precision="15" />
+            </key-property>
+            <key-property name="r5impuesc" type="big_decimal">
+                <column name="R5IMPUESC" precision="15" />
+            </key-property>
+            <key-property name="r5diaven" type="int">
+                <column name="R5DIAVEN" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5tasa" type="big_decimal">
+                <column name="R5TASA" precision="7" scale="4" />
+            </key-property>
+            <key-property name="r5userg" type="string">
+                <column name="R5USERG" length="10" />
+            </key-property>
+            <key-property name="r5progg" type="string">
+                <column name="R5PROGG" length="10" />
+            </key-property>
+            <key-property name="r5fechg" type="int">
+                <column name="R5FECHG" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5horag" type="int">
+                <column name="R5HORAG" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5usera" type="string">
+                <column name="R5USERA" length="10" />
+            </key-property>
+            <key-property name="r5proga" type="string">
+                <column name="R5PROGA" length="10" />
+            </key-property>
+            <key-property name="r5fecha" type="int">
+                <column name="R5FECHA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5horaa" type="int">
+                <column name="R5HORAA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r5tascam" type="big_decimal">
+                <column name="R5TASCAM" precision="15" scale="7" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

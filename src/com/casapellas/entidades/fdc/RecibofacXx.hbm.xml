@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.fdc.RecibofacXx" table="_RECIBOFAC_XX" catalog="Transferencias_New">
+        <composite-id name="id" class="com.casapellas.entidades.fdc.RecibofacXxId">
+            <key-property name="numRec" type="int">
+                <column name="NumRec" />
+            </key-property>
+            <key-property name="codComp" type="string">
+                <column name="CodComp" length="3" />
+            </key-property>
+            <key-property name="caId" type="int">
+                <column name="CaID" />
+            </key-property>
+            <key-property name="codSuc" type="string">
+                <column name="CodSuc" length="5" />
+            </key-property>
+            <key-property name="tipoRec" type="string">
+                <column name="TipoRec" length="3" />
+            </key-property>
+            <key-property name="codUniNeg" type="string">
+                <column name="CodUniNeg" length="12" />
+            </key-property>
+            <key-property name="tipoFactura" type="string">
+                <column name="TipoFactura" length="2" />
+            </key-property>
+            <key-property name="numFac" type="int">
+                <column name="NumFac" />
+            </key-property>
+            <key-property name="partida" type="string">
+                <column name="Partida" length="3" />
+            </key-property>
+        </composite-id>
+        <property name="monto" type="big_decimal">
+            <column name="Monto" scale="4" not-null="true" />
+        </property>
+        <property name="montoIni" type="big_decimal">
+            <column name="MontoIni" scale="4" not-null="true" />
+        </property>
+        <property name="rpddj" type="string">
+            <column name="RPDDJ" length="10" not-null="true" />
+        </property>
+        <property name="rpdivj" type="string">
+            <column name="RPDIVJ" length="10" not-null="true" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="Nombre" length="40" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="1" not-null="true" />
+        </property>
+        <property name="flwSts" type="string">
+            <column name="FlwSts" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

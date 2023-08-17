@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 3/02/2009 08:49:45 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.VtipoProd" table="VTIPO_PROD">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VtipoProdId">
+            <key-property name="drky" type="string">
+                <column name="DRKY" length="10" />
+            </key-property>
+            <key-property name="drdl01" type="string">
+                <column name="DRDL01" length="30" />
+            </key-property>
+            <key-property name="drdl02" type="string">
+                <column name="DRDL02" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

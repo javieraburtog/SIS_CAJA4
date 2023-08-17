@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 25, 2012 1:49:19 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Minutadp" table="MINUTADP"  >
+       
+        <comment>CONFIGURACION DE MINUTA DE DEPOSITO</comment>
+       
+        <id name="idminuta" type="int">
+            <column name="IDMINUTA" />
+            <generator class="identity" />
+        </id>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="3" not-null="true">
+                <comment>CODIGO DE LA COMPANIA</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA ASOCIADA A LA CUENTA Y COMPANIA</comment>
+            </column>
+        </property>
+        <property name="cuenta" type="string">
+            <column name="CUENTA" length="20" not-null="true">
+                <comment>NUMERO DE CUENTA DE BANCO</comment>
+            </column>
+        </property>
+        <property name="banco" type="int">
+            <column name="BANCO" not-null="true">
+                <comment>CODIGO DEL BANCO</comment>
+            </column>
+        </property>
+        <property name="ctacntbl" type="string">
+            <column name="CTACNTBL" length="8" not-null="true">
+                <comment>CODIGO DE LA CUENTA CONTABLE</comment>
+            </column>
+        </property>
+        <property name="nosiguiente" type="int">
+            <column name="NOSIGUIENTE" not-null="true" />
+        </property>
+        <property name="nombrebco" type="string">
+            <column name="NOMBREBCO" length="100" not-null="true">
+                <comment>nombre del banco asociado</comment>
+            </column>
+        </property>
+        <property name="nmbrcta" type="string">
+            <column name="NMBRCTA" length="100" not-null="true">
+                <comment>NOMBRE DE LA CUENTA DE BANCO</comment>
+            </column>
+        </property>
+        <property name="usrcrea" type="string">
+            <column name="USRCREA" length="10" not-null="true">
+                <comment>USUARIO QUE CREA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="usrmod" type="string">
+            <column name="USRMOD" length="10" not-null="true">
+                <comment>USUARIO QUE MODIFICA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="date">
+            <column name="FECHAMOD" length="10" not-null="true">
+                <comment>FECHA DE MODIFICACION</comment>
+            </column>
+        </property>
+        <property name="horamod" type="time">
+            <column name="HORAMOD" length="8" not-null="true">
+                <comment>HORA DE MODIFICACION</comment>
+            </column>
+        </property>
+        <property name="fechacrea" type="date">
+            <column name="FECHACREA" length="10" not-null="true">
+                <comment>FECHA DE CREACION</comment>
+            </column>
+        </property>
+        <property name="estado" type="boolean">
+            <column name="ESTADO" precision="1" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

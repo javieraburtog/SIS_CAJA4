@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 29, 2016 7:43:36 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.pmt.PmtDtCobroAutomatico" table="PMT_DT_COBRO_AUTOMATICO" >
+        <id name="iddtcobroauto" type="int">
+            <column name="IDDTCOBROAUTO" />
+            <generator class="identity" />
+        </id>
+        <property name="idmtcobroauto" type="int">
+            <column name="IDMTCOBROAUTO" not-null="true" />
+        </property>
+        <property name="codigocliente" type="int">
+            <column name="CODIGOCLIENTE" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numerocontrato" type="int">
+            <column name="NUMEROCONTRATO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numerocuota" type="int">
+            <column name="NUMEROCUOTA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="15" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="estado" type="boolean">
+            <column name="ESTADO" precision="1" scale="0" not-null="true" />
+        </property>
+        <property name="fechageneracion" type="date">
+            <column name="FECHAGENERACION" length="10" not-null="true" />
+        </property>
+        <property name="numerorecibo" type="int">
+            <column name="NUMERORECIBO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numerotarjeta" type="int">
+            <column name="NUMEROTARJETA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="codigoterminal" type="string">
+            <column name="CODIGOTERMINAL" length="20" not-null="true" />
+        </property>
+        <property name="numerovoucher" type="long">
+            <column name="NUMEROVOUCHER" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="createtime" type="time">
+            <column name="CREATETIME" length="8" not-null="true" />
+        </property>
+                
+        <property name="observaciones" type="string">
+            <column name="observaciones" length="200" not-null="true" />
+        </property>
+        
+        <property name="notificacioncliente" type="boolean">
+            <column name="notificacioncliente" precision="1" scale="0" not-null="true" />
+        </property>
+        
+        <property name="codigorespuestasp" type="string">
+            <column name="codigorespuestasp" length="10" not-null="true" />
+        </property>
+        <property name="descripcionrespuestasp" type="string">
+            <column name="descripcionrespuestasp" length="200" not-null="true" />
+        </property>
+        <property name="monedaCuota" type="string">
+            <column name="monedaCuota" length="3" not-null="true" />
+        </property>
+        
+          <property name="montoCuota" type="big_decimal">
+            <column name="montoCuota" precision="15" not-null="true" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

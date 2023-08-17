@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 08-11-2011 02:48:21 PM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.TermAfl" table="TERM_AFL">
+        <composite-id name="id" class="com.casapellas.entidades.TermAflId">
+            <key-property name="merchId" type="string">
+                <column name="MERCH_ID" length="8" />
+            </key-property>
+            <key-property name="merchDescription" type="string">
+                <column name="MERCH_DESCRIPTION" length="50" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="1" />
+            </key-property>
+            <key-property name="cardAcqId" type="string">
+                <column name="CARD_ACQ_ID" length="15" />
+            </key-property>
+            <key-property name="termId" type="string">
+                <column name="TERM_ID" length="8" />
+            </key-property>
+            <key-property name="termName" type="string">
+                <column name="TERM_NAME" length="50" />
+            </key-property>
+            <key-property name="codb" type="int">
+                <column name="CODB" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

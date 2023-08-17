@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 4/02/2009 17:10:08 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca013" table="F55CA013"  >
+        <comment>Maestro de moneda por caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca013Id">
+            <key-property name="c3id" type="int">
+                <column name="C3ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c3rp01" type="string">
+                <column name="C3RP01" length="3" />
+            </key-property>
+            <key-property name="c3crcd" type="string">
+                <column name="C3CRCD" length="3" />
+            </key-property>
+            <key-property name="c3miam" type="big_decimal">
+                <column name="C3MIAM" precision="15" />
+            </key-property>
+            <key-property name="c3stat" type="char">
+                <column name="C3STAT" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

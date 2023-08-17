@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 7, 2011 4:09:23 PM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.conciliacion.entidades.Archivo" table="ARCHIVO" >
+        <comment>CABECERA DE ARCHIVO DEPOSITOS NOTIFICADOS X BANCO</comment>
+        <id name="idarchivo" type="int">
+            <column name="IDARCHIVO" />
+           <generator class="identity" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="100" not-null="true">
+                <comment>NOMBRE DEL ARCHIVO</comment>
+            </column>
+        </property>
+        <property name="tamanio" type="big_decimal">
+            <column name="TAMANIO" precision="10" not-null="true">
+                <comment>TAMANIO EN KILOBYTES</comment>
+            </column>
+        </property>
+        <property name="cantlinea" type="int">
+            <column name="CANTLINEA" not-null="true">
+                <comment>CANTIDAD DE LINEAS DE REGISTROS DEL ARCHIVO</comment>
+            </column>
+        </property>
+        <property name="idbanco" type="int">
+            <column name="IDBANCO" not-null="true">
+                <comment>IDENTIFICADOR DEL BANCO QUE EMITE EL ARC</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA DE LOS DEPOSITOS CONTENIDOS</comment>
+            </column>
+        </property>
+        <property name="direftp" type="string">
+            <column name="DIREFTP" length="150" not-null="true">
+                <comment>DIRECCION DEL FTP DONDE FUE LEIDO EL ARCHIVO</comment>
+            </column>
+        </property>
+        <property name="estado" type="int">
+            <column name="ESTADO" not-null="true">
+                <comment>ESTADO DEL DOCUMENTO</comment>
+            </column>
+        </property>
+        <property name="estadproc" type="int">
+            <column name="ESTADPROC" precision="8" scale="0" not-null="true">
+                <comment>PROCESADO, EN PROCESO, SIN PROCESAR</comment>
+            </column>
+        </property>
+        <property name="datearchivo" type="date">
+            <column name="DATEARCHIVO" length="10" >
+                <comment>FECHA/HORA DEL ARCHIVO</comment>
+            </column>
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true">
+                <comment>FECHA/HORA DE INSERCION DE REGISTRO</comment>
+            </column>
+        </property>
+        <property name="usrcrea" type="int">
+            <column name="USRCREA" not-null="true">
+                <comment>USUARIO UTILIZADO PARA CREAR EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="usrmodi" type="int">
+            <column name="USRMODI" not-null="true">
+                <comment>USUARIO UTILIZADO PARA MODIFICAR EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="observacion" type="string">
+            <column name="OBSERVACION" length="100" not-null="true">
+                <comment>OBSERVACIONES IDENTIFICADAS</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true">
+                <comment>FECHA DE MODIFICACION DE ESTADO DEL ARCHIVO</comment>
+            </column>
+        </property>
+        <set name="conciliacions" inverse="true">
+            <key>
+                <column name="IDARCHIVO" not-null="true">
+                    <comment>IDENTIFICADOR DEL ARCHIVO DEL DEPOSITO</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.conciliacion.entidades.Conciliacion" />
+        </set>
+        <set name="depbancodets" inverse="true">
+            <key>
+                <column name="IDARCHIVO" not-null="true">
+                    <comment>CODIGO DEL ARCHIVO CABECERA</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.conciliacion.entidades.Depbancodet" />
+        </set>
+    </class>
+</hibernate-mapping>

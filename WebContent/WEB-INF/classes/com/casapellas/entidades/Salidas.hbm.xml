@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 02-12-2009 09:51:05 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Salidas" table="SALIDAS">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.SalidasId">
+            <key-property name="codsal" type="string">
+                <column name="CODSAL" length="15" />
+            </key-property>
+            <key-property name="numsal" type="int">
+                <column name="NUMSAL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="sucu" type="string">
+                <column name="SUCU" length="5" />
+            </key-property>
+            <key-property name="uneg" type="string">
+                <column name="UNEG" length="12" />
+            </key-property>
+            <key-property name="cobj" type="string">
+                <column name="COBJ" length="6" />
+            </key-property>
+            <key-property name="csub" type="string">
+                <column name="CSUB" length="8" />
+            </key-property>
+            <key-property name="cargo" type="string">
+                <column name="CARGO" length="8" />
+            </key-property>
+            <key-property name="solicitant" type="string">
+                <column name="SOLICITANT" length="8" />
+            </key-property>
+            <key-property name="concepto" type="string">
+                <column name="CONCEPTO" length="250" />
+            </key-property>
+            <key-property name="fecha" type="timestamp">
+                <column name="FECHA" length="26" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="1" />
+            </key-property>
+            <key-property name="cajero" type="string">
+                <column name="CAJERO" length="8" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

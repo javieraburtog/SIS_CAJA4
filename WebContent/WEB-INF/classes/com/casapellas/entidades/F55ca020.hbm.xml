@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/06/2009 19:00:10 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca020" table="F55CA020">
+        <comment>Maestro de datos de sucursal</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca020Id">
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="telefono" type="long">
+                <column name="TELEFONO" precision="10" scale="0" />
+            </key-property>
+            <key-property name="extension" type="int">
+                <column name="EXTENSION" precision="6" scale="0" />
+            </key-property>
+            <key-property name="ciudad" type="string">
+                <column name="CIUDAD" length="20" />
+            </key-property>
+            <key-property name="pais" type="string">
+                <column name="PAIS" length="20" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

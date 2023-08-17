@@ -1,0 +1,7 @@
+// (c) 2008 Infragistics - Do NOT modify the content of this file
+// Version 9.2.20092.1000
+
+if(ig){if(!ig.chart){function IgWebChartPackage(){this.TYPE_CHART="Chart";this.init=function(){ig.factory.addClass(ig.chart.TYPE_CHART,IgChart);};this.initChart=function(nodeId,clientSideListeners){var igElm=ig.getUIElementById(nodeId);if(igElm.init){igElm.init(clientSideListeners);}else{alert("Chart without 'init' method found");}};this.chartAreaClicked=function(chartId,nodeId,smartSubmitUrl){var jsChart=ig.getUIElementById(chartId);var args=jsChart._raiseClientEvent("dataPointClicked","Chart",nodeId);if(args!=null&&args.get_cancel())return;eval(smartSubmitUrl);};};ig.chart=new IgWebChartPackage();function IgChart(e){this.IgUIComponent(e);};IgChart.prototype.init=function(clientSideListeners){this._initClientEventsForObject(this.elm,clientSideListeners);this._raiseClientEvent("Initialize",null,null,null);};ig.augment(IgChart,IgUIComponent);ig.chart.init();}
+$IG.ChartEventArgs=function(){$IG.ChartEventArgs.initializeBase(this);}
+$IG.ChartEventArgs.prototype={get_nodeId:function(){return this._props[0];}}
+$IG.ChartEventArgs.registerClass("Infragistics.Web.UI.ChartEventArgs",$IG.CancelEventArgs);}

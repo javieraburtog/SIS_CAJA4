@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 15, 2014 9:29:19 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.CierreSpos" table="CIERRE_SPOS">
+        <id name="idcierrespos" type="int">
+            <column name="IDCIERRESPOS" />
+            <generator class="identity" />
+        </id>
+        <property name="termid" type="string">
+            <column name="TERMID" length="10" not-null="true" />
+        </property>
+        <property name="acqnumber" type="string">
+            <column name="ACQNUMBER" length="20" not-null="true" />
+        </property>
+        <property name="batchnumber" type="int">
+            <column name="BATCHNUMBER" not-null="true" />
+        </property>
+        <property name="dateBegin" type="timestamp">
+            <column name="DATE_BEGIN" length="26" not-null="true" />
+        </property>
+        <property name="dateEnd" type="timestamp">
+            <column name="DATE_END" length="26" not-null="true" />
+        </property>
+        <property name="credTrans" type="int">
+            <column name="CRED_TRANS" not-null="true" />
+        </property>
+        <property name="credAmount" type="big_decimal">
+            <column name="CRED_AMOUNT" precision="15" not-null="true" />
+        </property>
+        <property name="totalTrans" type="int">
+            <column name="TOTAL_TRANS" not-null="true" />
+        </property>
+        <property name="reference" type="string">
+            <column name="REFERENCE" length="12" not-null="true" />
+        </property>
+        <property name="authorizationid" type="string">
+            <column name="AUTHORIZATIONID" length="10" not-null="true" />
+        </property>
+        <property name="responsecode" type="string">
+            <column name="RESPONSECODE" length="6" not-null="true" />
+        </property>
+        <property name="systraceno" type="string">
+            <column name="SYSTRACENO" length="10" not-null="true" />
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="10" not-null="true" />
+        </property>
+        <property name="currency" type="string">
+            <column name="CURRENCY" length="3" not-null="true" />
+        </property>
+        <property name="usrcreate" type="string">
+            <column name="USRCREATE" length="12" not-null="true" />
+        </property>
+        <property name="usrcode" type="int">
+            <column name="USRCODE" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="totalAmountLocal" type="big_decimal">
+            <column name="TOTAL_AMOUNT_LOCAL" precision="15" not-null="true" />
+        </property>
+        <property name="totalAmountBank" type="big_decimal">
+            <column name="TOTAL_AMOUNT_BANK" precision="15" not-null="true" />
+        </property>
+        <property name="refundCant" type="int">
+            <column name="REFUND_CANT" not-null="true" />
+        </property>
+        <property name="refundamount" type="big_decimal">
+            <column name="REFUNDAMOUNT" precision="15" not-null="true" />
+        </property>
+         <property name="dateclosing" type="timestamp">
+            <column name="DATE_CLOSING" length="26" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

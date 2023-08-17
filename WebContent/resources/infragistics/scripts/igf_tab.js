@@ -1,0 +1,12 @@
+// (c) 2008 Infragistics - Do NOT modify the content of this file
+// Version 9.2.20092.1000
+
+if(ig){if(!ig.tab){function IgWebTabPackage(){this.TYPE_TABVIEW="TabView";this.TYPE_TABITEM="TabItem";this.lastTabView=null;this.lastTabItem=null;this.init=function(){ig.factory.addClass(ig.tab.TYPE_TABVIEW,IgTabView);ig.factory.addClass(ig.tab.TYPE_TABITEM,IgTabItem);};this.initTab=function(nodeId,clientSideListeners){var igElm=ig.getUIElementById(nodeId);if(igElm.init){igElm.init(clientSideListeners);}else{alert("TabView without 'init' method found");}};this.raiseTabChanging=function(tabViewId,currentTabItemId,newTabItemId,smartSubmitURL){ig.tab.lastTabView=ig.getUIElementById(tabViewId);var currentTabItem=ig.getUIElementById(currentTabItemId);ig.tab.lastTabItem=ig.getUIElementById(newTabItemId);var args=ig.tab.lastTabView._raiseClientEvent("selectedTabChanging","Tab",currentTabItem,ig.tab.lastTabItem);if(args!=null&&args.get_cancel())return;eval(smartSubmitURL);};this.raiseTabChanged=function(httpReq){ig.onPartialRefreshDefault(httpReq);ig.tab.lastTabView._raiseClientEvent("selectedTabChanged","Tab",ig.tab.lastTabItem,ig.tab.lastTabItem);};};ig.tab=new IgWebTabPackage();function IgTabView(e){this.IgUIComponent(e);};IgTabView.prototype.init=function(clientSideListeners){this._initClientEventsForObject(this.elm,clientSideListeners);this._raiseClientEvent("Initialize",null,null,null);};ig.augment(IgTabView,IgUIComponent);function IgTabItem(e){this.IgUIElement(e);};IgTabItem.prototype.applyClass=function(){var css=this.getDefaultClass();var cssLeft="igTabItemLeft";var cssRight="igTabItemRight";if(!this.isEnabled()){css=this.getDisabledClass();cssLeft="igTabItemDisabledLeft";cssRight="igTabItemDisabledRight";}
+else{if(this.isSelected()){return;}
+else{if(this.isHovered()){css=this.getHoverClass();cssLeft="igTabItemHoverLeft";cssRight="igTabItemHoverRight";}}}
+if(this.elm.className!=cssRight){this.elm.className=cssRight;}
+var leftTab=this.elm.previousSibling;var tabItem=this.elm.firstChild;if(leftTab.className!=cssLeft){leftTab.className=cssLeft;}
+if(tabItem.className!=css){tabItem.className=css;}};IgTabItem.prototype.isSelected=function(){return this.getAttribute("oselected")=="true";};ig.augment(IgTabItem,IgUIElement);ig.tab.init();}
+$IG.TabEventArgs=function(){$IG.TabEventArgs.initializeBase(this);}
+$IG.TabEventArgs.prototype={get_currentTabView:function(){return this._props[0];},get_newTabView:function(){return this._props[1];}}
+$IG.TabEventArgs.registerClass("Infragistics.Web.UI.TabEventArgs",$IG.CancelEventArgs);}

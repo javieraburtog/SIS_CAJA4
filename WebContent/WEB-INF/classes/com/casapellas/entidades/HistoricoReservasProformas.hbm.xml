@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 1, 2016 3:03:16 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.HistoricoReservasProformas" table="HISTORICO_RESERVAS_PROFORMAS">
+        <id name="idhistoricoreservas" type="int">
+            <column name="IDHISTORICORESERVAS" />
+            <generator class="assigned" />
+        </id>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="12" not-null="true" />
+        </property>
+        <property name="codsuc" type="string">
+            <column name="CODSUC" length="12" not-null="true" />
+        </property>
+        <property name="codunineg" type="string">
+            <column name="CODUNINEG" length="12" not-null="true" />
+        </property>
+        <property name="codcli" type="int">
+            <column name="CODCLI" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numrec" type="int">
+            <column name="NUMREC" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numeroproforma" type="int">
+            <column name="NUMEROPROFORMA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numerobatch" type="int">
+            <column name="NUMEROBATCH" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="tipodoc" type="string">
+            <column name="TIPODOC" length="10" not-null="true" />
+        </property>
+        <property name="codigocajero" type="int">
+            <column name="CODIGOCAJERO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="monedaapl" type="string">
+            <column name="MONEDAAPL" length="3" not-null="true" />
+        </property>
+        <property name="montorecibo" type="big_decimal">
+            <column name="MONTORECIBO" precision="15" not-null="true" />
+        </property>
+        <property name="fecharecibo" type="date">
+            <column name="FECHARECIBO" length="10" not-null="true" />
+        </property>
+        <property name="horarecibo" type="time">
+            <column name="HORARECIBO" length="8" not-null="true" />
+        </property>
+        <property name="tiporecibo" type="string">
+            <column name="TIPORECIBO" length="5" not-null="true" />
+        </property>
+         <property name="numerocuota" type="int">
+            <column name="numerocuota" precision="8" scale="0" not-null="true" />
+        </property>
+         <property name="estado" type="int">
+            <column name="estado" precision="8" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

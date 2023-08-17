@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Flexigrid</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" type="text/css" href="css/flexigrid/flexigrid.css">
+<script type="text/javascript" src="lib/jquery/jquery.js"></script>
+<script type="text/javascript" src="flexigrid.js"></script>
+</head>
+
+<body>
+<style>
+	.flexigrid div.fbutton .add{
+		background: url(css/images/add.png) no-repeat center left;
+	}
+	.flexigrid div.fbutton .delete{
+		background: url(css/images/close1.png) no-repeat center left;
+	}
+	.flexigrid div.fbutton .edit{
+		background: url(css/images/edit.png) no-repeat center left;
+	}
+</style>
+
+
+<table id="TblDatos" style="display:none">
+
+</table>
+
+
+<script type="text/javascript">
+    $("#TblDatos").flexigrid({
+        url: '../PruebaHibernate',
+        dataType: 'json',
+        colModel : [
+                {display: 'Nombre', name : 'nombre', width : 100, sortable : true, align: 'center'},
+                {display: 'Enunciado', name : 'enunciado', width : 100, sortable : true, align: 'left'},
+                {display: 'Descripción', name : 'descripcion', width : 120, sortable : true, align: 'left'},
+                {display: 'Fecha Creación', name : 'fechacreacion', width : 100, sortable : true, align: 'left', hide: false},
+                {display: 'Activo', name : 'activo', width : 80, sortable : true, align: 'right'}
+                ],
+         buttons : [
+                {name: 'Agregar', bclass: 'add', onpress : CrudBloque},
+				{separator: true},
+                {name: 'Editar', bclass: 'edit', onpress : CrudBloque},
+				{separator: true},
+                {name: 'Eliminar', bclass: 'delete', onpress : CrudBloque},
+                {separator: true}
+                ],
+        searchitems : [
+                {display: 'Nombre', name : 'nombre'},
+                {display: 'Enunciado', name : 'enunciado', isdefault: true},
+                {display: 'Descripcion', name : 'descripcion', isdefault: true}
+                ],
+        sortname: "nombre",
+        sortorder: "asc",
+        usepager: true,
+        title: 'Countries',
+        useRp: true,
+        rp: 10,
+        showTableToggleBtn: false,
+        singleSelect: true,
+        width: 700,
+        height: 200,
+        resizable: false
+    });
+			
+    function CrudBloque(com,grid){
+        if (com=='Agregar'){
+            alert('Agregar..');
+        }else if (com=='Editar'){
+        	$('.trSelected', grid).each(function() {
+                var id = $(this).attr('id');
+                id = id.substring(id.lastIndexOf('row')+3);
+                alert("Editando registro: " + id);
+            });
+            confirm('Editar ' + $('.trSelected',grid).length + ' items?')
+        }else if (com=='Eliminar'){
+        	$('.trSelected', grid).each(function() {
+                var id = $(this).attr('id');
+                id = id.substring(id.lastIndexOf('row')+3);
+                alert("Eliminando registro: " + id);
+            });
+            confirm('Eliminar ' + $('.trSelected',grid).length + ' items?')
+        }
+    }
+	
+</script>
+
+</body>
+</html>

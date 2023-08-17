@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 17/07/2009 13:52:09 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.ens.Vautoriz" table="E1_VAUTORIZ"  schema="ENS">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.ens.VautorizId">
+            <key-property name="coduser" type="string">
+                <column name="CODUSER" length="10" />
+            </key-property>
+            <key-property name="login" type="string">
+                <column name="LOGIN" length="32" />
+            </key-property>
+            <key-property name="tipuser" type="string">
+                <column name="TIPUSER" length="10" />
+            </key-property>
+            <key-property name="codreg" type="java.lang.Integer">
+                <column name="CODREG" precision="7" scale="0" />
+            </key-property>
+            <key-property name="codper" type="string">
+                <column name="CODPER" length="10" />
+            </key-property>
+            <key-property name="nomper" type="string">
+                <column name="NOMPER" length="32" />
+            </key-property>
+            <key-property name="codapp" type="string">
+                <column name="CODAPP" length="10" />
+            </key-property>
+            <key-property name="nomcorto" type="string">
+                <column name="NOMCORTO" length="10" />
+            </key-property>
+            <key-property name="nomapp" type="string">
+                <column name="NOMAPP" length="40" />
+            </key-property>
+            <key-property name="codsec" type="string">
+                <column name="CODSEC" length="10" />
+            </key-property>
+            <key-property name="codsuper" type="string">
+                <column name="CODSUPER" length="10" />
+            </key-property>
+            <key-property name="nomsec" type="string">
+                <column name="NOMSEC" length="32" />
+            </key-property>
+            <key-property name="iconurl" type="string">
+                <column name="ICONURL" length="32" />
+            </key-property>
+            <key-property name="outcome" type="string">
+                <column name="OUTCOME" length="16" />
+            </key-property>
+            <key-property name="enmenu" type="string">
+                <column name="ENMENU" length="1" />
+            </key-property>
+            <key-property name="codaut" type="string">
+                <column name="CODAUT" length="10" />
+            </key-property>
+            <key-property name="nomaut" type="string">
+                <column name="NOMAUT" length="32" />
+            </key-property>
+            <key-property name="alcance" type="string">
+                <column name="ALCANCE" length="3" />
+            </key-property>
+            <key-property name="url" type="string">
+                <column name="URL" length="32" />
+            </key-property>
+            <key-property name="orden" type="java.lang.Integer">
+                <column name="ORDEN" />
+            </key-property>
+            
+             <key-property name="empnombre" type="string">
+                <column name="EMPNOMBRE" length="200" />
+            </key-property>
+            
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-03-2012 09:01:30 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Reintegro" table="REINTEGRO">
+        <comment>REINTEGRO DE FONDO MINIMO</comment>
+        <composite-id name="id" class="com.casapellas.entidades.ReintegroId">
+            <key-property name="noreint" type="int">
+                <column name="NOREINT" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codusc" type="string">
+                <column name="CODUSC" length="5" />
+            </key-property>
+        </composite-id>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="10" not-null="true">
+                <comment>FECHA</comment>
+            </column>
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="10" not-null="true">
+                <comment>MONTO DE REINTEGRO</comment>
+            </column>
+        </property>
+        <property name="estado" type="boolean">
+            <column name="ESTADO" precision="1" scale="0" not-null="true">
+                <comment>0 = PENDIENTE, 1=REINTEGRADO</comment>
+            </column>
+        </property>
+        <property name="fechareint" type="date">
+            <column name="FECHAREINT" length="10" not-null="true">
+                <comment>FECHA EN QUE SE REALIZA EL REINT</comment>
+            </column>
+        </property>
+        <property name="usrmod" type="string">
+            <column name="USRMOD" length="10" not-null="true">
+                <comment>USUARIO Q MODIFICO</comment>
+            </column>
+        </property>
+        <property name="nobatch" type="int">
+            <column name="NOBATCH" precision="8" scale="0" not-null="true">
+                <comment>NUMERO DE BATCH</comment>
+            </column>
+        </property>
+        <property name="nodoc" type="int">
+            <column name="NODOC" precision="8" scale="0" not-null="true">
+                <comment>NUMERO DE DOC JDE</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA</comment>
+            </column>
+        </property>
+        <property name="narqueo" type="int">
+            <column name="NARQUEO" precision="8" scale="0" not-null="true">
+                <comment>NUMERO DE ARQUEO</comment>
+            </column>
+        </property>
+        <property name="batchreint" type="int">
+            <column name="BATCHREINT" precision="8" scale="0" not-null="true">
+                <comment>Batch en el que se realizo el reintegro</comment>
+            </column>
+        </property>
+        <property name="docreint" type="int">
+            <column name="DOCREINT" precision="8" scale="0" not-null="true">
+                <comment>NO DOC de jde de reintegro</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

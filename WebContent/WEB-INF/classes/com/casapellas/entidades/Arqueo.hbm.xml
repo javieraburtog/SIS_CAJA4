@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-28-2010 08:58:54 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.Arqueo" table="ARQUEO">
+		<comment>MAESTRO DE ARQUEO POR CAJA</comment>
+		<composite-id name="id" class="com.casapellas.entidades.ArqueoId">
+			<key-property name="hora" type="time">
+				<column name="HORA" length="8" />
+			</key-property>
+			<key-property name="fecha" type="date">
+				<column name="FECHA" length="10" />
+			</key-property>
+			<key-property name="noarqueo" type="int">
+				<column name="NOARQUEO" precision="8" scale="0" />
+			</key-property>
+			<key-property name="codsuc" type="string">
+				<column name="CODSUC" length="5" />
+			</key-property>
+			<key-property name="codcomp" type="string">
+				<column name="CODCOMP" length="10" />
+			</key-property>
+			<key-property name="caid" type="int">
+				<column name="CAID" precision="8" scale="0" />
+			</key-property>
+		</composite-id>
+		<property name="estado" type="string">
+			<column name="ESTADO" length="1" not-null="true">
+				<comment>ESTADO DE ARQUEO</comment>
+			</column>
+		</property>
+		<property name="codcajero" type="int">
+			<column name="CODCAJERO" precision="8" scale="0" not-null="true">
+				<comment>CODGIO DE CAJERO</comment>
+			</column>
+		</property>
+		<property name="tingreso" type="big_decimal">
+			<column name="TINGRESO" precision="15" not-null="true">
+				<comment>TOTAL DE INGRESOS</comment>
+			</column>
+		</property>
+		<property name="tegresos" type="big_decimal">
+			<column name="TEGRESOS" precision="10" not-null="true">
+				<comment>TOTAL DE EGRESOS O AJUSTES</comment>
+			</column>
+		</property>
+		<property name="netorec" type="big_decimal">
+			<column name="NETOREC" precision="15" not-null="true">
+				<comment>EFECTIVO NETO RECIBIDO</comment>
+			</column>
+		</property>
+		<property name="minimo" type="big_decimal">
+			<column name="MINIMO" precision="10" not-null="true">
+				<comment>MONTO MINIMO EN CAJA</comment>
+			</column>
+		</property>
+		<property name="dsugerido" type="big_decimal">
+			<column name="DSUGERIDO" precision="15" not-null="true">
+				<comment>DEPOSITO SUGERIDO</comment>
+			</column>
+		</property>
+		<property name="efectcaja" type="big_decimal">
+			<column name="EFECTCAJA" precision="15" not-null="true">
+				<comment>EFECTIVO EN CAJA</comment>
+			</column>
+		</property>
+		<property name="sf" type="big_decimal">
+			<column name="SF" precision="8" not-null="true">
+				<comment>SOBRANTE/FALTANTE</comment>
+			</column>
+		</property>
+		<property name="dfinal" type="big_decimal">
+			<column name="DFINAL" precision="15" not-null="true">
+				<comment>DEPOSITO FINAL</comment>
+			</column>
+		</property>
+		<property name="tpagos" type="big_decimal">
+			<column name="TPAGOS" precision="15" not-null="true">
+				<comment>TOTAL DE PAGOS</comment>
+			</column>
+		</property>
+		<property name="moneda" type="string">
+			<column name="MONEDA" length="3" not-null="true">
+				<comment>CODIGO DE MONEDA</comment>
+			</column>
+		</property>
+		<property name="fechamod" type="date">
+			<column name="FECHAMOD" length="10" not-null="true">
+				<comment>FECHA DE ULTIMA MODIFICACION</comment>
+			</column>
+		</property>
+		<property name="horamod" type="time">
+			<column name="HORAMOD" length="8" not-null="true">
+				<comment>HORA DE ULTIMA MODIFICACION</comment>
+			</column>
+		</property>
+		<property name="coduser" type="string">
+			<column name="CODUSER" length="10" not-null="true">
+				<comment>LOGIN DE USUARIO</comment>
+			</column>
+		</property>
+		<property name="motivo" type="string">
+			<column name="MOTIVO" length="250">
+				<comment>MOTIVO DE RECHAZO DEL ARQUEO</comment>
+			</column>
+		</property>
+		<property name="referdep" type="string">
+			<column name="REFERDEP" length="50">
+				<comment>NUMERO DE REFERENCIA MINUTA DEPOSITO</comment>
+			</column>
+		</property>
+
+		<property name="referencenumber" type="int">
+			<column name="REFERENCENUMBER" precision="8" scale="0"
+				not-null="true">
+				<comment>NUMERO REFERENCIA ORIGINAL DEL DEPOSITO </comment>
+			</column>
+		</property>
+
+		<property name="depctatran" type="int">
+			<column name="DEPCTATRAN" precision="1" scale="0" not-null="true">
+				<comment>PAGO A CUENTA TRANSITO</comment>
+			</column>
+		</property>
+
+		<property name="codusermod" type="int">
+			<column name="codusermod" precision="8" scale="0" not-null="true" />
+		</property>
+		<property name="datapcinfo" type="string">
+			<column name="datapcinfo" precision="1200" scale="0" not-null="true" />
+		</property>
+
+	</class>
+</hibernate-mapping>

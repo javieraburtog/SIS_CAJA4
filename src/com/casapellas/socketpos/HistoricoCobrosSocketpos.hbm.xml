@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 16, 2016 4:16:34 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.socketpos.HistoricoCobrosSocketpos" table="HISTORICO_COBROS_SOCKETPOS" >
+        <id name="idhistoricosp" type="int">
+            <column name="IDHISTORICOSP" />
+            <generator class="identity" />
+        </id>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="12" not-null="true" />
+        </property>
+        <property name="terminalid" type="string">
+            <column name="TERMINALID" length="20" not-null="true" />
+        </property>
+        <property name="acqnumber" type="string">
+            <column name="ACQNUMBER" length="20" not-null="true" />
+        </property>
+        <property name="invoicenumber" type="string">
+            <column name="INVOICENUMBER" length="20" not-null="true" />
+        </property>
+        <property name="entrymode" type="string">
+            <column name="ENTRYMODE" length="10" not-null="true" />
+        </property>
+        <property name="amount" type="big_decimal">
+            <column name="AMOUNT" precision="15" not-null="true" />
+        </property>
+        <property name="cardnumber" type="string">
+            <column name="CARDNUMBER" length="20" not-null="true" />
+        </property>
+        <property name="duedate" type="string">
+            <column name="DUEDATE" length="10" not-null="true" />
+        </property>
+        <property name="status" type="int" >
+            <column name="STATUS" precision="1" scale="0" not-null="true" />
+        </property>
+        <property name="responsecode" type="string">
+            <column name="RESPONSECODE" length="6" not-null="true" />
+        </property>
+        <property name="module" type="string">
+            <column name="MODULE" length="50" not-null="true" />
+        </property>
+        <property name="submodule" type="string">
+            <column name="SUBMODULE" length="50" not-null="true" />
+        </property>
+        <property name="usercode" type="long">
+            <column name="USERCODE" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="created" type="timestamp">
+            <column name="CREATED" length="26" not-null="true" />
+        </property>
+        <property name="updated" type="timestamp">
+            <column name="UPDATED" length="26" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

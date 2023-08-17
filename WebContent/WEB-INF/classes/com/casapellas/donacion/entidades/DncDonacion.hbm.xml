@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-27-2015 03:13:22 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="com.casapellas.donacion.entidades.DncDonacion" table="DNC_DONACION">
+        <id name="iddonacion" type="int">
+            <column name="IDDONACION" />
+            <generator class="identity" />
+        </id>
+        <property name="idbenficiario" type="int">
+            <column name="IDBENFICIARIO" not-null="true" />
+        </property>
+        <property name="codigo" type="int">
+            <column name="CODIGO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="clientecodigo" type="int">
+            <column name="CLIENTECODIGO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="clientenombre" type="string">
+            <column name="CLIENTENOMBRE" length="200" not-null="true" />
+        </property>
+        <property name="montorecibido" type="big_decimal">
+            <column name="MONTORECIBIDO" precision="10" not-null="true" />
+        </property>
+        <property name="montoaplicado" type="big_decimal">
+            <column name="MONTOAPLICADO" precision="10" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="formadepago" type="string">
+            <column name="FORMADEPAGO" length="3" not-null="true" />
+        </property>
+        <property name="clienteid" type="string">
+            <column name="CLIENTEID" length="20" not-null="true" />
+        </property>
+        <property name="codcajero" type="int">
+            <column name="CODCAJERO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numrec" type="int">
+            <column name="NUMREC" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="tiporec" type="string">
+            <column name="TIPOREC" length="3" not-null="true" />
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="3" not-null="true" />
+        </property>
+        <property name="referencia1" type="string">
+            <column name="REFERENCIA1" length="20" not-null="true" />
+        </property>
+        <property name="referencia2" type="string">
+            <column name="REFERENCIA2" length="20" not-null="true" />
+        </property>
+        <property name="socketpos" type="int">
+            <column name="SOCKETPOS" not-null="true" />
+        </property>
+        <property name="codigopos" type="int">
+            <column name="CODIGOPOS" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="comisionpos" type="big_decimal">
+            <column name="COMISIONPOS" precision="5" not-null="true" />
+        </property>
+        <property name="estado" type="int">
+            <column name="ESTADO" not-null="true" />
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true" />
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true" />
+        </property>
+        <property name="observacion" type="string">
+            <column name="OBSERVACION" length="200" not-null="true" />
+        </property>
+        <property name="beneficiarionombre" type="string">
+            <column name="BENEFICIARIONOMBRE" length="200" not-null="true" />
+        </property>
+        <property name="iddncrsm" type="int">
+            <column name="IDDNCRSM" not-null="true" />
+        </property>
+        <property name="codigomarcatarjeta" type="string">
+			<column name="codigomarcatarjeta"  not-null="true" />
+		</property>
+		<property name="marcatarjeta" type="string">
+			<column name="marcatarjeta" not-null="true" />
+		</property>
+		<property name="liquidarpormarca" type="int">
+			<column name="liquidarpormarca" precision="1" scale="0" not-null="true" />
+		</property>
+        
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+   <session-factory name="MCAJAPruebaCn">  
+   		<property name="connection.provider_class">
+   			org.hibernate.connection.C3P0ConnectionProvider
+		</property>
+		<property name="hibernate.show_sql">false</property>
+		<property name="hibernate.generate_statistics">false</property>
+		<property name="hibernate.use_sql_comments">false</property>
+		<property name="log4j.logger.org.hibernate">OFF</property>		
+		<property name="hibernate.c3p0.min_size">0</property>
+		<property name="hibernate.c3p0.max_size">100</property>
+		<property name="hibernate.c3p0.initialPoolSize">0</property>
+		<property name="hibernate.c3p0.acquireIncrement">1</property>
+		<property name="hibernate.c3p0.max_statements">3000</property>
+		<property name="hibernate.c3p0.maxStatementsPerConnection">50</property>
+		<property name="hibernate.c3p0.maxConnectionAge">200</property>
+		<property name="hibernate.c3p0.timeout">200</property>
+		<property name="hibernate.c3p0.idle_test_period">50</property>
+        <property name="hibernate.default_schema">e1gcpmcaja</property>
+        <property name="hibernate.default_catalog">SYSTEMIP</property>
+        
+        <property name="hibernate.connection.username">appcp</property>
+        <property name="hibernate.connection.password">appcp1810</property>
+        
+        <property name="hibernate.connection.url">jdbc:as400:192.168.1.3/e1gcpmcaja; prompt=false;behavior override=1;</property>
+        <property name="hibernate.connection.driver_class">com.ibm.as400.access.AS400JDBCDriver</property>  
+ 		<property name="hibernate.dialect">org.hibernate.dialect.DB2Dialect</property>
+        <property name="current_session_context_class">thread</property> 
+        <property name="hibernate.connection.release_mode">after_statement</property>
+       
+        <mapping resource="com/casapellas/entidades/A02factco.hbm.xml" />
+      	<mapping resource="com/casapellas/entidades/A03factco.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/TallerUn.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vrecfac.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Vdfactura.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vhfactura.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Recibodet.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Recibojde.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Recibo.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Cambiodet.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Recibofac.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Solicitud.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Bien.hbm.xml" />      
+   		<mapping resource="com/casapellas/entidades/Vf55ca01.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Ruc.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca011.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca013.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca012.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Hfacturajde.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca015.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca016.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca03.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vf0101.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca01.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Hfactjdecon.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Dfacturajde.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca02.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Dfactjdecon.hbm.xml" />     
+        <mapping resource="com/casapellas/entidades/Cafiliados.hbm.xml" />	
+		<mapping resource="com/casapellas/entidades/Salida.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Salidadet.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Salidas.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Vf55ca014.hbm.xml" />	
+		<mapping resource="com/casapellas/entidades/F55ca017.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/F55ca018.hbm.xml" />	
+		<mapping resource="com/casapellas/entidades/F55ca022.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca021.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca019.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca020.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Tpararela.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vtotaltipoingreso.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vrecibosxtipoingreso.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vdetallecambiorecibo.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vcambiosrealizadosxdia.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vrecibosxdevoluciones.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vtotaldiarioxdevolucion.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vtotalxtipoegreso.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vrecibosxtipompago.hbm.xml" />   
+        <mapping resource="com/casapellas/entidades/Arqueofact.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Arqueo.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Arqueorec.hbm.xml" /> 
+        <mapping resource="com/casapellas/entidades/Numcaja.hbm.xml" />                  
+        <mapping resource="com/casapellas/entidades/Vcompaniaxcontador.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vmonedasxcontador.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Varqueo.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca023.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vrecibodetalle.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Solecheque.hbm.xml" />        
+        <mapping resource="com/casapellas/entidades/Vrecibosxtipoegreso.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vfacturaxdevolucion.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vmonedafactrec.hbm.xml" /> 
+        <mapping resource="com/casapellas/entidades/Vreciboxdevolucion.hbm.xml" />   
+        <mapping resource="com/casapellas/entidades/Vdetallecambiorec.hbm.xml" />    
+		<mapping resource="com/casapellas/entidades/Vrecibo.hbm.xml" /> 
+        <mapping resource="com/casapellas/entidades/F55ca024.hbm.xml" />    
+	    <mapping resource="com/casapellas/entidades/F55ca018bk.hbm.xml" />   
+	    <mapping resource="com/casapellas/entidades/Deposito.hbm.xml" />	 
+	    <mapping resource="com/casapellas/entidades/Recbatch.hbm.xml" />  
+	    <mapping resource="com/casapellas/entidades/Vrecibodevrecibo.hbm.xml" /> 
+	    <mapping resource="com/casapellas/entidades/Vtransaccionesjde.hbm.xml" />
+	    <mapping resource="com/casapellas/entidades/Hfinan.hbm.xml" />
+	    <mapping resource="com/casapellas/entidades/Producto.hbm.xml" />
+	    <mapping resource="com/casapellas/entidades/Elementofin.hbm.xml" />
+	    <mapping resource="com/casapellas/entidades/Vf55ca012.hbm.xml" />
+   	    <mapping resource="com/casapellas/entidades/Vcuentaoperacion.hbm.xml" />
+   	    <mapping resource="com/casapellas/entidades/Finanhdr.hbm.xml" />
+   	    <mapping resource="com/casapellas/entidades/Finandet.hbm.xml" />
+   	    <mapping resource="com/casapellas/entidades/Vmora.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vsalida.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vrecibodatos.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca027.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vrptmcaja005.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vrptmcaja006.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Credhdr.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Creddet.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vsolecheque.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vf0311fn.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Trasladofac.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Hf4211.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Df4211.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vf0901.hbm.xml" /> 
+        <mapping resource="com/casapellas/entidades/Vf0002.hbm.xml" /> 
+        <mapping resource="com/casapellas/entidades/Vretencion.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vdetrecibodev.hbm.xml" />
+        
+        <mapping resource="com/casapellas/entidades/Equivtipodocs.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca033.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Ctaxdeposito.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vdeposito.hbm.xml" />
+        
+        
+        <mapping resource="com/casapellas/conciliacion/entidades/Depbancodet.hbm.xml" />
+        <mapping resource="com/casapellas/conciliacion/entidades/Conciliadet.hbm.xml" />
+        <mapping resource="com/casapellas/conciliacion/entidades/Conciliacion.hbm.xml" />
+        <mapping resource="com/casapellas/conciliacion/entidades/Archivo.hbm.xml" />
+        <mapping resource="com/casapellas/conciliacion/entidades/Ajusteconc.hbm.xml" />
+        <mapping resource="com/casapellas/conciliacion/entidades/Vwconciliacion.hbm.xml" />
+        
+        <mapping resource="com/casapellas/conciliacion/entidades/PcdCajasPreconciliar.hbm.xml"/>
+        <mapping resource="com/casapellas/conciliacion/entidades/PcdConsolidadoDepositosConfirmados.hbm.xml"/>
+    	<mapping resource="com/casapellas/conciliacion/entidades/PcdComparacionesDeposito.hbm.xml"/>
+    	<mapping resource="com/casapellas/conciliacion/entidades/PcdConsolidadoDepositosBanco.hbm.xml"/>
+   		<mapping resource="com/casapellas/conciliacion/entidades/PcdExcepcionDeposito.hbm.xml"/> 
+   		<mapping resource="com/casapellas/conciliacion/entidades/Vf0911.hbm.xml" />
+        
+        <mapping resource="com/casapellas/entidades/Minutadp.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55ca014.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Minsemitidas.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Mindpxcaja.hbm.xml" />
+        
+         <mapping resource="com/casapellas/entidades/Reintegro.hbm.xml" /> 
+         <mapping resource="com/casapellas/entidades/F55ca034.hbm.xml" />
+         <mapping resource="com/casapellas/entidades/F55ca036.hbm.xml" />
+         <mapping resource="com/casapellas/entidades/Vf55ca036.hbm.xml" />
+         <mapping resource="com/casapellas/entidades/Vrecibostcir.hbm.xml" />
+         <mapping resource="com/casapellas/entidades/Monedaxlinea.hbm.xml" />
+         <mapping resource="com/casapellas/entidades/Recibolog.hbm.xml" />
+         
+          <mapping resource="com/casapellas/entidades/ens/Vautoriz.hbm.xml" />
+         
+        <mapping resource="com/casapellas/entidades/Vcierresktpos.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/CierreSktpos.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/TermAfl.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Transactsp.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/CierreSpos.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/B64strfile.hbm.xml"/>
+        
+        <mapping resource="com/casapellas/donacion/entidades/DncCierreDetalle.hbm.xml" />
+        <mapping resource="com/casapellas/donacion/entidades/DncBeneficiario.hbm.xml" />
+        <mapping resource="com/casapellas/donacion/entidades/DncDonacionJde.hbm.xml" />
+        <mapping resource="com/casapellas/donacion/entidades/DncBeneficiarioCuentas.hbm.xml" />
+        <mapping resource="com/casapellas/donacion/entidades/DncCierreDonacion.hbm.xml" />
+        <mapping resource="com/casapellas/donacion/entidades/DncDonacion.hbm.xml" />
+        <mapping resource="com/casapellas/donacion/entidades/DncDonacionRsm.hbm.xml" />
+        <mapping resource="com/casapellas/donacion/entidades/DncDonacionCnsMpago.hbm.xml" />
+        <mapping resource="com/casapellas/donacion/entidades/Vdonacion.hbm.xml" />
+        
+        <mapping resource="com/casapellas/entidades/Vreporterecibos.hbm.xml"/>
+        <mapping resource="com/casapellas/entidades/Vwcuentascontablesporbanco.hbm.xml"/>
+        
+        <mapping resource="com/casapellas/entidades/HistoricoReservasProformas.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/pmt/Vwbitacoracobrospmt.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/pmt/PmtMtCobroAutomatico.hbm.xml"/>
+    	<mapping resource="com/casapellas/entidades/pmt/PmtDtCobroAutomatico.hbm.xml"/>       
+        
+        <mapping resource="com/casapellas/socketpos/HistoricoCobrosSocketpos.hbm.xml"/>
+        
+        <mapping resource="com/casapellas/entidades/VtipoProd.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vmodelo.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vmarca.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Vcompania.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Metpago.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Tcambio.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Uneglinea.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Unegocio.hbm.xml" />
+        
+        <!--FINAN.CFG.XML--> 
+        <mapping resource="com/casapellas/entidades/F55diaven.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/F55detinte.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/F55cabintr.hbm.xml" />
+        
+        <!--HIBERNATE.CFG.XML--> 
+        <mapping resource="com/casapellas/entidades/Appsec.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Usuario.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Log.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Perfil.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Seccion.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Aplicacion.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Usrung.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Persecaut.hbm.xml" />
+		<mapping resource="com/casapellas/entidades/Usrper.hbm.xml" />       
+        <mapping resource="com/casapellas/entidades/Valorcatalogo.hbm.xml" />
+        <mapping resource="com/casapellas/entidades/Catalogo.hbm.xml" />
+         
+         <!--HIBERNATEMCAJA.CFG.XML--> 
+      	<mapping resource="com/casapellas/entidades/Deposito_Report.hbm.xml" />
+ 
+    </session-factory>
+</hibernate-configuration>

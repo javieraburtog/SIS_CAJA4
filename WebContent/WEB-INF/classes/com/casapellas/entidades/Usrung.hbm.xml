@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 7, 2009 10:58:25 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Usrung" table="USRUNG" schema="ENS">
+        <comment>RELACION USUARIOS - UNID NEGOCIOS</comment>
+        <composite-id name="id" class="com.casapellas.entidades.UsrungId">
+            <key-property name="coduneg" type="string">
+                <column name="CODUNEG" length="12" />
+            </key-property>
+            <key-property name="coduser" type="string">
+                <column name="CODUSER" length="6" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="usuario" class="com.casapellas.entidades.Usuario" update="false" insert="false" fetch="select">
+            <column name="CODUSER" length="6" not-null="true">
+                <comment>CODIGO DE USUARIO</comment>
+            </column>
+        </many-to-one>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1">
+                <comment>RELACION ACTIVA/INACTIVA</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

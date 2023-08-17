@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 29, 2013 4:03:44 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.CierreSktpos" table="CIERRE_SKTPOS" >
+        <comment>Cierre de socket POS por banco</comment>
+        <id name="idcierre" type="int">
+            <column name="IDCIERRE" precision="8" scale="0" />
+            <generator class="identity" />
+        </id>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DE CAJA</comment>
+            </column>
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="10" not-null="true">
+                <comment>CODIGO DE COMPANIA</comment>
+            </column>
+        </property>
+        <property name="codsuc" type="string">
+            <column name="CODSUC" length="5" not-null="true">
+                <comment>CODIGO DE SUCURSAL</comment>
+            </column>
+        </property>
+        <property name="noarqueo" type="int">
+            <column name="NOARQUEO" precision="8" scale="0" not-null="true">
+                <comment>NUMERO DE ARQUEO</comment>
+            </column>
+        </property>
+        <property name="codb" type="int">
+            <column name="CODB" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DE BANCO</comment>
+            </column>
+        </property>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="10" not-null="true">
+                <comment>FECHA</comment>
+            </column>
+        </property>
+        <property name="hora" type="time">
+            <column name="HORA" length="8" not-null="true">
+                <comment>Hora de arqueo</comment>
+            </column>
+        </property>
+        <property name="horapos" type="string">
+            <column name="HORAPOS" length="6" not-null="true">
+                <comment>HORA DEL CIERRE DE POS</comment>
+            </column>
+        </property>
+        <property name="fechapos" type="string">
+            <column name="FECHAPOS" length="8" not-null="true">
+                <comment>FECHA DEL CIERRE (mmddyyyy)</comment>
+            </column>
+        </property>
+        <property name="referencia" type="string">
+            <column name="REFERENCIA" length="12" not-null="true">
+                <comment>referencia de la trans</comment>
+            </column>
+        </property>
+        <property name="autorizacion" type="string">
+            <column name="AUTORIZACION" length="6" not-null="true">
+                <comment>NUMERO DE LOTE</comment>
+            </column>
+        </property>
+        <property name="purshamount" type="string">
+            <column name="PURSHAMOUNT" length="12" not-null="true">
+                <comment>MONTO DE VENTAS DEL CIERRE</comment>
+            </column>
+        </property>
+        <property name="retamount" type="string">
+            <column name="RETAMOUNT" length="12" not-null="true">
+                <comment>MONTO DE DEVOLUCIONES EN UN CIERRE</comment>
+            </column>
+        </property>
+        <property name="purshtrans" type="string">
+            <column name="PURSHTRANS" length="6" not-null="true">
+                <comment>CANTIDAD DE VENTAS EN UN CIERRE</comment>
+            </column>
+        </property>
+        <property name="rettrans" type="string">
+            <column name="RETTRANS" length="6" not-null="true">
+                <comment>CANTIDAD DE DEVOLUCIONES EN UN CIERRE</comment>
+            </column>
+        </property>
+        <property name="systraceno" type="string">
+            <column name="SYSTRACENO" length="6" not-null="true">
+                <comment>NUMERO DE TRANS DEL SIST</comment>
+            </column>
+        </property>
+        <property name="termId" type="string">
+            <column name="TERM_ID" length="8" not-null="true">
+                <comment>IDENTIFICADOR DE TERMINAL</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

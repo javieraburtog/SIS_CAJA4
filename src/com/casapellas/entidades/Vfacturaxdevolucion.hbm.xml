@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 7, 2010 3:57:09 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vfacturaxdevolucion" table="VFACTURAXDEVOLUCION" >
+        <comment>V. Facturas por devoluciones procesadas</comment>
+        <composite-id name="id" class="com.casapellas.entidades.VfacturaxdevolucionId">
+            <key-property name="nodev" type="java.lang.Integer">
+                <column name="NODEV" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipodev" type="string">
+                <column name="TIPODEV" length="2" />
+            </key-property>
+            <key-property name="codcli" type="java.lang.Integer">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nomcli" type="string">
+                <column name="NOMCLI" length="40" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="unineg" type="string">
+                <column name="UNINEG" length="30" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="nomsuc" type="string">
+                <column name="NOMSUC" length="30" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="nomcomp" type="string">
+                <column name="NOMCOMP" length="30" />
+            </key-property>
+            <key-property name="subtotal" type="java.lang.Long">
+                <column name="SUBTOTAL" precision="15" scale="0" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="tipopago" type="string">
+                <column name="TIPOPAGO" length="3" />
+            </key-property>
+            <key-property name="fechagrab" type="java.lang.Integer">
+                <column name="FECHAGRAB" precision="6" scale="0" />
+            </key-property>
+            <key-property name="hechopor" type="string">
+                <column name="HECHOPOR" length="15" />
+            </key-property>
+            <key-property name="pantalla" type="string">
+                <column name="PANTALLA" length="15" />
+            </key-property>
+            <key-property name="hora" type="java.lang.Integer">
+                <column name="HORA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="1" />
+            </key-property>
+            <key-property name="nodoco" type="int">
+                <column name="NODOCO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipodoco" type="string">
+                <column name="TIPODOCO" length="2" />
+            </key-property>
+            <key-property name="total" type="long">
+                <column name="TOTAL" precision="15" scale="0" />
+            </key-property>
+            <key-property name="sdlocn" type="string">
+                <column name="SDLOCN" length="20" />
+            </key-property>
+            <key-property name="fechadev" type="java.lang.Integer">
+                <column name="FECHADEV" precision="6" scale="0" />
+            </key-property>
+            <key-property name="fechafact" type="java.lang.Integer">
+                <column name="FECHAFACT" precision="6" scale="0" />
+            </key-property>
+            <key-property name="nofact" type="java.lang.Integer">
+                <column name="NOFACT" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipofact" type="string">
+                <column name="TIPOFACT" length="2" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="3" />
+            </key-property>
+            <key-property name="subtotalf" type="long">
+                <column name="SUBTOTALF" precision="15" scale="0" />
+            </key-property>
+            <key-property name="totalf" type="long">
+                <column name="TOTALF" precision="15" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

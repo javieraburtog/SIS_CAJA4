@@ -1,0 +1,152 @@
+/*=======================================================*/
+/*                      Claymation Theme                      */ 
+/*=======================================================*/
+.igGrid {
+	background-color: white;
+	border: 1px solid #888888;  /* dark green border*/
+	border-collapse: collapse;
+	empty-cells: show;
+	color:#000000;
+	line-height: 20px;
+}
+
+.igGridHeader {	
+	background-image:url(webgrid/igwg_gridheader.gif);
+	background-position: top;
+	font-weight: bold;
+	padding: 5px 10px 5px 10px;	
+	color : #000000;
+	white-space: nowrap;
+	
+}
+.igGridFooter {
+	border-top: 1px solid #E5E5E5;
+	white-space: nowrap;
+	background-color: white;
+}
+.igGridColumn {
+	border-top: 1px solid #E5E5E5;
+	padding: 5px 10px 5px 10px;
+	white-space: nowrap;
+}
+.igGridColumnCaret {
+	background-color: #00bfff;
+	width: 2px;
+}
+.igGridColumnHeader {
+    background-image: url(webgrid/igwg_gridsubheader.gif);
+    background-position: top;
+	padding: 5px 10px 5px 10px;	
+	padding: 5px 10px 5px 10px;	
+	font-weight: bold;
+	text-align: left;
+	color : #000000;
+	white-space: nowrap;
+}
+
+.igGridColumnHeader A IMG
+{
+vertical-align: middle;
+}
+
+.igGridColumnHeader  A {
+	color: #000000;
+	text-decoration:none;
+}
+
+.igGridColumnHeader  A:hover {
+	color: #00bfff;
+	text-decoration:underline;
+}
+.igGridColumnHeader A LABEL {
+	cursor:pointer;
+}
+.igGridColumnFooter {
+	border-top: 1px solid #E5E5E5;
+	white-space: nowrap;
+}
+.igGridRow {
+
+}
+.igGridRowAlternate {
+	background-color: #F5F5F5;
+}
+.igGridRowHover {	
+	background-image:url(webgrid/igwg_rowhover.gif);
+	background-position:center;
+	color: #000000;
+}
+.igGridRowSelected {
+	background-color: #cccccc;
+	color: #000000;
+}
+.igGridRowExpanded {
+	padding: 0px 0px 0px 32px;
+}
+.igGridCell {
+}
+.igGridCellSelected {
+	background-color: #cccccc;
+	color: #000000;
+	border-bottom: 1px solid silver;
+	padding: 5px 10px 5px 10px;
+	white-space: nowrap;
+}
+.igGridCellEdit {
+	font-family:Verdana,Geneva,Arial,Helvetica,Sans-Serif;
+	font-size:8pt;
+	padding: 4px 8px 4px 8px;
+	color: #000000;;
+}
+.igGridCellActive {
+	background-color: #cccccc;
+	color: #00bfff;
+}
+.igGridColumnActive {
+	background-color: #cccccc;
+	color: #00bfff;
+}
+.igGridRowActive {
+	background-color: #cccccc;
+}
+
+.igGrid_AgPanel {
+	display: block;
+	background-image:url(webgrid/igwg_agbg.gif);
+	padding: 5px;
+	color: #000000;	
+}
+.igGridColumnFilter {
+	
+    background-color: #DBDBDB;
+    background-position: top;
+	padding:0px 10px 0px 10px;	
+	height:5px;
+	font-weight: bold;
+	text-align: left;
+	color : #000000;
+	white-space: nowrap;
+}
+.igGridColumnFilterButton { 
+	height:20px;
+	width:13px;
+	padding-right:10px;
+	border:none;
+	background-color:transparent;
+}
+.igGridFilterDropDownItem {
+	font-size:11px;
+	font-family: Verdana;
+	padding:1px 3px 1px 3px;
+	cursor: default;
+}
+.igGridFilterDropDown {
+	background-color:#FCFCFC;
+	border:solid 1px #ACACAC;
+	overflow: auto;
+	width: 150px;
+	max-height: 150px;
+	height: auto !important;
+	height: 150px;
+}
+

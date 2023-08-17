@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/07/2009 11:36:12 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Usuario" table="USUARIO">
+        <comment>USUARIOS CON ACCESO A APLICACIONES</comment>
+        <id name="coduser" type="string">
+            <column name="CODUSER" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="tipuser" type="string">
+            <column name="TIPUSER" length="10" not-null="true">
+                <comment>TIPO DE USUARIOS: EMPLEADO, CLIENTE, ETC</comment>
+            </column>
+        </property>
+        <property name="codreg" type="java.lang.Integer">
+            <column name="CODREG" precision="7" scale="0">
+                <comment>CODIGO DE EMPLEADO, CLIENTE</comment>
+            </column>
+        </property>
+        <property name="login" type="string">
+            <column name="LOGIN" length="32" not-null="true" unique="true">
+                <comment>USERNAME DE ISERIES</comment>
+            </column>
+        </property>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1">
+                <comment>USUARIO ACTIVO/INACTIVO</comment>
+            </column>
+        </property>
+        <property name="pswd" type="string">
+            <column name="PSWD" length="20">
+                <comment>CLAVE</comment>
+            </column>
+        </property>
+        <property name="fregistro" type="timestamp">
+            <column name="FREGISTRO" length="26" not-null="true">
+                <comment>FECHA/HORA DE INGRESO</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 29/10/2009 09:02:09 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Recbatch" table="RECBATCH">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.RecbatchId">
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="montoapl" type="big_decimal">
+                <column name="MONTOAPL" precision="8" />
+            </key-property>
+            <key-property name="montorec" type="big_decimal">
+                <column name="MONTOREC" precision="8" />
+            </key-property>
+            <key-property name="concepto" type="string">
+                <column name="CONCEPTO" length="250" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="cliente" type="string">
+                <column name="CLIENTE" length="50" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cajero" type="string">
+                <column name="CAJERO" length="50" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="numrecm" type="int">
+                <column name="NUMRECM" precision="8" scale="0" />
+            </key-property>
+            <key-property name="recjde" type="int">
+                <column name="RECJDE" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="2" />
+            </key-property>
+            <key-property name="motivo" type="string">
+                <column name="MOTIVO" length="256" />
+            </key-property>
+            <key-property name="codusera" type="string">
+                <column name="CODUSERA" length="10" />
+            </key-property>
+            <key-property name="horamod" type="time">
+                <column name="HORAMOD" length="8" />
+            </key-property>
+            <key-property name="coduser" type="string">
+                <column name="CODUSER" length="10" />
+            </key-property>
+            <key-property name="nodoco" type="int">
+                <column name="NODOCO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipodoco" type="string">
+                <column name="TIPODOCO" length="3" />
+            </key-property>
+            <key-property name="nobatch" type="int">
+                <column name="NOBATCH" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

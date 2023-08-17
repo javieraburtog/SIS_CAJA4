@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-10-2012 02:02:53 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55diaven" table="F55DIAVEN">
+        <comment>Control de Intereses Pendientes de Generar en JDE</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55diavenId">
+            <key-property name="r3clase" type="string">
+                <column name="R3CLASE" length="2" />
+            </key-property>
+            <key-property name="r3tipoin" type="string">
+                <column name="R3TIPOIN" length="2" />
+            </key-property>
+            <key-property name="r3sucur" type="string">
+                <column name="R3SUCUR" length="5" />
+            </key-property>
+            <key-property name="r3coclte" type="int">
+                <column name="R3COCLTE" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r3rpmcu" type="string">
+                <column name="R3RPMCU" length="12" />
+            </key-property>
+            <key-property name="r3moneda" type="string">
+                <column name="R3MONEDA" length="3" />
+            </key-property>
+            <key-property name="r3tipdoc" type="string">
+                <column name="R3TIPDOC" length="2" />
+            </key-property>
+            <key-property name="r3numdoc" type="int">
+                <column name="R3NUMDOC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r3rpsfx" type="string">
+                <column name="R3RPSFX" length="3" />
+            </key-property>
+            <key-property name="r3nobatch" type="int">
+                <column name="R3NOBATCH" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r3diaven" type="int">
+                <column name="R3DIAVEN" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r3diapag" type="int">
+                <column name="R3DIAPAG" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r3diaapl" type="int">
+                <column name="R3DIAAPL" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r3diacal" type="int">
+                <column name="R3DIACAL" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r3mesapl" type="short">
+                <column name="R3MESAPL" precision="3" scale="0" />
+            </key-property>
+            <key-property name="r3intpagc" type="big_decimal">
+                <column name="R3INTPAGC" precision="15" />
+            </key-property>
+            <key-property name="r3intcalc" type="big_decimal">
+                <column name="R3INTCALC" precision="15" />
+            </key-property>
+            <key-property name="r3imppagc" type="big_decimal">
+                <column name="R3IMPPAGC" precision="15" />
+            </key-property>
+            <key-property name="r3impcalc" type="big_decimal">
+                <column name="R3IMPCALC" precision="15" />
+            </key-property>
+            <key-property name="r3intpagu" type="big_decimal">
+                <column name="R3INTPAGU" precision="15" />
+            </key-property>
+            <key-property name="r3intcalu" type="big_decimal">
+                <column name="R3INTCALU" precision="15" />
+            </key-property>
+            <key-property name="r3imppagu" type="big_decimal">
+                <column name="R3IMPPAGU" precision="15" />
+            </key-property>
+            <key-property name="r3impcalu" type="big_decimal">
+                <column name="R3IMPCALU" precision="15" />
+            </key-property>
+            <key-property name="r3usuario" type="string">
+                <column name="R3USUARIO" length="10" />
+            </key-property>
+            <key-property name="r3feccre" type="int">
+                <column name="R3FECCRE" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r3progg" type="string">
+                <column name="R3PROGG" length="10" />
+            </key-property>
+            <key-property name="r3fechg" type="int">
+                <column name="R3FECHG" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r3horag" type="int">
+                <column name="R3HORAG" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r3usera" type="string">
+                <column name="R3USERA" length="10" />
+            </key-property>
+            <key-property name="r3proga" type="string">
+                <column name="R3PROGA" length="10" />
+            </key-property>
+            <key-property name="r3fecha" type="int">
+                <column name="R3FECHA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r3horaa" type="int">
+                <column name="R3HORAA" precision="6" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

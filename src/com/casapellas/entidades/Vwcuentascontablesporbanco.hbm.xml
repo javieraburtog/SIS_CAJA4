@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 9, 2016 2:43:42 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+
+	<class name="com.casapellas.entidades.Vwcuentascontablesporbanco"
+		table="VWCUENTASCONTABLESPORBANCO">
+		<id name="rowid" type="int">
+			<column name="rowid" />
+			<generator class="identity" />
+		</id>
+		
+		<property name="gmaid" type="string">
+			<column name="gmaid" length="30" />
+		</property>
+		
+		<property name="codb" type="int">
+			<column name="codb" />
+		</property>
+		<property name="banco" type="string">
+			<column name="BANCO" length="30" />
+		</property>
+		<property name="estado" type="string">
+			<column name="ESTADO" length="1" />
+		</property>
+		<property name="conciliar" type="boolean">
+			<column name="CONCILIAR" precision="1" scale="0" />
+		</property>
+		<property name="conciliacion" type="string">
+			<column name="CONCILIACION" length="19" />
+		</property>
+		<property name="cuentacontable" type="string">
+			<column name="CUENTACONTABLE" length="28" />
+		</property>
+		<property name="d3rp01" type="string">
+			<column name="D3RP01" length="3" />
+		</property>
+		<property name="d3crcd" type="string">
+			<column name="D3CRCD" length="3" />
+		</property>
+		<property name="d3mcu" type="string">
+			<column name="D3MCU" length="12" />
+		</property>
+		<property name="d3obj" type="string">
+			<column name="D3OBJ" length="6" />
+		</property>
+		<property name="d3sub" type="string">
+			<column name="D3SUB" length="8" />
+		</property>
+		<property name="gmco" type="string">
+			<column name="GMCO" length="5" />
+		</property>
+		<property name="nombrecuentacontable" type="string">
+			<column name="NOMBRECUENTACONTABLE" length="30" />
+		</property>
+
+		<property name="conciliarxcompania" type="int">
+			<column name="conciliarxcompania" />
+		</property>
+		<property name="conciliacionxcomp" type="string">
+			<column name="conciliacionxcomp" length="25" />
+		</property>
+
+
+	</class>
+</hibernate-mapping>

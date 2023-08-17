@@ -1,0 +1,159 @@
+/*=======================================================*/
+/*                     Pear Theme                         */ 
+/*=======================================================*/
+/* 							STACKBAR					 */
+/*=======================================================*/
+/* default look and feel of the stackBar */ 
+.igStackbar {
+	border: 1px solid #636A4C;
+	background-color: #ffffff;
+}
+
+/* default look and feel of the content area of the stackbarGroup */ 
+.igStackbarGroupContent {
+	background-color: #FFFFF0;
+	border-bottom: 1px solid #636A4C;
+	padding: 10px;
+
+}
+
+.sampleLinks A, .samplesLinks A:Visited {
+	color:#000000;
+	text-decoration:none;
+	display:block;
+}
+
+.sampleLinks A:Hover, .samplesLinks A:Visited:Hover {
+	color: #5E8D00;
+	text-decoration:underline;
+	display:block;
+}
+
+/* default look and feel of the header area of the group whenever collapsed */ 
+.igStackbarGroup {
+	background-color: #BBD17E;
+	border-bottom: 1px solid #636A4C;
+	color: #000000;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-decoration: none;
+
+}
+
+/* hover look and feel of the header area of the group whenever collapsed and hovered */ 
+ .igStackbarGroupHover {
+	background-color: #636a4c;
+	border-bottom: 1px solid #636A4C;
+	color: white;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-decoration: none;
+
+ }
+
+/* default look and feel of the header area of the group whenever expanded */ 
+.igStackbarGroupExpanded {
+	background-color: #BBD17E;
+	border-bottom: 1px solid #636A4C;
+	color: #000000;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-decoration: none;
+
+}
+
+/* hover look and feel of the header area of the group whenever expanded and hovered */ 
+ .igStackbarGroupExpandedHover {
+	background-color: #636a4c;
+	border-bottom: 1px solid #636A4C;
+	color: white;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-decoration: none;
+
+ }
+
+/*=======================================================*/
+/* 							SIDEBAR						 */
+/*=======================================================*/
+/* default look and feel */ 
+.igSidebar {
+	background-color: #FFFFF0;
+	padding: 10px;
+	border: 1px solid #636A4C;
+}
+
+/* default look and feel of the content area */ 
+.igSidebarGroupContent {
+	background-color: #ffffff;
+	padding: 10px;
+}
+
+/* default look and feel of the header area of the group whenever collapsed */ 
+.igSidebarGroup {
+	background-color: #BBD17E;
+	border: 1px solid #636A4C;
+	color: #000000;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-decoration: none;
+}
+
+/* hover look and feel of the header area of the group whenever collapsed and hovered */ 
+ .igSidebarGroupHover {
+	background-color: #636a4c;
+	border: 1px solid #636A4C;
+	color: white;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-decoration: none;
+ }
+
+/* default look and feel of the header area of the group whenever expanded */ 
+.igSidebarGroupExpanded {
+	background-color: #BBD17E;
+	border: 1px solid #636A4C;
+	color: #000000;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-decoration: none;
+}
+
+/* hover look and feel of the header area of the group whenever expanded and hovered */ 
+ .igSidebarGroupExpandedHover {
+	background-color: #1F58C8;
+	border: 1px solid #636A4C;
+	color: white;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-decoration: none;	
+ }
+
+.igSidebarBetweenGroup {
+	padding-top: 15px;
+}
+

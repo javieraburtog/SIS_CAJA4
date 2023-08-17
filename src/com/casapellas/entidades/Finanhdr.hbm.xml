@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 02/03/2010 12:11:57 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Finanhdr" table="FINANHDR">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.FinanhdrId">
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="linea" type="string">
+                <column name="LINEA" length="2" />
+            </key-property>
+            <key-property name="nomlinea" type="string">
+                <column name="NOMLINEA" length="30" />
+            </key-property>
+            <key-property name="nosol" type="int">
+                <column name="NOSOL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiposol" type="string">
+                <column name="TIPOSOL" length="5" />
+            </key-property>
+            <key-property name="fecha" type="timestamp">
+                <column name="FECHA" length="26" />
+            </key-property>
+            <key-property name="recibido" type="timestamp">
+                <column name="RECIBIDO" length="26" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nomcli" type="string">
+                <column name="NOMCLI" length="40" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="5" />
+            </key-property>
+            <key-property name="atag" type="big_decimal">
+                <column name="ATAG" precision="31" />
+            </key-property>
+            <key-property name="ataap" type="big_decimal">
+                <column name="ATAAP" precision="31" />
+            </key-property>
+            <key-property name="atprid" type="big_decimal">
+                <column name="ATPRID" precision="31" />
+            </key-property>
+            <key-property name="atintd" type="big_decimal">
+                <column name="ATINTD" precision="31" />
+            </key-property>
+            <key-property name="atstam" type="big_decimal">
+                <column name="ATSTAM" precision="31" />
+            </key-property>
+            <key-property name="atacr" type="big_decimal">
+                <column name="ATACR" precision="31" />
+            </key-property>
+            <key-property name="atfap" type="big_decimal">
+                <column name="ATFAP" precision="31" />
+            </key-property>
+            <key-property name="atprif" type="big_decimal">
+                <column name="ATPRIF" precision="31" />
+            </key-property>
+            <key-property name="atintf" type="big_decimal">
+                <column name="ATINTF" precision="31" />
+            </key-property>
+            <key-property name="atctam" type="big_decimal">
+                <column name="ATCTAM" precision="31" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="10" />
+            </key-property>
+            <key-property name="montopend" type="big_decimal">
+                <column name="MONTOPEND" precision="10" />
+            </key-property>
+            <key-property name="principal" type="big_decimal">
+                <column name="PRINCIPAL" precision="10" />
+            </key-property>
+            <key-property name="interes" type="big_decimal">
+                <column name="INTERES" precision="10" />
+            </key-property>
+            <key-property name="impuesto" type="big_decimal">
+                <column name="IMPUESTO" precision="10" />
+            </key-property>
+            <key-property name="mora" type="big_decimal">
+                <column name="MORA" precision="31" />
+            </key-property>
+            <key-property name="atexr1" type="string">
+                <column name="ATEXR1" length="2" />
+            </key-property>
+            <key-property name="attxa1" type="string">
+                <column name="ATTXA1" length="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

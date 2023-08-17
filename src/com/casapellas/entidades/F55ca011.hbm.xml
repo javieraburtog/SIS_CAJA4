@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 4/02/2009 17:10:08 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca011" table="F55CA011">
+        <comment>'Maestro de cuenta por caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca011Id">
+            <key-property name="c1id" type="int">
+                <column name="C1ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c1rp01" type="string">
+                <column name="C1RP01" length="3" />
+            </key-property>
+            <key-property name="c1crcd" type="string">
+                <column name="C1CRCD" length="3" />
+            </key-property>
+            <key-property name="c1ryin" type="char">
+                <column name="C1RYIN" length="1" />
+            </key-property>
+            <key-property name="c1mcu" type="string">
+                <column name="C1MCU" length="12" />
+            </key-property>
+            <key-property name="c1obj" type="string">
+                <column name="C1OBJ" length="6" />
+            </key-property>
+            <key-property name="c1sub" type="string">
+                <column name="C1SUB" length="8" />
+            </key-property>
+            <key-property name="c1stat" type="char">
+                <column name="C1STAT" length="1" />
+            </key-property>
+            <key-property name="c1mcuf" type="string">
+                <column name="C1MCUF" length="12" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

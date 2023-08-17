@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 08-25-2009 10:16:19 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Numcaja" table="NUMCAJA" >
+        <comment>Numeraciones utilizadas en el m&#243;dulo de caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.NumcajaId">
+            <key-property name="codnumeracion" type="string">
+                <column name="CODNUMERACION" length="10" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+        </composite-id>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="30">
+                <comment>Descripci&#243;n de la Numeraci&#243;n</comment>
+            </column>
+        </property>
+        <property name="noinicial" type="int">
+            <column name="NOINICIAL" precision="8" scale="0" not-null="true">
+                <comment>Valor inicial de la numeraci&#243;n</comment>
+            </column>
+        </property>
+        <property name="nosiguiente" type="int">
+            <column name="NOSIGUIENTE" precision="8" scale="0" not-null="true">
+                <comment>Valor pr&#243;ximo a utilizarse</comment>
+            </column>
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="1" not-null="true">
+                <comment>Estado de la numeraci&#243;n, 1- activa, 0 - inactiva</comment>
+            </column>
+        </property>
+        <property name="usuariocreacion" type="string">
+            <column name="USUARIOCREACION" length="10" not-null="true">
+                <comment>Usuario que define la numeracion</comment>
+            </column>
+        </property>
+        <property name="usuariomodificacion" type="string">
+            <column name="USUARIOMODIFICACION" length="10">
+                <comment>Usuario que modifica la numeracion</comment>
+            </column>
+        </property>
+        <property name="fechacreacion" type="timestamp">
+            <column name="FECHACREACION" length="26" not-null="true">
+                <comment>Fecha en que se crea la numeracion</comment>
+            </column>
+        </property>
+        <property name="fechamodificacion" type="timestamp">
+            <column name="FECHAMODIFICACION" length="26">
+                <comment>Fecha en que se modifica la numeracion</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

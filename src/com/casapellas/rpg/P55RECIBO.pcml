@@ -1,0 +1,13 @@
+<pcml version="4.0">
+    <program name="P55RECIBO"
+        parseorder="IDCAJA NORECIBO TIPORECIBO IDEMPRESA IDSUCURSAL RESULTADO COMANDO"
+        path="/QSYS.LIB/%LIBL%.LIB/P55RECIBO.PGM" threadsafe="false">
+        <data length="8" name="IDCAJA" precision="0" type="packed" usage="inputoutput"/>
+        <data length="8" name="NORECIBO" precision="0" type="packed" usage="inputoutput"/>
+        <data length="3" name="TIPORECIBO" type="char" usage="inputoutput"/>
+        <data length="10" name="IDEMPRESA" type="char" usage="inputoutput"/>
+        <data length="5" name="IDSUCURSAL" type="char" usage="inputoutput"/>
+        <data length="1" name="RESULTADO" type="char" usage="inputoutput"/>
+        <data length="1024" name="COMANDO" type="char" usage="inputoutput"/>
+    </program>
+</pcml>

@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?><web-app metadata-complete="true" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <display-name>GCPMCAJA</display-name>
+    <context-param>
+        <param-name>crystal_image_uri</param-name>
+        <param-value>crystalreportviewers</param-value>
+    </context-param>
+    <context-param>
+        <param-name>crystal_image_use_relative</param-name>
+        <param-value>webapp</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.NUMBER_OF_VIEWS_IN_SESSION</param-name>
+        <param-value>1</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.NUMBER_OF_VIEWS_IN_LOGICAL_VIEW_IN_SESSION</param-name>
+        <param-value>1</param-value>
+    </context-param>
+    <context-param>
+        <description>The location where state information is saved.
+			Valid values are 'server' (typically saved in HttpSession) and 'client' (typically
+			saved as a hidden field in the form.
+			Default is server.</description>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
+    </context-param>
+    <context-param>
+        <description>Comma-delimited list of context-relative resource paths under which the JSF implementation
+will look for application configuration resources, before loading a configuration resource
+named /WEB-INF/facesconfig.xml (if such a resource exists).</description>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>/WEB-INF/faces-config.xml</param-value>
+    </context-param>
+    <context-param>
+        <description>The default suffix for extension-mapped resources that contain JSF components.
+Default is '.jsp'.</description>
+        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+        <param-value>.jsp</param-value>
+    </context-param>
+    <context-param>
+        <description>Monitors Faces JSP files for modifications and synchronizes a running server with
+the changes without restarting the server. If this parameter is set to false or
+removed from the deployment descriptor, any changes made to Faces JSP files may
+not be seen by the server until it is restarted. This parameter is usually set
+to true while the Faces JSP files are being developed and debugged in order to
+improve the performance of the development environment.</description>
+        <param-name>com.ibm.ws.jsf.JSP_UPDATE_CHECK</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>Load JSF runtime when the application server starts up. If this parameter is set to false or removed,
+JSF runtime will be loaded and initialized when the first JSF request is processed.
+This may disable custom JSF extensions, such as factories defined in the project.</description>
+        <param-name>com.ibm.ws.jsf.LOAD_FACES_CONFIG_AT_STARTUP</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>If set to true disables use of MultipartFacesContext, allowing underlying implementations to be used.
+MultipartFacesContext is required when the FileUpload component is used, and can be disabled otherwise.</description>
+        <param-name>com.ibm.faces.DISABLE_JWL_MULTIPART_CONTEXT</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>Value, in milliseconds, to be used for Expires header for resources served by the JavaScript Resource Servlet.
+Default is never (31536000000 milliseconds or 1 year).</description>
+        <param-name>com.ibm.faces.RESOURCE_EXPIRE_MS</param-name>
+        <param-value>31536000000</param-value>
+    </context-param>
+    <context-param>
+        <description>Defines the strictness of the conversion when converting from a string to a date.
+The higher the value, the more exactly the value must conform to the format.
+If 0 (liberal), all 'literals' are ignored while parsing a value, mis-ordered components will be rearranged,
+any missing component is supplied using the current datetime, misspellings and incomplete spellings are allowed
+(to the extent that they can be evaluated), 'E' and other non-unique components are ignored.
+If 1 (strict), all 'literals' are ignored while parsing a value, any missing component is supplied using the current
+datetime, misspellings and incomplete spellings are allowed (to the extent that they can be evaluated),
+'E' and other non-unique components are ignored. For example if the pattern is MMMM dd, yyyy a user can enter 'Feb/02/04'
+and it will be parsed as February 02, 2004.
+If 2 (very strict), an exact match is required except long month names can be 'shortened' to the minimum number of unique
+characters and 'E' and other non-unique components are ignored. Literals must match exactly.
+Default is 1.</description>
+        <param-name>com.ibm.faces.DATETIME_ASSIST_STRICTNESS</param-name>
+        <param-value>1</param-value>
+    </context-param>
+    <context-param>
+        <description>Defines the strictness of the conversion when converting from a string to a number.
+The higher the value, the more exactly the value must conform to the pattern.
+For numbers, currently strictness levels of 0 and 1 are equivalent. If the strictness is 2,
+if number is signed, the sign must be provided (otherwise it's assumed positive).
+Default is 1.</description>
+        <param-name>com.ibm.faces.NUMBER_ASSIST_STRICTNESS</param-name>
+        <param-value>1</param-value>
+    </context-param>
+    <context-param>
+        <description>Defines the path for resources such as JavaScript libraries and images.
+The value can be either:
+1. An empty string. Context path of the current application will be used.
+2. A path string. Example: /project13. A number. Specifies the number of nodes to use from the context path starting from the left.
+Example: With a value of 1 if the context path is /screen/faces/SSID110267549/RID1102676
+the path will be evaluated as /screen
+Default is an empty string.</description>
+        <param-name>com.ibm.faces.USE_UNENCODED_CONTEXT_PATH</param-name>
+        <param-value/>
+    </context-param>
+    <context-param>
+        <description>Sets a custom url-pattern for the JavaScript Resource servlet.
+Should match servlet mapping setting for the JavaScript Resource servlet. If the default default mapping
+value '/.ibmjsfres/*' is modified, this context-param should also be modified.</description>
+        <param-name>com.ibm.faces.JS_RESOURCE_SERVLET_URL_PATTERN</param-name>
+        <param-value>/.ibmjsfres/*</param-value>
+    </context-param>
+    <context-param>
+        <description>If set to true, forces JavaScript Resource Servlet to cache all resources on the server.
+This can be useful when client-side caching is turned off.</description>
+        <param-name>com.ibm.faces.JS_RESOURCE_SERVLET_CACHE</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>Sets a custom charset mapping properties file similar to converter.properties in WAS.</description>
+        <param-name>com.ibm.faces.ENCODING_MAPPING</param-name>
+        <param-value>converter.properties</param-value>
+    </context-param>
+    <context-param>
+        <description>If set to true, the entire JavaScript library, containing code for all components, will be included
+in the generated pages as one file. If set to false or removed, multiple smaller JavaScript files will be
+included, depending on the components used on the page.Default is false.</description>
+        <param-name>com.ibm.faces.USE_HXCLIENT_FULL</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>Specifies maximum size for the request content processed by MultipartExternalContext.
+Can be used to prevent large files from being uploaded.
+Takes an integer value, in bytes. 0 or empty means there is no limit.
+Default is no limit.</description>
+        <param-name>com.ibm.faces.MAX_REQUEST_CONTENT_SIZE</param-name>
+        <param-value>0</param-value>
+    </context-param>
+    <context-param>
+        <description>Number of Views to be stored in the session when Enhanced State Saving is being used.
+Default is 15.</description>
+        <param-name>com.ibm.faces.ENHANCED_SERVER_STATE_SAVING_SESSION_STORED_VIEWS</param-name>
+        <param-value>15</param-value>
+    </context-param>
+    <context-param>
+        <description>If false, client data will not be encoded, allowing multiple portlets on a page to
+share the same client data model. By default, client data will be encoded, so any value other than
+"false", or the absence of the parameter, will result in client data being encoded.
+This also affects using Page Data with the Chart or Data Tree. By default
+Page Data is encoded. Setting this value to "false" will also unencode any Page Data that is being used
+with either a Chart or a Data Tree.</description>
+        <param-name>com.ibm.faces.ENCODE_DATA</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>When using Ajax components with Websphere Portal server 5.1 (versions 5.1.0.3 onwards), this value must be set to true.</description>
+        <param-name>com.ibm.faces.TURN_OFF_AJAX_PORTAL_60_PATH</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>If set to true while server-side state saving is being used, a serialized representation
+of the view is stored on the server. This allows for failover and sever clustering support.
+Default is false. This parameter is not available in JSF 1.0.</description>
+        <param-name>com.sun.faces.enableHighAvailability</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>If set to true while client-side state saving is being used, reduces the number of bytes
+sent to the client by compressing the state before it is encoded and written as a hidden field.
+Default is false. This parameter is not available in JSF 1.0.</description>
+        <param-name>com.sun.faces.COMPRESS_STATE</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <servlet>
+        <servlet-name>CrystalReportViewerServlet</servlet-name>
+        <servlet-class>com.crystaldecisions.report.web.viewer.CrystalReportViewerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TilesServet</servlet-name>
+        <servlet-class>org.apache.struts.tiles.TilesServlet</servlet-class>
+        <init-param>
+            <param-name>definitions-config</param-name>
+            <param-value>/WEB-INF/tiles-defs.xml</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>JavaScript Resource Servlet</servlet-name>
+        <servlet-class>com.ibm.faces.webapp.JSResourceServlet</servlet-class>
+        <load-on-startup>-1</load-on-startup>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>ExpXlsCnsTrans</display-name>
+        <servlet-name>ExpXlsCnsTrans</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.ExpXlsCnsTrans</servlet-class>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>SvltExpXlsDepsNc</display-name>
+        <servlet-name>SvltExpXlsDepsNc</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.SvltExpXlsDepsNc</servlet-class>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>SvltExpPdfMinutaDp</display-name>
+        <servlet-name>SvltExpPdfMinutaDp</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.SvltExpPdfMinutaDp</servlet-class>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>SvltReporteCartaCredomati</display-name>
+        <servlet-name>SvltReporteCartaCredomati</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltReporteCartaCredomati</servlet-class>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>SvltExpXlsTcIR</display-name>
+        <servlet-name>SvltExpXlsTcIR</servlet-name>
+        <servlet-class>com.casapellas.reportes.SvltExpXlsTcIR</servlet-class>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>SvltExportarExcelDonaciones</display-name>
+        <servlet-name>SvltExportarExcelDonaciones</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltExportarExcelDonaciones</servlet-class>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>SvltProgressBar</display-name>
+        <servlet-name>SvltProgressBar</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltProgressBar</servlet-class>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>SvltReporteConsolidadoDepositos</display-name>
+        <servlet-name>SvltReporteConsolidadoDepositos</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltReporteConsolidadoDepositos</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>svltExcepcionConfirmacion</display-name>
+        <servlet-name>svltExcepcionConfirmacion</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.servlet.svltExcepcionConfirmacion</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>svltProcesarAjuste</display-name>
+        <servlet-name>svltProcesarAjuste</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.servlet.svltProcesarAjuste</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>svltConfiguracionAjuste</display-name>
+        <servlet-name>svltConfiguracionAjuste</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.servlet.svltConfiguracionAjuste</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>svltRegistrarAjuste</display-name>
+        <servlet-name>svltRegistrarAjuste</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.servlet.svltRegistrarAjuste</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>svltDeshacerAjuste</display-name>
+        <servlet-name>svltDeshacerAjuste</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.servlet.svltDeshacerAjuste</servlet-class>
+    </servlet>
+    <servlet>
+        <description/>
+        <display-name>SvltExportarPropuestaAjustePDF</display-name>
+        <servlet-name>SvltExportarPropuestaAjustePDF</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltExportarPropuestaAjustePDF</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>SvltExportarExcelConsultaCuentas</display-name>
+        <servlet-name>SvltExportarExcelConsultaCuentas</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltExportarExcelConsultaCuentas</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>SvltExportarXlsRptmcaja007</display-name>
+        <servlet-name>SvltExportarXlsRptmcaja007</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltExportarXlsRptmcaja007</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>SvltExportDocumentosCierre</display-name>
+        <servlet-name>SvltExportDocumentosCierre</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltExportDocumentosCierre</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>svltReporteCierres</display-name>
+        <servlet-name>svltReporteCierres</servlet-name>
+        <servlet-class>com.casapellas.servlet.svltReporteCierres</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.casapellas.conciliacion.servlet.svltRegistrarAjuste</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.servlet.svltRegistrarAjuste</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.casapellas.servlet.SvltProgressBar</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltProgressBar</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.casapellas.servlet.SvltExportDocumentosCierre</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltExportDocumentosCierre</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.casapellas.servlet.SvltReporteCierreSocketPos</servlet-name>
+        <servlet-class>com.casapellas.servlet.SvltReporteCierreSocketPos</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.casapellas.conciliacion.servlet.SvltConsolidadoDepositosOpcn</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.servlet.SvltConsolidadoDepositosOpcn</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CrystalReportViewerServlet</servlet-name>
+        <url-pattern>/CrystalReportViewerHandler</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltReporteCartaCredomati</servlet-name>
+        <url-pattern>/SvltReporteCartaCredomati</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.faces</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>JavaScript Resource Servlet</servlet-name>
+        <url-pattern>/.ibmjsfres/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExpXlsCnsTrans</servlet-name>
+        <url-pattern>/ExpXlsCnsTrans</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltExpXlsDepsNc</servlet-name>
+        <url-pattern>/SvltExpXlsDepsNc</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltExpPdfMinutaDp</servlet-name>
+        <url-pattern>/SvltExpPdfMinutaDp</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltExpXlsTcIR</servlet-name>
+        <url-pattern>/SvltExpXlsTcIR</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltExportarExcelDonaciones</servlet-name>
+        <url-pattern>/SvltExportarExcelDonaciones</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SvltProgressBar</servlet-name>
+        <url-pattern>/SvltProgressBar</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SvltReporteConsolidadoDepositos</servlet-name>
+        <url-pattern>/SvltReporteConsolidadoDepositos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>svltExcepcionConfirmacion</servlet-name>
+        <url-pattern>/svltECMI</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>svltProcesarAjuste</servlet-name>
+        <url-pattern>/svltPA</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>svltConfiguracionAjuste</servlet-name>
+        <url-pattern>/svltCA</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>svltRegistrarAjuste</servlet-name>
+        <url-pattern>/svltRA</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>com.casapellas.conciliacion.servlet.svltRegistrarAjuste</servlet-name>
+        <url-pattern>/svltRegistrarAjuste</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>svltDeshacerAjuste</servlet-name>
+        <url-pattern>/svltRLA</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltExportarPropuestaAjustePDF</servlet-name>
+        <url-pattern>/SvltExportarPropuestaAjustePDF</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltExportarExcelConsultaCuentas</servlet-name>
+        <url-pattern>/SvltExportarExcelConsultaCuentas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltExportarXlsRptmcaja007</servlet-name>
+        <url-pattern>/SvltExportarXlsRptmcaja007</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SvltExportDocumentosCierre</servlet-name>
+        <url-pattern>/SvltExportDocumentosCierre</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>svltReporteCierres</servlet-name>
+        <url-pattern>/svltReporteCierres</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>com.casapellas.servlet.SvltReporteCierreSocketPos</servlet-name>
+        <url-pattern>/SvltReporteCierreSocketPos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>com.casapellas.conciliacion.servlet.SvltConsolidadoDepositosOpcn</servlet-name>
+        <url-pattern>/SvltConsolidadoDepositosOpcn</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>login.faces</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 13, 2016 8:48:29 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.conciliacion.entidades.Vf0911" table="VF0911" schema="GCPMCAJA">
+        <composite-id name="id" class="com.casapellas.conciliacion.entidades.Vf0911Id">
+            <key-property name="glaid" type="string">
+                <column name="GLAID" length="8" />
+            </key-property>
+            <key-property name="glaa" type="long">
+                <column name="GLAA" precision="15" scale="0" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="15" />
+            </key-property>
+            <key-property name="glcrcd" type="string">
+                <column name="GLCRCD" length="3" />
+            </key-property>
+            <key-property name="glani" type="string">
+                <column name="GLANI" length="30" />
+            </key-property>
+            <key-property name="glmcu" type="string">
+                <column name="GLMCU" length="12" />
+            </key-property>
+            <key-property name="globj" type="string">
+                <column name="GLOBJ" length="12" />
+            </key-property>
+            <key-property name="glsub" type="string">
+                <column name="GLSUB" length="12" />
+            </key-property>
+            <key-property name="glsbl" type="string">
+                <column name="GLSBL" length="12" />
+            </key-property>
+            <key-property name="glicu" type="int">
+                <column name="GLICU" precision="8" scale="0" />
+            </key-property>
+            <key-property name="gldoc" type="int">
+                <column name="GLDOC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="glkco" type="string">
+                <column name="GLKCO" length="12" />
+            </key-property>
+            <key-property name="gldgj" type="int">
+                <column name="GLDGJ" precision="6" scale="0" />
+            </key-property>
+            <key-property name="glupmj" type="int">
+                <column name="GLUPMJ" precision="6" scale="0" />
+            </key-property>
+            <key-property name="glcrr" type="big_decimal">
+                <column name="GLCRR" precision="15" scale="7" />
+            </key-property>
+            <key-property name="glxa" type="string">
+                <column name="GLXA" length="50" />
+            </key-property>
+            <key-property name="glexr" type="string">
+                <column name="GLEXR" length="50" />
+            </key-property>
+            <key-property name="gltorg" type="string">
+                <column name="GLTORG" length="12" />
+            </key-property>
+            <key-property name="gldct" type="string">
+                <column name="GLDCT" length="3" />
+            </key-property>
+            <key-property name="glpost" type="string">
+                <column name="GLPOST" length="1" />
+            </key-property>
+            <key-property name="tipoCargo" type="string">
+                <column name="TIPO_CARGO" length="7" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="30" />
+            </key-property>
+            <key-property name="fechabatch" type="date">
+                <column name="FECHABATCH" length="10" />
+            </key-property>
+            <key-property name="fechamodbatch" type="date">
+                <column name="FECHAMODBATCH" length="10" />
+            </key-property>
+            <key-property name="nombrecuenta" type="string">
+                <column name="NOMBRECUENTA" length="50" />
+            </key-property>
+            <key-property name="programaorigen" type="string">
+                <column name="PROGRAMAORIGEN" length="15" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 27/02/2009 12:28:20 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Uneglinea" table="UNEGLINEA">
+        <comment>Vista de unidades de neg con lineas</comment>
+        <composite-id name="id" class="com.casapellas.entidades.UneglineaId">
+            <key-property name="mcmcu" type="string">
+                <column name="MCMCU" length="12" />
+            </key-property>
+            <key-property name="mcdl01" type="string">
+                <column name="MCDL01" length="30" />
+            </key-property>
+            <key-property name="drky" type="string">
+                <column name="DRKY" length="10" />
+            </key-property>
+            <key-property name="drdl01" type="string">
+                <column name="DRDL01" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

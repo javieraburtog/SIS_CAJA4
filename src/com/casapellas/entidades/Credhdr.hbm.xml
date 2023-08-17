@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 04-28-2010 03:27:53 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.Credhdr" table="CREDHDR">
+		<comment></comment>
+		<composite-id name="id" class="com.casapellas.entidades.CredhdrId">
+			<key-property name="tipofactura" type="string">
+				<column name="TIPOFACTURA" length="2" />
+			</key-property>
+			<key-property name="nofactura" type="int">
+				<column name="NOFACTURA" precision="8" scale="0" />
+			</key-property>
+			<key-property name="partida" type="string">
+				<column name="PARTIDA" length="3" />
+			</key-property>
+			<key-property name="codcli" type="int">
+				<column name="CODCLI" precision="8" scale="0" />
+			</key-property>
+			<key-property name="nomcli" type="string">
+				<column name="NOMCLI" length="40" />
+			</key-property>
+			<key-property name="codunineg" type="string">
+				<column name="CODUNINEG" length="12" />
+			</key-property>
+			<key-property name="unineg" type="string">
+				<column name="UNINEG" length="30" />
+			</key-property>
+			<key-property name="codsuc" type="string">
+				<column name="CODSUC" length="5" />
+			</key-property>
+			<key-property name="nomsuc" type="string">
+				<column name="NOMSUC" length="30" />
+			</key-property>
+			<key-property name="codcomp" type="string">
+				<column name="CODCOMP" length="3" />
+			</key-property>
+			<key-property name="nomcomp" type="string">
+				<column name="NOMCOMP" length="30" />
+			</key-property>
+			<key-property name="moneda" type="string">
+				<column name="MONEDA" length="3" />
+			</key-property>
+			<key-property name="tasa" type="big_decimal">
+				<column name="TASA" precision="15" scale="7" />
+			</key-property>
+			<key-property name="cpendiente" type="big_decimal">
+				<column name="CPENDIENTE" precision="12" />
+			</key-property>
+			<key-property name="dpendiente" type="big_decimal">
+				<column name="DPENDIENTE" precision="12" />
+			</key-property>
+			<key-property name="ctotal" type="big_decimal">
+				<column name="CTOTAL" precision="12" />
+			</key-property>
+			<key-property name="dtotal" type="big_decimal">
+				<column name="DTOTAL" precision="12" />
+			</key-property>
+			<key-property name="cimpuesto" type="big_decimal">
+				<column name="CIMPUESTO" precision="12" />
+			</key-property>
+			<key-property name="dimpuesto" type="big_decimal">
+				<column name="DIMPUESTO" precision="12" />
+			</key-property>
+			<key-property name="csubtotal" type="big_decimal">
+				<column name="CSUBTOTAL" precision="12" />
+			</key-property>
+			<key-property name="dsubtotal" type="big_decimal">
+				<column name="DSUBTOTAL" precision="12" />
+			</key-property>
+			<key-property name="monto" type="big_decimal">
+				<column name="MONTO" precision="10" />
+			</key-property>
+			<key-property name="montopend" type="big_decimal">
+				<column name="MONTOPEND" precision="12" />
+			</key-property>
+			<key-property name="subtotal" type="big_decimal">
+				<column name="SUBTOTAL" precision="12" />
+			</key-property>
+			<key-property name="impuesto" type="big_decimal">
+				<column name="IMPUESTO" precision="12" />
+			</key-property>
+			<key-property name="fecha" type="date">
+				<column name="FECHA" length="10" />
+			</key-property>
+			<key-property name="fechavenc" type="date">
+				<column name="FECHAVENC" length="10" />
+			</key-property>
+			<key-property name="compenslm" type="string">
+				<column name="COMPENSLM" length="4" />
+			</key-property>
+			<key-property name="tipopago" type="string">
+				<column name="TIPOPAGO" length="3" />
+			</key-property>
+			<key-property name="rpdivj" type="int">
+				<column name="RPDIVJ" precision="6" scale="0" />
+			</key-property>
+			<key-property name="rpddj" type="int">
+				<column name="RPDDJ" precision="6" scale="0" />
+			</key-property>
+			<key-property name="rppo" type="string">
+				<column name="RPPO" length="8" />
+			</key-property>
+			<key-property name="rpdcto" type="string">
+				<column name="RPDCTO" length="2" />
+			</key-property>
+
+
+			<key-property name="rpicu" type="int">
+				<column name="RPICU" precision="8" scale="0" />
+			</key-property>
+
+			<key-property name="rpicut" type="string">
+				<column name="rpicut" length="2" />
+			</key-property>
+
+			<key-property name="rpco" type="string">
+				<column name="rpco" length="5" />
+			</key-property>
+
+			<key-property name="rppa8" type="int">
+				<column name="rppa8" precision="8" scale="0" />
+			</key-property>
+
+			<key-property name="rppyr" type="int">
+				<column name="rppyr" precision="8" scale="0" />
+			</key-property>
+
+			<key-property name="rppst" type="string">
+				<column name="rppst" length="5" />
+			</key-property>
+
+			<key-property name="rpjcl" type="int">
+				<column name="RPJCL" precision="8" scale="0" />
+			</key-property>
+
+			<key-property name="rpbcrc" type="string">
+				<column name="rpbcrc" length="3" />
+			</key-property>
+
+			<key-property name="rpcrrm" type="string">
+				<column name="rpcrrm" length="1" />
+			</key-property>
+
+			<key-property name="rpdgj" type="int">
+				<column name="rpdgj" precision="6" scale="0" />
+			</key-property>
+
+			<key-property name="rpddnj" type="int">
+				<column name="rpddnj" precision="6" scale="0" />
+			</key-property>
+
+			<key-property name="rpaid" type="string">
+				<column name="rpaid" length="8" />
+			</key-property>
+
+			<key-property name="tasaoriginal" type="big_decimal">
+				<column name="TASAORIGINAL" precision="15" scale="7" />
+			</key-property>
+
+			<key-property name="lossAccountId" type="string">
+				<column name="lossAccountId" length="8" />
+			</key-property>
+
+			<key-property name="gainAccountId" type="string">
+				<column name="gainAccountId" length="8" />
+			</key-property>
+
+		</composite-id>
+	</class>
+</hibernate-mapping>

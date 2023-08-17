@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 13, 2014 3:24:15 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>  
+	<class name="com.casapellas.entidades.A03factco" table="A03FACTCO">
+		<composite-id name="id" class="com.casapellas.entidades.A03factcoId">
+			<key-property name="nofactura" type="int">
+				<column name="NOFACTURA" precision="8" scale="0" />
+			</key-property>
+			<key-property name="tipofactura" type="string">
+				<column name="TIPOFACTURA" length="2" />
+			</key-property>
+			<key-property name="coditem" type="string">
+				<column name="CODITEM" length="25" />
+			</key-property>
+			<key-property name="descitem" type="string">
+				<column name="DESCITEM" length="30" />
+			</key-property>
+			<key-property name="preciounit" type="long">
+				<column name="PRECIOUNIT" precision="15" scale="0" />
+			</key-property>
+			<key-property name="cant" type="long">
+				<column name="CANT" precision="15" scale="0" />
+			</key-property>
+			<key-property name="impuesto" type="string">
+				<column name="IMPUESTO" length="10" />
+			</key-property>
+			<key-property name="factor" type="int">
+				<column name="FACTOR" precision="7" scale="0" />
+			</key-property>
+			<key-property name="codunineg" type="string">
+				<column name="CODUNINEG" length="12" />
+			</key-property>
+			<key-property name="codsuc" type="string">
+				<column name="CODSUC" length="5" />
+			</key-property>
+			<key-property name="pcosto" type="big_decimal">
+				<column name="PCOSTO" precision="15" />
+			</key-property>
+			<key-property name="descuento" type="big_decimal">
+				<column name="DESCUENTO" precision="15" />
+			</key-property>
+			<key-property name="codcli" type="int">
+				<column name="CODCLI" precision="8" scale="0" />
+			</key-property>
+			<key-property name="fecha" type="int">
+				<column name="FECHA" precision="6" scale="0" />
+			</key-property>
+			<key-property name="lote" type="string">
+				<column name="LOTE" length="30" />
+			</key-property>
+			<key-property name="enviadoa" type="int">
+				<column name="ENVIADOA" precision="8" scale="0" />
+			</key-property>
+			<key-property name="linea" type="int">
+				<column name="LINEA" precision="8" scale="0" />
+			</key-property>
+
+			<!-- Nuevo por ISC -->
+			<key-property name="porisc" type="big_decimal">
+				<column name="PORISC" precision="15" not-null="true">
+					<comment>PORCENTAJE ISC</comment>
+				</column>
+			</key-property>
+			<key-property name="valisc" type="big_decimal">
+				<column name="VALISC" precision="15" not-null="true">
+					<comment>VALOR ISC INICIAL</comment>
+				</column>
+			</key-property>
+			<key-property name="desctovta" type="big_decimal">
+				<column name="DESCTOVTA" precision="15" not-null="true">
+					<comment>DESCUENTO DE VENTA</comment>
+				</column>
+			</key-property>
+			<key-property name="desctoisc" type="big_decimal">
+				<column name="DESCTOISC" precision="15" not-null="true">
+					<comment>DESCUENTO DEL ISC</comment>
+				</column>
+			</key-property>
+			<key-property name="valiscfinal" type="big_decimal">
+				<column name="VALISCFINAL" precision="15" not-null="true">
+					<comment>VALOR ISC FINAL</comment>
+				</column>
+			</key-property>
+			<key-property name="desgloseisc" type="string">
+				<column name="DESGLOSEISC" length="1">
+					<comment>CLIENTE DESGLOSA</comment>
+				</column>
+			</key-property>
+
+			<!-- Fin - Nuevo por ISC -->
+
+		</composite-id>
+	</class>
+</hibernate-mapping>

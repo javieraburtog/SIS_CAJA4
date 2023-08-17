@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 11-10-2009 08:14:32 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca015" table="F55CA015" >
+        <comment>'Maestro de operaciones por caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca015Id">
+            <key-property name="c5id" type="int">
+                <column name="C5ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c5rp01" type="string">
+                <column name="C5RP01" length="3" />
+            </key-property>
+            <key-property name="c5top" type="string">
+                <column name="C5TOP" length="3" />
+            </key-property>
+            <key-property name="c5trtc" type="char">
+                <column name="C5TRTC" length="1" />
+            </key-property>
+            <key-property name="c5stat" type="char">
+                <column name="C5STAT" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

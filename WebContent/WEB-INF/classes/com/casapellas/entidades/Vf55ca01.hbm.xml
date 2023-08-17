@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 30, 2010 3:38:05 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vf55ca01" table="VF55CA01" >
+        <comment>V. Detalles de Datos b&#225;sicos de Caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.Vf55ca01Id">
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caname" type="string">
+                <column name="CANAME" length="40" />
+            </key-property>
+            <key-property name="caco" type="string">
+                <column name="CACO" length="5" />
+            </key-property>
+            <key-property name="caconom" type="string">
+                <column name="CACONOM" length="30" />
+            </key-property>
+            <key-property name="caan8" type="int">
+                <column name="CAAN8" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cacati" type="int">
+                <column name="CACATI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caauti" type="int">
+                <column name="CAAUTI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caausu" type="int">
+                <column name="CAAUSU" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cacont" type="int">
+                <column name="CACONT" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cajobn" type="string">
+                <column name="CAJOBN" length="15" />
+            </key-property>
+            <key-property name="carmk" type="string">
+                <column name="CARMK" length="30" />
+            </key-property>
+            <key-property name="carmk1" type="string">
+                <column name="CARMK1" length="30" />
+            </key-property>
+            <key-property name="castat" type="char">
+                <column name="CASTAT" length="1" />
+            </key-property>
+            <key-property name="caprnt" type="string">
+                <column name="CAPRNT" length="20" />
+            </key-property>
+            <key-property name="cacatinom" type="string">
+                <column name="CACATINOM" length="40" />
+            </key-property>
+            <key-property name="cacatimail" type="string">
+                <column name="CACATIMAIL" length="40" />
+            </key-property>
+            <key-property name="caan8nom" type="string">
+                <column name="CAAN8NOM" length="40" />
+            </key-property>
+            <key-property name="caan8mail" type="string">
+                <column name="CAAN8MAIL" length="40" />
+            </key-property>
+            <key-property name="cacontnom" type="string">
+                <column name="CACONTNOM" length="40" />
+            </key-property>
+            <key-property name="cacontmail" type="string">
+                <column name="CACONTMAIL" length="40" />
+            </key-property>
+            <key-property name="caausunom" type="string">
+                <column name="CAAUSUNOM" length="40" />
+            </key-property>
+            <key-property name="caausumail" type="string">
+                <column name="CAAUSUMAIL" length="40" />
+            </key-property>
+            <key-property name="caautinom" type="string">
+                <column name="CAAUTINOM" length="40" />
+            </key-property>
+            <key-property name="caautimail" type="string">
+                <column name="CAAUTIMAIL" length="40" />
+            </key-property>
+            
+             <key-property name="casktpos" type="char">
+                <column name="CASKTPOS" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

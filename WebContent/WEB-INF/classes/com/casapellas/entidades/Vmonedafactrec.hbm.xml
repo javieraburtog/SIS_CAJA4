@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 21, 2010 10:01:56 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vmonedafactrec" table="VMONEDAFACTREC" >
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VmonedafactrecId">
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="montoapl" type="big_decimal">
+                <column name="MONTOAPL" precision="8" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="horamod" type="time">
+                <column name="HORAMOD" length="8" />
+            </key-property>
+            <key-property name="refer1" type="string">
+                <column name="REFER1" length="150" />
+            </key-property>
+            <key-property name="refer2" type="string">
+                <column name="REFER2" length="150" />
+            </key-property>
+            <key-property name="refer3" type="string">
+                <column name="REFER3" length="150" />
+            </key-property>
+            <key-property name="refer4" type="string">
+                <column name="REFER4" length="150" />
+            </key-property>
+            <key-property name="cliente" type="string">
+                <column name="CLIENTE" length="50" />
+            </key-property>
+            <key-property name="restado" type="string">
+                <column name="RESTADO" length="2" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="mpago" type="string">
+                <column name="MPAGO" length="3" />
+            </key-property>
+            <key-property name="rmoneda" type="string">
+                <column name="RMONEDA" length="3" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="8" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="equiv" type="big_decimal">
+                <column name="EQUIV" precision="8" />
+            </key-property>
+            <key-property name="cambio" type="big_decimal">
+                <column name="CAMBIO" precision="8" />
+            </key-property>
+            <key-property name="cmoneda" type="string">
+                <column name="CMONEDA" length="3" />
+            </key-property>
+            <key-property name="fmoneda" type="string">
+                <column name="FMONEDA" length="3" />
+            </key-property>
+            <key-property name="domeaplicado" type="big_decimal">
+                <column name="DOMEAPLICADO" precision="10" />
+            </key-property>
+            <key-property name="forarecibido" type="big_decimal">
+                <column name="FORARECIBIDO" precision="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

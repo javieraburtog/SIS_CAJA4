@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 28, 2016 9:15:11 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.conciliacion.entidades.PcdCajasPreconciliar" table="PCD_CAJAS_PRECONCILIAR" >
+        <id name="idcajapreconcil" type="int">
+            <column name="IDCAJAPRECONCIL" />
+            <generator class="identity" />
+        </id>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="3" not-null="true" />
+        </property>
+        <property name="codigobanco" type="long">
+            <column name="CODIGOBANCO" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="estado" type="int">
+            <column name="ESTADO" not-null="true" />
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true" />
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true" />
+        </property>
+        <property name="usrcrea" type="int">
+            <column name="USRCREA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="usrmod" type="java.lang.Integer">
+            <column name="USRMOD" precision="8" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

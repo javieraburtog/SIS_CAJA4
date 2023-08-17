@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 17/11/2009 15:46:04 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca018" table="F55CA018">
+        <comment>'Maestro de cuenta por caja de contado</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca018Id">
+            <key-property name="c8id" type="int">
+                <column name="C8ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c8rp01" type="string">
+                <column name="C8RP01" length="3" />
+            </key-property>
+            <key-property name="c8mcu" type="string">
+                <column name="C8MCU" length="12" />
+            </key-property>
+            <key-property name="c8obj" type="string">
+                <column name="C8OBJ" length="6" />
+            </key-property>
+            <key-property name="c8sub" type="string">
+                <column name="C8SUB" length="8" />
+            </key-property>
+            <key-property name="c8cvobj" type="string">
+                <column name="C8CVOBJ" length="6" />
+            </key-property>
+            <key-property name="c8cvsub" type="string">
+                <column name="C8CVSUB" length="8" />
+            </key-property>
+            <key-property name="c8stat" type="char">
+                <column name="C8STAT" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

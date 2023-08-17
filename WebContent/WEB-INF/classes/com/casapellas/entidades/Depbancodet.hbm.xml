@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 7, 2011 4:09:23 PM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Depbancodet" table="DEPBANCODET" >
+        <comment>DEPOSITOS NOTIFICADOS POR BANCO</comment>
+        <id name="iddepbcodet" type="int">
+            <column name="IDDEPBCODET" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="archivo" class="com.casapellas.entidades.Archivo" fetch="select">
+            <column name="IDARCHIVO" not-null="true">
+                <comment>CODIGO DEL ARCHIVO CABECERA</comment>
+            </column>
+        </many-to-one>
+        <property name="fechaproceso" type="date">
+            <column name="FECHAPROCESO" length="10" not-null="true">
+                <comment>CAMPO 01: FECHA PROCESO</comment>
+            </column>
+        </property>
+        <property name="fechavalor" type="date">
+            <column name="FECHAVALOR" length="10" not-null="true">
+                <comment>CAMPO 02: FECHA VALOR</comment>
+            </column>
+        </property>
+        <property name="codtransaccion" type="string">
+            <column name="CODTRANSACCION" length="2" not-null="true">
+                <comment>CAMPO 07 CODIGO TRANSACCION</comment>
+            </column>
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="40" not-null="true">
+                <comment>POSICION 08: CODIGO TRANSACCION</comment>
+            </column>
+        </property>
+        <property name="referencia" type="int">
+            <column name="REFERENCIA" precision="9" scale="0" not-null="true">
+                <comment>POSICION 09: CODIGO TRANSACCION</comment>
+            </column>
+        </property>
+        <property name="nocuenta" type="int">
+            <column name="NOCUENTA" precision="9" scale="0" not-null="true">
+                <comment>POSICION 10: CODIGO CUENTA</comment>
+            </column>
+        </property>
+        <property name="mtodebito" type="big_decimal">
+            <column name="MTODEBITO" precision="15" not-null="true">
+                <comment>POSICION 11: MONTO DEL D&#201;BITO</comment>
+            </column>
+        </property>
+        <property name="mtocredito" type="big_decimal">
+            <column name="MTOCREDITO" precision="15" not-null="true">
+                <comment>POSICION 12: MONTO DEL CREDITO</comment>
+            </column>
+        </property>
+        <property name="balance" type="big_decimal">
+            <column name="BALANCE" precision="15" not-null="true">
+                <comment>POSICION 13: BALANCE</comment>
+            </column>
+        </property>
+        <property name="codsucursal" type="short">
+            <column name="CODSUCURSAL" precision="3" scale="0" not-null="true">
+                <comment>POSICION 14: CODIGO DE LA SUCURSAL</comment>
+            </column>
+        </property>
+        <property name="tiporegistro" type="char">
+            <column name="TIPOREGISTRO" length="1" not-null="true">
+                <comment>POSICION 15: CODIGO DE LA SUCURSAL</comment>
+            </column>
+        </property>
+        <property name="idtipoconfirm" type="int">
+            <column name="IDTIPOCONFIRM" precision="8" scale="0" not-null="true">
+                <comment>IDENTIFICADOR DEL TIPO DE CONFIRMACION USADA</comment>
+            </column>
+        </property>
+        <property name="idestadocnfr" type="int">
+            <column name="IDESTADOCNFR" precision="8" scale="0" not-null="true">
+                <comment>IDENTIFICADOR DEL ESTADO DEL DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true">
+                <comment>FECHA DE MODIFICACION DEL DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="usrmod" type="int">
+            <column name="USRMOD" not-null="true">
+                <comment>USURAIO QUE MODIFICA EL ESTADO DEL DEPOSITO BCO</comment>
+            </column>
+        </property>
+        <set name="conciliadets" inverse="true">
+            <key>
+                <column name="IDDEPOSITOBCO" not-null="true">
+                    <comment>IDENTIFICADOR DEL DEPOSITO DE BANCO</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Conciliadet" />
+        </set>
+        <property name="historicomod" type="string">
+            <column name="HISTORICOMOD" length="500" not-null="true">
+                <comment>HISTORICO DE MODIFICACIONES DE REFERENCIAS DEL DEP</comment>
+            </column>
+        </property> 
+    </class>
+</hibernate-mapping>

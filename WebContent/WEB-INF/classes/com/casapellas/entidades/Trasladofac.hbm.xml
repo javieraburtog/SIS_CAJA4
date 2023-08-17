@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 27, 2013 2:23:34 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Trasladofac" table="TRASLADOFAC">
+        <comment>Registro de traslado de facturas entre cajas.</comment>
+        <id name="consecutivo" type="int">
+            <column name="CONSECUTIVO" precision="8" scale="0" />
+            <generator class="identity" />
+        </id>
+        <property name="nofactura" type="int">
+            <column name="NOFACTURA" precision="8" scale="0" not-null="true">
+                <comment>N&#250;mero de la factura a trasladar</comment>
+            </column>
+        </property>
+        <property name="tipofactura" type="string">
+            <column name="TIPOFACTURA" length="2" not-null="true">
+                <comment>Tipo de Factura a trasladar</comment>
+            </column>
+        </property>
+        <property name="codsuc" type="string">
+            <column name="CODSUC" length="5" not-null="true">
+                <comment>C&#211;DIGO DE LA SUCURSAL</comment>
+            </column>
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="10" not-null="true">
+                <comment>C&#211;DIGO DE LA COMPANIA</comment>
+            </column>
+        </property>
+        <property name="codunineg" type="string">
+            <column name="CODUNINEG" length="12" not-null="true">
+                <comment>C&#211;DIGO DE LA UNIDAD DE NEGOCIO</comment>
+            </column>
+        </property>
+        <property name="caidorig" type="int">
+            <column name="CAIDORIG" precision="8" scale="0" not-null="true">
+                <comment>CAJA ORIGEN DE TRASLADO</comment>
+            </column>
+        </property>
+        <property name="caiddest" type="int">
+            <column name="CAIDDEST" precision="8" scale="0" not-null="true">
+                <comment>CAJA DESTINO DE TRASLADO</comment>
+            </column>
+        </property>
+        <property name="fecha" type="timestamp">
+            <column name="FECHA" length="26" not-null="true">
+                <comment>FECHA DE TRASLADO</comment>
+            </column>
+        </property>
+        <property name="estadotr" type="string">
+            <column name="ESTADOTR" length="3" not-null="true">
+                <comment>ESTADO DEL TRASLADO</comment>
+            </column>
+        </property>
+        <property name="estadof" type="string">
+            <column name="ESTADOF" length="3" not-null="true">
+                <comment>ESTADO DE LA FACTURA</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA DE LA FACTURA</comment>
+            </column>
+        </property>
+        <property name="caidprop" type="int">
+            <column name="CAIDPROP" precision="8" scale="0" not-null="true">
+                <comment>CAJA PROPIETARIA DE LA FACTURA</comment>
+            </column>
+        </property>
+        <property name="codcli" type="int">
+            <column name="CODCLI" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL CLIENTE</comment>
+            </column>
+        </property>
+        <property name="fechafac" type="int">
+            <column name="FECHAFAC" precision="6" scale="0" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

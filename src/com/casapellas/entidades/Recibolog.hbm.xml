@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 27, 2014 5:35:02 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Recibolog" table="RECIBOLOG"  >
+        <id name="idrecibolog" type="int">
+            <column name="IDRECIBOLOG" />
+            <generator class="identity" />
+        </id>
+        <property name="noregistro" type="long">
+            <column name="NOREGISTRO" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="10" not-null="true" />
+        </property>
+        <property name="codclie" type="int">
+            <column name="CODCLIE" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="valores" type="string">
+            <column name="VALORES" length="300" not-null="true" />
+        </property>
+        <property name="estado" type="int">
+            <column name="ESTADO" precision="2" scale="0" not-null="true" />
+        </property>
+        <property name="usuario" type="string">
+            <column name="USUARIO" length="10" not-null="true" />
+        </property>
+        <property name="codigoemp" type="int">
+            <column name="CODIGOEMP" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="10" not-null="true" />
+        </property>
+        <property name="hora" type="time">
+            <column name="HORA" length="8" not-null="true" />
+        </property>
+                <property name="horafinaliza" type="time">
+            <column name="HORAFINALIZA" length="8" not-null="true" />
+        </property>
+         <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="12" not-null="true">
+                <comment>MONTO RECIBIDO</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

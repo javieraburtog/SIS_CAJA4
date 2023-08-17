@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.fdc.ReciboXx" table="_RECIBO_XX"  catalog="Transferencias_New">
+        <composite-id name="id" class="com.casapellas.entidades.fdc.ReciboXxId">
+            <key-property name="numRec" type="int">
+                <column name="NumRec" />
+            </key-property>
+            <key-property name="codComp" type="string">
+                <column name="CodComp" length="3" />
+            </key-property>
+            <key-property name="caId" type="int">
+                <column name="CAID" />
+            </key-property>
+            <key-property name="codSuc" type="string">
+                <column name="CodSuc" length="5" />
+            </key-property>
+            <key-property name="tipoRec" type="string">
+                <column name="TipoRec" length="3" />
+            </key-property>
+        </composite-id>
+        <property name="montoApl" type="big_decimal">
+            <column name="MontoApl" scale="4" not-null="true" />
+        </property>
+        <property name="montoRec" type="big_decimal">
+            <column name="MontoRec" scale="4" not-null="true" />
+        </property>
+        <property name="concepto" type="string">
+            <column name="Concepto" length="40" not-null="true" />
+        </property>
+        <property name="fecha" type="string">
+            <column name="Fecha" length="10" not-null="true" />
+        </property>
+        <property name="cliente" type="string">
+            <column name="Cliente" length="40" not-null="true" />
+        </property>
+        <property name="codCli" type="int">
+            <column name="CodCli" not-null="true" />
+        </property>
+        <property name="cajero" type="string">
+            <column name="Cajero" length="40" not-null="true" />
+        </property>
+        <property name="hora" type="string">
+            <column name="Hora" length="12" not-null="true" />
+        </property>
+        <property name="numRecM" type="int">
+            <column name="NumRecM" not-null="true" />
+        </property>
+        <property name="recJde" type="int">
+            <column name="RecJDE" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="1" not-null="true" />
+        </property>
+        <property name="motivo" type="string">
+            <column name="Motivo" length="50" not-null="true" />
+        </property>
+        <property name="codUserA" type="string">
+            <column name="CodUserA" length="10" not-null="true" />
+        </property>
+        <property name="horaMod" type="string">
+            <column name="HoraMod" length="12" not-null="true" />
+        </property>
+        <property name="codUser" type="string">
+            <column name="CodUser" length="10" not-null="true" />
+        </property>
+        <property name="noDoco" type="int">
+            <column name="NoDoco" not-null="true" />
+        </property>
+        <property name="tipoDoco" type="string">
+            <column name="TipoDoco" length="3" not-null="true" />
+        </property>
+        <property name="fechaM" type="string">
+            <column name="FechaM" length="10" not-null="true" />
+        </property>
+        <property name="codUniNeg" type="string">
+            <column name="CodUniNeg" length="12" not-null="true" />
+        </property>
+        <property name="motivoOct" type="string">
+            <column name="MotivoOCT" length="50" not-null="true" />
+        </property>
+        <property name="flwSts" type="string">
+            <column name="FlwSts" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 2, 2009 4:41:52 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vf0002" table="VF0002"  >
+        <comment>Vista de definiciones de next number de JDE F0002</comment>
+        <composite-id name="id" class="com.casapellas.entidades.Vf0002Id">
+            <key-property name="nnsy" type="string">
+                <column name="NNSY" length="4" />
+            </key-property>
+            <key-property name="nnn001" type="int">
+                <column name="NNN001" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn002" type="int">
+                <column name="NNN002" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn003" type="int">
+                <column name="NNN003" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn004" type="int">
+                <column name="NNN004" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn005" type="int">
+                <column name="NNN005" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn006" type="int">
+                <column name="NNN006" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn007" type="int">
+                <column name="NNN007" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn008" type="int">
+                <column name="NNN008" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn009" type="int">
+                <column name="NNN009" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nnn010" type="int">
+                <column name="NNN010" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

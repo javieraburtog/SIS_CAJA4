@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 10, 2011 2:39:13 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca034" >
+        <composite-id name="id" class="com.casapellas.entidades.F55ca034Id">
+            <key-property name="b4id" type="int">
+                <column name="B4ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="b4crp01" type="string">
+                <column name="B4CRP01" length="3" />
+            </key-property>
+            <key-property name="b4mcu" type="string">
+                <column name="B4MCU" length="12" />
+            </key-property>
+            <key-property name="b4obj" type="string">
+                <column name="B4OBJ" length="6" />
+            </key-property>
+            <key-property name="b4sub" type="string">
+                <column name="B4SUB" length="8" />
+            </key-property>
+            <key-property name="b4crcd" type="string">
+                <column name="B4CRCD" length="3" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

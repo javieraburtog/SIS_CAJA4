@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 12, 2011 10:25:57 AM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Equivtipodocs" table="EQUIVTIPODOCS" >
+        <comment>TIPOS DE DOCUMENTOS DE BANCO VS TIPO DOC. CAJA</comment>
+        <id name="idequiv" type="int">
+        
+            <column name="IDEQUIV" />
+            <generator class="identity" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="100" not-null="true">
+                <comment>NOMBRE DEL DOCUMENTO DE BANCO</comment>
+            </column>
+        </property>
+        <property name="codigo" type="string">
+            <column name="CODIGO" length="4" not-null="true">
+                <comment>C&#211;DIGO DEL TIPO DE DOCUMENTO</comment>
+            </column>
+        </property>
+        <property name="idbanco" type="int">
+            <column name="IDBANCO" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL BANCO QUE EMITE EL TIPO DOCUMENTO</comment>
+            </column>
+        </property>
+        <property name="descripbco" type="string">
+            <column name="DESCRIPBCO" length="150" not-null="true">
+                <comment>DESCRIPCI&#211;N PARA EL DOCUMENTO DE BANCO</comment>
+            </column>
+        </property>
+        <property name="coddoccaja" type="string">
+            <column name="CODDOCCAJA" length="3" not-null="true">
+                <comment>CODIGO DEL DOCUMENTO DE CAJA</comment>
+            </column>
+        </property>
+        <property name="nomdoccaja" type="string">
+            <column name="NOMDOCCAJA" length="100" not-null="true">
+                <comment>NOMBRE DEL DOCUMENTO DE CAJA</comment>
+            </column>
+        </property>
+        <property name="descripequiv" type="string">
+            <column name="DESCRIPEQUIV" length="150" not-null="true">
+                <comment>DESCRIPCI&#211;N DE LA ASOCIACI&#211;N DE DOCS</comment>
+            </column>
+        </property>
+        <property name="usrcrea" type="int">
+            <column name="USRCREA" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL USUARIO QUE CREA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="usrmod" type="int">
+            <column name="USRMOD" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL USUARIO QUE MODIFICA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true">
+                <comment>FECHA EN QUE GENERA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true">
+                <comment>FECHA EN QUE MODIFICA EL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="activo" type="boolean">
+            <column name="ACTIVO" precision="1" scale="0" not-null="true">
+                <comment>DEFINE SI EL CAMPO ESTA ACTIVO O INACTIVO</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

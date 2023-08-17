@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/07/2009 11:36:12 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Seccion" table="SECCION">
+        <comment>SECCIONES DE APLICACIONES</comment>
+        <id name="codsec" type="string">
+            <column name="CODSEC" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="codsuper" type="string">
+            <column name="CODSUPER" length="10" not-null="true">
+                <comment>CODIGO DE SECCION PADRE</comment>
+            </column>
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="32" not-null="true">
+                <comment>NOMBRE DE SECCION</comment>
+            </column>
+        </property>
+        <property name="descrip" type="string">
+            <column name="DESCRIP" length="120" not-null="true">
+                <comment>DESCRIPCION DE SECCION</comment>
+            </column>
+        </property>
+        <property name="outcome" type="string">
+            <column name="OUTCOME" length="16">
+                <comment>PALABRA DE NAVEGACION A LA SECCION</comment>
+            </column>
+        </property>
+        <property name="activa" type="string">
+            <column name="ACTIVA" length="1">
+                <comment>ACTIVO/INACTIVO USUARIO</comment>
+            </column>
+        </property>
+        <property name="enmenu" type="string">
+            <column name="ENMENU" length="1">
+                <comment>SI/NO INCLUIR EN MENU</comment>
+            </column>
+        </property>
+        <property name="enhome" type="string">
+            <column name="ENHOME" length="1">
+                <comment>SI/NO INCLUIR EN HOME</comment>
+            </column>
+        </property>
+        <property name="iconurl" type="string">
+            <column name="ICONURL" length="32">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="url" type="string">
+            <column name="URL" length="32">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="fregistro" type="timestamp">
+            <column name="FREGISTRO" length="26" not-null="true">
+                <comment>FECHA/HORA DE INGRESO</comment>
+            </column>
+        </property>
+        <set name="appsecs" inverse="true">
+            <key>
+                <column name="CODSEC" length="10" not-null="true">
+                    <comment>NOMBRE DE AUTORIZACION</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Appsec" />
+        </set>
+    </class>
+</hibernate-mapping>

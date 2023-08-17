@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 06-15-2012 03:31:02 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca036" table="F55CA036">
+        <composite-id name="id" class="com.casapellas.entidades.F55ca036Id">
+            <key-property name="b6rp01" type="string">
+                <column name="B6RP01" length="3" />
+            </key-property>
+            <key-property name="b6dct" type="string">
+                <column name="B6DCT" length="2" />
+            </key-property>
+            <key-property name="b6ln" type="string">
+                <column name="B6LN" length="2" />
+            </key-property>
+            <key-property name="b6sts" type="char">
+                <column name="B6STS" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

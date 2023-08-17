@@ -1,0 +1,13 @@
+<pcml version="4.0">
+    <program name="P55CA090"
+        parseorder="CIA TERMINAL DIGITO REFERENC AUTORIZ FECHA VARIOS"
+        path="/QSYS.LIB/%LIBL%.LIB/P55CA090.PGM" threadsafe="false">
+        <data length="40" name="CIA" type="char" usage="inputoutput"/>
+        <data length="8" name="TERMINAL" type="char" usage="inputoutput"/>
+        <data length="4" name="DIGITO" type="char" usage="inputoutput"/>
+        <data length="12" name="REFERENC" type="char" usage="inputoutput"/>
+        <data length="6" name="AUTORIZ" type="char" usage="inputoutput"/>
+        <data length="20" name="FECHA" type="char" usage="inputoutput"/>
+        <data length="99" name="VARIOS" type="char" usage="inputoutput"/>
+    </program>
+</pcml>

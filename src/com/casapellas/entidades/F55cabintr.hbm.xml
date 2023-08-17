@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-10-2012 02:02:53 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55cabintr" table="F55CABINTR">
+        <comment>Cabezera de intereses aplicados</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55cabintrId">
+            <key-property name="r4clase" type="string">
+                <column name="R4CLASE" length="2" />
+            </key-property>
+            <key-property name="r4tipoin" type="string">
+                <column name="R4TIPOIN" length="2" />
+            </key-property>
+            <key-property name="r4sucur" type="string">
+                <column name="R4SUCUR" length="5" />
+            </key-property>
+            <key-property name="r4coclte" type="int">
+                <column name="R4COCLTE" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r4rpmcu" type="string">
+                <column name="R4RPMCU" length="12" />
+            </key-property>
+            <key-property name="r4moneda" type="string">
+                <column name="R4MONEDA" length="3" />
+            </key-property>
+            <key-property name="r4numdoc" type="int">
+                <column name="R4NUMDOC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r4rpsfx" type="string">
+                <column name="R4RPSFX" length="3" />
+            </key-property>
+            <key-property name="r4nobatch" type="int">
+                <column name="R4NOBATCH" precision="8" scale="0" />
+            </key-property>
+            <key-property name="r4fecfac" type="int">
+                <column name="R4FECFAC" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r4fecven" type="int">
+                <column name="R4FECVEN" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r4montou" type="big_decimal">
+                <column name="R4MONTOU" precision="15" />
+            </key-property>
+            <key-property name="r4intereu" type="big_decimal">
+                <column name="R4INTEREU" precision="15" />
+            </key-property>
+            <key-property name="r4impuesu" type="big_decimal">
+                <column name="R4IMPUESU" precision="15" />
+            </key-property>
+            <key-property name="r4montoc" type="big_decimal">
+                <column name="R4MONTOC" precision="15" />
+            </key-property>
+            <key-property name="r4interec" type="big_decimal">
+                <column name="R4INTEREC" precision="15" />
+            </key-property>
+            <key-property name="r4impuesc" type="big_decimal">
+                <column name="R4IMPUESC" precision="15" />
+            </key-property>
+            <key-property name="r4userg" type="string">
+                <column name="R4USERG" length="10" />
+            </key-property>
+            <key-property name="r4progg" type="string">
+                <column name="R4PROGG" length="10" />
+            </key-property>
+            <key-property name="r4fechg" type="int">
+                <column name="R4FECHG" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r4horag" type="int">
+                <column name="R4HORAG" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r4usera" type="string">
+                <column name="R4USERA" length="10" />
+            </key-property>
+            <key-property name="r4proga" type="string">
+                <column name="R4PROGA" length="10" />
+            </key-property>
+            <key-property name="r4fecha" type="int">
+                <column name="R4FECHA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r4horaa" type="int">
+                <column name="R4HORAA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="r4tascam" type="big_decimal">
+                <column name="R4TASCAM" precision="15" scale="7" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

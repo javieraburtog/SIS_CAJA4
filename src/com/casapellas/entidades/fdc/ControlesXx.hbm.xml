@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.fdc.ControlesXx" table="_CONTROLES_XX" catalog="Transferencias_New">
+        <composite-id name="id" class="com.casapellas.entidades.fdc.ControlesXxId">
+            <key-property name="sucursal" type="string">
+                <column name="Sucursal" length="2" />
+            </key-property>
+            <key-property name="zona" type="string">
+                <column name="Zona" length="2" />
+            </key-property>
+            <key-property name="noLiquid" type="int">
+                <column name="NoLiquid" />
+            </key-property>
+            <key-property name="ruta" type="string">
+                <column name="Ruta" length="8" />
+            </key-property>
+        </composite-id>
+        <property name="fecha" type="string">
+            <column name="Fecha" length="8" not-null="true" />
+        </property>
+        <property name="noFacIni" type="int">
+            <column name="NoFacIni" not-null="true" />
+        </property>
+        <property name="noFacFin" type="int">
+            <column name="NoFacFin" not-null="true" />
+        </property>
+        <property name="noCnsIni" type="int">
+            <column name="NoCnsIni" not-null="true" />
+        </property>
+        <property name="noCnsFin" type="int">
+            <column name="NoCnsFin" not-null="true" />
+        </property>
+        <property name="noDevIni" type="int">
+            <column name="NoDevIni" not-null="true" />
+        </property>
+        <property name="noDevFin" type="int">
+            <column name="NoDevFin" not-null="true" />
+        </property>
+        <property name="noReciboIni" type="int">
+            <column name="NoReciboIni" not-null="true" />
+        </property>
+        <property name="noReciboFin" type="int">
+            <column name="NoReciboFin" not-null="true" />
+        </property>
+        <property name="noPedidoIni" type="int">
+            <column name="NoPedidoIni" not-null="true" />
+        </property>
+        <property name="noPedidoFin" type="int">
+            <column name="NoPedidoFin" not-null="true" />
+        </property>
+        <property name="kmIni" type="int">
+            <column name="KmIni" not-null="true" />
+        </property>
+        <property name="kmFin" type="int">
+            <column name="KmFin" not-null="true" />
+        </property>
+        <property name="valesExtrasI" type="int">
+            <column name="ValesExtrasI" not-null="true" />
+        </property>
+        <property name="valesExtrasF" type="int">
+            <column name="ValesExtrasF" not-null="true" />
+        </property>
+        <property name="descargaI" type="int">
+            <column name="DescargaI" not-null="true" />
+        </property>
+        <property name="descargaF" type="int">
+            <column name="DescargaF" not-null="true" />
+        </property>
+        <property name="clteNvoMiscI" type="int">
+            <column name="Clte_Nvo_MiscI" not-null="true" />
+        </property>
+        <property name="clteNvoMiscF" type="int">
+            <column name="Clte_Nvo_MiscF" not-null="true" />
+        </property>
+        <property name="entradasEnvI" type="int">
+            <column name="EntradasEnvI" not-null="true" />
+        </property>
+        <property name="entradasEnvF" type="int">
+            <column name="EntradasEnvF" not-null="true" />
+        </property>
+        <property name="salidasEnvI" type="int">
+            <column name="SalidasEnvI" not-null="true" />
+        </property>
+        <property name="salidasEnvF" type="int">
+            <column name="SalidasEnvF" not-null="true" />
+        </property>
+        <property name="fisicoClteI" type="int">
+            <column name="Fisico_ClteI" not-null="true" />
+        </property>
+        <property name="fisicoClteF" type="int">
+            <column name="Fisico_ClteF" not-null="true" />
+        </property>
+        <property name="fisicoRutI" type="int">
+            <column name="Fisico_RutI" not-null="true" />
+        </property>
+        <property name="fisicoRutF" type="int">
+            <column name="Fisico_RutF" not-null="true" />
+        </property>
+        <property name="solicitudVeI" type="int">
+            <column name="Solicitud_VE_I" not-null="true" />
+        </property>
+        <property name="solicitudVeF" type="int">
+            <column name="Solicitud_VE_F" not-null="true" />
+        </property>
+        <property name="noCobrosI" type="int">
+            <column name="NoCobrosI" not-null="true" />
+        </property>
+        <property name="noCobrosF" type="int">
+            <column name="NoCobrosF" not-null="true" />
+        </property>
+        <property name="noPagosI" type="int">
+            <column name="NoPagosI" not-null="true" />
+        </property>
+        <property name="noPagosF" type="int">
+            <column name="NoPagosF" not-null="true" />
+        </property>
+        <property name="noJustificacionI" type="int">
+            <column name="NoJustificacionI" not-null="true" />
+        </property>
+        <property name="noJustificacionF" type="int">
+            <column name="NoJustificacionF" not-null="true" />
+        </property>
+        <property name="noMovInvI" type="int">
+            <column name="NoMovInvI" not-null="true" />
+        </property>
+        <property name="noMovInvF" type="int">
+            <column name="NoMovInvF" not-null="true" />
+        </property>
+        <property name="noFichaI" type="int">
+            <column name="NoFichaI" not-null="true" />
+        </property>
+        <property name="noFichaF" type="int">
+            <column name="NoFichaF" not-null="true" />
+        </property>
+        <property name="noArqueoI" type="int">
+            <column name="NoArqueoI" not-null="true" />
+        </property>
+        <property name="noArqueoF" type="int">
+            <column name="NoArqueoF" not-null="true" />
+        </property>
+        <property name="flwSts" type="string">
+            <column name="FlwSts" length="1" not-null="true" />
+        </property>
+        <property name="stsDta" type="string">
+            <column name="sts_dta" length="1" not-null="true" />
+        </property>
+        <property name="stsMov" type="string">
+            <column name="sts_mov" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

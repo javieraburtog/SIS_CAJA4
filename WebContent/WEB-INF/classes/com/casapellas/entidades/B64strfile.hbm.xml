@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 22, 2014 9:03:39 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.B64strfile" table="B64STRFILE">
+        <id name="idb64strfile" type="int">
+            <column name="IDB64STRFILE" />
+            <generator class="identity" />
+        </id>
+        <property name="strb64part" type="string">
+            <column name="STRB64PART" length="30000" not-null="true" />
+        </property>
+        <property name="index" type="int">
+            <column name="INDEX" precision="4" scale="0" not-null="true" />
+        </property>
+        <property name="idrowfile" type="int">
+            <column name="IDROWFILE" not-null="true" />
+        </property>
+        <property name="itemtype" type="int">
+            <column name="ITEMTYPE" precision="8" scale="0" not-null="true" />
+        </property>
+          <property name="idparentstr" type="string">
+            <column name="IDPARENTSTR" length="2000" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

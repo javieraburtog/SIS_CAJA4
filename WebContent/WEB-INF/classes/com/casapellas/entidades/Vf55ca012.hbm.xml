@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 04/01/2010 10:22:24 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vf55ca012" table="VF55CA012">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.Vf55ca012Id">
+            <key-property name="c2id" type="int">
+                <column name="C2ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c2rp01" type="string">
+                <column name="C2RP01" length="3" />
+            </key-property>
+            <key-property name="c2crcd" type="string">
+                <column name="C2CRCD" length="3" />
+            </key-property>
+            <key-property name="c2ryin" type="char">
+                <column name="C2RYIN" length="1" />
+            </key-property>
+            <key-property name="c2miam" type="long">
+                <column name="C2MIAM" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c2mxam" type="long">
+                <column name="C2MXAM" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c2stat" type="char">
+                <column name="C2STAT" length="1" />
+            </key-property>
+            
+            <key-property name="c2acpdn" type="int">
+                <column name="c2acpdn" length="1" />
+            </key-property>
+            
+            <key-property name="codigo" type="string">
+                <column name="CODIGO" length="10" />
+            </key-property>
+            <key-property name="mpago" type="string">
+                <column name="MPAGO" length="30" />
+            </key-property>
+            <key-property name="orden" type="int">
+                <column name="ORDEN" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

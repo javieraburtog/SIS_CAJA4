@@ -1,0 +1,85 @@
+/*=======================================================*/
+/*                  COMMON TO ALL PRODUCTS               */
+/*=======================================================*/
+.igDisabled,.igDisabled A {
+	color: silver;
+	cursor: default;
+	text-decoration: none;
+}
+
+/*=======================================================*/
+/*            	Office2k7Silver Theme 					 */
+/*=======================================================*/
+.igPager {
+	margin-top:10px;
+	margin-bottom:10px;
+	
+}
+
+.igPageNumber {
+	color: black;
+	padding: 3px;
+	text-decoration: none;
+}
+
+/* css applied to a page number inside a pager when the mouse cursor is moving over it */
+.igPageNumberHover {
+	color: #993300;
+	padding: 3px;
+	text-decoration: underline;
+}
+
+/* css applied to a page number inside a pager when selected */
+.igPageNumberSelected {
+	color: black;
+	font-weight: bold;
+	padding: 3px;
+	text-decoration: none;
+}
+
+.igPageSteppers {
+	padding: 3px;
+}
+
+.igPageSteppersHover {
+	padding: 3px;
+}
+
+.igPageSteppersDisabled {
+	padding: 3px;
+}
+
+.igPageSteppersDisabled IMG {
+	filter: alpha(opacity = 25);
+	opacity: 0.25;
+}
+
+.igLinkIcon {
+	margin-right: 6px;
+	vertical-align: middle;
+}
+
+/*=======================================================*/
+	/*                	Link Component						 */
+	/*=======================================================*/
+.igLeftIcon {
+	border: 0px;
+	margin-right: 4px;
+}
+
+.igRightIcon {
+	border: 0px;
+	margin-left: 4px;
+}
+
+.igLeftIconFloat {
+	border: 0px;
+	margin-right: 4px;
+	float: left;
+}
+
+.igRightIconFloat {
+	border: 0px;
+	margin-left: 4px;
+	float: right;
+}

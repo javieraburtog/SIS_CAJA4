@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.fdc.CambiodetXx" table="_CAMBIODET_XX"  catalog="Transferencias_New">
+        <composite-id name="id" class="com.casapellas.entidades.fdc.CambiodetXxId">
+            <key-property name="numRec" type="int">
+                <column name="NumRec" />
+            </key-property>
+            <key-property name="codComp" type="string">
+                <column name="CodComp" length="3" />
+            </key-property>
+            <key-property name="caId" type="int">
+                <column name="CaID" />
+            </key-property>
+            <key-property name="codSuc" type="string">
+                <column name="CodSuc" length="5" />
+            </key-property>
+            <key-property name="tipoRec" type="string">
+                <column name="TipoRec" length="3" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="Moneda" length="3" />
+            </key-property>
+        </composite-id>
+        <property name="cambio" type="big_decimal">
+            <column name="Cambio" scale="4" not-null="true" />
+        </property>
+        <property name="tasa" type="big_decimal">
+            <column name="Tasa" scale="4" not-null="true" />
+        </property>
+        <property name="flwSts" type="string">
+            <column name="FlwSts" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

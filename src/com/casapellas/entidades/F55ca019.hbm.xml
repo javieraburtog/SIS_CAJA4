@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 11-24-2009 03:50:57 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca019" table="F55CA019"  >
+        <comment>'Tipo de documento por linea de negocio</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca019Id">
+            <key-property name="camcul" type="string">
+                <column name="CAMCUL" length="10" />
+            </key-property>
+            <key-property name="cadoc" type="string">
+                <column name="CADOC" length="5" />
+            </key-property>
+            <key-property name="castat" type="string">
+                <column name="CASTAT" length="1" />
+            </key-property>
+            <key-property name="tipodoc" type="string">
+                <column name="TIPODOC" length="3" />
+            </key-property>
+            <key-property name="cacrcd" type="string">
+                <column name="CACRCD" length="3" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

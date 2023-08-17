@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.fdc.A02factcoXx" table="_A02FACTCO_XX"
+		catalog="Transferencias_New">
+		<composite-id name="id"
+			class="com.casapellas.entidades.fdc.A02factcoXxId">
+			<key-property name="sucursal" type="string">
+				<column name="Sucursal" length="2" />
+			</key-property>
+			<key-property name="zona" type="string">
+				<column name="Zona" length="2" />
+			</key-property>
+			<key-property name="ruta" type="string">
+				<column name="Ruta" length="8" />
+			</key-property>
+			<key-property name="codCli" type="int">
+				<column name="CodCli" />
+			</key-property>
+			<key-property name="noFactura" type="int">
+				<column name="NoFactura" />
+			</key-property>
+			<key-property name="tipoFactura" type="string">
+				<column name="TipoFactura" length="2" />
+			</key-property>
+			<key-property name="codUniNeg" type="string">
+				<column name="CodUniNeg" length="12" />
+			</key-property>
+			<key-property name="codSuc" type="string">
+				<column name="CodSuc" length="5" />
+			</key-property>
+		</composite-id>
+		<property name="nomCli" type="string">
+			<column name="NomCli" length="40" not-null="true" />
+		</property>
+		<property name="uniNeg" type="string">
+			<column name="UniNeg" length="30" not-null="true" />
+		</property>
+		<property name="nomSuc" type="string">
+			<column name="NomSuc" length="30" not-null="true" />
+		</property>
+		<property name="codComp" type="string">
+			<column name="CodComp" length="3" not-null="true" />
+		</property>
+		<property name="nomComp" type="string">
+			<column name="NomComp" length="30" not-null="true" />
+		</property>
+		<property name="fecha" type="int">
+			<column name="Fecha" not-null="true" />
+		</property>
+		<property name="subTotal" type="int">
+			<column name="SubTotal" not-null="true" />
+		</property>
+		<property name="moneda" type="string">
+			<column name="Moneda" length="3" not-null="true" />
+		</property>
+		<property name="tasa" type="big_decimal">
+			<column name="Tasa" scale="4" not-null="true" />
+		</property>
+		<property name="tipoPago" type="string">
+			<column name="TipoPago" length="3" not-null="true" />
+		</property>
+		<property name="fechaGrab" type="int">
+			<column name="FechaGrab" not-null="true" />
+		</property>
+		<property name="hechoPor" type="string">
+			<column name="HechoPor" length="15" not-null="true" />
+		</property>
+		<property name="pantalla" type="string">
+			<column name="Pantalla" length="15" not-null="true" />
+		</property>
+		<property name="hora" type="int">
+			<column name="Hora" not-null="true" />
+		</property>
+		<property name="estado" type="string">
+			<column name="Estado" length="1" not-null="true" />
+		</property>
+		<property name="noDoco" type="int">
+			<column name="NoDoco" not-null="true" />
+		</property>
+		<property name="tipoDoco" type="string">
+			<column name="TipoDoco" length="2" not-null="true" />
+		</property>
+		<property name="total" type="int">
+			<column name="Total" not-null="true" />
+		</property>
+		<property name="sdLocn" type="string">
+			<column name="SdLocn" length="20" not-null="true" />
+		</property>
+		<property name="programaId" type="string">
+			<column name="ProgramaId" length="10" not-null="true" />
+		</property>
+		<property name="codVendor" type="int">
+			<column name="CodVendor" not-null="true" />
+		</property>
+		<property name="flwSts" type="string">
+			<column name="FlwSts" length="1" not-null="true" />
+		</property>
+
+		<!-- Nuevo por ISC -->
+		<property name="valisc" type="big_decimal">
+			<column name="VALISC" precision="15" not-null="true">
+				<comment>VALOR ISC INICIAL</comment>
+			</column>
+		</property>
+		<property name="desctovta" type="big_decimal">
+			<column name="DESCTOVTA" precision="15" not-null="true">
+				<comment>DESCUENTO DE VENTA</comment>
+			</column>
+		</property>
+		<property name="desctoisc" type="big_decimal">
+			<column name="DESCTOISC" precision="15" not-null="true">
+				<comment>DESCUENTO DEL ISC</comment>
+			</column>
+		</property>
+		<property name="valiscfinal" type="big_decimal">
+			<column name="VALISCFINAL" precision="15" not-null="true">
+				<comment>VALOR ISC FINAL</comment>
+			</column>
+		</property>
+		<property name="desgloseisc" type="string">
+			<column name="DESGLOSEISC" length="1">
+				<comment>CLIENTE DESGLOSA</comment>
+			</column>
+		</property>
+		<property name="exoneraisc" type="string">
+			<column name="EXONERAISC" length="1">
+				<comment>CLIENTE EXONERA ISC</comment>
+			</column>
+		</property>
+		<!-- Fin - Nuevo por ISC -->
+
+
+
+	</class>
+</hibernate-mapping>

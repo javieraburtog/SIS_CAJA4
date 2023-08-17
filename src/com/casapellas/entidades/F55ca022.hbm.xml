@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 28, 2012 5:17:41 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca022" table="F55CA022">
+        <comment>Maestro de banco de caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca022Id">
+            <key-property name="codb" type="int">
+                <column name="CODB" precision="8" scale="0" />
+            </key-property>
+            <key-property name="banco" type="string">
+                <column name="BANCO" length="30" />
+            </key-property>
+            <key-property name="orden" type="int">
+                <column name="ORDEN" precision="5" scale="0" />
+            </key-property>
+            <key-property name="estado" type="char">
+                <column name="ESTADO" length="1" />
+            </key-property>
+            <key-property name="conciliar" type="int">
+                <column name="CONCILIAR" precision="1" scale="0" />
+            </key-property>
+            <key-property name="leerecbanco" type="boolean">
+                <column name="LEERECBANCO" precision="1" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

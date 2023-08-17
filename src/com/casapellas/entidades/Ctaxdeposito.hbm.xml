@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 4, 2012 4:03:35 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Ctaxdeposito" table="CTAXDEPOSITO" >
+        <comment>CUENTAS ASOCIADAS A UN DEPOSITO.</comment>
+        <id name="idctaxdep" type="long">
+            <column name="IDCTAXDEP" precision="10" scale="0" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="deposito" class="com.casapellas.entidades.Deposito" fetch="select">
+            <column name="IDDEPOSITO" not-null="true">
+                <comment>IDENTIFICADOR DEL DEPOSITO DE CAJA</comment>
+            </column>
+        </many-to-one>
+        <property name="idcuenta" type="string">
+            <column name="IDCUENTA" length="8" not-null="true">
+                <comment>CODIGO DE LA CUENTA AFECTADA</comment>
+            </column>
+        </property>
+        <property name="tipomov" type="string">
+            <column name="TIPOMOV" length="1" not-null="true">
+                <comment>TIPO DE TRANSACCION 1:DEBITO, 2:CREDITO</comment>
+            </column>
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="15" scale="1" not-null="true">
+                <comment>MONTO ASOCIADO A LA CUENTA</comment>
+            </column>
+        </property>
+        <property name="gmmcu" type="string">
+            <column name="GMMCU" length="12" not-null="true">
+                <comment>UNIDAD DE NEGOCIO DE LA CUENTA</comment>
+            </column>
+        </property>
+        <property name="gmobj" type="string">
+            <column name="GMOBJ" length="6" not-null="true">
+                <comment>CUENTA OBJETO</comment>
+            </column>
+        </property>
+        <property name="gmsub" type="string">
+            <column name="GMSUB" length="8" not-null="true">
+                <comment>CUENTA SUBSIDIARIA</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

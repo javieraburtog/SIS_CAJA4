@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 06/02/2010 11:03:53 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vmora" table="VMORA">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VmoraId">
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="nocuota" type="int">
+                <column name="NOCUOTA" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nosol" type="int">
+                <column name="NOSOL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiposol" type="string">
+                <column name="TIPOSOL" length="2" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nomcli" type="string">
+                <column name="NOMCLI" length="40" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="morapend" type="big_decimal">
+                <column name="MORAPEND" precision="10" />
+            </key-property>
+            <key-property name="intd" type="big_decimal">
+                <column name="INTD" precision="10" />
+            </key-property>
+            <key-property name="intf" type="big_decimal">
+                <column name="INTF" precision="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

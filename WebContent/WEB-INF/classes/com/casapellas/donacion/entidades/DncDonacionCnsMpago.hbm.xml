@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-19-2015 10:22:08 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="com.casapellas.donacion.entidades.DncDonacionCnsMpago" table="DNC_DONACION_CNS_MPAGO">
+        <id name="idconsolidaMpago" type="int">
+            <column name="IDCONSOLIDA_MPAGO" />
+            <generator class="identity" />
+        </id>
+        <property name="idcierredonacion" type="java.lang.Integer">
+            <column name="IDCIERREDONACION" />
+        </property>
+        <property name="codigobeneficiario" type="int">
+            <column name="CODIGOBENEFICIARIO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="formadepago" type="string">
+            <column name="FORMADEPAGO" length="3" not-null="true" />
+        </property>
+        <property name="montobruto" type="big_decimal">
+            <column name="MONTOBRUTO" precision="15" not-null="true" />
+        </property>
+        <property name="montoneto" type="big_decimal">
+            <column name="MONTONETO" precision="15" not-null="true" />
+        </property>
+        <property name="transacciones" type="int">
+            <column name="TRANSACCIONES" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="referencia" type="int">
+            <column name="REFERENCIA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="usrcrea" type="int">
+            <column name="USRCREA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

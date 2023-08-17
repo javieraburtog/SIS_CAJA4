@@ -1,0 +1,137 @@
+/*=======================================================*/
+/*                 Office2k7Silver Theme                 */ 
+/*=======================================================*/
+.igGrid {
+	background-color: white;
+	border: 1px solid #999999; 
+	border-collapse: collapse;
+	empty-cells: show;
+	color:#000000;
+	line-height: 20px;
+}
+
+.igGridHeader {
+	background-color: #AACC44;
+	background-image:url(webgrid/igwg_gridheader.gif);
+	background-position:center;
+	font-weight: bold;
+	padding: 5px 10px 5px 10px;	
+	color : black;
+	white-space: nowrap;
+}
+.igGridFooter {
+	border-top: 1px solid #E5E5E5;
+	white-space: nowrap;
+}
+.igGridColumn {
+	border-top: 1px solid #E5E5E5;	
+	padding: 5px 10px 5px 10px;
+	white-space: nowrap;
+}
+.igGridColumnCaret {
+	background-color: #d97845;
+	width: 2px;
+}
+.igGridColumnHeader {
+    background-image:url(webgrid/igwg_gridsubheader.gif);
+    background-position: center;
+	padding: 5px 10px 5px 10px;		
+	font-weight: bold;
+	text-align: left;
+	color : black;
+	white-space: nowrap;
+	border-top: 1px solid #d97845;
+	border-bottom: 1px solid #d97845;
+}
+.igGridColumnHeader  A {
+	color: #000000;
+	text-decoration:none;
+}
+.igGridColumnHeader A IMG
+{
+vertical-align: middle;
+}
+
+.igGridColumnHeader  A:Hover{
+	color: #000000;
+	text-decoration:underline;
+}
+.igGridColumnHeader A LABEL {
+	cursor:pointer;
+}
+.igGridColumnFooter {
+	border-top: 1px solid #E5E5E5;
+	white-space: nowrap;
+}
+.igGridRow {
+}
+.igGridRowAlternate {
+	background-color: #FAFAFA;
+}
+.igGridRowHover {
+	background-image: url(webgrid/igwg_rowhover.gif);
+	color: black;
+}
+.igGridRowSelected {
+	background-image: url(webgrid/igwg_rowhover.gif);
+	color: #000000;
+}
+.igGridRowExpanded {
+	padding: 0px 0px 0px 32px;
+}
+.igGridCellEdit {
+	font-family:Verdana,Geneva,Arial,Helvetica,Sans-Serif;
+	font-size:8pt;
+	padding: 4px 8px 4px 8px;
+	color: #000000;;
+}
+.igGridCellActive {
+	background-image: url(webgrid/igwg_item_selected.gif);
+	color: Black;
+}
+.igGridColumnActive {
+	background-image: url(webgrid/igwg_gridheader_hover.gif);
+	color: black;
+}
+.igGridRowActive {
+	background-image: url(webgrid/igwg_item_selected.gif);
+}
+
+
+.igGrid_AgPanel {
+	display: block;
+	background-image:url(webgrid/igwg_agbg.gif);
+	padding: 5px;
+	color: #000000;	
+}
+.igGridColumnFilter {
+	background-color: #DBDBDB;
+    background-position: top;
+	padding:0px 10px 0px 10px;	
+	height:5px;
+	font-weight: bold;
+	text-align: left;
+	color : #333;
+	white-space: nowrap;
+}
+.igGridColumnFilterButton { 
+	height:20px;
+	width:20px;
+	border:none;
+	background-color:transparent;
+}
+.igGridFilterDropDownItem {
+	font-size:11px;
+	font-family: Verdana;
+	padding:1px 3px 1px 3px;
+	cursor: default;
+}
+.igGridFilterDropDown {
+	background-color:#FCFCFC;
+	border:solid 1px #ACACAC;
+	overflow: auto;
+	width: 150px;
+	max-height: 150px;
+	height: auto !important;
+	height: 150px;
+}

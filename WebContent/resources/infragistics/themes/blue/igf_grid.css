@@ -1,0 +1,206 @@
+/*=======================================================*/
+/*                      BLUE THEME                       */ 
+/*=======================================================*/
+.igGridColumnFooter {
+	background-color: #e6e6e6;
+	border-bottom: 1px solid #C1C1C1;
+	padding: 1px 10px 1px 10px;	
+	font-weight: bold;
+	text-align: right;
+	color : #052684;
+	white-space: nowrap;
+	height: 15px;
+}
+.igGridColumnFooterLeft {
+	background-color: #e6e6e6;
+	border-bottom: 1px solid #C1C1C1;
+	padding: 1px 10px 1px 10px;	
+	font-weight: bold;
+	text-align: left;
+	color : #052684;
+	white-space: nowrap;
+	height: 10px;
+}
+.igGrid  {
+	background-color: #ebedf1;
+	border: 1px solid #A9B9CD;
+	border-collapse: collapse;
+	color:#07465D;
+	empty-cells: show;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+.igGridError  {
+	background-color: #ebedf1;
+	border: 2px solid red;
+	border-collapse: collapse;
+	color:#07465D;
+	empty-cells: show;
+}
+.igGridOscuro  {
+	background-color: #f2f2f2;
+	border: 1px solid #607fae;
+	border-collapse: collapse;
+	color:#07465D;
+	empty-cells: show;
+}
+.igGridM  {
+	background-color: #ebedf1;
+	border: 1px solid #A9B9CD;
+	border-bottom: 0px solid silver;
+	border-collapse: collapse;
+	color:#07465D;
+	empty-cells: show;;
+	width: 800px
+}
+
+.igGridHeader {
+	background-color: #CC0066;
+	/*border-bottom: 1px solid #C1C1C1;*/
+	background-image:url(webgrid/igwg_gridheader.gif);
+	background-position:center;
+	color : #052684;
+	font-weight: bold;
+	padding: 2px 10px 2px 10px;	
+	white-space: nowrap;
+}
+.igGridFooter {
+	border-bottom: 1px solid #C1C1C1;
+	white-space: nowrap;
+	height: 15px;
+	
+}
+.igGridColumn {
+	border-bottom: 1px solid silver;
+	padding: 1px 10px 1px 10px;
+	white-space: nowrap;
+}
+
+.igGridColumnBdrRight {
+	border-bottom: 1px solid silver;
+	padding: 1px 10px 1px 10px;
+	white-space: nowrap;
+	border-right: 1px solid #C1C1C1;"
+}
+
+.igGridColumn160 {
+	border-bottom: 1px solid silver;
+	padding: 1px 10px 1px 10px;
+	white-space: nowrap;
+	width: 160px;
+}
+.igGridColumn200 {
+	border-bottom: 1px solid silver;
+	padding: 1px 10px 1px 10px;
+	white-space: nowrap;
+	width: 200px;
+}
+.igGridColumnCaret {
+	background-color: red;
+	width: 2px;
+}
+.igGridColumnHeader {
+    background-color: #d2d2d2;
+	border-bottom: 1px solid #C1C1C1;
+	border-right: 1px solid #C1C1C1;
+	padding: 1px 10px 1px 10px;	
+	font-weight: bold;
+	text-align: center !important;
+	color : #052684;
+	white-space: nowrap;
+}
+.igGridOscuroColumnHeader {
+    background-color: #3e68a4;
+	border-bottom: 1px solid #C1C1C1;
+	padding: 1px 10px 1px 10px;	
+	font-weight: bold;
+	text-align: center;
+	color : white;
+	white-space: nowrap;
+}
+.igGridColumnHeader A IMG
+{
+vertical-align: middle;
+}
+
+
+
+.igGridColumnHeader A {
+	color : #052684;
+	text-decoration:none;
+	
+}
+
+.igGridColumnHeader A:hover {
+	color : #052684;
+	text-decoration:underline;
+	
+}
+
+.igGridColumnHeader A LABEL {
+	cursor:pointer;
+}
+.igGridColumnFooter {
+	background-color: #e6e6e6;
+	border-bottom: 1px solid #C1C1C1;
+	padding: 1px 10px 1px 10px;	
+	font-weight: bold;
+	text-align: right;
+	color : #052684;
+	white-space: nowrap;
+	height: 15px;
+}
+.igGridRow {
+
+}
+.igGridRowAlternate {
+	background-color: #ebedf1;
+}
+.igGridOscuroRowAlternate {
+	background-color: #f2f2f2;
+}
+.igGridRowHover {
+	/*background-color: #f1f1f1;*/
+	background-image:url(webgrid/igwg_rowhover.gif);
+	background-position:center;
+	background-repeat:repeat-x;
+}
+.igGridRowSelected {
+	background-color: #b8d0e8;
+	color: white;
+}
+.igGridRowExpanded {
+	padding: 0px 0px 0px 32px;
+}
+.igGridCell {
+}
+.igGridCellSelected {
+	background-color: #b8d0e8;
+	color: white;
+	border-bottom: 1px solid silver;
+	padding: 5px 10px 5px 10px;
+	white-space: nowrap;
+}
+.igGridCellEdit {
+	font-family:Verdana,Geneva,Arial,Helvetica,Sans-Serif;
+	font-size:8pt;
+	padding: 4px 8px 4px 8px;
+	color:#07465D;
+}
+.igGridCellActive {
+	background-color: #b8d0e8;
+	color: white;
+}
+.igGridColumnActive {
+	background-color: #316AC5;
+	color: white;
+	
+}
+.igGridRowActive {
+	background-color: #316AC5;
+	color: white;
+}
+
+
+
+

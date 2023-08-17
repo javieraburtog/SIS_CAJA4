@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 07-27-2009 02:37:22 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vtotaldiarioxdevolucion" table="VTOTALDIARIOXDEVOLUCION" >
+        <comment>V. de total Diario por devoluciones realizadas</comment>
+        <composite-id name="id" class="com.casapellas.entidades.VtotaldiarioxdevolucionId">
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="cor" type="big_decimal">
+                <column name="COR" precision="31" />
+            </key-property>
+            <key-property name="usd" type="big_decimal">
+                <column name="USD" precision="31" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 13, 2012 4:59:40 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Hf4211" table="HF4211">
+        <composite-id name="id" class="com.casapellas.entidades.Hf4211Id">
+            <key-property name="sddoco" type="int">
+                <column name="SDDOCO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="sddcto" type="string">
+                <column name="SDDCTO" length="2" />
+            </key-property>
+            <key-property name="nofactura" type="int">
+                <column name="NOFACTURA" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipofactura" type="string">
+                <column name="TIPOFACTURA" length="2" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nomcli" type="string">
+                <column name="NOMCLI" length="40" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="unineg" type="string">
+                <column name="UNINEG" length="30" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="nomsuc" type="string">
+                <column name="NOMSUC" length="30" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="nomcomp" type="string">
+                <column name="NOMCOMP" length="30" />
+            </key-property>
+            <key-property name="fecha" type="int">
+                <column name="FECHA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="subtotal" type="big_decimal">
+                <column name="SUBTOTAL" precision="31" scale="0" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="tipopago" type="string">
+                <column name="TIPOPAGO" length="3" />
+            </key-property>
+            <key-property name="fechagrab" type="int">
+                <column name="FECHAGRAB" precision="6" scale="0" />
+            </key-property>
+            <key-property name="hechopor" type="string">
+                <column name="HECHOPOR" length="10" />
+            </key-property>
+            <key-property name="pantalla" type="string">
+                <column name="PANTALLA" length="10" />
+            </key-property>
+            <key-property name="hora" type="java.lang.Integer">
+                <column name="HORA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="1" />
+            </key-property>
+            <key-property name="nodoco" type="int">
+                <column name="NODOCO" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipodoco" type="string">
+                <column name="TIPODOCO" length="2" />
+            </key-property>
+            <key-property name="total" type="big_decimal">
+                <column name="TOTAL" precision="31" scale="0" />
+            </key-property>
+            <key-property name="sdlocn" type="string">
+                <column name="SDLOCN" length="10" />
+            </key-property>
+            <key-property name="programaid" type="string">
+                <column name="PROGRAMAID" length="10" />
+            </key-property>
+            <key-property name="codvendor" type="int">
+                <column name="CODVENDOR" precision="8" scale="0" />
+            </key-property>
+            <key-property name="subtotalf" type="big_decimal">
+                <column name="SUBTOTALF" precision="31" scale="0" />
+            </key-property>
+            <key-property name="totalf" type="big_decimal">
+                <column name="TOTALF" precision="31" scale="0" />
+            </key-property>
+            <key-property name="totalcosto" type="big_decimal">
+                <column name="TOTALCOSTO" precision="15" />
+            </key-property>
+            <key-property name="totaldscto" type="big_decimal">
+                <column name="TOTALDSCTO" precision="15" />
+            </key-property>
+			<key-property name="enviadoa" type="int">
+				<column name="ENVIADOA" precision="8" scale="0" />
+			</key-property>
+			
+			<key-property name="fechadoco" type="int">
+                <column name="FECHADOCO" precision="6" scale="0" />
+            </key-property>
+			
+        </composite-id>
+    </class>
+</hibernate-mapping>

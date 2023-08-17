@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 07/01/2010 11:59:24 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Hfinan" table="HFINAN">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.HfinanId">
+            <key-property name="nofactura" type="int">
+                <column name="NOFACTURA" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipofactura" type="string">
+                <column name="TIPOFACTURA" length="2" />
+            </key-property>
+            <key-property name="cuota" type="string">
+                <column name="CUOTA" length="3" />
+            </key-property>
+            <key-property name="nosol" type="int">
+                <column name="NOSOL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiposol" type="string">
+                <column name="TIPOSOL" length="2" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nomcli" type="string">
+                <column name="NOMCLI" length="40" />
+            </key-property>
+            <key-property name="codatendid" type="int">
+                <column name="CODATENDID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nomatendid" type="string">
+                <column name="NOMATENDID" length="40" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="unineg" type="string">
+                <column name="UNINEG" length="30" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="sucursal" type="string">
+                <column name="SUCURSAL" length="30" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="compania" type="string">
+                <column name="COMPANIA" length="30" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="fecha" type="timestamp">
+                <column name="FECHA" length="26" />
+            </key-property>
+            <key-property name="fechavenc" type="timestamp">
+                <column name="FECHAVENC" length="26" />
+            </key-property>
+            <key-property name="codlinea" type="string">
+                <column name="CODLINEA" length="2" />
+            </key-property>
+            <key-property name="nomlinea" type="string">
+                <column name="NOMLINEA" length="30" />
+            </key-property>
+            <key-property name="codprodfin" type="string">
+                <column name="CODPRODFIN" length="3" />
+            </key-property>
+            <key-property name="nomprodfin" type="string">
+                <column name="NOMPRODFIN" length="30" />
+            </key-property>
+            <key-property name="atdven" type="short">
+                <column name="ATDVEN" precision="3" scale="0" />
+            </key-property>
+            <key-property name="codcondpag" type="string">
+                <column name="CODCONDPAG" length="3" />
+            </key-property>
+            <key-property name="nomcondpag" type="string">
+                <column name="NOMCONDPAG" length="30" />
+            </key-property>
+            <key-property name="codsolicit" type="char">
+                <column name="CODSOLICIT" length="1" />
+            </key-property>
+            <key-property name="nomsolicit" type="string">
+                <column name="NOMSOLICIT" length="30" />
+            </key-property>
+            <key-property name="tasaint" type="big_decimal">
+                <column name="TASAINT" precision="15" scale="7" />
+            </key-property>
+            <key-property name="rpag" type="big_decimal">
+                <column name="RPAG" precision="10" />
+            </key-property>
+            <key-property name="rpaap" type="big_decimal">
+                <column name="RPAAP" precision="10" />
+            </key-property>
+            <key-property name="rpacr" type="big_decimal">
+                <column name="RPACR" precision="10" />
+            </key-property>
+            <key-property name="rpfap" type="big_decimal">
+                <column name="RPFAP" precision="10" />
+            </key-property>
+            <key-property name="r3dpri" type="big_decimal">
+                <column name="R3DPRI" precision="10" />
+            </key-property>
+            <key-property name="r3fpri" type="big_decimal">
+                <column name="R3FPRI" precision="10" />
+            </key-property>
+            <key-property name="r3adap" type="big_decimal">
+                <column name="R3ADAP" precision="10" />
+            </key-property>
+            <key-property name="r3afap" type="big_decimal">
+                <column name="R3AFAP" precision="10" />
+            </key-property>
+            <key-property name="montobruto" type="big_decimal">
+                <column name="MONTOBRUTO" precision="10" />
+            </key-property>
+            <key-property name="montopend" type="big_decimal">
+                <column name="MONTOPEND" precision="10" />
+            </key-property>
+            <key-property name="rprmk" type="string">
+                <column name="RPRMK" length="30" />
+            </key-property>
+            <key-property name="actualfecha" type="int">
+                <column name="ACTUALFECHA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="rpdivj" type="int">
+                <column name="RPDIVJ" precision="6" scale="0" />
+            </key-property>
+            <key-property name="rpddj" type="int">
+                <column name="RPDDJ" precision="6" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

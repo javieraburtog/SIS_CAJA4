@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 7, 2011 4:09:23 PM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Conciliacion" table="CONCILIACION" >
+        <comment>GUARDA DATOS POR CADA CONCILIACION DE DEPOSITO</comment>
+        <id name="idconciliacion" type="int">
+            <column name="IDCONCILIACION" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="archivo" class="com.casapellas.entidades.Archivo" fetch="select">
+            <column name="IDARCHIVO" not-null="true">
+                <comment>IDENTIFICADOR DEL ARCHIVO DEL DEPOSITO</comment>
+            </column>
+        </many-to-one>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="10" not-null="true">
+                <comment>MONTO CONCILIADO</comment>
+            </column>
+        </property>
+        <property name="nobatch" type="int">
+            <column name="NOBATCH" not-null="true">
+                <comment>BATCH UTILIZADO PARA CONCILIAR</comment>
+            </column>
+        </property>
+        <property name="noreferencia" type="int">
+            <column name="NOREFERENCIA" not-null="true">
+                <comment>NUMERO REFERENCIA / DOCUMENTO USADO</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA DE LA CONCILIACION</comment>
+            </column>
+        </property>
+        <property name="tipodoc" type="string">
+            <column name="TIPODOC" length="3" not-null="true">
+                <comment>TIPO DE DOCUMENTO DEL ASIENTO DIARIO</comment>
+            </column>
+        </property>
+        <property name="idcuenta" type="int">
+            <column name="IDCUENTA" not-null="true">
+                <comment>ID DE LA CUENTA DE BANCO A UTILIZAR</comment>
+            </column>
+        </property>
+        <property name="estado" type="int">
+            <column name="ESTADO" precision="8" scale="0" not-null="true">
+                <comment>ESTADOS: CONCILIADO / ANULADO</comment>
+            </column>
+        </property>
+        <property name="usrcrea" type="int">
+            <column name="USRCREA" not-null="true">
+                <comment>USUARIO DE CREACION DEL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="usrmod" type="int">
+            <column name="USRMOD" not-null="true">
+                <comment>USUARIO DE MODIFICACION DEL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true">
+                <comment>FECHA DE MODIFICACION DEL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true">
+                <comment>FECHA DE CREACION DEL REGISTRO</comment>
+            </column>
+        </property>
+        <property name="rnobatch" type="int">
+            <column name="RNOBATCH" precision="8" scale="0" not-null="true">
+                <comment>NUMERO GLICU ASOCIADO A LA REVERSION DEL DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="rnodoc" type="int">
+            <column name="RNODOC" precision="8" scale="0" not-null="true">
+                <comment>NUMERO GLDOC ASOCIADO A LA REVERSION DEL DEPOSITO</comment>
+            </column>
+        </property>
+        <set name="ajusteconcs" inverse="true">
+            <key>
+                <column name="IDCONCILIACION" not-null="true">
+                    <comment>CONCILIACION ASOCIADA A LA QUE PERTENECE</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Ajusteconc" />
+        </set>
+        <set name="conciliadets" inverse="true">
+            <key>
+                <column name="IDCONCILIACION" not-null="true">
+                    <comment>MAESTRO DEL REGISTRO EN CONCILIACION</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Conciliadet" />
+        </set>
+    </class>
+</hibernate-mapping>

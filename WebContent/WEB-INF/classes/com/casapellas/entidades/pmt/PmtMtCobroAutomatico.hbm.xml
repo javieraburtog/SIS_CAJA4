@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 29, 2016 7:43:36 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.pmt.PmtMtCobroAutomatico" table="PMT_MT_COBRO_AUTOMATICO" >
+        <id name="idcobroauto" type="int">
+            <column name="IDCOBROAUTO" />
+            <generator class="assigned" />
+        </id>
+        <property name="codigousuario" type="int">
+            <column name="CODIGOUSUARIO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="cuotas" type="int">
+            <column name="CUOTAS" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="procesados" type="int">
+            <column name="PROCESADOS" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="10" not-null="true" />
+        </property>
+        <property name="horainicio" type="time">
+            <column name="HORAINICIO" length="8" not-null="true" />
+        </property>
+        <property name="horafinaliza" type="time">
+            <column name="HORAFINALIZA" length="8" not-null="true" />
+        </property>
+        <property name="datapcinfo" type="string">
+            <column name="DATAPCINFO" length="1000" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

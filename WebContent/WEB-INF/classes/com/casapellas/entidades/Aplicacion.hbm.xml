@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/07/2009 11:36:12 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Aplicacion" table="APLICACION">
+        <comment>APLICACIONES EN PRODUCCION</comment>
+        <id name="codapp" type="string">
+            <column name="CODAPP" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="40" not-null="true">
+                <comment>NOMBRE DE APLICACION</comment>
+            </column>
+        </property>
+        <property name="descrip" type="string">
+            <column name="DESCRIP" length="128" not-null="true">
+                <comment>DESCRIPCION DE APLICACION</comment>
+            </column>
+        </property>
+        <property name="url" type="string">
+            <column name="URL" length="50">
+                <comment>URL DE APLICACION</comment>
+            </column>
+        </property>
+        <property name="fingreso" type="timestamp">
+            <column name="FINGRESO" length="26" not-null="true">
+                <comment>FECHA DE ALTA DE APLICACION</comment>
+            </column>
+        </property>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1">
+                <comment>ACTIVA/INACTIVA APLICACION</comment>
+            </column>
+        </property>
+        <property name="nomcorto" type="string">
+            <column name="NOMCORTO" length="10">
+                <comment>NOMBRE CORTO</comment>
+            </column>
+        </property>
+        <set name="appsecs" inverse="true">
+            <key>
+                <column name="CODAPP" length="10" not-null="true">
+                    <comment>CODIGO DE AUTORIZACION</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Appsec" />
+        </set>
+    </class>
+</hibernate-mapping>

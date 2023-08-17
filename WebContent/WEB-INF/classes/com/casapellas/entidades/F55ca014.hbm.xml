@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 28, 2012 5:17:41 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca014" table="F55CA014" >
+        <comment>Maestro de cia por caja</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca014Id">
+            <key-property name="c4id" type="int">
+                <column name="C4ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c4rp01" type="string">
+                <column name="C4RP01" length="3" />
+            </key-property>
+            <key-property name="c4rp01d1" type="string">
+                <column name="C4RP01D1" length="30" />
+            </key-property>
+            <key-property name="c4nnbe" type="long">
+                <column name="C4NNBE" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4nnfi" type="long">
+                <column name="C4NNFI" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4nncu" type="long">
+                <column name="C4NNCU" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4stat" type="string">
+                <column name="C4STAT" length="1" />
+            </key-property>
+            <key-property name="c4prt" type="string">
+                <column name="C4PRT" length="20" />
+            </key-property>
+            <key-property name="c4bnc" type="int">
+                <column name="C4BNC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c4bcrcd" type="string">
+                <column name="C4BCRCD" length="3" />
+            </key-property>
+            <key-property name="c4trir" type="big_decimal">
+                <column name="C4TRIR" precision="7" scale="3" />
+            </key-property>
+            <key-property name="c4cjmcu" type="string">
+                <column name="C4CJMCU" length="4" />
+            </key-property>
+            <key-property name="confrmauto" type="boolean">
+                <column name="CONFRMAUTO" precision="1" scale="0" />
+            </key-property>
+            <key-property name="mndepatm" type="int">
+                <column name="MNDEPATM" />
+            </key-property>
+            <key-property name="usrmod" type="string">
+                <column name="USRMOD" length="25" />
+            </key-property>
+            <key-property name="fechamod" type="timestamp">
+                <column name="FECHAMOD" length="26" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

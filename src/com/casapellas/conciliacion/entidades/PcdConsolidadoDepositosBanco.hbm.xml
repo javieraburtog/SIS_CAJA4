@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 12, 2015 6:34:04 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<class
+		name="com.casapellas.conciliacion.entidades.PcdConsolidadoDepositosBanco"
+		table="PCD_CONSOLIDADO_DEPOSITOS_BANCO" >
+
+		<id name="idresumenbanco" type="int">
+			<column name="IDRESUMENBANCO" />
+			<generator class="identity" />
+		</id>
+		<property name="estadocuentanombre" type="string">
+			<column name="ESTADOCUENTANOMBRE" length="100" not-null="true" />
+		</property>
+		<property name="numerocuenta" type="long">
+			<column name="NUMEROCUENTA" precision="10" scale="0" not-null="true" />
+		</property>
+		<property name="codigobanco" type="long">
+			<column name="CODIGOBANCO" precision="10" scale="0" not-null="true" />
+		</property>
+		<property name="moneda" type="string">
+			<column name="MONEDA" length="4" not-null="true" />
+		</property>
+		<property name="fechadeposito" type="date">
+			<column name="FECHADEPOSITO" length="10" not-null="true" />
+		</property>
+		<property name="referenciaoriginal" type="long">
+			<column name="REFERENCIAORIGINAL" precision="10" scale="0"
+				not-null="true" />
+		</property>
+		<property name="referenciajde" type="long">
+			<column name="REFERENCIAJDE" precision="10" scale="0"
+				not-null="true" />
+		</property>
+		<property name="montooriginal" type="big_decimal">
+			<column name="MONTOORIGINAL" precision="15" not-null="true" />
+		</property>
+		<property name="montoajustado" type="big_decimal">
+			<column name="MONTOAJUSTADO" precision="15" not-null="true" />
+		</property>
+		<property name="descripcion" type="string">
+			<column name="DESCRIPCION" length="100" not-null="true" />
+		</property>
+		<property name="codigotransaccionbco" type="string">
+			<column name="CODIGOTRANSACCIONBCO" length="5" not-null="true" />
+		</property>
+		<property name="estadoconfirmacion" type="int">
+			<column name="ESTADOCONFIRMACION" not-null="true" />
+		</property>
+		<property name="cantidadcomparacion" type="int">
+			<column name="CANTIDADCOMPARACION" not-null="true" />
+		</property>
+		<property name="usuarioactualiza" type="int">
+			<column name="USUARIOACTUALIZA" precision="8" scale="0"
+				not-null="true" />
+		</property>
+		<property name="usuarioultimacomparacion" type="int">
+			<column name="USUARIOULTIMACOMPARACION" precision="8" scale="0"
+				not-null="true" />
+		</property>
+		<property name="iddepbcodet" type="int">
+			<column name="IDDEPBCODET" not-null="true" />
+		</property>
+		<property name="tipotransaccionjde" type="string">
+			<column name="TIPOTRANSACCIONJDE" length="5" not-null="true" />
+		</property>
+		<property name="fechagrabadeposito" type="timestamp">
+			<column name="FECHAGRABADEPOSITO" length="26" not-null="true" />
+		</property>
+		<property name="fechagrabaconsolida" type="timestamp">
+			<column name="FECHAGRABACONSOLIDA" length="26" not-null="true" />
+		</property>
+		<property name="fechamodconsolida" type="timestamp">
+			<column name="FECHAMODCONSOLIDA" length="26" not-null="true" />
+		</property>
+		<property name="descriptransbanco" type="string">
+			<column name="DESCRIPTRANSBANCO" length="100" not-null="true" />
+		</property>
+		<property name="descriptransjde" type="string">
+			<column name="DESCRIPTRANSJDE" length="100" not-null="true" />
+		</property>
+		<property name="nombrebanco" type="string">
+			<column name="NOMBREBANCO" length="30" not-null="true" />
+		</property>
+		<property name="idarchivo" type="int">
+			<column name="IDARCHIVO" not-null="true" />
+		</property>
+		<property name="numerobatch" type="int">
+			<column name="NUMEROBATCH" not-null="true" />
+		</property>
+		<property name="tipodocumentojde" type="string">
+			<column name="TIPODOCUMENTOJDE" not-null="true" length="3" />
+		</property>
+		
+		<property name="codcomp" type="string">
+			<column name="CODCOMP" length="10" not-null="true" />
+		</property>
+		<property name="nombrecompania" type="string">
+			<column name="nombrecompania" length="100" not-null="true" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

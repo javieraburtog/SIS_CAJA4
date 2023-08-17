@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-19-2010 05:29:22 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vf0311fn" table="VF0311FN">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.Vf0311fnId">
+            <key-property name="tipofactura" type="string">
+                <column name="TIPOFACTURA" length="2" />
+            </key-property>
+            <key-property name="nofactura" type="int">
+                <column name="NOFACTURA" precision="8" scale="0" />
+            </key-property>
+            <key-property name="partida" type="string">
+                <column name="PARTIDA" length="3" />
+            </key-property>
+            <key-property name="fecha" type="int">
+                <column name="FECHA" precision="6" scale="0" />
+            </key-property>
+            <key-property name="fechavenc" type="int">
+                <column name="FECHAVENC" precision="6" scale="0" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nomcli" type="string">
+                <column name="NOMCLI" length="40" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="unineg" type="string">
+                <column name="UNINEG" length="30" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="nomsuc" type="string">
+                <column name="NOMSUC" length="30" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="3" />
+            </key-property>
+            <key-property name="nomcomp" type="string">
+                <column name="NOMCOMP" length="30" />
+            </key-property>
+            <key-property name="csubtotal" type="long">
+                <column name="CSUBTOTAL" precision="15" scale="0" />
+            </key-property>
+            <key-property name="dsubtotal" type="long">
+                <column name="DSUBTOTAL" precision="15" scale="0" />
+            </key-property>
+            <key-property name="cimpuesto" type="long">
+                <column name="CIMPUESTO" precision="15" scale="0" />
+            </key-property>
+            <key-property name="dimpuesto" type="long">
+                <column name="DIMPUESTO" precision="15" scale="0" />
+            </key-property>
+            <key-property name="ctotal" type="long">
+                <column name="CTOTAL" precision="15" scale="0" />
+            </key-property>
+            <key-property name="dtotal" type="long">
+                <column name="DTOTAL" precision="15" scale="0" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="tipopago" type="string">
+                <column name="TIPOPAGO" length="3" />
+            </key-property>
+            <key-property name="desctpago" type="string">
+                <column name="DESCTPAGO" length="30" />
+            </key-property>
+            <key-property name="cpendiente" type="long">
+                <column name="CPENDIENTE" precision="15" scale="0" />
+            </key-property>
+            <key-property name="dpendiente" type="long">
+                <column name="DPENDIENTE" precision="15" scale="0" />
+            </key-property>
+            <key-property name="codepago" type="string">
+                <column name="CODEPAGO" length="1" />
+            </key-property>
+            <key-property name="descepago" type="string">
+                <column name="DESCEPAGO" length="30" />
+            </key-property>
+            <key-property name="fechagrab" type="int">
+                <column name="FECHAGRAB" precision="6" scale="0" />
+            </key-property>
+            <key-property name="hechopor" type="string">
+                <column name="HECHOPOR" length="10" />
+            </key-property>
+            <key-property name="pantalla" type="string">
+                <column name="PANTALLA" length="10" />
+            </key-property>
+            <key-property name="fechalm" type="int">
+                <column name="FECHALM" precision="6" scale="0" />
+            </key-property>
+            <key-property name="fechaimp" type="int">
+                <column name="FECHAIMP" precision="6" scale="0" />
+            </key-property>
+            <key-property name="compenslm" type="string">
+                <column name="COMPENSLM" length="4" />
+            </key-property>
+            <key-property name="nobatch" type="int">
+                <column name="NOBATCH" precision="8" scale="0" />
+            </key-property>
+            <key-property name="fechabatch" type="int">
+                <column name="FECHABATCH" precision="6" scale="0" />
+            </key-property>
+            <key-property name="observaciones" type="string">
+                <column name="OBSERVACIONES" length="30" />
+            </key-property>
+            <key-property name="referencia" type="string">
+                <column name="REFERENCIA" length="25" />
+            </key-property>
+            <key-property name="numorden" type="int">
+                <column name="NUMORDEN" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipoorden" type="string">
+                <column name="TIPOORDEN" length="2" />
+            </key-property>
+            <key-property name="cdescdisp" type="long">
+                <column name="CDESCDISP" precision="15" scale="0" />
+            </key-property>
+            <key-property name="cdesctom" type="long">
+                <column name="CDESCTOM" precision="15" scale="0" />
+            </key-property>
+            <key-property name="ddescdisp" type="long">
+                <column name="DDESCDISP" precision="15" scale="0" />
+            </key-property>
+            <key-property name="ddesctom" type="long">
+                <column name="DDESCTOM" precision="15" scale="0" />
+            </key-property>
+            <key-property name="codcont" type="string">
+                <column name="CODCONT" length="1" />
+            </key-property>
+            <key-property name="tiposol" type="string">
+                <column name="TIPOSOL" length="2" />
+            </key-property>
+            <key-property name="nosol" type="int">
+                <column name="NOSOL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nocuota" type="short">
+                <column name="NOCUOTA" precision="3" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

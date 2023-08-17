@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 14, 2016 7:43:42 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.pmt.Vwbitacoracobrospmt"
+		table="VWBITACORACOBROSPMT">
+
+		<id name="rowcount" type="long">
+			<column name="ROWCOUNT" />
+			<generator class="identity" />
+		</id>
+
+		<property name="mpbcia" type="string">
+			<column name="MPBCIA" length="10" />
+		</property>
+		<property name="mpbsuc" type="string">
+			<column name="MPBSUC" length="10" />
+		</property>
+		<property name="mpbnctto" type="java.lang.Integer">
+			<column name="MPBNCTTO" precision="8" scale="0" />
+		</property>
+
+		<property name="mpbchas" type="string">
+			<column name="MPBCHAS" length="25" />
+		</property>
+
+		<property name="mpbfcgnr" type="date">
+			<column name="MPBFCGNR" length="10" />
+		</property>
+		<property name="mpbcli" type="java.lang.Integer">
+			<column name="MPBCLI" precision="8" scale="0" />
+		</property>
+		<property name="mpbttrj" type="string">
+			<column name="MPBTTRJ" length="3" />
+		</property>
+		<property name="mpbdttrj" type="string">
+			<column name="MPBDTTRJ" length="40" />
+		</property>
+		<property name="mpbetrj" type="string">
+			<column name="MPBETRJ" length="3" />
+		</property>
+		<property name="mpbdetrj" type="string">
+			<column name="MPBDETRJ" length="40" />
+		</property>
+		<property name="mpbntrj" type="big_decimal">
+			<column name="MPBNTRJ" precision="20" scale="0" />
+		</property>
+		<property name="mpbnttrj" type="string">
+			<column name="MPBNTTRJ" length="20" />
+		</property>
+		<property name="mpbvtrj" type="java.lang.Integer">
+			<column name="MPBVTRJ" precision="5" scale="0" />
+		</property>
+		<property name="mpbvpag" type="big_decimal">
+			<column name="MPBVPAG" precision="10" />
+		</property>
+		<property name="mpbnpag" type="java.lang.Integer">
+			<column name="MPBNPAG" precision="5" scale="0" />
+		</property>
+		<property name="mpbfpag" type="date">
+			<column name="MPBFPAG" length="10" />
+		</property>
+		<property name="mpbmon" type="string">
+			<column name="MPBMON" length="3" />
+		</property>
+		<property name="mpbtcam" type="big_decimal">
+			<column name="MPBTCAM" precision="15" scale="7" />
+		</property>
+		<property name="mpbobs" type="string">
+			<column name="MPBOBS" length="60" />
+		</property>
+		<property name="mpbnint" type="java.lang.Integer">
+			<column name="MPBNINT" precision="5" scale="0" />
+		</property>
+		<property name="mpbintr" type="java.lang.Integer">
+			<column name="MPBINTR" precision="5" scale="0" />
+		</property>
+		<property name="mpbsts1" type="string">
+			<column name="MPBSTS1" length="10" />
+		</property>
+		<property name="mpbsts2" type="string">
+			<column name="MPBSTS2" length="10" />
+		</property>
+		<property name="mpbcodcomp" type="string">
+			<column name="MPBCODCOMP" length="10" />
+		</property>
+		<property name="mpbcodsuc" type="string">
+			<column name="MPBCODSUC" length="5" />
+		</property>
+		<property name="mpbunineg" type="string">
+			<column name="MPBUNINEG" length="12" />
+		</property>
+		<property name="mpbnumrec" type="java.lang.Integer">
+			<column name="MPBNUMREC" precision="8" scale="0" />
+		</property>
+		<property name="mpbtiporec" type="string">
+			<column name="MPBTIPOREC" length="20" />
+		</property>
+		<property name="mpbfecha" type="date">
+			<column name="MPBFECHA" length="10" />
+		</property>
+		<property name="mpbcaid" type="java.lang.Integer">
+			<column name="MPBCAID" precision="8" scale="0" />
+		</property>
+		<property name="mpbhereg" type="string">
+			<column name="MPBHEREG" length="10" />
+		</property>
+		<property name="mpbfereg" type="date">
+			<column name="MPBFEREG" length="10" />
+		</property>
+		<property name="mpbhrreg" type="time">
+			<column name="MPBHRREG" length="8" />
+		</property>
+		<property name="mpbpareg" type="string">
+			<column name="MPBPAREG" length="10" />
+		</property>
+		<property name="mpbprreg" type="string">
+			<column name="MPBPRREG" length="10" />
+		</property>
+		<property name="mpbhecam" type="string">
+			<column name="MPBHECAM" length="10" />
+		</property>
+		<property name="mpbfecam" type="date">
+			<column name="MPBFECAM" length="10" />
+		</property>
+		<property name="mpbhrcam" type="time">
+			<column name="MPBHRCAM" length="8" />
+		</property>
+		<property name="mpbpacam" type="string">
+			<column name="MPBPACAM" length="10" />
+		</property>
+		<property name="mpbprcam" type="string">
+			<column name="MPBPRCAM" length="10" />
+		</property>
+		<property name="clientenombre" type="string">
+			<column name="CLIENTENOMBRE" length="100" />
+		</property>
+		<property name="correo" type="string">
+			<column name="CORREO" length="100" />
+		</property>
+		<property name="codcomp" type="string">
+			<column name="CODCOMP" length="3" />
+		</property>
+		<property name="nomcomp" type="string">
+			<column name="NOMCOMP" length="50" />
+		</property>
+		<property name="codsuc" type="string">
+			<column name="CODSUC" length="10" />
+		</property>
+		<property name="nomsuc" type="string">
+			<column name="NOMSUC" length="50" />
+		</property>
+		<property name="codunineg" type="string">
+			<column name="CODUNINEG" length="10" />
+		</property>
+		<property name="nomunineg" type="string">
+			<column name="NOMUNINEG" length="50" />
+		</property>
+		<property name="montocobrarentarjeta" type="big_decimal">
+			<column name="montocobrarentarjeta" precision="15" not-null="true" />
+		</property>
+		<property name="correocliente" type="string">
+			<column name="correocliente" length="200" />
+		</property>
+
+		<property name="codigovendedor" type="java.lang.Integer">
+			<column name="codigovendedor" precision="8" scale="0" />
+		</property>
+		<property name="nombrevendedor" type="string">
+			<column name="nombrevendedor" length="200" />
+		</property>
+
+	</class>
+</hibernate-mapping>

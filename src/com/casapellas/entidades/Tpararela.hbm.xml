@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18/06/2009 09:30:47 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Tpararela" table="TPARARELA">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.TpararelaId">
+            <key-property name="cmono" type="string">
+                <column name="CMONO" length="3" />
+            </key-property>
+            <key-property name="cmond" type="string">
+                <column name="CMOND" length="3" />
+            </key-property>
+            <key-property name="tcambiom" type="big_decimal">
+                <column name="TCAMBIOM" precision="15" scale="7" />
+            </key-property>
+            <key-property name="tcambiod" type="big_decimal">
+                <column name="TCAMBIOD" precision="15" scale="7" />
+            </key-property>
+            <key-property name="direc" type="char">
+                <column name="DIREC" length="1" />
+            </key-property>
+            <key-property name="fechai" type="int">
+                <column name="FECHAI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="fechaf" type="int">
+                <column name="FECHAF" precision="8" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

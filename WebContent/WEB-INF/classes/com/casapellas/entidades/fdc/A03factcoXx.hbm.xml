@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 10, 2013 3:23:07 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.fdc.A03factcoXx" table="_A03FACTCO_XX"
+		catalog="Transferencias_New">
+	
+		<composite-id name="id"
+			class="com.casapellas.entidades.fdc.A03factcoXxId">
+			<key-property name="sucursal" type="string">
+				<column name="Sucursal" length="2" />
+			</key-property>
+			<key-property name="zona" type="string">
+				<column name="Zona" length="2" />
+			</key-property>
+			<key-property name="ruta" type="string">
+				<column name="Ruta" length="8" />
+			</key-property>
+			<key-property name="noFactura" type="int">
+				<column name="NoFactura" />
+			</key-property>
+			<key-property name="tipoFactura" type="string">
+				<column name="TipoFactura" length="2" />
+			</key-property>
+			<key-property name="codUniNeg" type="string">
+				<column name="CodUniNeg" length="12" />
+			</key-property>
+			<key-property name="codSuc" type="string">
+				<column name="CodSuc" length="5" />
+			</key-property>
+			<key-property name="codItem" type="string">
+				<column name="CodItem" length="25" />
+			</key-property>
+			<key-property name="empaque" type="string">
+				<column name="Empaque" length="2" />
+			</key-property>
+			<key-property name="nlote" type="string">
+				<column name="NLote" length="20" />
+			</key-property>
+		</composite-id>
+		
+		<property name="descItem" type="string">
+			<column name="DescItem" length="30" not-null="true" />
+		</property>
+		<property name="precioUnit" type="int">
+			<column name="PrecioUnit" not-null="true" />
+		</property>
+		<property name="cant" type="int">
+			<column name="Cant" not-null="true" />
+		</property>
+		<property name="impuesto" type="string">
+			<column name="Impuesto" length="10" not-null="true" />
+		</property>
+		<property name="factor" type="int">
+			<column name="Factor" not-null="true" />
+		</property>
+		<property name="flwSts" type="string">
+			<column name="FlwSts" length="1" not-null="true" />
+		</property>
+
+		<!-- Nuevo por ISC -->
+		<property name="porisc" type="big_decimal">
+			<column name="PORISC" precision="15" not-null="true">
+				<comment>PORCENTAJE ISC</comment>
+			</column>
+		</property>
+		<property name="valisc" type="big_decimal">
+			<column name="VALISC" precision="15" not-null="true">
+				<comment>VALOR ISC INICIAL</comment>
+			</column>
+		</property>
+		<property name="desctovta" type="big_decimal">
+			<column name="DESCTOVTA" precision="15" not-null="true">
+				<comment>DESCUENTO DE VENTA</comment>
+			</column>
+		</property>
+		<property name="desctoisc" type="big_decimal">
+			<column name="DESCTOISC" precision="15" not-null="true">
+				<comment>DESCUENTO DEL ISC</comment>
+			</column>
+		</property>
+		<property name="valiscfinal" type="big_decimal">
+			<column name="VALISCFINAL" precision="15" not-null="true">
+				<comment>VALOR ISC FINAL</comment>
+			</column>
+		</property>
+		<property name="desgloseisc" type="string">
+			<column name="DESGLOSEISC" length="1">
+				<comment>CLIENTE DESGLOSA</comment>
+			</column>
+		</property>
+
+		<!-- Fin - Nuevo por ISC -->
+
+	</class>
+</hibernate-mapping>

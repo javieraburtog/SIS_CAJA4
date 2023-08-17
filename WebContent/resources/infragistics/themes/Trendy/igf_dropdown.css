@@ -1,0 +1,346 @@
+/*
+
+Main control CSS class
+*/
+.igdd_Control
+{
+	    padding-bottom:0px;
+        padding-top:0px;
+        margin-top:0px;
+        margin-bottom:0px;
+        vertical-align: baseline;
+}
+
+/*
+ Main Control CSS class when it's disabled - do we need this ? 
+ 
+*/
+.igdd_ControlDisabled
+{
+	
+}
+
+/*
+ Main control css class on hover
+*/
+.igdd_ControlHover
+{
+        background-color:#FFA500;
+     	border-color:#454545 rgb(0, 0, 0) rgb(0, 0, 0) rgb(69, 69, 69);
+        border-style:solid;
+        border-width:1px;
+        padding-left:4px;
+	    padding-bottom:0px;
+        padding-top:0px;
+        margin-top:0px;
+        margin-bottom:0px;
+        vertical-align: baseline;
+}
+
+.igdd_Pager
+{
+	text-align:center;
+	background-color:white;
+	font-size: 12px;
+	font-family:Verdana;
+	clear:both;
+	display:block;
+}
+
+.igdd_Pager a
+{
+	color:blue;
+
+}
+
+/*
+
+*/
+.igdd_ControlFocus
+{
+
+       background-color:#99CCFF;
+     	border-color:#454545 rgb(0, 0, 0) rgb(0, 0, 0) rgb(69, 69, 69);
+        border-style:solid;
+        border-width:1px;
+        padding-left:4px;
+	    padding-bottom:0px;
+        padding-top:0px;
+        margin-top:0px;
+        margin-bottom:0px;
+        vertical-align: baseline;
+}
+
+/*
+ CSS class for the table that accomodates the value display and the drop down button, and which is a 
+ child of the main control (div)
+*/
+.igdd_ControlArea
+{
+       background-color:#F6F6F6;
+     	border-color:#454545 rgb(0, 0, 0) rgb(0, 0, 0) rgb(69, 69, 69);
+        border-style:solid;
+        border-width:1px;
+        padding-left:4px;	
+        padding-bottom:0px;
+        padding-top:0px;
+        margin-top:0px;
+        margin-bottom:0px;
+		overflow:hidden;
+		vertical-align: baseline;
+	
+}
+
+.igdd_ControlAreaFocus
+{
+	   background-color:#99CCFF;
+     	border-color:#454545 rgb(0, 0, 0) rgb(0, 0, 0) rgb(69, 69, 69);
+        border-style:solid;
+        border-width:1px;
+        padding-left:4px;
+	    padding-bottom:0px;
+        padding-top:0px;
+        margin-top:0px;
+        margin-bottom:0px;
+        vertical-align: baseline;
+}
+
+
+.igdd_ControlArea_Hover
+{
+	
+}
+
+/*
+
+*/
+.igdd_ValueDisplay
+{
+		background-color:#F6F6F6;
+        background:transparent none repeat scroll 0%;
+        border:medium none;
+        color:#333333;
+        font-family:Tahoma,"Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
+        font-size:11px;
+        margin:0px;
+        padding:0px;	
+		overflow:hidden;
+}
+
+/*
+
+*/
+.igdd_ValueDisplayHover
+{
+	
+}
+
+/*
+
+*/
+.igdd_ValueDisplayFocus
+{
+  
+}
+
+/*
+
+*/
+.igdd_ValueDisplayDisabled
+{
+	
+}
+
+/*
+ do we need this? What's the difference between value display disabled and value display read only ? 
+*/
+.igdd_ValueDisplayReadOnly
+{
+	
+}
+
+/*
+
+*/
+.igdd_DropDownList
+{
+
+margin: 0pt;
+padding: 0pt;
+margin-left:0px;
+list-style-type: none;
+list-style-image: none;
+list-style-position: outside;
+overflow:hidden;
+ 
+}
+
+/*
+
+*/
+.igdd_DropDownListHover
+{
+	
+}
+
+/*
+
+*/
+.igdd_DropDownListDisabled
+{
+	
+}
+
+/*
+
+*/
+.igdd_DropDownListFocus
+{
+	
+}
+
+/*
+
+*/
+.igdd_DropDownListReadOnly
+{
+	
+}
+
+/*
+	
+*/
+.igdd_DropDownListContainer
+{
+        background:#F6F6F6 none repeat scroll 0%;
+        border-color:#83868D rgb(198, 199, 210) rgb(198, 199, 210);
+        border-style:solid;
+        border-width:1px;
+        cursor:default;
+        font-size:12px;
+		padding-bottom:0px;
+		padding-top:0px;
+		margin-bottom:0px;
+		margin-top:0px;
+        position:absolute;    	
+}
+
+/*
+
+*/
+.igdd_DropDownListContainerFocus
+{
+	
+}
+
+/*
+
+*/
+.igdd_DropDownListContainerHover
+{
+	
+}
+
+/*
+
+*/
+.igdd_DropDownButton
+{
+	
+}
+
+/*
+
+*/
+.igdd_DropDownButtonHover
+{
+	
+}
+
+/*
+	
+*/
+.igdd_DropDownButtonFocus
+{
+        background:transparent none repeat scroll 0%;
+        border:medium none;
+        color:white;
+        font-family:Tahoma,"Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
+        font-size:11px;
+        margin:0pt;
+        padding:0pt;	
+	width:100%;	
+}
+
+/*
+
+*/
+.igdd_DropDownButtonDisabled
+{
+	
+}
+
+/*
+
+*/
+.igdd_ListItem
+{
+    	font-family:Verdana;
+        font-size:10px;
+        padding-left: 0px;
+        padding-top: 3px;
+        padding-bottom: 3px;	
+}
+
+/*
+
+*/
+.igdd_ListItemHover
+{
+	font-family:Verdana;
+	background-color: #99CCFF;
+        padding-left: 0px;
+        padding-top: 3px;
+        padding-bottom: 3px;	
+}
+
+/*
+
+*/
+.igdd_ListItemSelected
+{
+	background-color: #99CCFF;
+	font-family:Verdana;
+	font-color:yellow;
+        padding-left: 0px;
+        padding-top: 3px;
+        padding-bottom: 3px;	
+}
+
+.igdd_Header
+{
+	background-color:lime;
+}
+
+.igdd_Footer
+{
+	background-color:blue;
+}
+/*
+
+*/
+.igdd_ListItemDisabled
+{
+
+	background-color: red;
+	color:white;
+	
+}
+
+/*
+
+*/
+.igdd_ListItemFocus
+{
+	
+}

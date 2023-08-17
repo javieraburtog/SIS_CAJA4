@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 21, 2012 3:34:25 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vrecibostcir" table="VRECIBOSTCIR" >
+        <composite-id name="id" class="com.casapellas.entidades.VrecibostcirId">
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="10" />
+            </key-property>
+            <key-property name="tasa" type="big_decimal">
+                <column name="TASA" precision="15" scale="7" />
+            </key-property>
+            <key-property name="equiv" type="big_decimal">
+                <column name="EQUIV" precision="10" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="afiliado" type="string">
+                <column name="AFILIADO" length="150" />
+            </key-property>
+            <key-property name="comision" type="big_decimal">
+                <column name="COMISION" precision="5" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="nomunineg" type="string">
+                <column name="NOMUNINEG" length="30" />
+            </key-property>
+            <key-property name="noliquidacion" type="int">
+                <column name="NOLIQUIDACION" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="2" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="montoapl" type="big_decimal">
+                <column name="MONTOAPL" precision="10" />
+            </key-property>
+            <key-property name="cliente" type="string">
+                <column name="CLIENTE" length="50" />
+            </key-property>
+            <key-property name="cajero" type="string">
+                <column name="CAJERO" length="50" />
+            </key-property>
+             <key-property name="tasaoficialdia" type="big_decimal">
+                <column name="TSAOFICIAL" precision="15" scale="7" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

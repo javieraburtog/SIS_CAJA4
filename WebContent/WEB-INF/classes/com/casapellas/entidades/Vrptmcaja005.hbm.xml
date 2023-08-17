@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 5, 2010 12:41:41 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vrptmcaja005" table="VRPTMCAJA005" >
+        <comment>V. Para los datos del reporte rptmcaja005</comment>
+        <composite-id name="id" class="com.casapellas.entidades.Vrptmcaja005Id">
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="8" />
+            </key-property>
+            <key-property name="montoapl" type="big_decimal">
+                <column name="MONTOAPL" precision="8" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="cliente" type="string">
+                <column name="CLIENTE" length="50" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="nobatch" type="int">
+                <column name="NOBATCH" precision="8" scale="0" />
+            </key-property>
+            <key-property name="recjde" type="string">
+                <column name="RECJDE" precision="8" scale="0" />
+            </key-property>
+            <key-property name="glaid" type="int">
+                <column name="GLAID" length="100" />
+            </key-property>
+            <key-property name="glani" type="string">
+                <column name="GLANI" length="30" />
+            </key-property>
+            <key-property name="gllt" type="string">
+                <column name="GLLT" length="2" />
+            </key-property>
+            <key-property name="glcrcd" type="string">
+                <column name="GLCRCD" length="3" />
+            </key-property>
+            <key-property name="glaa" type="big_decimal">
+                <column name="GLAA" precision="10" />
+            </key-property>
+            <key-property name="gljeln" type="string">
+                <column name="GLJELN" length="7" />
+            </key-property>
+            
+            <key-property name="gldct" type="string">
+                <column name="GLDCT" length="10" />
+            </key-property>
+            
+        </composite-id>
+    </class>
+</hibernate-mapping>

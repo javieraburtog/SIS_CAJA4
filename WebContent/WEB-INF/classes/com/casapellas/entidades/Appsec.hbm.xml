@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/07/2009 11:36:12 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Appsec" table="APPSEC">
+        <comment>RELACION APLICACIONES - SECCIONES</comment>
+        <composite-id name="id" class="com.casapellas.entidades.AppsecId">
+            <key-property name="codsec" type="string">
+                <column name="CODSEC" length="10" />
+            </key-property>
+            <key-property name="codapp" type="string">
+                <column name="CODAPP" length="10" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="seccion" class="com.casapellas.entidades.Seccion" update="false" insert="false" fetch="select">
+            <column name="CODSEC" length="10" not-null="true">
+                <comment>NOMBRE DE AUTORIZACION</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="aplicacion" class="com.casapellas.entidades.Aplicacion" update="false" insert="false" fetch="select">
+            <column name="CODAPP" length="10" not-null="true">
+                <comment>CODIGO DE AUTORIZACION</comment>
+            </column>
+        </many-to-one>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1">
+                <comment>RELACION ACTIVA/INACTIVA</comment>
+            </column>
+        </property>
+        <property name="orden" type="java.lang.Integer">
+            <column name="ORDEN">
+                <comment></comment>
+            </column>
+        </property>
+        <property name="cont" type="string">
+            <column name="CONT" length="6">
+                <comment></comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

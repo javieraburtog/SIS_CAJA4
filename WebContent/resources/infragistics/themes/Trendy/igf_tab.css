@@ -1,0 +1,126 @@
+/*=======================================================*/
+	/*                      Trendy Theme                       */
+	/*=======================================================*/
+.igTabView {
+	
+}
+
+.igTabView tr, .igTabView td {
+	margin: 0px;
+	padding: 0px;
+}
+
+.igTabItems * {
+	white-space: nowrap;
+}
+
+.igTabItemLeft {
+	background-image: url(webtab/igwtb_tabiteml.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	font-size: 6px;
+	border-bottom: 1px solid #109a48;
+	padding-right: 3px;
+}
+
+.igTabItemRight {
+	background-image: url(webtab/igwtb_tabitemr.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+	cursor: pointer;
+	padding: 5px 10px 4px 7px;
+	border-bottom: 1px solid #109a48;
+}
+
+.igTabItem {
+	color: #006F4A;
+	text-decoration: none;
+}
+
+.igTabItemSelectedLeft {
+	background-image: url(webtab/igwtb_tabitemsl.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	font-size: 6px;
+	padding-right: 3px;
+}
+
+.igTabItemSelectedRight {
+	background-image: url(webtab/igwtb_tabitemsr.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+	padding: 5px 10px 4px 7px;
+}
+
+.igTabItemSelected {
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.igTabItemHoverLeft {
+	background-image: url(webtab/igwtb_tabitemhl.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	font-size: 6px;
+	border-bottom: 1px solid #109a48;
+	padding-right: 3px;
+}
+
+.igTabItemHoverRight {
+	background-image: url(webtab/igwtb_tabitemhr.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+	cursor: pointer;
+	padding: 5px 10px 4px 7px;
+	border-bottom: 1px solid #109a48;
+}
+
+.igTabItemHover {
+	color: #000000;
+	text-decoration: none;
+}
+
+.igTabItemDisabledLeft {
+	background-image: url(webtab/igwtb_tabiteml.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	font-size: 6px;
+	border-bottom: 1px solid #109a48;
+	padding-right: 3px;
+	padding-right: 3px;
+}
+
+.igTabItemDisabledRight {
+	background-image: url(webtab/igwtb_tabitemr.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+	padding: 5px 10px 4px 7px;
+	border-bottom: 1px solid #109a48;
+}
+
+.igTabItemDisabled {
+	color: #DBEDB6;
+	text-decoration: none;
+}
+
+.igTabItemSeparator {
+	font-size: 1px;
+	border-bottom: 1px solid #109a48;
+	padding-left: 1px;
+}
+
+.igTabItemSpacer {
+	border-bottom: 1px solid #109a48;
+	font-size: 1px;
+	padding-left: 10px;
+	width: 100%;	
+}
+
+.igTabItemContent {
+	padding: 5px;
+	background-color: white;
+	border-left: 1px solid #109a48;
+	border-right: 1px solid #109a48;
+	border-bottom: 1px solid #109a48;
+}

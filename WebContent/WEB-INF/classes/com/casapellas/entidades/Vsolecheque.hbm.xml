@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 23, 2013 10:39:02 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vsolecheque" table="VSOLECHEQUE">
+        <comment>V.Datos de las solicitudes Carta / Cheque</comment>
+    
+        <composite-id name="id" class="com.casapellas.entidades.VsolechequeId">
+            <key-property name="nosol" type="int">
+                <column name="NOSOL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="codunineg" type="string">
+                <column name="CODUNINEG" length="12" />
+            </key-property>
+            <key-property name="numfac" type="int">
+                <column name="NUMFAC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipofactura" type="string">
+                <column name="TIPOFACTURA" length="2" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="1" />
+            </key-property>
+            <key-property name="codemp" type="int">
+                <column name="CODEMP" precision="8" scale="0" />
+            </key-property>
+            <key-property name="usuariomod" type="java.lang.Integer">
+                <column name="USUARIOMOD" precision="8" scale="0" />
+            </key-property>
+            <key-property name="fechamod" type="timestamp">
+                <column name="FECHAMOD" length="26" />
+            </key-property>
+            <key-property name="observacion" type="string">
+                <column name="OBSERVACION" length="100" />
+            </key-property>
+            <key-property name="mpago" type="string">
+                <column name="MPAGO" length="3" />
+            </key-property>
+            <key-property name="tipoemision" type="string">
+                <column name="TIPOEMISION" length="3" />
+            </key-property>
+            <key-property name="moneda" type="string">
+                <column name="MONEDA" length="3" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="8" />
+            </key-property>
+            <key-property name="codautoriz" type="string">
+                <column name="CODAUTORIZ" length="150" />
+            </key-property>
+            <key-property name="notarjeta" type="string">
+                <column name="NOTARJETA" length="150" />
+            </key-property>
+            <key-property name="fechapago" type="string">
+                <column name="FECHAPAGO" length="150" />
+            </key-property>
+            <key-property name="idafiliado" type="string">
+                <column name="IDAFILIADO" length="150" />
+            </key-property>
+            <key-property name="tasacambio" type="big_decimal">
+                <column name="TASACAMBIO" precision="15" scale="7" />
+            </key-property>
+            
+            <key-property name="fechajul" type="int">
+           	 	<column name="FECHAJUL" precision="6" scale="0" not-null="true" />
+       		</key-property>
+            
+            
+            <key-property name="unineg" type="string">
+                <column name="UNINEG" length="30" />
+            </key-property>
+            <key-property name="nomsuc" type="string">
+                <column name="NOMSUC" length="30" />
+            </key-property>
+            <key-property name="nomcomp" type="string">
+                <column name="NOMCOMP" length="30" />
+            </key-property>
+            <key-property name="monedadev" type="string">
+                <column name="MONEDADEV" length="3" />
+            </key-property>
+            <key-property name="totaldev" type="big_decimal">
+                <column name="TOTALDEV" precision="10" />
+            </key-property>
+            <key-property name="codcli" type="java.lang.Integer">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cliente" type="string">
+                <column name="CLIENTE" length="40" />
+            </key-property>
+            <key-property name="fechadev" type="date">
+                <column name="FECHADEV" length="10" />
+            </key-property>
+            <key-property name="fechafac" type="date">
+                <column name="FECHAFAC" length="10" />
+            </key-property>
+            <key-property name="horadev" type="string">
+                <column name="HORADEV" length="26" />
+            </key-property>
+            <key-property name="estadosol" type="string">
+                <column name="ESTADOSOL" length="80" />
+            </key-property>
+            <key-property name="nomcajero" type="string">
+                <column name="NOMCAJERO" length="40" />
+            </key-property>
+            <key-property name="nofactoriginal" type="int">
+                <column name="NOFACTORIGINAL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tipofactoriginal" type="string">
+                <column name="TIPOFACTORIGINAL" length="2" />
+            </key-property>
+            <key-property name="totalfact" type="big_decimal">
+                <column name="TOTALFACT" precision="10" />
+            </key-property>
+            <key-property name="caname" type="string">
+                <column name="CANAME" length="40" />
+            </key-property>
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="3" />
+            </key-property>
+            <key-property name="cajarec" type="int">
+                <column name="CAJAREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="cajasuc" type="string">
+                <column name="CAJASUC" length="5" />
+            </key-property>
+            <key-property name="cajacomp" type="string">
+                <column name="CAJACOMP" length="10" />
+            </key-property>
+            <key-property name="tipoe" type="string">
+                <column name="TIPOE" length="80" />
+            </key-property>
+            <key-property name="metododesc" type="string">
+                <column name="METODODESC" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

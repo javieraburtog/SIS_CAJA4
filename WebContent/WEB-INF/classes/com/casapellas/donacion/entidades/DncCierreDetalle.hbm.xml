@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-19-2015 10:22:08 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="com.casapellas.donacion.entidades.DncCierreDetalle" table="DNC_CIERRE_DETALLE">
+        <id name="iddonacionxcierre" type="int">
+            <column name="IDDONACIONXCIERRE" />
+            <generator class="identity" />
+        </id>
+        <property name="iddonacion" type="int">
+            <column name="IDDONACION" not-null="true" />
+        </property>
+        <property name="idcierrednc" type="int">
+            <column name="IDCIERREDNC" not-null="true" />
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="15" not-null="true" />
+        </property>
+        <property name="formapago" type="string">
+            <column name="FORMAPAGO" length="3" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="fechacrea" type="timestamp">
+            <column name="FECHACREA" length="26" not-null="true" />
+        </property>
+        <property name="fechamod" type="timestamp">
+            <column name="FECHAMOD" length="26" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

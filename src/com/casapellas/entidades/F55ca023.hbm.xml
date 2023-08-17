@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 28, 2012 5:17:41 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca023" table="F55CA023" >
+        <comment>Maestro de cuenta de banco por compa&#166;ia</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca023Id">
+            <key-property name="d3rp01" type="string">
+                <column name="D3RP01" length="3" />
+            </key-property>
+            <key-property name="d3crcd" type="string">
+                <column name="D3CRCD" length="3" />
+            </key-property>
+            <key-property name="d3mcu" type="string">
+                <column name="D3MCU" length="12" />
+            </key-property>
+            <key-property name="d3obj" type="string">
+                <column name="D3OBJ" length="6" />
+            </key-property>
+            <key-property name="d3sub" type="string">
+                <column name="D3SUB" length="8" />
+            </key-property>
+            <key-property name="d3stat" type="string">
+                <column name="D3STAT" length="1" />
+            </key-property>
+            <key-property name="d3codb" type="int">
+                <column name="D3CODB" precision="8" scale="0" />
+            </key-property>
+            <key-property name="d3nocuenta" type="long">
+                <column name="D3NOCUENTA" precision="10" scale="0" />
+            </key-property>
+            <key-property name="d3digconc" type="int">
+                <column name="D3DIGCONC" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

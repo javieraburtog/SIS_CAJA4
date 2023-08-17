@@ -1,0 +1,191 @@
+/*=======================================================*/
+/*                      Green Gel                        */ 
+/*=======================================================*/
+
+.igdw_Control
+{
+	background-color:Transparent;
+	border-width:0px;
+}
+
+
+.igdw_HeaderArea
+{
+	font-weight:bold;
+	border-width:0px;
+	cursor:default;
+	color:White;
+	font-size:1px;
+}
+
+
+.igdw_BodyContent
+{
+	background-color:white;
+	padding:10px;
+	overflow-x:auto;
+	overflow-y:auto;
+}
+
+
+.igdw_HeaderButton
+{
+	margin:4px 3px 3px 3px;
+	cursor:pointer;
+}
+
+
+.igdw_HeaderCaption
+{
+	font-weight:normal;
+	font-size:x-small;
+	margin-top:16px;
+	margin-left:6px;
+	padding-top:10px;
+	color:#3C3C3C;
+	white-space:nowrap;
+}
+
+
+.igdw_HeaderButtonArea
+{
+	width: 60px;
+	vertical-align:middle;
+	text-align:right;
+	height: 24px;
+}
+
+
+.igdw_HeaderImage
+{
+	cursor:default;
+}
+
+
+.igdw_ModalBackground
+{
+	filter:alpha(opacity:50);
+	opacity:0.5;
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:100%;
+	height:100%;
+	background-color:white;
+}
+
+
+.igdw_ResizingHandle
+{
+}
+
+
+/* used only when header visible */
+.igdw_HeaderCornerLeft
+{
+	background-position:top left ;
+	background-image: url(webdialogwindow/igdw_TopLeft.gif);
+	font-size:1px;
+	width: 9px;
+}
+
+
+/* used only when header visible */
+.igdw_HeaderContent
+{
+	background-image: url(webdialogwindow/igdw_Top.gif);
+	overflow-x:hidden;
+	overflow-y:hidden;
+}
+
+
+/* used only when header visible */
+.igdw_HeaderCornerRight
+{
+	background-position:top right ;
+	background-image: url(webdialogwindow/igdw_TopRight.gif);
+	font-size:1px;
+	width: 9px;
+}
+
+
+/* used only when header hidden */
+.igdw_BodyCornerTopLeft
+{
+	background-position:top left ;
+	background-image: url(webdialogwindow/igdw_TopLeft.gif);
+	font-size:1px;
+	height: 14px;
+	width: 9px;
+}
+
+
+/* used only when header hidden */
+.igdw_BodyEdgeTop
+{
+	background-image: url(webdialogwindow/igdw_TopHidden.gif);
+	font-size:1px;
+	height: 14px;
+}
+
+
+/* used only when header hidden */
+.igdw_BodyCornerTopRight
+{
+	background-position:top right ;
+	background-image: url(webdialogwindow/igdw_TopRight.gif);
+	font-size:1px;
+	height: 14px;
+	width: 9px;
+}
+
+
+.igdw_BodyEdgeLeft
+{
+	background-position:top left ;
+	background-image: url(webdialogwindow/igdw_EdgeLeft.gif);
+	font-size:1px;
+	width: 6px;
+}
+
+
+.igdw_BodyEdgeRight
+{
+	background-position:top right ;
+	background-image: url(webdialogwindow/igdw_EdgeRight.gif);
+	font-size:1px;
+	width: 6px;
+}
+
+
+.igdw_BodyCornerBottomLeft
+{
+	background-image: url(webdialogwindow/igdw_BottomLeft.gif);
+	font-size:1px;
+	width: 9px;
+	height: 14px;
+}
+
+
+.igdw_BodyContentArea
+{
+	background-color:White;
+	vertical-align:top;
+}
+
+
+.igdw_BodyCornerBottomRight
+{
+	background-image: url(webdialogwindow/igdw_BottomRight.gif);
+	font-size:1px;
+	width: 9px;
+	height: 14px;
+}
+
+
+.igdw_BodyEdgeBottom
+{
+	background-image: url(webdialogwindow/igdw_Bottom.gif);
+	font-size:1px;
+	height: 14px;
+}

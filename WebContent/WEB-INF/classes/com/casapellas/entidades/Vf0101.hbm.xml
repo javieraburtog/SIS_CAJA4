@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 08-15-2010 06:33:19 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.Vf0101" table="VF0101">
+		<comment></comment>
+		<composite-id name="id" class="com.casapellas.entidades.Vf0101Id">
+			<key-property name="aban8" type="int">
+				<column name="ABAN8" precision="8" scale="0" />
+			</key-property>
+			<key-property name="abalph" type="string">
+				<column name="ABALPH" length="40" />
+			</key-property>
+			<key-property name="aladd1" type="string">
+				<column name="ALADD1" length="40" />
+			</key-property>
+			<key-property name="wwrem1" type="string">
+				<column name="WWREM1" length="40" />
+			</key-property>
+			<key-property name="abate" type="string">
+				<column name="ABATE" length="1" />
+			</key-property>
+			<key-property name="abatr" type="string">
+				<column name="ABATR" length="1" />
+			</key-property>
+			<key-property name="abatpr" type="string">
+				<column name="ABATPR" length="1" />
+			</key-property>
+			<key-property name="abatp" type="string">
+				<column name="ABATP" length="1" />
+			</key-property>
+			<key-property name="abat1" type="string">
+				<column name="ABAT1" length="3" />
+			</key-property>
+			<key-property name="abat2" type="string">
+				<column name="ABAT2" length="1" />
+			</key-property>
+			<key-property name="abat3" type="string">
+				<column name="ABAT3" length="1" />
+			</key-property>
+			<key-property name="abat4" type="string">
+				<column name="ABAT4" length="1" />
+			</key-property>
+			<key-property name="abat5" type="string">
+				<column name="ABAT5" length="1" />
+			</key-property>
+			<key-property name="abac01" type="string">
+				<column name="ABAC01" length="1" />
+			</key-property>
+			<key-property name="abac02" type="string">
+				<column name="ABAC02" length="1" />
+			</key-property>
+			<key-property name="abac03" type="string">
+				<column name="ABAC03" length="1" />
+			</key-property>
+			<key-property name="abac04" type="string">
+				<column name="ABAC04" length="1" />
+			</key-property>
+			<key-property name="abac05" type="string">
+				<column name="ABAC05" length="1" />
+			</key-property>
+			<key-property name="abac06" type="string">
+				<column name="ABAC06" length="1" />
+			</key-property>
+			<key-property name="abac07" type="string">
+				<column name="ABAC07" length="1" />
+			</key-property>
+			<key-property name="abac08" type="string">
+				<column name="ABAC08" length="1" />
+			</key-property>
+			<key-property name="abac09" type="string">
+				<column name="ABAC09" length="1" />
+			</key-property>
+			<key-property name="abac10" type="string">
+				<column name="ABAC10" length="1" />
+			</key-property>
+			<key-property name="a5arc" type="string">
+				<column name="A5ARC" length="4" />
+			</key-property>
+			<key-property name="a5co" type="string">
+				<column name="A5CO" length="5" />
+			</key-property>
+			<key-property name="abtx2" type="string">
+				<column name="ABTX2" length="20" />
+			</key-property>
+			<key-property name="abcm" type="string">
+				<column name="ABCM" length="2" />
+			</key-property>
+			<key-property name="abxab" type="string">
+				<column name="ABXAB" length="1" />
+			</key-property>
+
+			<key-property name="wwgnnm" type="string">
+				<column name="wwgnnm" length="25" />
+			</key-property>
+
+			<key-property name="wwmdnm" type="string">
+				<column name="wwmdnm" length="25" />
+			</key-property>
+
+			<key-property name="wwsrnm" type="string">
+				<column name="wwsrnm" length="25" />
+			</key-property>
+
+		</composite-id>
+	</class>
+</hibernate-mapping>

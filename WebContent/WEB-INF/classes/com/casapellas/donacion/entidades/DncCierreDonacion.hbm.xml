@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 05-19-2015 10:22:08 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="com.casapellas.donacion.entidades.DncCierreDonacion" table="DNC_CIERRE_DONACION">
+        <id name="idcierredonacion" type="int">
+            <column name="IDCIERREDONACION" />
+            <generator class="identity" />
+        </id>
+        <property name="idbeneficiario" type="int">
+            <column name="IDBENEFICIARIO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="3" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="noarqueo" type="int">
+            <column name="NOARQUEO" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="montorecibido" type="big_decimal">
+            <column name="MONTORECIBIDO" precision="15" not-null="true" />
+        </property>
+        <property name="montoneto" type="big_decimal">
+            <column name="MONTONETO" precision="15" not-null="true" />
+        </property>
+        <property name="transacciones" type="int">
+            <column name="TRANSACCIONES" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="fechacierre" type="timestamp">
+            <column name="FECHACIERRE" length="26" not-null="true" />
+        </property>
+        <property name="transactrc" type="int">
+            <column name="TRANSACTRC" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="montorecibos" type="big_decimal">
+            <column name="MONTORECIBOS" precision="15" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="3" not-null="true" />
+        </property>
+        <property name="observaciones" type="string">
+            <column name="OBSERVACIONES" length="100" not-null="true" />
+        </property>
+        <property name="usrcrea" type="int">
+            <column name="USRCREA" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="usrmod" type="int">
+            <column name="USRMOD" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="batchAprobacion" type="int">
+            <column name="BATCH_APROBACION" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="documentoAprobacion" type="int">
+            <column name="DOCUMENTO_APROBACION" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="tipoDocumento" type="string">
+            <column name="TIPO_DOCUMENTO" length="10" not-null="true" />
+        </property>
+          <property name="codigobeneficiario" type="int">
+            <column name="CODIGOBENEFICIARIO" not-null="true" />
+        </property>
+        
+           <property name="fechamodificacion" type="timestamp">
+            <column name="fechamodificacion" length="26" not-null="true" />
+        </property>
+        
+        
+        
+    </class>
+</hibernate-mapping>

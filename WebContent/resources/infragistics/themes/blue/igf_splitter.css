@@ -1,0 +1,31 @@
+/*=======================================================*/
+/*                      THEME BLUE                       */
+/*=======================================================*/
+
+.igspl_Control {
+	border: 1px solid rgb(204,204,204);
+}
+
+.igspl_HSplitBarHeight {
+	height:6px;
+}
+
+.igspl_HSplitBar {
+	height:6px;
+	width:100%;
+	background-repeat: repeat-x;
+	background-image: url(websplitter/igspl_splithoriz.gif);
+	cursor:n-resize;
+}
+
+.igspl_VSplitBarWidth {
+	width:6px;
+}
+
+.igspl_VSplitBar {
+	width:6px;
+	height:100%;
+	background-repeat: repeat-y;
+	background-image: url(websplitter/igspl_splitvert.gif);
+	cursor:e-resize;
+}

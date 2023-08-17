@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 11, 2015 6:30:41 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.conciliacion.entidades.PcdConsolidadoDepositosConfirmados" table="PCD_CONSOLIDADO_DEPOSITOS_CONFIRMADOS">
+        <id name="idresumendepositoconfirmado" type="int">
+            <column name="IDRESUMENDEPOSITOCONFIRMADO" />
+            <generator class="identity" />
+        </id>
+        <property name="idconsolidadobco" type="int">
+            <column name="IDCONSOLIDADOBCO" not-null="true" />
+        </property>
+        <property name="iddepbcodet" type="int">
+            <column name="IDDEPBCODET" not-null="true" />
+        </property>
+        <property name="numeroreferenciaorg" type="int">
+            <column name="NUMEROREFERENCIAORG" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="numeroreferenciajde" type="int">
+            <column name="NUMEROREFERENCIAJDE" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="15" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true" />
+        </property>
+        <property name="codigobanco" type="long">
+            <column name="CODIGOBANCO" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="numerocuenta" type="long">
+            <column name="NUMEROCUENTA" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="fechadeposito" type="date">
+            <column name="FECHADEPOSITO" length="10" not-null="true" />
+        </property>
+        <property name="codigotransaccion" type="string">
+            <column name="CODIGOTRANSACCION" length="5" not-null="true" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="100" not-null="true" />
+        </property>
+        <property name="estadodecuenta" type="string">
+            <column name="ESTADODECUENTA" length="100" not-null="true" />
+        </property>
+        <property name="cantidadcomparaciones" type="long">
+            <column name="CANTIDADCOMPARACIONES" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="fechaconfirmacion" type="date">
+            <column name="FECHACONFIRMACION" length="10" not-null="true" />
+        </property>
+        <property name="tipoconfirmacion" type="int">
+            <column name="TIPOCONFIRMACION" not-null="true" />
+        </property>
+        <property name="usuarioconfirmacion" type="int">
+            <column name="USUARIOCONFIRMACION" precision="8" scale="0" not-null="true" />
+        </property>
+        <property name="observaciones" type="string">
+            <column name="OBSERVACIONES" length="100" not-null="true" />
+        </property>
+        <property name="montodeajuste" type="big_decimal">
+            <column name="MONTODEAJUSTE" precision="15" not-null="true" />
+        </property>
+        <property name="fechacreacion" type="timestamp">
+            <column name="FECHACREACION" length="26" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

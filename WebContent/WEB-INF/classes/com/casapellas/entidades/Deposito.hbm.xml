@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 4, 2012 4:03:35 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Deposito" table="DEPOSITO" >
+        <comment>DEPOSITOS REALIZADOS EN CAJA Y CONFIRMACION BANCO</comment>
+        <id name="consecutivo" type="int">
+            <column name="CONSECUTIVO" />
+            <generator class="identity" />
+        </id>
+        <property name="nodeposito" type="int">
+            <column name="NODEPOSITO" precision="8" scale="0" not-null="true">
+                <comment>NO DE DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="codsuc" type="string">
+            <column name="CODSUC" length="5" not-null="true">
+                <comment>CODIGO DE SUCURSAL</comment>
+            </column>
+        </property>
+        <property name="codcomp" type="string">
+            <column name="CODCOMP" length="10" not-null="true">
+                <comment>CODIGO DE COMPANIA</comment>
+            </column>
+        </property>
+        <property name="caid" type="int">
+            <column name="CAID" precision="8" scale="0" not-null="true">
+                <comment>NO DE CAJA</comment>
+            </column>
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" not-null="true">
+                <comment>MONEDA DEL DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="15" not-null="true">
+                <comment>MONTO DEL DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="referencia" type="string">
+            <column name="REFERENCIA" length="15" not-null="true">
+                <comment>REFERENCIA DE BANCO</comment>
+            </column>
+        </property>
+        <property name="fecha" type="date">
+            <column name="FECHA" length="10" not-null="true">
+                <comment>FECHA DE CREACION DE DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="hora" type="time">
+            <column name="HORA" length="8" not-null="true">
+                <comment>HORA DE CREACION DE DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="fechamod" type="date">
+            <column name="FECHAMOD" length="10" not-null="true">
+                <comment>FECHA DE CONFIRMACION DEL DEPOSITO CON BANCO</comment>
+            </column>
+        </property>
+        <property name="horamod" type="time">
+            <column name="HORAMOD" length="8" not-null="true">
+                <comment>HORA DE CONFIRMACION DEL DEPOSITO CON BANCO</comment>
+            </column>
+        </property>
+        <property name="coduser" type="string">
+            <column name="CODUSER" length="10" not-null="true">
+                <comment>LOGIN DE USUARIO</comment>
+            </column>
+        </property>
+        <property name="tipodep" type="string">
+            <column name="TIPODEP" length="2" not-null="true">
+                <comment>Tipo de deposito (D dep, R ret, C com)</comment>
+            </column>
+        </property>
+        <property name="tasa" type="big_decimal">
+            <column name="TASA" precision="15" scale="7" not-null="true">
+                <comment>Tasa de deposito</comment>
+            </column>
+        </property>
+        <property name="mpagodep" type="string">
+            <column name="MPAGODEP" length="3" not-null="true">
+                <comment>METODO DE PAGO CORRESPONDIENTE AL DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="referdep" type="string">
+            <column name="REFERDEP" length="10" not-null="true">
+                <comment>REFERENCIA DEL DEPOSITO CONFIRMADO CON EL BANCO</comment>
+            </column>
+        </property>
+        <property name="estadocnfr" type="string">
+            <column name="ESTADOCNFR" length="3" not-null="true">
+                <comment>ESTADO DEL REGISTRO DE CONFIRMACION DE DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="tipoconfr" type="string">
+            <column name="TIPOCONFR" length="3" not-null="true">
+                <comment>TIPO DE CONFIRMACI&#211;N USADA EN CONCILIACION</comment>
+            </column>
+        </property>
+        <property name="usrconfr" type="int">
+            <column name="USRCONFR" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL USUARIO QUE CONFIRMA EL DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="usrcreate" type="int">
+            <column name="USRCREATE" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL USUARIO QUE REGISTRO EL DEPOSITO</comment>
+            </column>
+        </property>
+        <property name="idbanco" type="int">
+            <column name="IDBANCO" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL BANCO</comment>
+            </column>
+        </property>
+        <property name="codcajero" type="int">
+            <column name="CODCAJERO" precision="8" scale="0" not-null="true">
+                <comment>CODIGO DEL CAJERO ASOCIADO CON EL DEPOSITO</comment>
+            </column>
+        </property>
+        <set name="ctaxdepositos" table="CTAXDEPOSITO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="IDDEPOSITO" not-null="true">
+                    <comment>IDENTIFICADOR DEL DEPOSITO DE CAJA</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Ctaxdeposito" />
+        </set>
+        <set name="conciliadets" table="CONCILIADET" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="IDDEPOSITOCJA" not-null="true" />
+            </key>
+            <one-to-many class="com.casapellas.conciliacion.entidades.Conciliadet" />
+        </set>
+        
+        <property name="referencenumber" type="int">
+            <column name="REFERENCENUMBER" precision="8" scale="0" not-null="true">
+                <comment>NUMERO REFERENCIA ORIGINAL DEL DEPOSITO </comment>
+            </column>
+        </property>
+        
+         <property name="depctatran" type="int">
+            <column name="DEPCTATRAN" precision="1" scale="0" not-null="true">
+                <comment>PAGO A CUENTA TRANSITO</comment>
+            </column>
+        </property>
+        
+    </class>
+</hibernate-mapping>

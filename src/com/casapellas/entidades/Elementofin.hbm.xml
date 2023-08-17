@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/12/2009 11:38:33 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Elementofin" table="ELEMENTOFIN">
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.ElementofinId">
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="nosol" type="int">
+                <column name="NOSOL" precision="8" scale="0" />
+            </key-property>
+            <key-property name="tiposol" type="string">
+                <column name="TIPOSOL" length="2" />
+            </key-property>
+            <key-property name="codcli" type="int">
+                <column name="CODCLI" precision="8" scale="0" />
+            </key-property>
+            <key-property name="nivel" type="string">
+                <column name="NIVEL" length="3" />
+            </key-property>
+            <key-property name="descnivel" type="string">
+                <column name="DESCNIVEL" length="30" />
+            </key-property>
+            <key-property name="mrurec" type="big_decimal">
+                <column name="MRUREC" precision="10" />
+            </key-property>
+            <key-property name="mrstam" type="big_decimal">
+                <column name="MRSTAM" precision="10" />
+            </key-property>
+            <key-property name="mrfrec" type="big_decimal">
+                <column name="MRFREC" precision="10" />
+            </key-property>
+            <key-property name="mrctam" type="big_decimal">
+                <column name="MRCTAM" precision="10" />
+            </key-property>
+            <key-property name="codimp" type="string">
+                <column name="CODIMP" length="2" />
+            </key-property>
+            <key-property name="tasaimp" type="string">
+                <column name="TASAIMP" length="10" />
+            </key-property>
+            <key-property name="importe" type="big_decimal">
+                <column name="IMPORTE" precision="10" />
+            </key-property>
+            <key-property name="total" type="big_decimal">
+                <column name="TOTAL" precision="10" />
+            </key-property>
+            <key-property name="impuesto" type="big_decimal">
+                <column name="IMPUESTO" precision="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

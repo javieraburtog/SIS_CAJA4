@@ -1,0 +1,111 @@
+/*=======================================================*/
+/*                      Office2k7Black Theme         		                  */
+/*=======================================================*/
+/* default css applied to the tree itself */
+.igTreeView {
+	background-color: #FFFFFF;
+	border: 1px solid silver;
+}
+
+/* display the "minus" icon to collapse a tree node */
+.igTreeNodeExpandedControl {
+	background-image: url(webtree/igwt_junctionExpanded.gif);
+	height: 16px;
+	width: 16px;
+}
+
+/* display the "plus" icon to expand a tree node */
+.igTreeNodeCollapsedControl {
+	background-image: url(webtree/igwt_junctionCollapsed.gif);
+	height: 16px;
+	width: 16px;
+}
+
+/* display a transparent icon that matches the dimension of the plus/minus icon */
+.igTreeNodeControl {
+	height: 16px;
+	width: 16px;
+}
+
+/* default css applied to tree nodes */
+.igTreeNode {
+	color: #000000;
+	text-decoration: none;
+	white-space: nowrap;
+	padding:2px;
+	
+}
+.igTreeNode img, .igTreeNodeHover img, .igTreeNodeSelected img, .igTreeNodeDisabled img {	
+	vertical-align:middle;	
+}
+.igTreeNode .label, .igTreeNodeHover .label, .igTreeNodeSelected .label, .igTreeNodeDisabled .label {	
+	vertical-align:middle;	
+}
+
+/* applied to disabled tree nodes */
+.igTreeNodeDisabled {
+	color: silver;
+	cursor: text;
+	text-decoration: none;
+	white-space: nowrap;
+	padding:2px;
+}
+
+/* css applied to a node whenever the mouse cursor is over it */
+.igTreeNodeHover {
+	color: #f3943a;	
+	white-space: nowrap;
+	text-decoration: none;
+	padding:2px;
+}
+.igTreeNodeHover .label{
+	text-decoration: underline;
+}
+
+/* css applied to a node whenever selected */
+.igTreeNodeSelected {
+	color: #74B8E4;
+	font-weight: bold;
+	text-decoration: none;
+	white-space: nowrap;
+	padding:2px;
+}
+
+.igTreeNodeSelected .label{
+	text-decoration: underline;
+}
+
+.owtnodeIcon {
+	margin-right: 3px;
+	vertical-align: middle;
+	padding-top: -3px;
+}
+
+/* css that applies to the nodes' icons (but not the plus/minus icons) */
+.igTreeNodeIcon {
+	margin-right: 4px;
+}
+
+/* css applied to children nodes */
+.igTreeNodeContent {
+	margin-left: 16px;
+	text-decoration: none;
+	background-color: white;
+}
+/* css applied to a node whenever insert before action is possible */
+.igTreeNodeInsertBefore {
+	height: 1px;
+	background-color:silver
+}
+
+.igTreeView A{
+	text-decoration: none;
+}
+
+.igTreeView UL {
+	margin-top:0px;
+	margin-bottom:0px;
+	margin-left:15px;
+	padding:0px;
+	list-style: none;
+} 

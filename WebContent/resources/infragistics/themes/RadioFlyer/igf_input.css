@@ -1,0 +1,109 @@
+/*=======================================================*/
+/*                      Radio Flyer Theme                       */ 
+/*=======================================================*/
+.igCalendar {
+	background-color: white;
+	border: 1px solid gray;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;	
+}
+.igCalendarHeader {
+	text-align: center;	
+}
+
+/* applied to the dayHeader section of the calendar */
+.igCalendarDayHeader {
+	border: 1px solid gray;
+	background-color: #6699cc;
+	color: white;
+	text-align: center;
+}
+.igCalendarDayHeader  td {
+	padding: 2px;
+	background-image:url(webinput/igwi_header.gif);
+	background-position:center;
+	font-weight:bold;
+}
+
+/* default css applied to each day */
+.igCalendarDay {
+	padding: 5px;
+	text-align: center;	
+}
+.igCalendarDay  a {
+	color: black;
+	text-decoration: none;
+}
+
+/* css applied to a day when the mouse cursor is over it */
+.igCalendarDayHover {
+	background-color: #F0959F;
+	padding: 5px;
+	text-align: center;	
+}
+.igCalendarDayHover  a {
+	color: white;
+	text-decoration: none;
+}
+
+/* css applied to the selected day */
+.igCalendarDaySelected {
+	background-color: #950416;
+	padding: 5px;
+	text-align: center;
+
+}
+.igCalendarDaySelected  a {
+	color: white;
+	text-decoration: none;
+}
+
+/* css applied to a day not belonging to the currently displayed month */
+.igCalendarDayNotCurrentMonth {
+    padding: 5px;
+    text-align: center; 
+}
+.igCalendarDayNotCurrentMonth  a {
+    color: silver;
+    text-decoration: none;
+}
+
+
+
+
+/*=======================================================*/
+/*               COMMON TO ALL THEMES                    */ 
+/*=======================================================*/
+.owidct td {
+	margin: 0px;
+	padding: 0px;
+}
+.owidcs {
+	border: 0px; 
+	margin: 0px;
+	padding: 0px;
+}
+
+.owidcbcy {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+.owidcbcy img {
+	vertical-align: middle;
+}
+
+.igCalendarDisabledDay {
+	color: silver;
+	cursor: text;	
+	text-decoration: line-through;
+}
+
+.igDisabledCalendarDay
+{
+	color: silver;
+	cursor: text;	
+	text-decoration: line-through;
+}

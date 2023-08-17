@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 5, 2011 10:22:47 AM by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.F55ca033" table="F55CA033" >
+        <comment>Registro de Cuenta Transitoria a banco</comment>
+        <composite-id name="id" class="com.casapellas.entidades.F55ca033Id">
+            <key-property name="b3codb" type="int">
+                <column name="B3CODB" precision="8" scale="0" />
+            </key-property>
+            <key-property name="b3rp01" type="string">
+                <column name="B3RP01" length="3" />
+            </key-property>
+            <key-property name="b3crcd" type="string">
+                <column name="B3CRCD" length="3" />
+            </key-property>
+            <key-property name="b3ctat" type="string">
+                <column name="B3CTAT" length="8" />
+            </key-property>
+            <key-property name="ajustemin" type="big_decimal">
+                <column name="AJUSTEMIN" precision="10" />
+            </key-property>
+            <key-property name="ajustemax" type="big_decimal">
+                <column name="AJUSTEMAX" precision="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

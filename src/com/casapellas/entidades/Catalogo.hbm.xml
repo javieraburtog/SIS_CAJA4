@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 08-25-2009 04:41:56 PM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Catalogo" table="CATALOGO" >
+        <comment>Maestro de cat&#225;logos b&#225;sicos</comment>
+        <id name="codcatalogo" type="int">
+            <column name="CODCATALOGO" precision="8" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="15" not-null="true">
+                <comment>Nombre del cat&#225;logo</comment>
+            </column>
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="50">
+                <comment>Descripci&#243;n del cat&#225;logo</comment>
+            </column>
+        </property>
+        <property name="activo" type="string">
+            <column name="ACTIVO" length="1" not-null="true">
+                <comment>Estado del arqueo 1:activo, 0:inactivo</comment>
+            </column>
+        </property>
+        <property name="usuariocreacion" type="string">
+            <column name="USUARIOCREACION" length="10" not-null="true">
+                <comment>Usuario que crea el registro</comment>
+            </column>
+        </property>
+        <property name="usuariomodificacion" type="string">
+            <column name="USUARIOMODIFICACION" length="10">
+                <comment>Usuario que modifica el registro</comment>
+            </column>
+        </property>
+        <property name="fechacreacion" type="timestamp">
+            <column name="FECHACREACION" length="26" not-null="true">
+                <comment>fecha de ingreso del registro</comment>
+            </column>
+        </property>
+        <property name="fechamodificacion" type="timestamp">
+            <column name="FECHAMODIFICACION" length="26">
+                <comment>fecha de modificaci&#243;n del registro</comment>
+            </column>
+        </property>
+        <set name="valorcatalogos" inverse="true">
+            <key>
+                <column name="CODCATALOGO" precision="8" scale="0" not-null="true">
+                    <comment>c&#243;digo del catalogo al que pertenece</comment>
+                </column>
+            </key>
+            <one-to-many class="com.casapellas.entidades.Valorcatalogo" />
+        </set>
+    </class>
+</hibernate-mapping>

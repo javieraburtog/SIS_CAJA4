@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 23, 2010 9:54:15 AM by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vcuentaoperacion" table="VCUENTAOPERACION" >
+        <comment></comment>
+        <composite-id name="id" class="com.casapellas.entidades.VcuentaoperacionId">
+            <key-property name="d5tid" type="int">
+                <column name="D5TID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="d5desc" type="string">
+                <column name="D5DESC" length="45" />
+            </key-property>
+            <key-property name="d5rmrk" type="string">
+                <column name="D5RMRK" length="70" />
+            </key-property>
+            <key-property name="d5crd" type="int">
+                <column name="D5CRD" precision="8" scale="0" />
+            </key-property>
+            <key-property name="d5usr" type="string">
+                <column name="D5USR" length="10" />
+            </key-property>
+            <key-property name="d6tid" type="int">
+                <column name="D6TID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="d6crcd" type="string">
+                <column name="D6CRCD" length="3" />
+            </key-property>
+            <key-property name="d6co" type="string">
+                <column name="D6CO" length="5" />
+            </key-property>
+            <key-property name="d6aid" type="string">
+                <column name="D6AID" length="8" />
+            </key-property>
+            <key-property name="gmco" type="string">
+                <column name="GMCO" length="5" />
+            </key-property>
+            <key-property name="gmmcu" type="string">
+                <column name="GMMCU" length="12" />
+            </key-property>
+            <key-property name="gmobj" type="string">
+                <column name="GMOBJ" length="6" />
+            </key-property>
+            <key-property name="gmsub" type="string">
+                <column name="GMSUB" length="8" />
+            </key-property>
+            <key-property name="gmpec" type="string">
+                <column name="GMPEC" length="3" />
+            </key-property>
+            <key-property name="gmdl01" type="string">
+                <column name="GMDL01" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

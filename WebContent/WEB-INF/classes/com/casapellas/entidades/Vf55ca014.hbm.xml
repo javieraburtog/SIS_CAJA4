@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22/02/2009 13:12:56 by Hibernate Tools 3.2.0.b9 -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vf55ca014" table="VF55CA014" >
+        <comment>VISTA DEL F55CA014</comment>
+        <composite-id name="id" class="com.casapellas.entidades.Vf55ca014Id">
+            <key-property name="c4id" type="int">
+                <column name="C4ID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="c4rp01" type="string">
+                <column name="C4RP01" length="3" />
+            </key-property>
+            <key-property name="c4rp01d1" type="string">
+                <column name="C4RP01D1" length="30" />
+            </key-property>
+            <key-property name="c4nnbe" type="long">
+                <column name="C4NNBE" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4nnfi" type="long">
+                <column name="C4NNFI" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4nncu" type="long">
+                <column name="C4NNCU" precision="15" scale="0" />
+            </key-property>
+            <key-property name="c4stat" type="char">
+                <column name="C4STAT" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

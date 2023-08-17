@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 26, 2013 11:17:48 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<class name="com.casapellas.entidades.A02factco" table="A02FACTCO">
+		<comment>M&#243;dulo de Caja - Facturas de Contado Unificada</comment>
+		<composite-id name="id" class="com.casapellas.entidades.A02factcoId">
+			<key-property name="codcli" type="java.lang.Integer">
+				<column name="CODCLI" precision="8" scale="0" />
+			</key-property>
+			<key-property name="fecha" type="java.lang.Integer">
+				<column name="FECHA" precision="6" scale="0" />
+			</key-property>
+			<key-property name="nofactura" type="java.lang.Integer">
+				<column name="NOFACTURA" precision="8" scale="0" />
+			</key-property>
+			<key-property name="tipofactura" type="string">
+				<column name="TIPOFACTURA" length="2" />
+			</key-property>
+			<key-property name="codsuc" type="string">
+				<column name="CODSUC" length="5" />
+			</key-property>
+			<key-property name="codunineg" type="string">
+				<column name="CODUNINEG" length="12" />
+			</key-property>
+		</composite-id>
+		<property name="nomclie" type="string">
+			<column name="NOMCLIE" length="40">
+				<comment>Nombre del cliente</comment>
+			</column>
+		</property>
+		<property name="unineg" type="string">
+			<column name="UNINEG" length="30">
+				<comment>Nombre de unidad de negocio</comment>
+			</column>
+		</property>
+		<property name="nomsuc" type="string">
+			<column name="NOMSUC" length="30">
+				<comment>Nombre de sucursal</comment>
+			</column>
+		</property>
+		<property name="codcomp" type="string">
+			<column name="CODCOMP" length="3">
+				<comment>C&#243;digo de compa&#241;&#237;a</comment>
+			</column>
+		</property>
+		<property name="nomcomp" type="string">
+			<column name="NOMCOMP" length="30">
+				<comment>Nombre de compa&#241;&#237;a</comment>
+			</column>
+		</property>
+		<property name="subtotal" type="java.lang.Long">
+			<column name="SUBTOTAL" precision="15" scale="0">
+				<comment>Subtotal de factura</comment>
+			</column>
+		</property>
+		<property name="moneda" type="string">
+			<column name="MONEDA" length="3">
+				<comment>Moneda de factura</comment>
+			</column>
+		</property>
+		<property name="tasa" type="big_decimal">
+			<column name="TASA" precision="15" scale="7">
+				<comment>Tasa de cambio</comment>
+			</column>
+		</property>
+		<property name="tipopago" type="string">
+			<column name="TIPOPAGO" length="3">
+				<comment>Termino de pago</comment>
+			</column>
+		</property>
+		<property name="fechagrab" type="java.lang.Integer">
+			<column name="FECHAGRAB" precision="6" scale="0">
+				<comment>Fecha de grabaci&#243;n</comment>
+			</column>
+		</property>
+		<property name="hechopor" type="string">
+			<column name="HECHOPOR" length="15">
+				<comment>Usuario de grabaci&#243;n</comment>
+			</column>
+		</property>
+		<property name="pantalla" type="string">
+			<column name="PANTALLA" length="15">
+				<comment>Pantalla de grabaci&#243;n</comment>
+			</column>
+		</property>
+		<property name="hora" type="java.lang.Integer">
+			<column name="HORA" precision="6" scale="0">
+				<comment>Hora de grabaci&#243;n</comment>
+			</column>
+		</property>
+		<property name="estado" type="string">
+			<column name="ESTADO" length="1">
+				<comment>Estado de factura ('A' ,'D','')</comment>
+			</column>
+		</property>
+		<property name="nodoco" type="int">
+			<column name="NODOCO" precision="8" scale="0" not-null="true">
+				<comment>NO. DE DOC. ORIGINAL</comment>
+			</column>
+		</property>
+		<property name="tipodoco" type="string">
+			<column name="TIPODOCO" length="2" not-null="true">
+				<comment>TIPO DE DOC. ORIGINAL</comment>
+			</column>
+		</property>
+		<property name="total" type="long">
+			<column name="TOTAL" precision="15" scale="0" not-null="true">
+				<comment>TOTAL DE FACTURA</comment>
+			</column>
+		</property>
+		<property name="sdlocn" type="string">
+			<column name="SDLOCN" length="20" not-null="true">
+				<comment>LOCALIZACION</comment>
+			</column>
+		</property>
+		<property name="programaid" type="string">
+			<column name="PROGRAMAID" length="10" not-null="true">
+				<comment>ID DE PROGRAMA</comment>
+			</column>
+		</property>
+		<property name="codvendor" type="int">
+			<column name="CODVENDOR" precision="8" scale="0" not-null="true">
+				<comment>CODIGO DE VENDEDOR</comment>
+			</column>
+		</property>
+		<property name="subtotalf" type="long">
+			<column name="SUBTOTALF" precision="15" scale="0" not-null="true">
+				<comment>SUBTOTAL FORANEO</comment>
+			</column>
+		</property>
+		<property name="totalf" type="long">
+			<column name="TOTALF" precision="15" scale="0" not-null="true">
+				<comment>TOTAL FORANEO</comment>
+			</column>
+		</property>
+		<property name="totalcosto" type="big_decimal">
+			<column name="TOTALCOSTO" precision="15" not-null="true">
+				<comment>TOTAL DE COSTOS DE LA FACTURA</comment>
+			</column>
+		</property>
+		<property name="totaldscto" type="big_decimal">
+			<column name="TOTALDSCTO" precision="15" not-null="true">
+				<comment>TOTAL DE DESCUENTOS APLICADOS EN FACTURA</comment>
+			</column>
+		</property>
+		<property name="enviadoa" type="java.lang.Integer">
+			<column name="ENVIADOA" precision="8" scale="0" />
+		</property>
+
+		<!-- Nuevo por ISC -->
+		<property name="valisc" type="big_decimal">
+			<column name="VALISC" precision="15" not-null="true">
+				<comment>VALOR ISC INICIAL</comment>
+			</column>
+		</property>
+		<property name="desctovta" type="big_decimal">
+			<column name="DESCTOVTA" precision="15" not-null="true">
+				<comment>DESCUENTO DE VENTA</comment>
+			</column>
+		</property>
+		<property name="desctoisc" type="big_decimal">
+			<column name="DESCTOISC" precision="15" not-null="true">
+				<comment>DESCUENTO DEL ISC</comment>
+			</column>
+		</property>
+		<property name="valiscfinal" type="big_decimal">
+			<column name="VALISCFINAL" precision="15" not-null="true">
+				<comment>VALOR ISC FINAL</comment>
+			</column>
+		</property>
+		<property name="desgloseisc" type="string">
+			<column name="DESGLOSEISC" length="1">
+				<comment>CLIENTE DESGLOSA</comment>
+			</column>
+		</property>
+		<property name="exoneraisc" type="string">
+			<column name="EXONERAISC" length="1">
+				<comment>CLIENTE EXONERA ISC</comment>
+			</column>
+		</property>
+		<!-- Fin - Nuevo por ISC -->
+
+		<property name="fechadoco" type="java.lang.Integer">
+			<column name="FECHADOCO" precision="6" scale="0" />
+		</property>
+
+
+
+	</class>
+</hibernate-mapping>

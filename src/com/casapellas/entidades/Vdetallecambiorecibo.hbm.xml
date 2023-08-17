@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 25, 2012 11:29:54 PM by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="com.casapellas.entidades.Vdetallecambiorecibo" table="VDETALLECAMBIORECIBO">
+        <composite-id name="id" class="com.casapellas.entidades.VdetallecambioreciboId">
+            <key-property name="numrec" type="int">
+                <column name="NUMREC" precision="8" scale="0" />
+            </key-property>
+            <key-property name="codcomp" type="string">
+                <column name="CODCOMP" length="10" />
+            </key-property>
+            <key-property name="codsuc" type="string">
+                <column name="CODSUC" length="5" />
+            </key-property>
+            <key-property name="caid" type="int">
+                <column name="CAID" precision="8" scale="0" />
+            </key-property>
+            <key-property name="montoapl" type="big_decimal">
+                <column name="MONTOAPL" precision="10" />
+            </key-property>
+            <key-property name="montorec" type="big_decimal">
+                <column name="MONTOREC" precision="10" />
+            </key-property>
+            <key-property name="cambio" type="big_decimal">
+                <column name="CAMBIO" precision="8" />
+            </key-property>
+            <key-property name="cliente" type="string">
+                <column name="CLIENTE" length="50" />
+            </key-property>
+            <key-property name="fecha" type="date">
+                <column name="FECHA" length="10" />
+            </key-property>
+            <key-property name="hora" type="time">
+                <column name="HORA" length="8" />
+            </key-property>
+            <key-property name="tiporec" type="string">
+                <column name="TIPOREC" length="20" />
+            </key-property>
+            <key-property name="monedafac" type="string">
+                <column name="MONEDAFAC" length="3" />
+            </key-property>
+            <key-property name="monedarec" type="string">
+                <column name="MONEDAREC" length="3" />
+            </key-property>
+            <key-property name="monedacamb" type="string">
+                <column name="MONEDACAMB" length="3" />
+            </key-property>
+            <key-property name="tasacambio" type="big_decimal">
+                <column name="TASACAMBIO" precision="15" scale="7" />
+            </key-property>
+            <key-property name="estado" type="string">
+                <column name="ESTADO" length="2" />
+            </key-property>
+            <key-property name="cantmon" type="java.lang.Integer">
+                <column name="CANTMON" />
+            </key-property>
+            <key-property name="monto" type="big_decimal">
+                <column name="MONTO" precision="10" />
+            </key-property>
+            <key-property name="mpago" type="string">
+                <column name="MPAGO" length="3" />
+            </key-property>
+            <key-property name="monscambio" type="java.lang.Integer">
+                <column name="MONSCAMBIO" />
+            </key-property>
+            
+            <key-property name="equiv" type="big_decimal">
+                <column name="EQUIV" precision="10" />
+            </key-property>
+            
+        </composite-id>
+    </class>
+</hibernate-mapping>
