@@ -19,11 +19,13 @@ import nl.bitwalker.useragentutils.UserAgent;
 public class PropertiesSystem {
 	
    // Código de Usuario para Conexión a Base de Datos.
-	public final static String CN_USRNAME = "APPCP";
-	public final static String CN_USRPWD  = "APPCP1810";
+	//public final static String CN_USRNAME = "APPCP";
+	//public final static String CN_USRPWD  = "APPCP1810";
+	public final static String CN_USRNAME = "PRUEBAE2PD";
+	public final static String CN_USRPWD  = "password";
 	
    // Ambiente de Desarrollo/Pruebas, ESQUEMAS de Base de Datos.
-  public final static String ESQUEMA = "E1GCPMCAJA";
+   /*public final static String ESQUEMA = "E1GCPMCAJA";
 	public final static String JDEDTA = "CRPDTA"; 
 	public final static String JDECOM = "CRPCTL";
 	public final static String QS36F = "E1QS36F" ;
@@ -31,19 +33,31 @@ public class PropertiesSystem {
 	public final static String GCPCXC = "E1GCPCXC";
 	public final static String ENS = "E1ENS";
 	public final static String GCPSISEVA = "E1GCPSISEVA2";
-	public final static String INV = "E1INV";
+	public final static String INV = "E1INV";*/
 	
 	 // Ambiente de Produccion, ESQUEMAS de Base de Datos.
-	/* public final static String ESQUEMA = "GCPMCAJA";
-		public final static String JDEDTA = "PRODDTA"; 
-		public final static String JDECOM = "PRODCTL";
-		public final static String QS36F = "QS36F" ;
+	   public final static String ESQUEMA = "E2GCPMCAJA";
+		public final static String JDEDTA = "PRODDTA920"; 
+		public final static String JDECOM = "PRODCTL920";
+		public final static String QS36F = "E2QS36F" ;
 		public final static String GCPDES = "GCPCERT";	
-		public final static String GCPCXC = "GCPCXC";
+		public final static String GCPCXC = "E2GCPCXC";
 		public final static String ENS = "ENS";
 		public final static String GCPSISEVA = "GCPSISEVA2";
-		public final static String INV = "INV";*/
+		public final static String INV = "E2INV";
 	
+		
+   // Configuraciones para obtener cuentas
+		public final static String parametroCaja="30";
+		//-Contado
+		public final static String tipoTrxContado="CO";
+		public final static String valuesJDEContado="CONTADO_JDE_INS";
+		public final static String valuesJDENumeracion="NUM_JDE_CONF";
+		public final static String valuesJDEDevolucionContado="DEV_CONT_JDE_INS";
+		public final static String valuesJDECredito="CREDITO_JDE_INS";
+		public final static String valuesJDEPrimaReserva="PRIMAS_JDE_INS";
+		public final static String valuesJDEFinanciamiento="FINAN_JDE_INS";
+				
    // Datos de Servidor de Base de Datos.
 	public final static String IPSERVERDB2 = "192.168.1.3";
 
@@ -67,7 +81,7 @@ public class PropertiesSystem {
 	public final static String LNS_TALLER ="25,32,35,36,34";
 	public final static String LNS_JDEDWARDS ="22,23,24";
 	
-	public final static String CONTEXT_NAME = "E1GCPMCAJA";
+	public final static String CONTEXT_NAME = "GCPMCAJA";
 	
 	public final static String SOCKETPOS_DDLNAME = "sockpos";
 	public final static String JNA_SOCKETPOS_LIBNAME = "jna.library.path";

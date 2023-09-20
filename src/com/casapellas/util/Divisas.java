@@ -1964,6 +1964,50 @@ public class Divisas {
 		return numeroSiguiente;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static int numeroSiguienteJdeE1Custom( String posicion,String codigo){
+		int numeroSiguiente = 0;
+		
+		Session session = null;
+		
+		
+		try {
+			
+			int delay  = Integer.parseInt( new Random().nextInt(3) + ""+ new Random().nextInt(1000) ); 
+			Thread.currentThread();
+			Thread.sleep(delay);
+			
+			session = HibernateUtilPruebaCn.currentSession();
+			
+			String sql = "select cast(f.@NNNPOS  as integer) from  "+PropertiesSystem.JDECOM+".F0002 f where trim(f.nnsy) = '@CODIGO'";
+			sql = sql.replace("@NNNPOS", posicion ).replace("@CODIGO", codigo );
+			
+			LogCajaService.CreateLog("numeroSiguienteJdeE1", "QRY", sql);
+			
+			List<Integer> nextNumber = ( ArrayList<Integer>) session.createSQLQuery( sql ).list();
+			
+			if(nextNumber == null || nextNumber.isEmpty() )
+				return 0;
+			
+			numeroSiguiente = nextNumber.get(0);
+			if(numeroSiguiente>0) {
+
+				sql = "UPDATE "+PropertiesSystem.JDECOM+".F0002 SET @NNNPOS = ( @NNNPOS + 1) WHERE TRIM(NNSY) = '@CODIGO'";
+				sql = sql.replace("@NNNPOS", posicion ).replace("@CODIGO", codigo );
+				
+				LogCajaService.CreateLog("numeroSiguienteJdeE1", "QRY", sql);
+				ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, sql);
+				
+				LogCajaService.CreateLog("numeroSiguienteJdeE1", "INFO", "NoDocumentoGenerado: " + String.valueOf(numeroSiguiente));
+			}
+			
+		} catch (Exception e) {
+			LogCajaService.CreateLog("numeroSiguienteJdeE1", "ERR", "Error al generar NoDocumento: " + e.getMessage());
+			e.printStackTrace();
+			numeroSiguiente = 0;
+		}
+		return numeroSiguiente;
+	}
 	
 	
 	@SuppressWarnings("unchecked")

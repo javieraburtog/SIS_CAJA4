@@ -23,6 +23,7 @@ import com.casapellas.entidades.F55ca017;
 import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.util.CatalogoGenerico;
 import com.casapellas.util.CodeUtil;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.PropertiesSystem;
 import com.casapellas.entidades.ens.Vautoriz;
@@ -149,18 +150,28 @@ public class mainDAO {
 				
 				int caid = ((ArrayList<Vf55ca01>)m.get("lstCajas")).get(0).getId().getCaid();
 				String caco = ((ArrayList<Vf55ca01>)m.get("lstCajas")).get(0).getId().getCaco().trim();
+							
 				
 				int iFechaActual = FechasUtil.dateToJulian(new Date());
 				F55ca017[] f55ca017 = CtrlCajas.obtenerUniNegCaja(caid,caco);
 				String[] sLineas  = CtrlCajas.lineasPorUnidadNegocio(f55ca017);
 				String[] sTipoDoc = CtrlCajas.documentosPorLineas(sLineas);
+				String[] valoresJDEInsContado = DocumuentosTransaccionales.getValuesJDEContado().split(",");
+				String[] valoresJDENumeracionIns = DocumuentosTransaccionales.getValuesJDENumeracion().split(",");
+				String[] valoresJDEInsDevolucionContado = DocumuentosTransaccionales.getValuesJDEDevolucionContado().split(",");
+				String[] valoresJDEInsCredito = DocumuentosTransaccionales.valoresJDEInsCredito().split(",");
+				String[] valoresJDEInsPrimaReservas = DocumuentosTransaccionales.valoresJDEInsPrimaReservas().split(",");
+				String[] valoresJDEInsFinanciamiento = DocumuentosTransaccionales.valoresJDEInsFinanciamiento().split(",");
 				
 				m.put("f55ca017", f55ca017);
 				m.put("sTiposDoc", sTipoDoc);
 				m.put("iFechaActual", iFechaActual);
-				
-
-				
+				m.put("valoresJDEInsContado",valoresJDEInsContado);
+				m.put("valoresJDENumeracionIns",valoresJDENumeracionIns);
+				m.put("valoresJDEInsDevolucionContado",valoresJDEInsDevolucionContado);
+				m.put("valoresJDEInsCredito",valoresJDEInsCredito);
+				m.put("valoresJDEInsPrimaReservas",valoresJDEInsPrimaReservas);
+				m.put("valoresJDEInsFinanciamiento",valoresJDEInsFinanciamiento);
 			} catch (Exception e) {
 				 e.printStackTrace();
 			}

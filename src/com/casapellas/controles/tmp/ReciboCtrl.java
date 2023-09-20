@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.faces.context.FacesContext;
+
 //import org.apache.commons.mail.MultiPartEmail;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -73,7 +75,10 @@ import com.casapellas.util.*;
 public class ReciboCtrl {
 	public Exception errorDetalle;
 	public Exception error;
+	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 
+	//Valores de insercion de documentos en JDE
+	String[] valoresJdeIns = (String[]) m.get("valoresJDEInsContado");
 	public Exception getError() {
 		return error;
 	}
@@ -4904,7 +4909,7 @@ public class ReciboCtrl {
 			 .replace("@GLDGJ@", fechaBatch)
 			 .replace("@GLJELN@", String.valueOf( dLineaJDE ) )
 			 .replace("@GLICU@", String.valueOf( iNoBatch ) ) 
-			 .replace("@GLICUT@", "G")
+			 .replace("@GLICUT@", valoresJdeIns[8])
 			 .replace("@GLDICJ@", fechaBatch )
 			 .replace("@GLDSYJ@", fechaBatch)
 			 .replace("@GLTICU@", horaBatch)
@@ -5469,6 +5474,39 @@ public class ReciboCtrl {
 		return update;
 	}
 	
+	
+	public boolean registrarBatchA92Custom(Session session, Date fecha, String cjTipoRecibo, int iNoBatch, long iTotalTransaccion, String sUsuario, int iCantDocs, String jobname, String estadoBatch ) {
+		boolean update = false;
+		
+		try {
+			
+
+			BatchControlF0011 f0011 = new BatchControlF0011(
+					cjTipoRecibo,
+					String.valueOf(iNoBatch),
+					"0",
+					sUsuario,
+					String.valueOf(iTotalTransaccion),
+					String.valueOf( iCantDocs ),
+					"0",
+					fecha,
+					jobname,
+					estadoBatch
+				); 
+				
+			String sqlInsert =  f0011.insertStatement();
+			
+			LogCajaService.CreateLog("registrarBatchA92", "QRY", sqlInsert);			
+			
+			update = ConsolidadoDepositosBcoCtrl.executeSqlQueryTx( session, sqlInsert );
+			
+		} catch (Exception e) {
+			LogCajaService.CreateLog("registrarBatchA92", "ERR", e.getMessage());
+			e.printStackTrace(); 
+		}
+		return update;
+	}
+
 	
 	
 	public boolean registrarBatchA92(Connection cn, String sTipoBatch, int iNoBatch, long iTotalTransaccion, String sUsuario, int iCantDocs, String sIcpob) {

@@ -2145,7 +2145,7 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 				//&& ============ restar los cambios.
 				String selectTotalCambios = " select '" + MetodosPagoCtrl.EFECTIVO + "', sum(cambio), moneda ";
 				String queryTablasCambios = 
-				" from gcpmcaja.recibo r inner join gcpmcaja.cambiodet rd on r.caid =rd.caid and r.codcomp = rd.codcomp and r.numrec = rd.numrec and r.tiporec = rd.tiporec " ;
+				" from "+PropertiesSystem.ESQUEMA+".recibo r inner join "+PropertiesSystem.ESQUEMA+".cambiodet rd on r.caid =rd.caid and r.codcomp = rd.codcomp and r.numrec = rd.numrec and r.tiporec = rd.tiporec " ;
 				
 				String selectSumCambios = selectTotalCambios + queryTablasCambios +  sqlWhere	
 					+ " and r.tiporec not in ('DCO', 'FCV')  and cambio > 0 " 
