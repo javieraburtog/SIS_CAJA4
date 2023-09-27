@@ -122,7 +122,7 @@ public class SucursalCtrl {
 		 
 		try{
 			
-			String sql = "from Unegocio as u where u.id.codsuc = '"+sCodSuc+"' and u.id.tipo in ('IS','EX')";
+			String sql = "from Unegocio as u where u.id.codsuc = '"+sCodSuc+"'";
 			sql+= " and (select count(*) from Vf0901 f09 ";
 			sql+= " where trim(f09.id.gmmcu) = trim(u.id.codunineg) and f09.id.gmpec not in ('I','N')  ) >0 order by codunineg ";
 			

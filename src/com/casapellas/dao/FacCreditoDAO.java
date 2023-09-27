@@ -88,10 +88,9 @@ import com.casapellas.entidades.Vf0101;
 import com.casapellas.entidades.Vf0901;
 import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
-import com.casapellas.jde.creditos.CodigosJDE1;
 import com.casapellas.jde.creditos.DatosComprobanteF0911;
-import com.casapellas.jde.creditos.ProcesarEntradaDeDiario;
-import com.casapellas.jde.creditos.ProcesarPagoFacturaJde;
+import com.casapellas.jde.creditos.ProcesarEntradaDeDiarioCustom;
+import com.casapellas.jde.creditos.ProcesarPagoFacturaJdeCustom;
 import com.casapellas.navegacion.As400Connection;
 import com.casapellas.rpg.P55CA090;
 import com.casapellas.rpg.P55RECIBO;
@@ -100,6 +99,7 @@ import com.casapellas.util.BitacoraSecuenciaReciboService;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.CustomEmailAddress;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LogCajaService;
 import com.casapellas.util.MailHelper;
@@ -335,6 +335,10 @@ public class FacCreditoDAO {
 	private HtmlDropDownList ddlTipoMarcasTarjetas;
 	private HtmlOutputText lblMarcaTarjeta;
 	
+	//Nuevos valores para JDE
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
+	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
 	/***********************************************************************************************/
 	
 	public void procesarDonacionesIngresadas(ActionEvent ev){
@@ -1091,20 +1095,7 @@ public class FacCreditoDAO {
 						track.setStyleClass("frmInput2Error");
 						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> No se leyó correctamente la fecha de vencimiento de la tarjeta!!!<br>";
 						dwProcesa.setWindowState("normal");
-					}/*else if(lstDatosTrack.get(4) != null){
-						if(lstDatosTrack.get(4).toString().length() < 4){
-							validado = false;
-							track.setStyleClass("frmInput2Error");
-							sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> No se leyó correctamente la fecha de vencimiento de la tarjeta, long. menor a 4!!!<br>";
-							dwProcesa.setWindowState("normal");
-						}
-					} else if (ref2.equals("")) {//valida 4 ultimos digitos de la tarjeta
-						validado = false;
-						txtReferencia2.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> 4 Ultimos digitos de tarjeta requeridos<br>";
-						dwProcesa.setWindowState("normal");
-						y = y + 5;
-					}*/ 
+					}
 				}
 			}else{///
 				ref2 = txtNoTarjeta.getValue().toString().trim();
@@ -1308,7 +1299,7 @@ public class FacCreditoDAO {
 		}
 	}
 	
-	public static boolean batchExcedentesEnPago(Session session, String monedaFactura,String companiaFactura, String codunineg, int numrec, int caid, 
+	public  boolean batchExcedentesEnPago(Session session, String monedaFactura,String companiaFactura, String codunineg, int numrec, int caid, 
 			String codcomp, String codsuc, MetodosPago mpago, BigDecimal monto, BigDecimal tasaOficial,
 			String usuario, int codigousuario, Date fecharecibo, boolean diferencialCambiario, String monedaLocal){
 		
@@ -1318,14 +1309,16 @@ public class FacCreditoDAO {
 		try {
 			
 			int numeroBatchJde = Divisas.numeroSiguienteJdeE1(  );
-			int numeroReciboJde = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int numeroReciboJde = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9]);
 			
 			String concepto = "Sobrante ";
-			String strCuentaObj = "65100";
-			String strCuentaSub = "10" ;
+			String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(codcomp).split(",");
+			String strCuentaObj = fcvCuentaGanacia[0];
+			String strCuentaSub = fcvCuentaGanacia[1] ;
 			
 			if( monedaFactura.compareTo(mpago.getMoneda()) != 0 || diferencialCambiario){
-				strCuentaObj = "66000"; strCuentaSub = "01" ;
+				String[] fcvCuentaPerdida = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(codcomp).split(",");
+				strCuentaObj = fcvCuentaPerdida[0]; strCuentaSub = fcvCuentaPerdida[1] ;
 			}
 			 
 			concepto = "Recibo "+numrec +" caja " + caid;
@@ -1335,45 +1328,7 @@ public class FacCreditoDAO {
 			
 			companiaComprobante = cuentaSobrante.getId().getGmco();
 			
-			//++++++++++++++++++++++++++++++++++++++++++++++++++
-			//Ajuste Hecho por LFonseca - 2018-08-15
-			//Corrige el monto grabado como sobrante,
-			//Ya que actualmente lo deja como gasto mas
-			//que como utilidad
-			//++++++++++++++++++++++++++++++++++++++++++++++++++
-			
-			
-			//-------------------------------------------------------
-			//** Segmento de codigo original.
-			//-------------------------------------------------------
-			
-			/*
-			 List<DatosComprobanteF0911> lineasComprobante = new ArrayList<DatosComprobanteF0911>();
-			 DatosComprobanteF0911 dtCtaSobrante = new DatosComprobanteF0911(
-					 cuentaSobrante.getId().getGmaid(),
-					 monto, 
-					 concepto,
-					 tasaOficial,
-					 "",
-					 "",
-					 companiaComprobante );
-			 lineasComprobante.add(dtCtaSobrante);
-			 
-			 DatosComprobanteF0911 dtaFormaPago = new DatosComprobanteF0911(
-					 cuentaCaja.get(0)[1],
-					 monto.negate(), 
-					 concepto,
-					 tasaOficial,
-					 "",
-					 "",
-					 companiaComprobante );
-			 lineasComprobante.add(dtaFormaPago);
-			 */
-			
-			//-------------------------------------------------------
-			//** Nuevo Segmento de codigo
-			//-------------------------------------------------------
-			
+
 			List<DatosComprobanteF0911> lineasComprobante = new ArrayList<DatosComprobanteF0911>();
 			 DatosComprobanteF0911 dtCtaSobrante = new DatosComprobanteF0911(
 					 cuentaSobrante.getId().getGmaid(),
@@ -1398,33 +1353,32 @@ public class FacCreditoDAO {
 			//++++++++++++++++++++++++++++++++++++++++++++++++++
 			
 			
-			 new ProcesarEntradaDeDiario();
-			 ProcesarEntradaDeDiario.procesarSql = false;
-			 ProcesarEntradaDeDiario.monedaComprobante = mpago.getMoneda();
-			 ProcesarEntradaDeDiario.monedaLocal = monedaLocal;
-			 ProcesarEntradaDeDiario.fecharecibo = fecharecibo;
-			 ProcesarEntradaDeDiario.tasaCambioParalela = tasaOficial; 
-			 ProcesarEntradaDeDiario.tasaCambioOficial = tasaOficial; 
-			 ProcesarEntradaDeDiario.montoComprobante = monto;
-			 ProcesarEntradaDeDiario.tipoDocumento = "P9";
-			 ProcesarEntradaDeDiario.conceptoComprobante = " Sobrante de pago en caja ";
-			 ProcesarEntradaDeDiario.numeroBatchJde = String.valueOf( numeroBatchJde );
-			 ProcesarEntradaDeDiario.numeroReciboJde = String.valueOf( numeroReciboJde ) ;
-			 ProcesarEntradaDeDiario.usuario = usuario;
-			 ProcesarEntradaDeDiario.codigousuario = codigousuario;
-			 ProcesarEntradaDeDiario.programaActualiza = PropertiesSystem.CONTEXT_NAME;
-			 ProcesarEntradaDeDiario.lineasComprobante = lineasComprobante;
-			 ProcesarEntradaDeDiario.tipodebatch = CodigosJDE1.RECIBOCONTADO; 
-			 ProcesarEntradaDeDiario.estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE;
-			 ProcesarEntradaDeDiario.procesarEntradaDeDiario(session);
+			 new ProcesarEntradaDeDiarioCustom();
+			 ProcesarEntradaDeDiarioCustom.procesarSql = false;
+			 ProcesarEntradaDeDiarioCustom.monedaComprobante = mpago.getMoneda();
+			 ProcesarEntradaDeDiarioCustom.monedaLocal = monedaLocal;
+			 ProcesarEntradaDeDiarioCustom.fecharecibo = fecharecibo;
+			 ProcesarEntradaDeDiarioCustom.tasaCambioParalela = tasaOficial; 
+			 ProcesarEntradaDeDiarioCustom.tasaCambioOficial = tasaOficial; 
+			 ProcesarEntradaDeDiarioCustom.montoComprobante = monto;
+			 ProcesarEntradaDeDiarioCustom.tipoDocumento = valoresJdeInsContado[1];
+			 ProcesarEntradaDeDiarioCustom.conceptoComprobante = " Sobrante de pago en caja ";
+			 ProcesarEntradaDeDiarioCustom.numeroBatchJde = String.valueOf( numeroBatchJde );
+			 ProcesarEntradaDeDiarioCustom.numeroReciboJde = String.valueOf( numeroReciboJde ) ;
+			 ProcesarEntradaDeDiarioCustom.usuario = usuario;
+			 ProcesarEntradaDeDiarioCustom.codigousuario = codigousuario;
+			 ProcesarEntradaDeDiarioCustom.programaActualiza = PropertiesSystem.CONTEXT_NAME;
+			 ProcesarEntradaDeDiarioCustom.lineasComprobante = lineasComprobante;
+			 ProcesarEntradaDeDiarioCustom.valoresJdeInsContado = valoresJdeInsContado; 
+			 ProcesarEntradaDeDiarioCustom.procesarEntradaDeDiarioCustom(session);
 			 
-			 aplicado = ProcesarEntradaDeDiario.msgProceso.isEmpty();
+			 aplicado = ProcesarEntradaDeDiarioCustom.msgProceso.isEmpty();
 			 
 			 if(!aplicado){
 				 return aplicado;
 			 }
 			 
-			 List<String[]> querysToExecute = ProcesarEntradaDeDiario.lstSqlsInserts ;
+			 List<String[]> querysToExecute = ProcesarEntradaDeDiarioCustom.lstSqlsInserts ;
 			 if( querysToExecute == null || querysToExecute.isEmpty() ){
 				 return aplicado = false;
 			 }
@@ -1500,24 +1454,28 @@ public class FacCreditoDAO {
 			
 			//&& ==== Validar la cuenta a utilizar, en dependencia del tipo de transaccion.
 			//&& ==== UN.66000.01: Diferencial Cambiario, UN.65100.10: Sobrante de Caja.
-			sCtaOb = "66000";
-			sCtaSub= "01";
+			
+			String[] fcvCuentaPerdia = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(f55.getId().getCaco()).split(",");
+			sCtaOb = fcvCuentaPerdia[0];
+			sCtaSub= fcvCuentaPerdia[1];
 			
 			//&& === Condicion de seleccion tipo sobrante/diferencia para casos TRADER.
 			if(Factura.getId().getCodcomp().trim().equals("E03") ){
 				if( m.get("scr_SbrDfr")!=null && chkSobranteDifrl.isChecked()){
 					sTipo = "SBRTE";
 					sConcepto = "Sobrante en Rc:" +iNumrec+ " Ca:"+f55.getId().getCaid();
-					sCtaOb = "65100";
-					sCtaSub= "10";
+					String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(f55.getId().getCaco()).split(",");
+					sCtaOb = fcvCuentaGanacia[0];
+					sCtaSub= fcvCuentaGanacia[1];
 				}
 			}else{
 				MetodosPago mpSobrante = (MetodosPago)m.get("scr_MpagoSobrante");
 				if(Factura.getMoneda().equals(mpSobrante.getMoneda())){
 					sTipo = "SBRTE";
 					sConcepto = "Sobrante en Rc:" +iNumrec+ " Ca:"+f55.getId().getCaid();
-					sCtaOb = "65100";
-					sCtaSub= "10";
+					String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(f55.getId().getCaco()).split(",");
+					sCtaOb = fcvCuentaGanacia[0];
+					sCtaSub= fcvCuentaGanacia[1];
 				}
 			}
 			vCtaDI  = dv.validarCuentaF0901(sCodunineg,sCtaOb,sCtaSub);
@@ -1528,11 +1486,7 @@ public class FacCreditoDAO {
 			}else{
 				
 				sCoCuentaDI = vCtaDI.getId().getGmco().trim();
-				
-//				sCoCuentaDI = (sCodunineg.length()==4)? 
-//								sCodunineg.substring(0,2):
-//								sCodunineg;
-								
+												
 				sCuentaDI = sCodunineg+"."+sCtaOb+"."+sCtaSub;				
 			}
 			sAsientoSuc  = sCuentaCaja[2];
@@ -1547,27 +1501,27 @@ public class FacCreditoDAO {
 			iMonto = dv.pasarAentero(dSobrante);
 		
 			//---- Guardar el batch.
-			bHecho = rcCtrl.registrarBatchA92(cn,"G", iNobatchNodoc[0],iMonto, vaut.getId().getLogin(), 1, MetodosPagoCtrl.DEPOSITO);
+			bHecho = rcCtrl.registrarBatchA92(cn,valoresJdeInsContado[8], iNobatchNodoc[0],iMonto, vaut.getId().getLogin(), 1, MetodosPagoCtrl.DEPOSITO);
 			if(bHecho){
 				
 				//---- Registro en córdobas.
 				if(mpago.getMoneda().equals(sMonedaBase)){
 				
-					bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 1.0,
+					bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, valoresJdeInsContado[1], iNobatchNodoc[1], 1.0,
 								iNobatchNodoc[0], sCuentaCaja[0], sCuentaCaja[1], 
 								sCuentaCaja[3], sCuentaCaja[4], sCuentaCaja[5],
-								"AA", mpago.getMoneda(), iMonto, 
+								valoresJdeInsContado[5], mpago.getMoneda(), iMonto, 
 								sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 								BigDecimal.ZERO, sTipoCliente,"DBTO X "+sTipo+" PAGO CTA CA: "+mpago.getMetodo()+" ",
-								sCuentaCaja[2], "", "", mpago.getMoneda(),sCuentaCaja[2],"D");
+								sCuentaCaja[2], "", "", mpago.getMoneda(),sCuentaCaja[2],valoresJdeInsContado[7]);
 					if(bHecho){
-						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 2.0,
+						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, valoresJdeInsContado[1], iNobatchNodoc[1], 2.0,
 									iNobatchNodoc[0], sCuentaDI,	vCtaDI.getId().getGmaid(), 
 									vCtaDI.getId().getGmmcu().trim(), vCtaDI.getId().getGmobj().trim(), 
-									vCtaDI.getId().getGmsub().trim(), "AA",	mpago.getMoneda(),  iMonto*-1,
+									vCtaDI.getId().getGmsub().trim(), valoresJdeInsContado[5],	mpago.getMoneda(),  iMonto*-1,
 									sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 									BigDecimal.ZERO, sTipoCliente,"CRDTO X "+sTipo+" CTA ",
-									sCoCuentaDI, "", "",mpago.getMoneda(),sCoCuentaDI,"D");
+									sCoCuentaDI, "", "",mpago.getMoneda(),sCoCuentaDI,valoresJdeInsContado[7]);
 					
 						if(!bHecho){
 							sMensajeError = "No se ha podido registrar  línea 2.0 de asientos para registro de Sobrante de Pagos ";
@@ -1589,39 +1543,39 @@ public class FacCreditoDAO {
 					iMontoDom =	Integer.parseInt( String.format("%1$.2f", bdTasaOficial.multiply(
 									new BigDecimal( Double.toString( dSobrante ) ) ) ).replace(".", "") ); 
 					
-					bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 1.0,
+					bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, valoresJdeInsContado[1], iNobatchNodoc[1], 1.0,
 									iNobatchNodoc[0], sCuentaCaja[0], sCuentaCaja[1], 
 									sCuentaCaja[3], sCuentaCaja[4], sCuentaCaja[5],
-									"AA", mpago.getMoneda(), iMontoDom, 
+									valoresJdeInsContado[5], mpago.getMoneda(), iMontoDom, 
 									sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 									bdTasaOficial, sTipoCliente,"DBTO CTA CA:"+mpago.getMetodo()+" "+sTipo+" PAGO",
-									sCuentaCaja[2], "", "", mpago.getMoneda(),sCuentaCaja[2],"F");
+									sCuentaCaja[2], "", "", mpago.getMoneda(),sCuentaCaja[2],valoresJdeInsContado[4]);
 					if(bHecho){
-						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 1.0,
+						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, valoresJdeInsContado[1], iNobatchNodoc[1], 1.0,
 										iNobatchNodoc[0], sCuentaCaja[0], sCuentaCaja[1], 
 										sCuentaCaja[3], sCuentaCaja[4], sCuentaCaja[5],
-										"CA", mpago.getMoneda(), iMonto, 
+										valoresJdeInsContado[2], mpago.getMoneda(), iMonto, 
 										sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 										BigDecimal.ZERO, sTipoCliente,"DBTO CTA CA:"+mpago.getMetodo()+" "+sTipo+" PAGO",
-										sCuentaCaja[2], "", "",mpago.getMoneda(),sCuentaCaja[2],"F");
+										sCuentaCaja[2], "", "",mpago.getMoneda(),sCuentaCaja[2],valoresJdeInsContado[4]);
 						
 						if(bHecho){
-							bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 2.0,
+							bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, valoresJdeInsContado[1], iNobatchNodoc[1], 2.0,
 											iNobatchNodoc[0], sCuentaDI,	vCtaDI.getId().getGmaid(), 
 											vCtaDI.getId().getGmmcu().trim(), vCtaDI.getId().getGmobj().trim(), 
-											vCtaDI.getId().getGmsub().trim(), "AA",	mpago.getMoneda(), (iMontoDom*-1), 
+											vCtaDI.getId().getGmsub().trim(), valoresJdeInsContado[5],	mpago.getMoneda(), (iMontoDom*-1), 
 											sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 											bdTasaOficial, sTipoCliente,"CRDTO CTA  X "+sTipo+" PAGO",
-											sCoCuentaDI, "", "",mpago.getMoneda(),sCoCuentaDI,"F");
+											sCoCuentaDI, "", "",mpago.getMoneda(),sCoCuentaDI,valoresJdeInsContado[4]);
 							
 							if(bHecho){
-								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 2.0,
+								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, valoresJdeInsContado[1], iNobatchNodoc[1], 2.0,
 													iNobatchNodoc[0], sCuentaDI,	vCtaDI.getId().getGmaid(), 
 													vCtaDI.getId().getGmmcu().trim(), vCtaDI.getId().getGmobj().trim(), 
-													vCtaDI.getId().getGmsub().trim(), "CA",	mpago.getMoneda(), (iMonto*-1), 
+													vCtaDI.getId().getGmsub().trim(), valoresJdeInsContado[2],	mpago.getMoneda(), (iMonto*-1), 
 													sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 													BigDecimal.ZERO, sTipoCliente,"CRDTO CTA  X "+sTipo+" PAGO",
-													sCoCuentaDI, "", "", mpago.getMoneda(),sCoCuentaDI,"F");
+													sCoCuentaDI, "", "", mpago.getMoneda(),sCoCuentaDI,valoresJdeInsContado[4]);
 								if(!bHecho)
 									sMensajeError = "No se ha podido registrar  línea 2.0 cA de asientos para registro de Excedente de Pagos ";
 							}else{
@@ -2170,17 +2124,15 @@ public class FacCreditoDAO {
 						}//el pago cubre toda la factura //========================================= CH
 						else if(d.roundDouble(mPago.getEquivalente()) == d.roundDouble(hFacSel.getMontoAplicar().doubleValue())){//el pago cubre el monto de la factura
 
-							dMontoF = d.roundDouble(mPago.getEquivalente() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF : "+dMontoF+" : mPago.getEquivalente() : "+mPago.getEquivalente() +" hFacSel.getMontoAplicar().doubleValue() "+hFacSel.getMontoAplicar().doubleValue()); 
-							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura : "+dMontoAplicarxFactura+" : hFacSel.getMontoAplicar().doubleValue() : "+hFacSel.getMontoAplicar().doubleValue());
+							dMontoF = d.roundDouble(mPago.getEquivalente() - hFacSel.getMontoAplicar().doubleValue());							 
+							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());							
 							dNewPendienteForaneo = d.roundDouble(hFacSel.getId().getDpendiente().doubleValue() - dMontoAplicarxFactura);
 							if(dNewPendienteForaneo > 0){
-								//LogCrtl.sendLogDebgs2("<===========> dNewPendienteForaneo > 0 l1746 ");
+							
 								d2 = d.roundDouble(hFacSel.getMontoAplicar().doubleValue()*hFacSel.getId().getTasa().doubleValue());	
-								//LogCrtl.sendLogDebgs2("<===========> d2 = "+d2+" hFacSel.getMontoAplicar().doubleValue() "+hFacSel.getMontoAplicar().doubleValue()+" hFacSel.getId().getTasa().doubleValue() : "+hFacSel.getId().getTasa().doubleValue());
+							
 								dNewPendienteDom = Divisas.roundDouble(hFacSel.getId().getCpendiente().subtract(new BigDecimal(Double.toString(d2))).doubleValue(),2) ;//   dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - d2 - dMontoD);				
-								//LogCrtl.sendLogDebgs2("<===========> dNewPendienteDom =  "+dNewPendienteDom+" hFacSel.getId().getCpendiente().doubleValue() "+hFacSel.getId().getCpendiente().doubleValue()+" d2 "+d2+" dMontoD: "+dMontoD);
+								
 								d1 = 0;	
 							}else{
 							
@@ -2196,13 +2148,6 @@ public class FacCreditoDAO {
 								}
 							}																								
 
-							//grabar RC
-							
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//												 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
-//												 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
-							
-							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 									            "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
@@ -2303,53 +2248,16 @@ public class FacCreditoDAO {
 							//se decremente el monto a apllicar a la factura 
 							hFacSel.setMontoAplicar(Divisas.roundBigDecimal(new BigDecimal(dMontoF) ));
 							
-							
-//							BigDecimal equiv = new BigDecimal( Double.toString(mPago.getMonto()));
-//							if(mPago.getMonto() > mPago.getEquivalente()){
-//								equiv = new BigDecimal( Double.toString(mPago.getMonto()) )
-//											.divide(mPago.getTasa(),4,RoundingMode.HALF_UP);
-//							}
-//							if(mPago.getMonto() < mPago.getEquivalente()){
-//								equiv = new BigDecimal( Double.toString(mPago.getMonto()) )
-//										.multiply(mPago.getTasa());			
-//							}
-							 
-//							dMontoD = Divisas.roundDouble(
-//									new BigDecimal(Double.toString(dMontoAplicarxFactura)).add( 
-//									new BigDecimal(Double.toString(mPago.getEquivalente())))
-//										.multiply(mPago.getTasa()).doubleValue() ,2) ;
-
-							/*dMontoD = Divisas.roundDouble(	
-								new BigDecimal(Double.toString(
-									dMontoAplicarxFactura)).add(equiv)
-									.multiply(mPago.getTasa()).doubleValue() , 2);*/
-							
-//							dMontoD = Divisas.roundDouble(	
-//								new BigDecimal(Double.toString(dMontoAplicarxFactura)).add( 
-//									 .multiply(mPago.getTasa())
-//							 .doubleValue() ,2);
-							
-//							dMontoD = Divisas.roundDouble(										/*dMontoD = Divisas.roundDouble(*/
-//								new BigDecimal(Double.toString(dMontoAplicarxFactura)).add( 	/*new BigDecimal(Double.toString(dMontoAplicarxFactura)).add( */
-//										new BigDecimal(Double.toString(mPago.getEquivalente())))		/*new BigDecimal(Double.toString(mPago.getEquivalente())))*/
-//								.multiply(mPago.getTasa()) .doubleValue() ,2);					/*.multiply(mPago.getTasa()).doubleValue() ,2) ;*/
+	
 							
 							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + mPago.getEquivalente());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura "+dMontoAplicarxFactura+" mPago.getEquivalente(): "+mPago.getEquivalente());
 							
-							//LogCrtl.sendLogDebgs2("<===========> dMontoD "+dMontoD+" dMontoAplicarxFactura : "+dMontoAplicarxFactura+" hFacSel.getId().getTasa().doubleValue() : "+hFacSel.getId().getTasa().doubleValue());
-							
-							//&& ==== Si solo es uno el metodo de pago, actualizar el monto pendiente.
-//							if(lstMetodosPago.size() == 1){
 								
 								dMontoD = Divisas.roundDouble( hFacSel.getId().getCpendiente()
 											.subtract(new BigDecimal(Double.toString(
 												mPago.getMonto()))).doubleValue(), 2 ) ;
 								dMontoF = Divisas.roundDouble( hFacSel.getId().getDpendiente().subtract(new BigDecimal(Double.toString(mPago.getEquivalente()))).doubleValue(), 2  ) ;
-//								dMontoD = Divisas.roundDouble( mPago.getTasa()
-//										.multiply(new BigDecimal(Double
-//												.toString(dMontoF) ))
-//												.doubleValue(), 2) ;
+
 								 
 								bHecho = rcCtrl.aplicarMontoF0311(cn, "A",
 									dMontoD, dMontoF, 
@@ -2395,46 +2303,33 @@ public class FacCreditoDAO {
 					
 					hFacSel = (Credhdr)lstFacturasSelected.get(j);
 					if(hFacSel.getMontoAplicar().doubleValue()>0){//si el monto a aplicar es mayor a 0
-						//LogCrtl.sendLogDebgs2("<===========> MONTO A APLICAR ES MAYOR A 0");
+						
 						if(d.roundDouble(mPago.getMonto()) > d.roundDouble(hFacSel.getMontoAplicar().doubleValue())){//el pago cubre el monto de la factura
-							//LogCrtl.sendLogDebgs2("<===========> El pago cubre el monto de la factura l1908");
+						
 							dMontoF = d.roundDouble(mPago.getMonto() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF : "+dMontoF+" mPago.getMonto() "+mPago.getMonto());
+						
 							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura : "+dMontoAplicarxFactura+" hFacSel.getMontoAplicar().doubleValue() "+hFacSel.getMontoAplicar().doubleValue());												
+																		
 							dNewPendienteForaneo = d.roundDouble(hFacSel.getId().getDpendiente().doubleValue() - dMontoAplicarxFactura);
-							//LogCrtl.sendLogDebgs2("<===========> dNewPendienteForaneo : "+dNewPendienteForaneo+" hFacSel.getId().getDpendiente().doubleValue()  "+hFacSel.getId().getDpendiente().doubleValue());
+						
 							if(dNewPendienteForaneo > 0){
-								//LogCrtl.sendLogDebgs2("<===========> dNewPendienteForaneo > 0");
+						
 								d2 = d.roundDouble(hFacSel.getMontoAplicar().doubleValue()*hFacSel.getId().getTasa().doubleValue());	
-								//LogCrtl.sendLogDebgs2("<===========> d2 : "+d2+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue()+" hFacSel.getId().getTasa().doubleValue(): "+hFacSel.getId().getTasa().doubleValue());
+						
 								dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - d2 - dMontoD);
-								//LogCrtl.sendLogDebgs2("<===========> dNewPendienteDom : "+dNewPendienteDom+" hFacSel.getId().getCpendiente().doubleValue(): "+hFacSel.getId().getCpendiente().doubleValue()+" d2: "+d2+" dMontoD: "+dMontoD);																								
+																														
 								d1 = 0;	
 							}else{													
 								d1 = d.roundDouble(hFacSel.getMontoAplicar().doubleValue()*hFacSel.getId().getTasa().doubleValue());
-								//LogCrtl.sendLogDebgs2("<===========> d1 : "+d1+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue()+" hFacSel.getId().getTasa().doubleValue(): "+hFacSel.getId().getTasa().doubleValue());
+						
 								d1 = d1 + dMontoD;
-								//LogCrtl.sendLogDebgs2("<===========> d1 : "+d1+" dMontoD: "+dMontoD);
+						
 								d2 = hFacSel.getId().getCpendiente().doubleValue();	
-								//LogCrtl.sendLogDebgs2("<===========> d2 : "+d2+" hFacSel.getId().getCpendiente().doubleValue(): "+hFacSel.getId().getCpendiente().doubleValue());
+						
 								dNewPendienteDom = 0;
-//								if (d1 >= d2 || d1 <= d2){
-//									d1 = d2 - d1;
-//									d2 = d.roundDouble(d2 - dMontoD);
-//									//LogCrtl.sendLogDebgs2("<===========> d2 : "+d2+" dMontoD: "+dMontoD);
-//								}else{
-//									d1=0;
-//									d2 = d.roundDouble(d2 - dMontoD);
-//								}
+
 							}																																				
 
-							//grabar RC
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//												 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
-//												 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
-							
-							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 									            "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
 									            hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
@@ -2499,49 +2394,33 @@ public class FacCreditoDAO {
 							}
 						}//el pago cubre toda la factura
 						else if(d.roundDouble(mPago.getMonto()) == d.roundDouble(hFacSel.getMontoAplicar().doubleValue())){//el pago es igual a la factura
-							//LogCrtl.sendLogDebgs2("<===========> el pago es igual a la factura ");
+
 							dMontoF = d.roundDouble(mPago.getMonto() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF: "+dMontoF+" hFacSel.getMontoAplicar().doubleValue(): "+ hFacSel.getMontoAplicar().doubleValue());
+
 							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura: "+dMontoAplicarxFactura+" hFacSel.getMontoAplicar().doubleValue(): "+ hFacSel.getMontoAplicar().doubleValue());
+
 							dNewPendienteForaneo = d.roundDouble(hFacSel.getId().getDpendiente().doubleValue() - dMontoAplicarxFactura);
-							//LogCrtl.sendLogDebgs2("<===========> dNewPendienteForaneo: "+dNewPendienteForaneo+" hFacSel.getId().getDpendiente().doubleValue(): "+ hFacSel.getId().getDpendiente().doubleValue()+" dMontoAplicarxFactura: "+ dMontoAplicarxFactura);
-							
+
 							if(dNewPendienteForaneo > 0){
-								//LogCrtl.sendLogDebgs2("<===========> dNewPendienteForaneo  > 0 ");
+
 								d2 = d.roundDouble(hFacSel.getMontoAplicar().doubleValue() * hFacSel.getId().getTasa().doubleValue());
-								//LogCrtl.sendLogDebgs2("<===========> d2: "+d2+" hFacSel.getMontoAplicar().doubleValue(): "+ hFacSel.getMontoAplicar().doubleValue()+" hFacSel.getId().getTasa().doubleValue(): "+ hFacSel.getId().getTasa().doubleValue());
-//								dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - d2 - dMontoD);
 								
 								dNewPendienteDom = Divisas.roundDouble( hFacSel.getId().getCpendiente().subtract(new BigDecimal(Double.toString(d2))).doubleValue(),2); //dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue()  );
-								
-								//LogCrtl.sendLogDebgs2("<===========> dNewPendienteDom: "+dNewPendienteDom+" hFacSel.getId().getCpendiente().doubleValue(): "+ hFacSel.getId().getCpendiente().doubleValue()+" d2: "+ d2+" dMontoD: "+ dMontoD);																						
+																																						
 								d1 = 0;	
 								
 							}else{													
 								d1 = d.roundDouble(hFacSel.getMontoAplicar().doubleValue()*hFacSel.getId().getTasa().doubleValue());
-								//LogCrtl.sendLogDebgs2("<===========> d1: "+d1+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue()+" hFacSel.getId().getTasa().doubleValue(): "+ hFacSel.getId().getTasa().doubleValue());
+								
 								d1 = d1 + dMontoD;
 								//LogCrtl.sendLogDebgs2("<===========> d1: "+d1+" dMontoD: "+dMontoD);
 								d2 = hFacSel.getId().getCpendiente().doubleValue();			
 								//LogCrtl.sendLogDebgs2("<===========> d2: "+d2+"  hFacSel.getId().getCpendiente().doubleValue(): "+ hFacSel.getId().getCpendiente().doubleValue());
 								dNewPendienteDom = 0;
 								
-//								if (d1 >= d2 || d1 <= d2){
-//									d1 = d2 - d1;
-//									//LogCrtl.sendLogDebgs2("<===========> d1: "+d1+" d2: "+d2);
-//									d2 = d.roundDouble(d2 - dMontoD);
-//									//LogCrtl.sendLogDebgs2("<===========> d2: "+d2+" dMontoD: "+dMontoD);
-//								}else{
-//									d1=0;
-//									d2 = d.roundDouble(d2 - dMontoD);
-//								}
+
 							}																																				
 
-							//grabar RC
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//												 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
-//												 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
 							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
@@ -2616,9 +2495,6 @@ public class FacCreditoDAO {
 									 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto() * tasatmp.doubleValue() ), "F",  hFacSel.getMoneda(), tasatmp.doubleValue(), d.roundDouble(mPago.getMonto()), 
 									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
-							/*bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto() * hFacSel.getId().getTasa().doubleValue()), "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(mPago.getMonto()), 
-									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());*/
 							
 							if(!bHecho){													
 								strMensajeValidacion = "No se pudo grabar el recibo en el JDE!!! ==" + rcCtrl.getError() + " <BR/> DETALLE: " + rcCtrl.getErrorDetalle();		
@@ -2677,24 +2553,12 @@ else{//facturas en cor F: COR
 				while(j < lstFacturasSelected.size()){
 					hFacSel = (Credhdr)lstFacturasSelected.get(j);
 					if(hFacSel.getMontoAplicar().doubleValue()>0){//si el monto a aplicar es mayor a 0
-						//LogCrtl.sendLogDebgs2("<===========> monto a aplicar es mayor a 0 l2159 ");
-						//LogCrtl.sendLogDebgs2("<===========> mPago.getEquivalente(): "+mPago.getEquivalente()+ " d.roundDouble(hFacSel.getMontoAplicar().doubleValue()): "+d.roundDouble(hFacSel.getMontoAplicar().doubleValue()));
 						if(d.roundDouble(mPago.getEquivalente()) > d.roundDouble(hFacSel.getMontoAplicar().doubleValue())){//el pago cubre el monto de la factura
-							//LogCrtl.sendLogDebgs2("<===========> el pago cubre el monto de la factura l2161 ");
-							
 							dMontoF = d.roundDouble(mPago.getEquivalente() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF: "+dMontoF+" mPago.getEquivalente() : "+mPago.getEquivalente()+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue() );
-							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura: "+dMontoAplicarxFactura+" hFacSel.getMontoAplicar().doubleValue() : "+hFacSel.getMontoAplicar().doubleValue());
-							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dNewPendienteDom: "+dNewPendienteDom+" hFacSel.getId().getCpendiente().doubleValue() : "+hFacSel.getId().getCpendiente().doubleValue()+" hFacSel.getMontoAplicar().doubleValue() : "+hFacSel.getMontoAplicar().doubleValue());
-							//dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - dMontoAplicarxFactura);
-							//dNewPendienteForaneo = d.roundDouble(hFacSel.getId().getDpendiente().doubleValue() - dMontoAplicarxFactura);
 
-							//grabar RC
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//												 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
-//												 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
+							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
+
+							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - hFacSel.getMontoAplicar().doubleValue());
 							
 							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
@@ -2729,22 +2593,13 @@ else{//facturas en cor F: COR
 							}
 						}//el pago cubre toda la factura
 						else if(d.roundDouble(mPago.getEquivalente()) == d.roundDouble(hFacSel.getMontoAplicar().doubleValue())){//el pago cubre el monto de la factura
-							//LogCrtl.sendLogDebgs2("<===========> el pago cubre el monto de la factura l2213 ");
-							dMontoF = d.roundDouble(mPago.getEquivalente() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF: "+dMontoF+" mPago.getEquivalente(): "+mPago.getEquivalente()+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue());
-							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura: "+dMontoAplicarxFactura+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue());
-							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dNewPendienteDom: "+dMontoAplicarxFactura+" hFacSel.getId().getCpendiente().doubleValue(): "+hFacSel.getId().getCpendiente().doubleValue()+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue());
-							//dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - dMontoAplicarxFactura);
-							//dNewPendienteForaneo = d.roundDouble(hFacSel.getId().getDpendiente().doubleValue() - dMontoAplicarxFactura);
 
-							//grabar RC
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//												 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
-//												 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
-							
-							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
+							dMontoF = d.roundDouble(mPago.getEquivalente() - hFacSel.getMontoAplicar().doubleValue());
+
+							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
+
+							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - hFacSel.getMontoAplicar().doubleValue());
+
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 									             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 									             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
@@ -2778,16 +2633,9 @@ else{//facturas en cor F: COR
 							}
 						}//el pago cubre toda la factura
 						else{//el pago no cubre la factura
-							//LogCrtl.sendLogDebgs2("<===========> el pago no cubre la factura l2268");
+
 							dMontoF = d.roundDouble(hFacSel.getMontoAplicar().doubleValue() - mPago.getEquivalente());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF: "+dMontoF+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue()+" mPago.getEquivalente(): "+mPago.getEquivalente());
 							i++;
-							//grabarRC																																					
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//									 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d.roundDouble(mPago.getEquivalente()), "D",  hFacSel.getMoneda(), 0,0, 
-//									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
-							
-							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 									 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getEquivalente()), "D",  hFacSel.getMoneda(), 0,0, 
 									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
@@ -2798,10 +2646,10 @@ else{//facturas en cor F: COR
 							}
 							//se decremente el monto a apllicar a la factura 
 							hFacSel.setMontoAplicar(new BigDecimal(dMontoF));
-							//hFacSel.getId().setCpendiente(new BigDecimal(dMontoF));
+
 							hFacSel.getId().setCpendiente(new BigDecimal(d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - mPago.getEquivalente())));
 							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + mPago.getEquivalente());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura: "+dMontoAplicarxFactura+" mPago.getEquivalente(): "+mPago.getEquivalente());
+
 							break;
 						}//el pago no cubre la factura
 					}else{//no incluye la factura
@@ -2824,13 +2672,8 @@ else{//facturas en cor F: COR
 						}
 					}
 				}
-//								if(i >= lstMetodosPago.size() && j >= lstFacturasSelected.size() && hFacSel.getId().getCpendiente().doubleValue() == 0) { 
-//++i; //agregada por lrodriguez. Ya está considerado en los programas que No quede valor 'significativo' en las formas de pago.
-//							}
 			}else{//pago en la misma moneda de la factura f:COR p:COR
-				//LogCrtl.sendLogDebgs2("<===========> pago en la misma moneda de la factura f:COR p:COR l2319 ");
 				iTotalTransaccion = iTotalTransaccion + d.pasarAenteroLong(mPago.getMonto());
-				//LogCrtl.sendLogDebgs2("<===========> iTotalTransaccion:  "+iTotalTransaccion+" d.pasarAentero(mPago.getMonto()): "+d.pasarAentero(mPago.getMonto()));
 				while(j < lstFacturasSelected.size()){
 					iCinf++;
 					if (iCinf > 999) {
@@ -2840,23 +2683,10 @@ else{//facturas en cor F: COR
 					}// seguro contra ciclo infinito
 					hFacSel = (Credhdr)lstFacturasSelected.get(j);
 					if(hFacSel.getMontoAplicar().doubleValue()>0){//si el monto a aplicar es mayor a 0
-						//LogCrtl.sendLogDebgs2("<===========> hFacSel.getMontoAplicar().doubleValue()>0 ");
 						if(d.roundDouble(mPago.getMonto()) > d.roundDouble(hFacSel.getMontoAplicar().doubleValue())){//el pago cubre el monto de la factura												
-							//LogCrtl.sendLogDebgs2("<===========> el pago cubre el monto de la factura:  mPago.getMonto()) > d.roundDouble(hFacSel.getMontoAplicar().doubleValue() ");
 							dMontoF = d.roundDouble(mPago.getMonto() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF:  "+dMontoF+ " mPago.getMonto(): "+mPago.getMonto()+ " hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue());
 							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura:  "+dMontoAplicarxFactura+ "  hFacSel.getMontoAplicar().doubleValue(): "+ hFacSel.getMontoAplicar().doubleValue());
 							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - d.roundDouble(hFacSel.getMontoAplicar().doubleValue()));
-							//LogCrtl.sendLogDebgs2("<===========> dNewPendienteDom:  "+dNewPendienteDom+ "  hFacSel.getId().getCpendiente().doubleValue() : "+ hFacSel.getId().getCpendiente().doubleValue()+ "  d.roundDouble(hFacSel.getMontoAplicar().doubleValue()) : "+ d.roundDouble(hFacSel.getMontoAplicar().doubleValue()));
-							//dNewPendienteForaneo = d.roundDouble(hFacSel.getId().getDpendiente().doubleValue() - dMontoAplicarxFactura);
-
-							//grabar RC
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//												 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
-//												 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
-							
-							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 									             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 									             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
@@ -2888,22 +2718,9 @@ else{//facturas en cor F: COR
 							}
 						}//el pago cubre toda la factura
 						else if(d.roundDouble(mPago.getMonto()) == d.roundDouble(hFacSel.getMontoAplicar().doubleValue())){//el pago cubre el monto de la factura
-							//LogCrtl.sendLogDebgs2("<===========> el pago cubre el monto de la factura l2384 ");
 							dMontoF = d.roundDouble(mPago.getMonto() - hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF: "+dMontoF+" mPago.getMonto(): "+mPago.getMonto()+ " hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue());
 							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoAplicarxFactura: "+dMontoAplicarxFactura+"  hFacSel.getMontoAplicar().doubleValue(): "+ hFacSel.getMontoAplicar().doubleValue());
-							//fff
 							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - d.roundDouble(hFacSel.getMontoAplicar().doubleValue()));
-							//LogCrtl.sendLogDebgs2("<===========> dNewPendienteDom: "+dNewPendienteDom+"  hFacSel.getId().getCpendiente().doubleValue(): "+ hFacSel.getId().getCpendiente().doubleValue()+"  d.roundDouble(hFacSel.getMontoAplicar().doubleValue()): "+ d.roundDouble(hFacSel.getMontoAplicar().doubleValue()));
-							//dNewPendienteForaneo = d.roundDouble(hFacSel.getId().getDpendiente().doubleValue() - dMontoAplicarxFactura);
-
-							//grabar RC
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//												 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
-//												 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
-							
-							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 									             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 									             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
@@ -2942,16 +2759,8 @@ else{//facturas en cor F: COR
 							}
 						}//el pago cubre toda la factura
 						else{//el pago no cubre la factura
-							//LogCrtl.sendLogDebgs2("<===========> el pago no cubre la factura l2438 ");
 							dMontoF = d.roundDouble(hFacSel.getMontoAplicar().doubleValue() - mPago.getMonto());
-							//LogCrtl.sendLogDebgs2("<===========> dMontoF: "+dMontoF+" hFacSel.getMontoAplicar().doubleValue(): "+hFacSel.getMontoAplicar().doubleValue()+" mPago.getMonto(): "+mPago.getMonto());
 							i++;
-							//grabarRC
-//							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-//									 "RC", iNoReciboJDE, fecUtil.obtenerFechaActualJuliana(), "R", iNobatch, d.roundDouble(mPago.getMonto()), "D",  hFacSel.getMoneda(), 0, 0, 
-//									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
-							
-							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 									 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto()), "D",  hFacSel.getMoneda(), 0, 0, 
 									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
@@ -3000,8 +2809,6 @@ else{//facturas en cor F: COR
 						if(bHayFicha && bHecho){
 							String[] sCuentaCajaDom = d.obtenerCuentaCaja(f55ca01.getId().getCaid(),hFac.getId().getCodcomp(), MetodosPagoCtrl.EFECTIVO ,sMonedaBase,null,null,null,null);
 							sCuentaCaja = d.obtenerCuentaCaja(f55ca01.getId().getCaid(),hFac.getId().getCodcomp(), MetodosPagoCtrl.EFECTIVO ,"USD",null,null,null,null);
-							
-				//			int iNoficha = Integer.parseInt(m.get("iNoFicha").toString());
 							
 							bHecho = generarAsientosFichaCV(s,
 									tx, cn, lstPagoFicha,
@@ -3157,19 +2964,19 @@ else{//facturas en cor F: COR
 			int caid = f55ca01.getId().getCaid() ;
 			String codsuc = f55ca01.getId().getCaco();
 			String codcomp = lstFacturasSelected.get(0).getId().getCodcomp();
-			String tiporec = "CR";
+			String tiporec = valoresJDEInsCredito[0];
 			
 			List<String> numerosRecibosJde = new ArrayList<String>();
 			
 			for (int i = 0; i < lstMetodosPago.size(); i++) {
-				int numeroReciboJde = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROPAGORECIBO );
+				int numeroReciboJde = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 				numerosRecibosJde.add(String.valueOf(numeroReciboJde));
 			}
 			
 			int numeroBatchJde = Divisas.numeroSiguienteJdeE1(  );
 			int numeroReciboJde = Integer.parseInt( numerosRecibosJde.get(0) ) ;
 			
-			ProcesarPagoFacturaJde ppf = new  ProcesarPagoFacturaJde() ;
+			ProcesarPagoFacturaJdeCustom ppf = new  ProcesarPagoFacturaJdeCustom() ;
 			
 			ppf.caid = caid ;
 			ppf.codcomp = codcomp ;
@@ -3189,6 +2996,8 @@ else{//facturas en cor F: COR
 			ppf.codigousuario = vaut.getId().getCodreg();
 			ppf.usuario = vaut.getId().getLogin();
 			ppf.programaActualiza = PropertiesSystem.CONTEXT_NAME;
+			
+			ppf.valoresJDEInsCredito=valoresJDEInsCredito;
 			
 			ppf.msgProceso = "";
 			
@@ -3286,10 +3095,6 @@ else{//facturas en cor F: COR
 											//dMontoF es lo que me queda del pago que todavía pudiera aplicar a otra factura
 											dMontoF = d.roundDouble(mPago.getEquivalente() - hFacSel.getMontoAplicar().doubleValue());
 											
-											//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
-											//                        COR 
-											//d.roundDouble(hFacSel.getMontoAplicar().doubleValue()) --> dMontoAplicar        --> RPAG,  RPAAP
-											//                                                    0  --> dMontoAplicarForaneo --> RPACR, RPFAP
 											bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 										             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 										             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
@@ -3364,11 +3169,6 @@ else{//facturas en cor F: COR
 										//Pago >= Monto Factura
 										if (d.roundDouble(mPago.getMonto()) >= d.roundDouble(hFacSel.getMontoAplicar().doubleValue())) {												
 											dMontoF = d.roundDouble(mPago.getMonto() - hFacSel.getMontoAplicar().doubleValue());																						
-											//dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - d.roundDouble(hFacSel.getMontoAplicar().doubleValue()));
-											
-											//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
-											//d.roundDouble(hFacSel.getMontoAplicar().doubleValue()) --> dMontoAplicar        --> RPAG,  RPAAP
-											//                                                    0  --> dMontoAplicarForaneo --> RPACR, RPFAP
 											bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 													             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 													             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());											
@@ -3398,9 +3198,6 @@ else{//facturas en cor F: COR
 										}      //fin    -> el pago >= que la factura											
 										else { //inicio -> el pago <  que la factura
 											dMontoF = d.roundDouble(hFacSel.getMontoAplicar().doubleValue() - mPago.getMonto());
-											//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
-											//d.roundDouble(mPago.getMonto()) --> dMontoAplicar        --> RPAG,  RPAAP
-											//                             0  --> dMontoAplicarForaneo --> RPACR, RPFAP
 											bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
 													 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto()), "D",  hFacSel.getMoneda(), 0, 0, 
 													 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
@@ -3511,20 +3308,12 @@ else{//facturas en cor F: COR
 				}
 			}
 		} catch (Exception e) {
-			//LERB 4/13/2012: Mejorando los mensajes a posibles problemas.
+
 			strMensajeValidacion = "Problemas Obteniendo Tasa Paralela!!!";	
 			lblMensajeValidacion.setValue(strMensajeValidacion);
 			// TODO: handle exception
 		}
 		
-//		tcPar = (Tpararela[]) m.get("tpcambio");
-//		// buscar tasa de cambio paralela para moneda
-//		for (int t = 0; t < tcPar.length; t++) {
-//			if (tcPar[t].getId().getCmono().equals(sMoneda) || tcPar[t].getId().getCmond().equals(sMoneda)) {
-//				tasa = tcPar[t].getId().getTcambiom();
-//				break;
-//			}
-//		}
 		return tasa;
 	}
 	
@@ -3625,33 +3414,33 @@ else{//facturas en cor F: COR
 			sCodsuc =  hFac.getId().getCodsuc().substring(3, 5);
 			// vender dolares (1)
 			iContadorFor++;
-			bContabilizado = recCtrl.registrarAsientoDiario(dtFecha, cn, sSucursaldeAsiento,"P9", iNoDocForaneo, (iContadorFor) * 1.0,iNoBatch, 
-								sCuentaMetodo[0], sCuentaMetodo[1], sCuentaMetodo[3], sCuentaMetodo[4],sCuentaMetodo[5],"CA", mPago.getMoneda(), 
+			bContabilizado = recCtrl.registrarAsientoDiario(dtFecha, cn, sSucursaldeAsiento,valoresJdeInsContado[1], iNoDocForaneo, (iContadorFor) * 1.0,iNoBatch, 
+								sCuentaMetodo[0], sCuentaMetodo[1], sCuentaMetodo[3], sCuentaMetodo[4],sCuentaMetodo[5],valoresJdeInsContado[2], mPago.getMoneda(), 
 								d.pasarAentero(d.roundDouble(mPago.getMonto())), sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), mPago.getTasa(), sTipoCliente, "Deb caja dolares "
-							+ d.roundDouble(mPago.getMonto()), sCuentaMetodo[2],"","","USD",sCuentaMetodo[2],"F");
+							+ d.roundDouble(mPago.getMonto()), sCuentaMetodo[2],"","",valoresJdeInsContado[3],sCuentaMetodo[2],valoresJdeInsContado[4]);
 			if (bContabilizado) {
-				bContabilizado = recCtrl.registrarAsientoDiario(dtFecha, cn, sSucursaldeAsiento,"P9",iNoDocForaneo, (iContadorFor) * 1.0, iNoBatch,
-								sCuentaMetodo[0], sCuentaMetodo[1], sCuentaMetodo[3], sCuentaMetodo[4], sCuentaMetodo[5], "AA", mPago.getMoneda(),
+				bContabilizado = recCtrl.registrarAsientoDiario(dtFecha, cn, sSucursaldeAsiento,valoresJdeInsContado[1],iNoDocForaneo, (iContadorFor) * 1.0, iNoBatch,
+								sCuentaMetodo[0], sCuentaMetodo[1], sCuentaMetodo[3], sCuentaMetodo[4], sCuentaMetodo[5], valoresJdeInsContado[5], mPago.getMoneda(),
 								d.pasarAentero(d.roundDouble(mPago.getEquivalente())), sConcepto,vaut.getId().getLogin(), vaut.getId().getCodapp(), mPago.getTasa(),
 								sTipoCliente, "Deb caja dolares " + d.roundDouble(mPago.getMonto()), 
-								sCuentaMetodo[2],"","","COR",sCuentaMetodo[2],"F");
+								sCuentaMetodo[2],"","",valoresJdeInsContado[6],sCuentaMetodo[2],valoresJdeInsContado[4]);
 				if (bContabilizado) {
-					bContabilizado = recCtrl.registrarAsientoDiario(dtFecha, cn, sSucursaldeAsiento, "P9", iNoDocForaneo,(iContadorFor + 1) * 1.0, iNoBatch, 
-									sCtaMetodoDom[0],sCtaMetodoDom[1],sCtaMetodoDom[3],sCtaMetodoDom[4],sCtaMetodoDom[5], "CA", mPago.getMoneda(), (-1)* d.pasarAentero(d.roundDouble(mPago.getMonto())), sConcepto,vaut.getId().getLogin(), vaut.getId().getCodapp(),
+					bContabilizado = recCtrl.registrarAsientoDiario(dtFecha, cn, sSucursaldeAsiento, valoresJdeInsContado[1], iNoDocForaneo,(iContadorFor + 1) * 1.0, iNoBatch, 
+									sCtaMetodoDom[0],sCtaMetodoDom[1],sCtaMetodoDom[3],sCtaMetodoDom[4],sCtaMetodoDom[5], valoresJdeInsContado[2], mPago.getMoneda(), (-1)* d.pasarAentero(d.roundDouble(mPago.getMonto())), sConcepto,vaut.getId().getLogin(), vaut.getId().getCodapp(),
 									mPago.getTasa(), sTipoCliente,"Cred caja cordobas " + d.roundDouble(mPago.getMonto()),
-									sCtaMetodoDom[2],"","","USD",sCtaMetodoDom[2],"F");
+									sCtaMetodoDom[2],"","",valoresJdeInsContado[3],sCtaMetodoDom[2],valoresJdeInsContado[4]);
 					if (bContabilizado) {
-						bContabilizado = recCtrl.registrarAsientoDiario(dtFecha, cn,sSucursaldeAsiento,"P9", iNoDocForaneo,(iContadorFor + 1) * 1.0, iNoBatch,sCtaMetodoDom[0], sCtaMetodoDom[1], sCtaMetodoDom[3], sCtaMetodoDom[4],sCtaMetodoDom[5],
-										"AA", mPago.getMoneda(), (-1)* d.pasarAentero(d.roundDouble(mPago.getEquivalente())),sConcepto, vaut.getId().getLogin(), vaut
+						bContabilizado = recCtrl.registrarAsientoDiario(dtFecha, cn,sSucursaldeAsiento,valoresJdeInsContado[1], iNoDocForaneo,(iContadorFor + 1) * 1.0, iNoBatch,sCtaMetodoDom[0], sCtaMetodoDom[1], sCtaMetodoDom[3], sCtaMetodoDom[4],sCtaMetodoDom[5],
+								valoresJdeInsContado[5], mPago.getMoneda(), (-1)* d.pasarAentero(d.roundDouble(mPago.getEquivalente())),sConcepto, vaut.getId().getLogin(), vaut
 										.getId().getCodapp(), mPago.getTasa(),sTipoCliente, "Cred caja cordobas "+ d.roundDouble(mPago.getMonto()), 
-										sCtaMetodoDom[2],"","","COR",sCtaMetodoDom[2],"F");
+										sCtaMetodoDom[2],"","",valoresJdeInsContado[6],sCtaMetodoDom[2],valoresJdeInsContado[4]);
 						iContadorFor++;
 						
 						if(bContabilizado){
 							bContabilizado = recCtrl.fillEnlaceMcajaJde(session,tx,iNumFicha, hFac.getId().getCodcomp(), iNoDocForaneo, iNoBatch,f55ca01.getId().getCaid(),f55ca01.getId().getCaco(),"A","FCV");
 							if(bContabilizado){
 								//bContabilizado = recCtrl.registrarBatch(cn,"G", iNoBatch, d.pasarAentero(d.roundDouble(mPago.getMonto())), vaut.getId().getLogin(), 1,MetodosPagoCtrl.DEPOSITO); VERSION A7.3
-								bContabilizado = recCtrl.registrarBatchA92(cn,"G", iNoBatch, d.pasarAentero(d.roundDouble(mPago.getMonto())), vaut.getId().getLogin(), 1,MetodosPagoCtrl.DEPOSITO);
+								bContabilizado = recCtrl.registrarBatchA92(cn,valoresJdeInsContado[8], iNoBatch, d.pasarAentero(d.roundDouble(mPago.getMonto())), vaut.getId().getLogin(), 1,MetodosPagoCtrl.DEPOSITO);
 							}else {
 								lblMensajeValidacion.setValue("No se pudo insertar el enlace entre la ficha y el documento de transacciones Foraneas!!!");
 							}
@@ -3854,9 +3643,7 @@ else{//facturas en cor F: COR
 		RowItem row  = null;
 		try{
 			if (lstSelectedFacs.size() > 1){//validar facturas
-				
-				//hFacFirst = (FacturaCredito)lstSelectedFacs.get(0);
-				//lstSelectedFacs.add(hFacFirst);
+								
 				String sl1 = hFacFirst.getCodunineg().trim().substring(2,4);
 				for(int i = 0;i < lstSelectedFacs.size(); i++){
 					hFacSelected = (Credhdr)lstSelectedFacs.get(i);
@@ -3869,11 +3656,7 @@ else{//facturas en cor F: COR
 								);
 						break;
 					}
-					//validar linea de negocios
-					/*else if(!hFacFirst.getCodunineg().trim().substring(3,4).equals(hFacSelected.getCodunineg().trim().substring(3, 4))){
-						valido = false;
-					}*/
-					//validar moneda
+					
 					else if(!hFacFirst.getMoneda().equals(hFacSelected.getMoneda())){
 						valido = false;
 						lblValidaFactura.setValue(
@@ -3889,17 +3672,11 @@ else{//facturas en cor F: COR
 						break;
 					}
 				}
-			}/*else if(lstSelectedFacs.size() == 1){
-				hFacFirst = (FacturaCredito)lstSelectedFacs.get(0);
-			}*/
+			}
 			if(!valido){
-				//lstSelectedFacs = new ArrayList();
-				//m.put("selectedFacsCredito", lstSelectedFacs);	
 				
 				dwValidacionFactura.setWindowState("normal");
-				dwValidacionFactura.setStyle("height: 170px; visibility: visible; width: 365px");
-				//gvHfacturasCredito.dataBind();
-				//srm.addSmartRefreshId(gvHfacturasCredito.getClientId(FacesContext.getCurrentInstance()));
+				dwValidacionFactura.setStyle("height: 170px; visibility: visible; width: 365px");				
 				srm.addSmartRefreshId(lblValidaFactura.getClientId(FacesContext.getCurrentInstance()));
 				srm.addSmartRefreshId(dwValidacionFactura.getClientId(FacesContext.getCurrentInstance()));
 			}						
@@ -4054,16 +3831,16 @@ else{//facturas en cor F: COR
 		Unegocio[] unegocio = null;
 		try{
 			sCodComp = ddlCompaniaCre.getValue().toString();
-			if(!sCodComp.equals("01")){
+			if(!sCodComp.equals("10")){
 				//
 				SucursalCtrl sucCtrl = new SucursalCtrl();
 				//
 				unegocio = sucCtrl.obtenerSucursalesxCompania(sCodComp);
 				
 				List lstFiltro = new ArrayList();				
-				lstFiltro.add(new SelectItem("01","Todas","Seleccione una Compañía primero"));
+				lstFiltro.add(new SelectItem("00010","Todas","Seleccione una Compañía primero"));
 				for(int i = 0; i < unegocio.length; i ++){
-					lstFiltro.add(new SelectItem("000"+unegocio[i].getId().getCodunineg().trim(),"000"+unegocio[i].getId().getCodunineg().trim() + ": " + unegocio[i].getId().getDesc().trim(),unegocio[i].getId().getCodunineg().trim()));
+					lstFiltro.add(new SelectItem(unegocio[i].getId().getCodunineg().trim(),unegocio[i].getId().getCodunineg().trim() + ": " + unegocio[i].getId().getDesc().trim(),unegocio[i].getId().getCodunineg().trim()));
 				}
 				m.put("lstSucursalCred", lstFiltro);	
 				ddlSucursalCred.dataBind();
@@ -4071,11 +3848,11 @@ else{//facturas en cor F: COR
 				realizarBusquedaFacturas();
 			}else{
 				List lstFiltro = new ArrayList();				
-				lstFiltro.add(new SelectItem("01","Todas","Seleccione una Compañía primero"));				
+				lstFiltro.add(new SelectItem("00010","Todas","Seleccione una Compañía primero"));				
 				m.put("lstSucursalCred", lstFiltro);
 				ddlSucursalCred.dataBind();
 				lstFiltro = new ArrayList();				
-				lstFiltro.add(new SelectItem("01","Todas","Seleccione una Sucursal primero"));				
+				lstFiltro.add(new SelectItem("10","Todas","Seleccione una Sucursal primero"));				
 				m.put("lstUninegCred", lstFiltro);	
 				ddlUninegCred.dataBind();
 			}
@@ -4091,11 +3868,11 @@ public void onSucursalChange(ValueChangeEvent ev){
 	try{
 		sCodSuc = ddlSucursalCred.getValue().toString();
 		sCodSuc = sCodSuc.substring(3,5);
-		if(!sCodSuc.equals("01")){
+		if(!sCodSuc.equals("10")){
 			SucursalCtrl sucCtrl = new SucursalCtrl();
 			unegocio = sucCtrl.obtenerUninegxSucursal(sCodSuc);
 			List lstFiltro = new ArrayList();
-			lstFiltro.add(new SelectItem("01","Todas","Seleccione una Sucursal primero"));
+			lstFiltro.add(new SelectItem("10","Todas","Seleccione una Sucursal primero"));
 			for(int i = 0; i < unegocio.length; i ++){
 				lstFiltro.add(new SelectItem(unegocio[i].getId().getCodunineg().trim(),unegocio[i].getId().getCodunineg().trim() + ": " + unegocio[i].getId().getDesc().trim(),unegocio[i].getId().getCodunineg().trim()));
 			}
@@ -4105,7 +3882,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 			//realizarBusquedaFacturas();
 		}else {
 			List lstFiltro = new ArrayList();				
-			lstFiltro.add(new SelectItem("01","Todas","Seleccione una Sucursal primero"));				
+			lstFiltro.add(new SelectItem("10","Todas","Seleccione una Sucursal primero"));				
 			m.put("lstUninegCred", lstFiltro);
 			ddlUninegCred.dataBind();
 			realizarBusquedaFacturas();
@@ -4333,34 +4110,13 @@ public void onSucursalChange(ValueChangeEvent ev){
 					txtFechaVenDecto.setValue(hFac.getId().getFechavenc());
 					txtTasaDetalle.setValue(hFac.getId().getTasa());
 					
-					/*txtFechaImp.setValue(hFac.getFechaimp());
-					txtFechalm.setValue(hFac.getFechalm());					
-					txtCompens.setValue(hFac.getCompenslm());					
-					txtCondicion.setValue(hFac.getTipopago() + " " + hFac.getDesctpago());						
-					txtNoOrden.setValue(hFac.getNumorden());
-					txtTipoOrden.setValue(hFac.getTipoorden());					
-					txtNoBatch.setValue(hFac.getNobatch());
-					txtFechaBatch.setValue(hFac.getFechabatch());
-					
-					txtObservaciones.setValue(hFac.getObservaciones());
-					txtReferenciaFactura.setValue(hFac.getReferencia());*/
 					
 					//
 					if(hFac.getMoneda().equals(sMonedaBase)){
-						txtPendiente.setValue(hFac.getId().getCpendiente());
-						/*txtSubtotal.setValue(hFac.getCsubtotal());
-						txtIva.setValue(hFac.getCimpuesto());					
-						txtDescuento.setValue(hFac.getCdescdisp());
-						txtDescuentoAplicado.setValue(hFac.getCdesctom());
-						txtTotal.setValue(hFac.getCtotal());*/
+						txtPendiente.setValue(hFac.getId().getCpendiente());						
 						lstMonedasDetalle.add(new SelectItem(sMonedaBase,sMonedaBase));
 					}else{
-						txtPendiente.setValue(hFac.getId().getDpendiente());
-						/*txtSubtotal.setValue(hFac.getDsubtotal());
-						txtIva.setValue(hFac.getDimpuesto());					
-						txtDescuento.setValue(hFac.getDdescdisp());
-						txtDescuentoAplicado.setValue(hFac.getDdesctom());
-						txtTotal.setValue(hFac.getDtotal());*/
+						txtPendiente.setValue(hFac.getId().getDpendiente());						
 						lstMonedasDetalle.add(new SelectItem(hFac.getMoneda(),hFac.getMoneda()));
 						lstMonedasDetalle.add(new SelectItem(sMonedaBase,sMonedaBase));
 					}
@@ -4368,7 +4124,6 @@ public void onSucursalChange(ValueChangeEvent ev){
 					cmbMonedaDetalleCredito.dataBind();
 					//buscar detalle 
 					List lstDfacturasCredito = facCred.getDetalleFacturaCredito(hFac.getId().getNofactura(), hFac.getId().getTipofactura(),hFac.getId().getCodsuc(),hFac.getId().getCodunineg());
-					//lstDfacturasCredito = facCred.formatDetalleCredito(lstDfacturasCredito, hFac.getTasa(), hFac.getMoneda());
 					m.put("lstDfacturasCredito", lstDfacturasCredito);
 					gvDfacturasCredito.dataBind();
 					
@@ -4402,16 +4157,12 @@ public void onSucursalChange(ValueChangeEvent ev){
 			if(monedaActual.equals(sMonedaBase)){
 				txtSubtotal.setValue(hFac.getId().getCsubtotal());
 				txtIva.setValue(hFac.getId().getCimpuesto());	
-				txtPendiente.setValue(hFac.getId().getCpendiente());
-				//txtDescuento.setValue(hFac.getId().getCdescdisp());
-				//txtDescuentoAplicado.setValue(hFac.getId().getCdesctom());		
+				txtPendiente.setValue(hFac.getId().getCpendiente());						
 				txtTotal.setValue(hFac.getId().getCtotal());
 			}else {
 				txtSubtotal.setValue(hFac.getId().getDsubtotal());
 				txtIva.setValue(hFac.getId().getDimpuesto());	
-				txtPendiente.setValue(hFac.getId().getDpendiente());
-				//txtDescuento.setValue(hFac.getId().getDdescdisp());
-				//txtDescuentoAplicado.setValue(hFac.getId().getDdesctom());
+				txtPendiente.setValue(hFac.getId().getDpendiente());				
 				txtTotal.setValue(hFac.getId().getDtotal());
 			}
 		}catch(Exception ex){
@@ -4584,12 +4335,8 @@ public void onSucursalChange(ValueChangeEvent ev){
 		    	lstMetPago = new ArrayList();
 		    	lstMetodosPago = new ArrayList();
 		    	
-		    	for(int i = 0; i <  f55ca012.length; i ++){
-		    		
-//		    		metpago = metCtrl.obtenerDescripcionMetodosPago(f55ca012[i]);
-//		    		lstMetodosPago.add(new SelectItem(metpago[0].getId().getCodigo(),metpago[0].getId().getMpago()));
-//		    		lstMetPago.add(metpago);
-		    		
+		    	for(int i = 0; i <  f55ca012.length; i ++){		    		
+   		
 		    		
 		    		Metpago formapago = com.casapellas.controles.MetodosPagoCtrl.metodoPagoCodigo(f55ca012[i]);
 		    		lstMetodosPago.add(new SelectItem( formapago.getId().getCodigo(), formapago.getId().getMpago() ) );
@@ -4730,17 +4477,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 										.setStyle("height: 150px; visibility: visible; width: 330px");
 								srm.addSmartRefreshId(dwValidacionFactura
 										.getClientId(FacesContext.getCurrentInstance()));
-						
-//						lblValidaFactura
-//						.setValue("<img width=\"7\" src=\"/"
-//										+ PropertiesSystem.CONTEXT_NAME
-//										+ "/theme/icons/redCircle.jpg\" border=\"0\" /> " + strError + "<br>");
-//						dwValidacionFactura.setWindowState("normal");
-//						dwValidacionFactura
-//								.setStyle("height: 150px; visibility: visible; width: 330px");
-//						srm.addSmartRefreshId(dwValidacionFactura
-//								.getClientId(FacesContext.getCurrentInstance()));
-				
+
 						return;
 					}
 				}
@@ -4860,16 +4597,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 			ex.printStackTrace();
 		}
 	}
-/*****************************************************************************************************/	
-	
-/********************************************************************************************************/
-	/**********************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/***********************//*METODOS DE PAGO//*****************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**********************************************************************************************************/
+
 	/*************ESTABLECE LAS REFERENCIA REQUERIDAS PARA EL METODO DE PAGO SELECCIONADO***********************************/
 	public void setMetodosPago(ValueChangeEvent e) {
 		Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
@@ -5151,15 +4879,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 			sMetodosPago = metPagoCtrl.obtenerMetodoPagoxCaja_Moneda(
 									caja.getId().getCaid(), 
 									hFac.getId().getCodcomp(), sMoneda);
-			/*
-			metpago = new Metpago[sMetodosPago.length];
-	    	for(int i = 0; i <  sMetodosPago.length; i ++){
-				metpago = metPagoCtrl.obtenerDescripcionMetodosPago(sMetodosPago[i]);
-				lstMetodosPago.add(new SelectItem(metpago[0].getId()
-						.getCodigo(), metpago[0].getId().getMpago()));
-	    	}
-	    	*/
-	    	
+		    	
 	    	for(int i = 0; i <  sMetodosPago.length; i ++){
 	    		Metpago formapago = com.casapellas.controles.MetodosPagoCtrl.metodoPagoCodigo( sMetodosPago[i] );
 	    		lstMetodosPago.add(new SelectItem( formapago.getId().getCodigo(), formapago.getId().getMpago() ) );
@@ -5985,16 +5705,8 @@ public void onSucursalChange(ValueChangeEvent ev){
 							m.put("montoIsertando", monto);
 						}
 						//validar consolidado de montos
-						 else if ( dEquivalente > montoaplequiv ) { //else if ( monto > dMontoAplicar) {
-							 
-//							 double dSobrante = dEquivalente - montoaplequiv ;
-//							 double dSobrante = monto - dMontoAplicar;
-//							 if( montoaplequiv > dMontoAplicar)
-//								 dSobrante = dSobrante / tasa.doubleValue() ;
-//							 if( montoaplequiv > dMontoAplicar)
-//								 dSobrante = dSobrante * tasa.doubleValue() ;
-//							 dSobrante = divisas.roundDouble(dSobrante);
-							 
+						 else if ( dEquivalente > montoaplequiv ) { 
+
 							 BigDecimal sbr = new BigDecimal(Double.toString(dEquivalente))
 				 				.subtract( new BigDecimal(Double.toString(montoaplequiv))) ;
 				 	 
@@ -6771,10 +6483,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 			}
 			else if (!hFac.getMoneda().equals(sMonedaBase) && bCambioCOR){
 				
-				/*toma el total a aplicar y lo convierte a la tasa 
-				paralela a eso se le resta lo recibido a la misma 
-				tasa y ese es el cambio*/
-				
+
 				//obtener tasa del cambio
 				Tpararela[] tcPar = (Tpararela[])m.get("tpcambio");
 				//buscar tasa de cambio paralela para moneda
@@ -6804,18 +6513,9 @@ public void onSucursalChange(ValueChangeEvent ev){
 					break;
 				}
 				
-				/*cambio = divisas.roundDouble( ( divisas.formatStringToDouble(txtMontoRecibido.getValue().toString()) - divisas.formatStringToDouble(txtMontoAplicar.getValue().toString())) *tasa.doubleValue()) ;
-				if(cambio < 0){
-					
-				}else if(cambio > 0){
-					txtCambio.setStyle("color: green;font-size: 10pt");
-				}else{
-					txtCambio.setStyle("font-size: 10pt");
-				}*/
+			
 				
 				lblCambio.setValue("Cambio " + sMonedaBase + ":");
-//				txtCambio.setValue(divisas.formatDouble(cambio));
-				
 				txtCambio.setValue(String.format("%1$,.2f", bdCambio));
 				
 				txtCambioForaneo.setStyle("visibility: hidden; width: 0px");
@@ -7624,14 +7324,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 				
 				if(d.validarCuentaCorreo(vf0101.getId().getWwrem1().trim()))
 					lstCc.add(vf0101.getId().getWwrem1().trim());
-					
-				/*for (Iterator iter = lstAutorizadores.iterator(); iter.hasNext();) {
-					Vf0101 f01 = (Vf0101) iter.next();
-					if(d.validarCuentaCorreo(f01.getId().getWwrem1().trim()))
-						lstCc.add(f01.getId().getWwrem1().trim());
-				}*/
 				
-				//&& =========== copia a los autorizadores.
 				List<SelectItem> correosAutorizadores = (ArrayList<SelectItem>)CodeUtil.getFromSessionMap("lstAutoriza") ;
 				for (SelectItem si : correosAutorizadores) {
 					
@@ -8239,14 +7932,7 @@ public void cancelarSolicitud(ActionEvent e) {
 					validado = false;
 					y=y+14;
 				}
-				/*if (!txtConcepto.getValue().toString().trim().equals("")){
-					if(!matAlfa.matches()){
-						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/MCAJA/theme/icons/redCircle.jpg\" border=\"0\" /> El campo concepto contiene caracteres invalidos <br>";
-						txtConcepto.setStyleClass("frmInput2Error");
-						validado = false;
-						y=y+14;
-					}
-				}*/
+			
 				if(txtConcepto.getValue().toString().length() > 250){
 					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La longitud del campo es muy alta (lim. 250) <br>";
 					txtConcepto.setStyleClass("frmInput2Error");
@@ -8327,7 +8013,7 @@ public void cancelarSolicitud(ActionEvent e) {
 		String codsuc     = new String("");
 		String codcomp    = new String("");
 		String codunineg  = new String("");
-		String tiporec    = new String("CR"); 
+		String tiporec    = new String(valoresJDEInsCredito[0]); 
 		String sTipoDoc   = new String("");
 		String sCodunineg = new String("");
 		
@@ -8820,7 +8506,7 @@ public void cancelarSolicitud(ActionEvent e) {
 			List<String> numerosRecibosJde = new ArrayList<String>();
 				
 			for (int i = 0; i < lstMetodosPago.size(); i++) {
-				int numeroReciboJde = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROPAGORECIBO );
+				int numeroReciboJde = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 				numerosRecibosJde.add(String.valueOf(numeroReciboJde));
 			}
 			
@@ -8844,7 +8530,7 @@ public void cancelarSolicitud(ActionEvent e) {
 				throw new Exception(msgProceso);
 			}
 			
-			ProcesarPagoFacturaJde ppf = new  ProcesarPagoFacturaJde() ;
+			ProcesarPagoFacturaJdeCustom ppf = new  ProcesarPagoFacturaJdeCustom() ;
 			
 			ppf.executeQueries = false; 
 			
@@ -8867,7 +8553,7 @@ public void cancelarSolicitud(ActionEvent e) {
 			ppf.usuario = vaut.getId().getLogin();
 			ppf.programaActualiza = PropertiesSystem.CONTEXT_NAME;
 			ppf.moduloSistema = "RCREDITO";
-			ppf.estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE ;
+			ppf.valoresJDEInsCredito =valoresJDEInsCredito;
 			
 			ppf.ajustarMontoAplicado = false;
 			
@@ -9620,7 +9306,7 @@ public void cancelarSolicitud(ActionEvent e) {
 					iNumRecm, sCodComp, dMontoAplicar, dMontoRec, dCambio,
 					sConcepto, dFecha, dHora, iCodCli, sNomCli, sCajero,
 					iCajaId, f55ca01.getId().getCaco(), 
-					vautoriz[0].getId().getCoduser(), "CR", 0, "", 
+					vautoriz[0].getId().getCoduser(), valoresJDEInsCredito[0], 0, "", 
 					0, dFecha, hFac.getId().getCodunineg().trim(), 
 					sMotivoTc, hFac.getId().getMoneda() );
 				
@@ -9662,7 +9348,7 @@ public void cancelarSolicitud(ActionEvent e) {
 									sol = (Solicitud)lstSolicitud.get(i);
 									iNumSol = solCtrl.getNumeroSolicitud();
 									
-									bHecho = solCtrl.registrarSolicitud(null,null, iNumSol, iNumRec, "CR", iCajaId, 
+									bHecho = solCtrl.registrarSolicitud(null,null, iNumSol, iNumRec, valoresJDEInsCredito[0], iCajaId, 
 											sCodComp,f55ca01.getId().getCaco(), sol.getId().getReferencia(),sol.getAutoriza(),
 											dFecha,sol.getObs(),sol.getMpago(),sol.getMonto(),sol.getMoneda());
 									if(!bHecho){
@@ -9714,9 +9400,9 @@ public void cancelarSolicitud(ActionEvent e) {
 						if (m.get("bdTasa") != null){
 							bdTasa = (BigDecimal)m.get("bdTasa");
 						}
-						bHecho = creCtrl.registrarCambio(session, transaction, iNumRec, sCodComp, sLblCambio1, divisas.formatStringToDouble(sCambio1),iCajaId,f55ca01.getId().getCaco(),bdTasa,"CR");
+						bHecho = creCtrl.registrarCambio(session, transaction, iNumRec, sCodComp, sLblCambio1, divisas.formatStringToDouble(sCambio1),iCajaId,f55ca01.getId().getCaco(),bdTasa,valoresJDEInsCredito[0]);
 						if(bHecho){
-							bHecho = creCtrl.registrarCambio(session, transaction, iNumRec, sCodComp, sLblCambio2, divisas.formatStringToDouble(sCambio2),iCajaId,f55ca01.getId().getCaco(),bdTasa,"CR");
+							bHecho = creCtrl.registrarCambio(session, transaction, iNumRec, sCodComp, sLblCambio2, divisas.formatStringToDouble(sCambio2),iCajaId,f55ca01.getId().getCaco(),bdTasa,valoresJDEInsCredito[0]);
 							if(!bHecho){
 								strMensajeValidacion = "No se pudo registrar el cambio " + sLblCambio2 ;
 								lblMensajeValidacion.setValue(strMensajeValidacion);
@@ -9736,7 +9422,7 @@ public void cancelarSolicitud(ActionEvent e) {
 						if (m.get("bdTasa") != null){
 							bdTasa = (BigDecimal)m.get("bdTasa");
 						}
-						bHecho = creCtrl.registrarCambio(session, transaction, iNumRec, sCodComp, sLblCambio1, divisas.formatStringToDouble(sCambio1),iCajaId,f55ca01.getId().getCaco(),bdTasa,"CR");
+						bHecho = creCtrl.registrarCambio(session, transaction, iNumRec, sCodComp, sLblCambio1, divisas.formatStringToDouble(sCambio1),iCajaId,f55ca01.getId().getCaco(),bdTasa,valoresJDEInsCredito[0]);
 						if(!bHecho){
 							strMensajeValidacion = "No se pudo registrar el cambio " + sLblCambio1;
 							lblMensajeValidacion.setValue(strMensajeValidacion );
@@ -9789,35 +9475,13 @@ public void cancelarSolicitud(ActionEvent e) {
 					txtCompania.setValue(hFac.getId().getNomcomp());
 					
 					txtFechaVenc.setValue(hFac.getId().getFechavenc());					
-					txtFechaVenDecto.setValue(hFac.getId().getFechavenc());
-					
-					/*txtFechalm.setValue(hFac.getFechalm());
-					txtFechaImp.setValue(hFac.getFechaimp());
-					txtCompens.setValue(hFac.getCompenslm());
-					txtCondicion.setValue(hFac.getTipopago() + " " + hFac.getDesctpago());	
-					txtNoOrden.setValue(hFac.getNumorden());
-					txtNoBatch.setValue(hFac.getNobatch());
-					txtFechaBatch.setValue(hFac.getFechabatch());
-					txtObservaciones.setValue(hFac.getObservaciones());
-					txtReferenciaFactura.setValue(hFac.getReferencia());
-					
-					txtTipoOrden.setValue(hFac.getTipoorden());*/
+					txtFechaVenDecto.setValue(hFac.getId().getFechavenc());					
 					
 					if(hFac.getMoneda().equals(sMonedaBase)){
-						/*txtSubtotal.setValue(hFac.getCsubtotal());
-						txtIva.setValue(hFac.getCimpuesto());	
-						txtPendiente.setValue(hFac.getCpendiente());
-						txtDescuento.setValue(hFac.getCdescdisp());
-						txtDescuentoAplicado.setValue(hFac.getCdesctom());
-						txtTotal.setValue(hFac.getCtotal());*/
+						
 						lstMonedasDetalle.add(new SelectItem(sMonedaBase,sMonedaBase));
 					}else{
-						/*txtSubtotal.setValue(hFac.getDsubtotal());
-						txtIva.setValue(hFac.getDimpuesto());	
-						txtPendiente.setValue(hFac.getDpendiente());
-						txtDescuento.setValue(hFac.getDdescdisp());
-						txtDescuentoAplicado.setValue(hFac.getDdesctom());
-						txtTotal.setValue(hFac.getDtotal());*/
+						
 						lstMonedasDetalle.add(new SelectItem(hFac.getMoneda(),hFac.getMoneda()));
 						lstMonedasDetalle.add(new SelectItem(sMonedaBase,sMonedaBase));
 					}
@@ -9825,7 +9489,6 @@ public void cancelarSolicitud(ActionEvent e) {
 					cmbMonedaDetalleCredito.dataBind();
 					//buscar detalle 
 					List lstDfacturasCredito = facCred.getDetalleFacturaCredito(hFac.getId().getNofactura(), hFac.getId().getTipofactura(),hFac.getId().getCodsuc(),hFac.getId().getCodunineg());
-					//lstDfacturasCredito = facCred.formatDetalleCredito(lstDfacturasCredito, hFac.getTasa(), hFac.getMoneda());
 					m.put("lstDfacturasCredito", lstDfacturasCredito);
 					gvDfacturasCredito.dataBind();
 					break;
@@ -9836,11 +9499,7 @@ public void cancelarSolicitud(ActionEvent e) {
 			ex.printStackTrace();
 		}
 	}
-/******************************************************************************************************/
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////GETTERS Y SETTERS////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-/*****************************************************************************************************/
+
 	public UIInput getCmbBusquedaCredito() {
 		return cmbBusquedaCredito;
 	}
@@ -10812,7 +10471,7 @@ public String getFechaRecibo() {
 				List lstFiltro = new ArrayList();
 				F55ca014[] lstComxCaja = cc.obtenerCompaniasxCaja(sCajaId);			
 				
-				lstFiltro.add(new SelectItem("01","Todas","Seleccione una Compañía primero"));
+				lstFiltro.add(new SelectItem("10","Todas","Seleccione una Compañía primero"));
 				for(int i=0; i<lstComxCaja.length;i++){				
 					lstFiltro.add(new SelectItem(lstComxCaja[i].getId().getC4rp01(),lstComxCaja[i].getId().getC4rp01() + " " + lstComxCaja[i].getId().getC4rp01d1().trim(),lstComxCaja[i].getId().getC4rp01()));
 				}
@@ -10836,7 +10495,7 @@ public String getFechaRecibo() {
 		try{
 			if(m.get("lstUninegCred")==null){
 				List lstFiltro = new ArrayList();				
-				lstFiltro.add(new SelectItem("01","Todas","Seleccione una Sucursal primero"));				
+				lstFiltro.add(new SelectItem("10","Todas","Seleccione una Sucursal primero"));				
 				m.put("lstUninegCred", lstFiltro);	
 				lstUninegCred = lstFiltro;
 			}else{
@@ -10874,7 +10533,7 @@ public String getFechaRecibo() {
 		try{
 			if(m.get("lstSucursalCred")==null){
 				List lstFiltro = new ArrayList();				
-				lstFiltro.add(new SelectItem("01","Todas","Seleccione una Compañía primero"));				
+				lstFiltro.add(new SelectItem("00010","Todas","Seleccione una Compañía primero"));				
 				m.put("lstSucursalCred", lstFiltro);
 				lstSucursalCred = lstFiltro;
 			}else{

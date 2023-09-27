@@ -84,4 +84,28 @@ public static String valoresJDEInsFinanciamiento() {
 			else
 			return null;
 		}
+
+public static String obtenerCuentasFCVGanancia(String compania) {
+	
+	String query="SELECT CONCAT(CONCAT( COD_CUENTA_OBJETO,',' ),IFNULL(COD_SUBCUENTA,'')) CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ compania +"' ";     
+		
+		List<Object> cuentaGanancia= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(cuentaGanancia.size()>0)
+		return cuentaGanancia.get(0).toString();
+		else
+		return null;
+	}
+
+public static String obtenerCuentasFCVPerdida(String compania) {
+	
+	String query="SELECT CONCAT(CONCAT( COD_CUENTA_OBJETO,',' ),IFNULL(COD_SUBCUENTA,'')) CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ compania +"' ";     
+		
+		List<Object> cuentaPerdida= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(cuentaPerdida.size()>0)
+		return cuentaPerdida.get(0).toString();
+		else
+		return null;
+	}
 }

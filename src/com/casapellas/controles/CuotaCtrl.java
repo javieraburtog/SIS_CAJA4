@@ -171,6 +171,7 @@ public class CuotaCtrl {
 				return null;
 						
 			for (String idcuenta : cuentas) {
+				if(idcuenta!=null)
 				strIdCuenta.add(  idcuenta.split("@@") ) ;
 			}			
 			
@@ -232,6 +233,7 @@ public class CuotaCtrl {
 				return null;
 						
 			for (String idcuenta : cuentas) {
+				if(idcuenta!=null)
 				strIdCuenta.add(  idcuenta.split("@@") ) ;
 			}			
 			

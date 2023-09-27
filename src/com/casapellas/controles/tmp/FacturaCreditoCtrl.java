@@ -334,11 +334,11 @@ public class FacturaCreditoCtrl {
 			//---- Moneda, Compania, Unidad de Negocio, Sucursal.
 			if(!sMoneda.trim().equals("01"))
 				cr.add(Restrictions.eq("id.moneda", sMoneda.trim()));
-			if(!sCodComp.trim().equals("01"))
+			if(!sCodComp.trim().equals("10"))
 				cr.add(Restrictions.eq("id.codcomp",sCodComp.trim()));
-			if(!sCodsuc.trim().equals("01"))
+			if(!sCodsuc.trim().equals("00010"))
 				cr.add(Restrictions.eq("id.codsuc", sCodsuc.trim()));
-			if(!sCodunineg.trim().equals("01"))
+			if(!sCodunineg.trim().equals("10"))
 				cr.add(Restrictions.eq("id.codunineg", sCodunineg.trim()));
 			if(dFechaDesde!=null)
 				cr.add(Restrictions.ge("id.fecha", dFechaDesde));
@@ -356,9 +356,6 @@ public class FacturaCreditoCtrl {
 				}
 			}
 			 
-//			cr.add(Restrictions.ne("id.tipofactura", "IF"));
-//			cr.add(Restrictions.ne("id.tipofactura", "MF"));
-			
 			String criteriaSQL = LogCajaService.toSql(cr);
 			LogCajaService.CreateLog("buscarFacturasCredito", "QRY", criteriaSQL);
 			

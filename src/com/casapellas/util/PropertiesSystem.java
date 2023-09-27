@@ -49,6 +49,8 @@ public class PropertiesSystem {
 		
    // Configuraciones para obtener cuentas
 		public final static String parametroCaja="30";
+		public final static String parametroFCVGanancia="11";
+		public final static String parametroFCVPerdida="10";
 		//-Contado
 		public final static String tipoTrxContado="CO";
 		public final static String valuesJDEContado="CONTADO_JDE_INS";

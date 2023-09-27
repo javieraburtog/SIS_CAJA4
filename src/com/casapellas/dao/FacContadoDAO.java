@@ -1551,7 +1551,7 @@ public class FacContadoDAO {
 				String concepto = "Dev:" + dev.getNofactura() + " " + dev.getTipofactura() + " C:" + caid;
 				
 				List<String> codigosSucursal = Arrays.asList(new String[]{dev.getCodsuc()}); 
-				List<String[]> cuentasContableFactura = CuotaCtrl.idCuentaFacturaTipoClienteSucursal(codigosSucursal, cliente.getId().getA5arc(), valoresJDEInsCredito[0]);
+				List<String[]> cuentasContableFactura = CuotaCtrl.idCuentaFacturaTipoClienteSucursal(codigosSucursal, cliente.getId().getA5arc(), valoresJDEInsCredito[1]);
 				
 				String[] sCuenta = new Divisas().obtenerCuentaVenta(caid, dev.getCodcomp(), dev.getCodunineg(), session, transaction);
 				

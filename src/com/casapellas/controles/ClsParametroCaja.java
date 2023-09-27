@@ -124,7 +124,7 @@ public class ClsParametroCaja {
 							  					  "caid = " + strNumeroCaja + " and "
 							  					+ "tcod = '" + strCodigoParm + "' ";
 			
-			System.out.println(strQuery);
+		
 			ResultSet rs = dbC.executeQuery(conn, strQuery);
 			
 			if(rs==null) throw new Exception("No esta configurado los parametros solicitados");
@@ -199,7 +199,7 @@ public class ClsParametroCaja {
 							  					  "caid = " + strNumeroCaja + " and "
 							  					+ "tcod = '" + strCodigoParm + "'";
 			
-			System.out.println(strQuery);
+			
 			dbC.executeUpdate(conn, strQuery);
 			
 			return true;
