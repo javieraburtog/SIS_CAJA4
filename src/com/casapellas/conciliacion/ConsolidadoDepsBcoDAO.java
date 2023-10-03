@@ -336,14 +336,6 @@ public class ConsolidadoDepsBcoDAO {
 			}
 			
 			
-//			for (ConsolidadoCoincidente cc : coincidencias) {
-//				
-//				System.out.println("dp Banco >> Nivel: " +cc.getNivelcomparacion() 
-//						+", Referencia: " +  cc.getReferenciabanco() 
-//						+", monto B: " + cc.getMontoBanco() 
-//						+", dpCaja" + cc.getCantdepositoscaja()
-//						+", monto C: " +cc.getMontoCaja() );
-//			}
 
 			rsmTotalDepBco = cantdepbancoiniciales ;
 			rsmTotalCoincidenciasBco = cantCoincidenciasBanco ;
@@ -666,10 +658,6 @@ public class ConsolidadoDepsBcoDAO {
 						 return	((ConsolidadoCoincidente)o).getIdresumenbanco() == idresumenbanco ;
 						}
 					}) ;
-				
-//				for (ConsolidadoCoincidente cc : duplicados) {
-//					System.out.print(",  [" + cc.getNivelcomparacion() +" "+ cc.getIdresumenbanco() +" " + cc.getMontoBanco() + " " + cc.getMontorporajuste()+"]" );
-//				}
 				
 				
 				Collections.sort(duplicados, new Comparator<ConsolidadoCoincidente>(){
@@ -1252,17 +1240,10 @@ public class ConsolidadoDepsBcoDAO {
 			 
 			List<Integer> idsDepsCaja = (ArrayList<Integer>)CodeUtil.selectPropertyListFromEntity(lstDepositosCaja, "consecutivo", true) ;
 
-//			for (Integer integer : idsDepsCaja) {
-//				System.out.print(String.valueOf(integer).concat(", ") );  idsDepsCaja.toString();
-//			}
 			
 			
 			idsDepsCaja = (ArrayList<Integer>)CodeUtil.selectPropertyListFromEntity(dbRemains, "idresumenbanco", true) ;
 
-//			for (Integer integer : idsDepsCaja) {
-//				System.out.print(String.valueOf(integer).concat(", ") );
-//			}
-			
 			
 			//&& =============== actualizar el estado de los consolidados no coincidentes
 			updateConsolidado(comparados, idsresumenbancoNoMatch) ;

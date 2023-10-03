@@ -759,11 +759,7 @@ public class GnrMinutaAutomatica {
 				background.restoreState();
 
 			} catch (Exception e) {
-				System.out
-						.println(" com.casapellas.conciliacion " + new Date());
-				System.out
-						.println(": Excepción capturada en :tableLayout Mensaje:\n "
-								+ e);
+			
 			}
 		 }
 	 }

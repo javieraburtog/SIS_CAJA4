@@ -855,21 +855,13 @@ public class FacturaCrtl {
 			tx.commit();
 			
 		}catch(Exception ex){
-			System.out.print("Se capturo una Excepcion en FacturaCtrl.leerFacturasDelDia: " + ex);
+			LogCajaService.CreateLog("leerFacturasDelDia", "ERR", ex.getMessage());			
 		}finally {			
-			try {HibernateUtilPruebaCn.closeSession(session); } catch (Exception e2) {e2.printStackTrace(); }
+			try {HibernateUtilPruebaCn.closeSession(session); } catch (Exception e2) {LogCajaService.CreateLog("leerFacturasDelDia", "ERR", e2.getMessage());}
 		}
 	return lstFacturas;
 }
-/*********************************************************************************************/
-	///////////////////////////////////////////////////////////
-	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/******METODOS DE CONTADO***********/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/****************DETALLE DE FACTURA DE CONTADO*****************/	
 	public void mostrarDetalleContado(ActionEvent e){
-		//dgwDetalleContado.setStyle("height: 435px; visibility: visible; width: 520px");
 		dgwDetalleContado.setWindowState("normal");
 		boolean mod = dgwDetalleContado.isModal();
 		//dgwDetalleContado.setModal(true);
@@ -933,7 +925,7 @@ public class FacturaCrtl {
 			}
 			//dgwDetalleContado.setWindowState("normal");
 		}catch(Exception ex){
-			System.out.print("==> Excepción capturada en mostrarDetalleContado: " + ex);
+			LogCajaService.CreateLog("mostrarDetalleContado", "ERR", ex.getMessage());
 		}
 	}
 	public void cerrarDetalleContado(ActionEvent e){
@@ -960,7 +952,7 @@ public class FacturaCrtl {
 		gvDfacturasContado.dataBind();
 		dgwDetalleContado.setWindowState("hidden");
 		}catch(Exception ex){
-			System.out.print("=>Excepcon capturada en cerrarDetalleContado" + ex);
+			LogCajaService.CreateLog("cerrarDetalleContado", "ERR", ex.getMessage());			
 		}
 	}
 	/****************DETALLE DE FACTURA DE CONTADO en el popup del recibo*****************/
@@ -1018,7 +1010,8 @@ public class FacturaCrtl {
 			//dgwDetalleEnReciboContado.setModal(true);
 			dgwDetalleEnReciboContado.setStyle("height: 440px; visibility: visible; width: 520px");		
 		}catch(Exception ex){
-			System.out.print("==> Excepción capturada en mostrarDetalleContado: " + ex);
+			LogCajaService.CreateLog("mostrarDetalleContado", "ERR", ex.getMessage());	
+			
 		}
 	}
 	public void cerrarDetalleEnReciboContado(ActionEvent e){

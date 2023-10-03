@@ -66,9 +66,7 @@ public class OperationProperties extends ConnectionSqlite {
             }
         } catch (SQLException e) {
         	e.printStackTrace();
-//            System.out.println("Mensaje:" + e.getMessage());
-//            System.out.println("Estado:" + e.getSQLState());
-//            System.out.println("Codigo del error:" + e.getErrorCode());
+
         }
         close();
         return propertieses;

@@ -96,7 +96,6 @@ public class RpttransjdeDAO {
 		}
 	}
 	public void ejecutar(ActionEvent ev){
-//		System.out.println("ejecución del actionlistener");
 	}
 /*********************************************************************************/
 /** Validar y ejecutar la búsqueda a partir de los valores de los filtros       **/

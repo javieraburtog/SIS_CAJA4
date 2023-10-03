@@ -133,10 +133,10 @@ public class CtrlCajas {
 			try{
 				int result = (p55recibo.getRESULTADO().compareTo("") == 0)? 1: Integer.parseInt(p55recibo.getRESULTADO()) ;
 				switch (result) {
-				case 1: //System.out.println("Impresion Fallida");
+				case 1: 
 						System.err.println("==> "+p55recibo.getErrParm());
 					break;
-				case 0: //System.out.println("Impresion Exitosa");
+				case 0:
 					break;
 				}
 			}catch (Exception e) { 
@@ -628,14 +628,14 @@ public class CtrlCajas {
 			}	
 			rs.close();
 		}catch(Exception ex){
-			System.out.print("==> Excepción capturada en getAllCajas: " + ex);
+			LogCajaService.CreateLog("getAllCajas", "ERR", ex.getMessage());
 		}finally{
 		
 			try {
 				ps.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LogCajaService.CreateLog("getAllCajas", "ERR", e.getMessage());
 			}
 		}
 		return lstCajas;
@@ -1308,46 +1308,7 @@ public class CtrlCajas {
 /*****************************************************************************************************/
 /**	 		Obtiene los datos para generar el reporte de emisión de recibos rptmcaja007				**/
 	public List obtieneRecibosrpt007(int iCaid, String sCodcomp,Date dtIni,Date dtFin){ 
-		/*List<Vrptmcaja007> lstRecibos = null;
-		List<Vrptmcaja007Id>lstRpt07 = null;
-		String sql = "",sFechaIni="",sFechaFin="";
-		FechasUtil f = new FechasUtil();
-		Transaction trans = null;
-		Session sesion = HibernateUtilPruebaCn.currentSession();
-		
-		try {
-			sFechaIni = f.formatDatetoString(dtIni, "yyyy-MM-dd");
-			sFechaFin = f.formatDatetoString(dtFin, "yyyy-MM-dd");
-			sql = sql.concat("from Vrptmcaja007 v where v.id.codcomp = '").concat(sCodcomp);
-			sql = sql.concat("' and v.id.caid = ").concat(String.valueOf(iCaid));
-			sql = sql.concat(" and v.id.fecha between '").concat(sFechaIni).concat("' and '");
-			sql = sql.concat(sFechaFin).concat("' order by v.id.numrec asc");
-
-			trans = sesion.beginTransaction();
-			lstRecibos = (ArrayList<Vrptmcaja007>)sesion.createQuery(sql).list();
-			trans.commit();
-			
-			if(lstRecibos!=null && lstRecibos.size()>0){
-				lstRpt07 = new ArrayList<Vrptmcaja007Id>(lstRecibos.size());
-				for(Vrptmcaja007 v : lstRecibos) {
-					Vrptmcaja007Id vid = v.getId();	
-					vid.setFecharecibo(f.formatDatetoString(vid.getFecha(), "dd-MM-yyyy"));
-					vid.setDftasa(vid.getFtasa().doubleValue());
-					vid.setDmontoapl(vid.getMontoapl().doubleValue());
-					vid.setInofactura(vid.getNofactura().intValue());
-					vid.setDfmonto(vid.getFmonto().doubleValue());
-					if(vid.getCliente().trim().length()>28)
-						vid.setCliente(vid.getCliente().trim().substring(0,28));
-					lstRpt07.add(vid);
-				}
-			}
-		} catch (Exception error) {
-			lstRecibos = null;
-			System.out.println("Error en CtrlCajas.obtieneRecibosrpt007 " + error);
-		} finally {
-			try {HibernateUtilPruebaCn.closeSession(); } catch (Exception e2) {e2.printStackTrace(); }
-		}*/
-		return null ;/*lstRpt07*/
+				return null ;
 	}
 /*****************************************************************************************************/
 /**	 		Obtiene los datos para generar el reporte de emisión de recibos rptmcaja006				**/
@@ -1860,7 +1821,7 @@ public class CtrlCajas {
 			.createQuery(sql)			
 			.list();
 		}catch(Exception ex){
-			System.out.print("==> Excepción capturada en obtenerCaja: " + ex);
+			LogCajaService.CreateLog("obtenerCaja", "ERR", ex.getMessage());
 		}
 
 		return lstCajas;
@@ -2069,7 +2030,7 @@ public class CtrlCajas {
 				sLinea =  lstLineas.toArray(new String[lstLineas.size()]);
 			
 		}catch(Exception ex){
-			System.out.print("Se capturo una excepcion en: " + ex);
+			LogCajaService.CreateLog("obtenerLineas", "ERR", ex.getMessage());
 		}
 		return sLinea;
 	}

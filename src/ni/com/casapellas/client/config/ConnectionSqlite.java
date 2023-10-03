@@ -29,15 +29,13 @@ public class ConnectionSqlite {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-        	e.printStackTrace();
-//            System.out.println("Ocurrio un error: " + e.getCause());
+        
         }
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + path);
             statement = getConnection().createStatement();
         } catch (SQLException e) {
-        	e.printStackTrace();
-//            System.out.println("Ocurrio un error:  " + e.getMessage());
+        
         }
     }
 

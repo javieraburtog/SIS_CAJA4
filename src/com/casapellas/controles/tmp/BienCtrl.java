@@ -151,7 +151,6 @@ public class BienCtrl {
 			registrado = true;
 			
 		}catch(Exception ex){
-			System.out.print("Se capturo una excepcion en BienCtrl.registrarBien: " + ex);
 		}
 		return registrado;
 	}

@@ -77,7 +77,6 @@ public class SugerenciasRecibo extends AbstractMap {
 			}
 			
 		}catch(Exception e){
-			System.out.print("==> Excepción capturada en SugerenciasRecibo: " + e);
 		}		
 		return sugerenciasRecibo;
 	}

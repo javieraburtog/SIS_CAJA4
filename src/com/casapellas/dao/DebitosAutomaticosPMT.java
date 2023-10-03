@@ -2137,7 +2137,6 @@ public class DebitosAutomaticosPMT {
 	@SuppressWarnings("unchecked")
 	public void excluirDebitoAutomatico(ActionEvent ev){
 		try {
-			System.out.println("Entro a Debitos automaticos 0");
 			RowItem ri = (RowItem) ev.getComponent().getParent().getParent();
 			final Vwbitacoracobrospmt v = (Vwbitacoracobrospmt) DataRepeater.getDataRow(ri);
 			 
@@ -2450,37 +2449,7 @@ public class DebitosAutomaticosPMT {
 	
 	int iContador = 0;
 	public HtmlGridView getGvCuotasPendientesDebitos() {
-//		System.out.println("Entro a Debitos automaticos 1");
-//		
-//		
-//		ClsParametroCaja clsPC = new ClsParametroCaja();
-//		try
-//		{
-//			CajaParametro lstCP = clsPC.getParametros("06", "0", "DEBAUT");
-//			if(lstCP.getValorNumerico()==1)
-//			{
-//				dwMensajesValidacion.setWindowState("normal");
-//				lblMensajeValidacion.setValue("Debito automático se esta procesando");
-//				iContador = 1;
-//				
-//				System.out.println("//************************************");
-//				System.out.println("Debito automático se esta procesando");
-//				System.out.println("//************************************");
-//			}
-//		}
-//		catch (Exception e) {
-//			dwMensajesValidacion.setWindowState("normal");
-//			lblMensajeValidacion.setValue("Error al consultar paramatros de caja para verificar si esta "
-//					+ "procesandose los debitos automáticos");
-//			
-//			iContador = 1;
-//		}
-//		
-//		if(iContador==1)
-//		{
-//			dwConfirmacionProcesoDebitos.setWindowState("hidden");
-//			dwConfirmacionProcesoDebitos = null;
-//		}
+
 		
 		return gvCuotasPendientesDebitos;
 	}

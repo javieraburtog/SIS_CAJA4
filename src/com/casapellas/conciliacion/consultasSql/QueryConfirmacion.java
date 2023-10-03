@@ -308,7 +308,6 @@ public class QueryConfirmacion {
 			totalRegs = (Integer)(sesion.createSQLQuery(strSqlQuery.replace("@camposC", " count(*) ").replace("@camposT", strCampos).replace("@order", "").replace("@where",strWhere)).list()).get(0);
 			
 		}catch(Exception ex){    
-//			System.out.print("Se capturo una excepcion en cargarDepositoBanco: " );
 			ex.printStackTrace();  
 		}finally{
 			

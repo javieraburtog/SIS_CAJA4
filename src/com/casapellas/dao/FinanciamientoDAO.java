@@ -93,8 +93,8 @@ import com.casapellas.entidades.Vf0311fn;
 import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.entidades.Vf55ca012;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
-import com.casapellas.jde.creditos.CodigosJDE1;
 import com.casapellas.jde.creditos.ProcesarPagoFacturaJde;
+import com.casapellas.jde.creditos.ProcesarPagoFacturaJdeCustom;
 import com.casapellas.navegacion.As400Connection;
 import com.casapellas.rpg.P55CA090;
 import com.casapellas.rpg.P55RECIBO;
@@ -341,7 +341,10 @@ public class FinanciamientoDAO {
 	private HtmlJspPanel pnlDatosOtrosFinancimientos ;
 	private HtmlOutputText lblFacturaOtrosFinan;
 	private String styleDialogDetalleFinancimiento;
-	
+
+	//Nuevos valores para JDE
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	String[] valoresJDEInsFinanciamiento = (String[]) m.get("valoresJDEInsFinanciamiento");
 	/*******************************************************************************************************/	
 	public void procesarDonacionesIngresadas(ActionEvent ev){
 		String msg = "";
@@ -1756,10 +1759,6 @@ public class FinanciamientoDAO {
 							+ new Exception().getStackTrace()[1].getClassName() +":"	
 							+ new Exception().getStackTrace()[1].getMethodName() ;
 					
-//					LogCrtl.sendLogDebgs("Intereses corrientes Generados para : Cliente>Solicitud>Cuota>Batch:  " 
-//							+ fh.getId().getCodcli() +">"+fh.getId().getNosol()+">"+fd.getId().getNocuota()+">"+fd.getId().getAticu() +" | Invocado desde "+ origen
-//							+" usuario " + vautoriz[0].getId().getLogin() + " fecha "+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date() ) );
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -1835,11 +1834,7 @@ public class FinanciamientoDAO {
 					cr = (Credhdr)lstComponents.get(j);
 					
 					if( cr.isFinancimientoAsociado() )
-					{
-						System.out.println("Entro a documento asociados: Tipo :  " + cr.getId().getTipofactura().trim());
-						System.out.println("Entro a documento asociados: Cuota :  " + cr.getId().getPartida());
-						System.out.println("Entro a documento asociados: Numero Factura :  " + cr.getId().getNofactura());
-						
+					{					
 						
 						continue;
 					}
@@ -3899,7 +3894,7 @@ public class FinanciamientoDAO {
 			List<String> numerosRecibosJde = new ArrayList<String>();
 			
 			for (int i = 0; i < lstMetodosPago.size(); i++) {
-				int numeroReciboJde = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROPAGORECIBO );
+				int numeroReciboJde = Divisas.numeroSiguienteJdeE1Custom( valoresJdeNumeracion[0],valoresJdeNumeracion[1] );
 				numerosRecibosJde.add(String.valueOf(numeroReciboJde));
 			}
 			
@@ -3923,7 +3918,7 @@ public class FinanciamientoDAO {
 				throw new Exception(msgProceso);
 			}
 			
-			ProcesarPagoFacturaJde ppf = new  ProcesarPagoFacturaJde() ;
+			ProcesarPagoFacturaJdeCustom ppf = new  ProcesarPagoFacturaJdeCustom() ;
 			
 			ppf.executeQueries = false; 
 			
@@ -3947,7 +3942,7 @@ public class FinanciamientoDAO {
 			ppf.programaActualiza = PropertiesSystem.CONTEXT_NAME;
 			ppf.moduloSistema = "RFINANCIA";
 			ppf.ajustarMontoAplicado = false;
-			ppf.estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE ;
+			ppf.valoresJDEIns = valoresJDEInsFinanciamiento ;
 			
 			ppf.msgProceso = "";
 			ppf.procesarPagosFacturas(sessionInsJdeCaja);
@@ -8132,7 +8127,8 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			Vautoriz vaut =  ((Vautoriz[])m.get("sevAut"))[0];
 			BigDecimal tasaoficial = obtenerTasaOficial();
 			String msgCreaInteres="";
-			 msgCreaInteres = crearFacturasPorIntereses2( lstSelected,  lstFacturasSelected, vaut.getId().getLogin() );
+			
+			msgCreaInteres = crearFacturasPorIntereses2( lstSelected,  lstFacturasSelected, vaut.getId().getLogin() );
 			
 			if( !msgCreaInteres.isEmpty() ){
 				msgProceso = msgCreaInteres ;
@@ -8576,7 +8572,6 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			
 		}catch(Exception ex){
 			// ex.printStackTrace();
-			System.out.println(ex.getLocalizedMessage());
 		}finally{
 			
 			ConsolidadoDepositosBcoCtrl.isNewSession = nuevaConexion;

@@ -3074,8 +3074,7 @@ public class FacContadoDAO {
 		boolean bHecho = false, bAnular = true;
 		Connection cn = null;
 		try{
-			System.out.println("Sincronizar Factura Linea 3001");
-			//unidades de negocios configuradas en caja
+		
 			f55ca017 = (F55ca017[]) m.get("f55ca017");
 			
 			if(f55ca017 != null){
@@ -9970,7 +9969,7 @@ public class FacContadoDAO {
 	public void refrescarFacturasContado(ActionEvent e) {
 		try {
 			LogCajaService.CreateLog("refrescarFacturasContado", "INFO", "INICIO METODO => refrescarFacturasContado");
-			System.out.println("Refrescar Facturas Contado, Linea 9774");
+			
 			m.remove("lstHfacturasContado");
 			lstHfacturasContado = new ArrayList();
 			F55ca017[] f55ca017 = (F55ca017[]) m.get("f55ca017");
@@ -10217,8 +10216,7 @@ public class FacContadoDAO {
 					if(bValidaCliente)
 					{
 						indexMensaje = ConfiguracionMensaje.getConfiguracionMensajeXCodigo(configuracionMensaje, "CAJA", "REC_CONTADO", "MOSTRARRECIBO", "GETFACTSELECT_01");
-						System.out.println("V Cliente: " + indexMensaje);
-						
+												
 						if(indexMensaje < 0)
 							lblValidaFactura.setValue("<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El cliente de la factura debe ser el mismo<br>");
 						else
@@ -10227,8 +10225,7 @@ public class FacContadoDAO {
 					else if(bValidaCompania)
 					{
 						indexMensaje = ConfiguracionMensaje.getConfiguracionMensajeXCodigo(configuracionMensaje, "CAJA", "REC_CONTADO", "MOSTRARRECIBO", "GETFACTSELECT_02");
-						System.out.println("V Compania: " + indexMensaje);
-						
+												
 						if(indexMensaje < 0)
 							lblValidaFactura.setValue("<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La compania de la factura debe ser la misma<br>");
 						else
@@ -10238,8 +10235,7 @@ public class FacContadoDAO {
 					{
 						
 						indexMensaje = ConfiguracionMensaje.getConfiguracionMensajeXCodigo(configuracionMensaje, "CAJA", "REC_CONTADO", "MOSTRARRECIBO", "GETFACTSELECT_03");
-						System.out.println("V Moneda: " + indexMensaje);
-						
+												
 						if(indexMensaje < 0)
 							lblValidaFactura.setValue("<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La moneda de la factura debe ser la misma<br>");
 						else
@@ -10248,8 +10244,7 @@ public class FacContadoDAO {
 					else if(bValidaCombinacionFac_Dev)
 					{
 						indexMensaje = ConfiguracionMensaje.getConfiguracionMensajeXCodigo(configuracionMensaje, "CAJA", "REC_CONTADO", "MOSTRARRECIBO", "GETFACTSELECT_04");
-						System.out.println("V Combicacion Fac Dev: " + indexMensaje);
-						
+												
 						if(indexMensaje < 0)
 							lblValidaFactura.setValue("<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> No debe procesar devoluciones y facturas<br>");
 						else
@@ -15048,7 +15043,6 @@ public class FacContadoDAO {
 	
 /***********PROCESA E IMPRIME EL RECIBO DE PAGO A FACTURAS DE CONTADO*******************************/
 	public void ProcesaReciboContado(ActionEvent e) {
-		System.out.println("paso 2 de pago de recibo");
 		Divisas divisas = new Divisas();
 		MetodosPago[] metPago = null;
 		Connection cn = null;

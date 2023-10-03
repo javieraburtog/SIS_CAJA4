@@ -552,9 +552,7 @@ public class ConfirmacionDepositosDao {
 					
 					cdc.notificaCambioReferencia(lstCncCambioRfr, 
 								lstCambiosRefer,vaut.getId().getCodreg());
-//					if(!bHecho){
-//						System.out.println("No se ha enviado el correo de cambio de referencia!");
-//					}
+
 				}
 				
 				//&& ======= depositos de caja filtrados como coincidentes.
@@ -614,10 +612,7 @@ public class ConfirmacionDepositosDao {
 				
 				cn.rollback();
 				transCaja.rollback();
-				
-//				if(pca.getErrorDetalle()!=null){
-//					System.out.println("Detalle: "+pca.getErrorDetalle());
-//				}
+			
 			}
 			session.close();			
 			if(!cn.isClosed()){
@@ -1419,36 +1414,24 @@ public class ConfirmacionDepositosDao {
 					cn.rollback();
 					transCaja.rollback();
 					
-//					if(pca.getErrorDetalle()!=null){
-//						System.out.println("Detalle: "+pca.getError());
-//					}
 				}
 				lstResumenConcilia.add(cdb);
 			}
 			
 			
-//			sesionCajaR.close();
-//			sesionCajaW.close();
-//			if(!cn.isClosed()){
-//				cn.close();
-//			}
 			
 			//&& ====== Enviar los correos de notificacion
 			ConfirmaDepositosCtrl cdc = new ConfirmaDepositosCtrl();
 			if(lstConciliaRegis.size()>0){
 				bHecho = cdc.enviarNotificacionBatch(lstConciliaRegis,2);
-//				if(!bHecho){
-//					System.out.println("No se ha enviado el correo!");
-//				}
+
 			}
 			//&& =============== Oct 17, 2012: confirmarAutoDepositosCajaBanco
 			//&& ======= Enviar notificacion de cambio de referencias. 
 			if(lstCambiosRefer.size() > 0){
 				cdc.notificaCambioReferencia(lstCncCambioRfr, lstCambiosRefer,
 									vaut.getId().getCodreg());
-//				if(!bHecho){
-//					System.out.println("No se ha enviado el correo de cambio de referencia!");
-//				}
+
 			}
 			
 			lstMsgSelecDepsConfirmCa.setStyle("color:green");
@@ -1684,15 +1667,9 @@ public class ConfirmacionDepositosDao {
 						lstMsgSelArchivoConfirm.setStyle("color:red");
 						lstMsgSelArchivoConfirm.setValue(cdc.getError().toString().split("@")[1]);
 						return;
-//					}else{
-//						System.out.println(" 	======= Ningun registro coincidente =======");
 					}
 				}
 				
-//				System.out.println("===== Referencias Excluidas ==========");
-//				for (Integer str : lstReferenciasExcluidas) {
-//					System.out.println("............ "+str.intValue() );
-//				}
 			}
 			
 			//&& ====== Mostrar los resultados encontrados en la comparacion.

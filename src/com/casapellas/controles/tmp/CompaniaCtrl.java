@@ -183,7 +183,6 @@ public class CompaniaCtrl {
 			
 		}catch(Exception ex){
 			vcompania = null;
-			System.out.print("Excepcion capturada en CompaniaCtrl.obtenerCompaniasxCodigo: " + ex);
 		}finally {			
 			try {
 				if(bNuevaSesionENS){

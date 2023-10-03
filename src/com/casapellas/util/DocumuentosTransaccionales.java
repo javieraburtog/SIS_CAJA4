@@ -108,4 +108,52 @@ public static String obtenerCuentasFCVPerdida(String compania) {
 		else
 		return null;
 	}
+
+public static String obtenerIDCuentasFCVGanancia(String compania,String cuenta) {
+	
+	String qryCuentaObjeto="SELECT IFNULL(COD_CUENTA_OBJETO,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ compania +"' ";     
+	String qrySubcuenta = "SELECT IFNULL(COD_SUBCUENTA,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ compania +"' ";
+	List<Object> cuentaObjeto= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qryCuentaObjeto, null, true);
+	List<Object> subCuenta= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qrySubcuenta, null, true);
+	
+	String qryidCuenta = "SELECT " + 
+			"		CAST(x.GMAID AS varchar(37) CCSID 37) " + 
+			"	FROM " + 
+			"		"+PropertiesSystem.JDEDTA+".F0901 x" + 
+			"	WHERE " + 
+			"		TRIM(x.GMMCU) = '"+cuenta+"'" + 
+			"			AND TRIM(x.GMOBJ) = '"+cuentaObjeto.get(0).toString()+"'" + 
+			"				AND TRIM(x.GMSUB) = '"+subCuenta.get(0).toString()+"'" + 
+			"FETCH FIRST 1 ROWS ONLY";
+	List<Object> idCuentaGanancia = ConsolidadoDepositosBcoCtrl.executeSqlQuery(qryidCuenta, null, true);
+		if(idCuentaGanancia.size()>0)
+		return idCuentaGanancia.get(0).toString();
+		else
+		return null;
+	}
+
+public static String obtenerIDCuentasFCVPerdida(String compania,String cuenta) {
+	
+	String qryCuentaObjeto="SELECT IFNULL(COD_CUENTA_OBJETO,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ compania +"' ";     
+	String qrySubcuenta = "SELECT IFNULL(COD_SUBCUENTA,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ compania +"' ";
+	List<Object> cuentaObjeto= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qryCuentaObjeto, null, true);
+	List<Object> subCuenta= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qrySubcuenta, null, true);
+	
+	String qryidCuenta = "SELECT " + 
+			"		CAST(x.GMAID AS varchar(37) CCSID 37) " + 
+			"	FROM " + 
+			"		"+PropertiesSystem.JDEDTA+".F0901 x" + 
+			"	WHERE " + 
+			"		TRIM(x.GMMCU) = '"+cuenta+"'" + 
+			"			AND TRIM(x.GMOBJ) = '"+cuentaObjeto.get(0).toString()+"'" + 
+			"				AND TRIM(x.GMSUB) = '"+subCuenta.get(0).toString()+"'" + 
+			"FETCH FIRST 1 ROWS ONLY";
+	
+		List<Object> idCuentaPerdida= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qryidCuenta, null, true);
+		
+		if(idCuentaPerdida.size()>0)
+		return idCuentaPerdida.get(0).toString();
+		else
+		return null;
+	}
 }

@@ -1343,8 +1343,6 @@ public class RevisionSolechequeDAO {
 					cr.add(Restrictions.sqlRestriction(" trim(lower("
 									+campo+")) like '%"+sParam.toLowerCase()+"%'"));
 			}
-//			LogCrtl.sendLogInfo("Consulta de solicitud de cheques "+ cr);
-			System.out.println("Consulta de solicitud de cheques "+ cr);
 			solicitudes = (ArrayList<Vsolecheque>)cr.list();
 			
 		} catch (Exception e) {

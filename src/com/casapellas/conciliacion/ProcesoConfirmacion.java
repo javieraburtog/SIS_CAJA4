@@ -256,9 +256,6 @@ public class ProcesoConfirmacion {
 			int rowsAffected = 0;
 			int iQueryIndex = 0;
 			
-//			for (int i = 0; i < queries.size(); i++) {
-//				System.out.println("Query executed : " + queries.get(i) ) ;
-//			}			
 			
 			for (int i = 0; i < queries.size(); i++) {
 				iQueryIndex = i;

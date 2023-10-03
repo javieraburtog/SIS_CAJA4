@@ -2997,7 +2997,7 @@ else{//facturas en cor F: COR
 			ppf.usuario = vaut.getId().getLogin();
 			ppf.programaActualiza = PropertiesSystem.CONTEXT_NAME;
 			
-			ppf.valoresJDEInsCredito=valoresJDEInsCredito;
+			ppf.valoresJDEIns=valoresJDEInsCredito;
 			
 			ppf.msgProceso = "";
 			
@@ -8553,7 +8553,7 @@ public void cancelarSolicitud(ActionEvent e) {
 			ppf.usuario = vaut.getId().getLogin();
 			ppf.programaActualiza = PropertiesSystem.CONTEXT_NAME;
 			ppf.moduloSistema = "RCREDITO";
-			ppf.valoresJDEInsCredito =valoresJDEInsCredito;
+			ppf.valoresJDEIns =valoresJDEInsCredito;
 			
 			ppf.ajustarMontoAplicado = false;
 			

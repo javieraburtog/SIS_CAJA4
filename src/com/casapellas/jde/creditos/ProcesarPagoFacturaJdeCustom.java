@@ -16,6 +16,7 @@ import com.casapellas.entidades.Credhdr;
 import com.casapellas.entidades.MetodosPago;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
@@ -59,7 +60,7 @@ public class ProcesarPagoFacturaJdeCustom {
 	
 	public static boolean executeQueries = true;
 	
-	public static String[]  valoresJDEInsCredito;
+	public static String[]  valoresJDEIns;
 	
 	private static List<ReciboF03B13> rcsF03B13 = new ArrayList<ReciboF03B13>() ;
 	private static List<ReciboDetalleF03B14> rcsF03B14 = new ArrayList<ReciboDetalleF03B14>() ;
@@ -333,7 +334,7 @@ public class ProcesarPagoFacturaJdeCustom {
 			BigDecimal totalFacturas = montoEnteroTotalRecibo;
 			
 			BatchControlF0011 f0011 = new BatchControlF0011(
-					valoresJDEInsCredito[8],
+					valoresJDEIns[8],
 				 numeroBatchJde,
 				 "0",
 				 usuario,
@@ -342,7 +343,7 @@ public class ProcesarPagoFacturaJdeCustom {
 				"0",
 				 fecharecibo,
 				 moduloSistema,
-				 valoresJDEInsCredito[9]
+				 valoresJDEIns[9]
 			); 
 			
 			lstSqlsInserts.add(new String[]{ f0011.insertStatement(), "Grabar registro de control de batchs F0011"});
@@ -424,7 +425,7 @@ public class ProcesarPagoFacturaJdeCustom {
 					 descripcionRecibo,
 					 f03b11.getRpalph(),
 					 f03b11.getRpuser(),
-					 valoresJDEInsCredito[8],
+					 valoresJDEIns[8],
 					 fecharecibo
 					);
 		 
@@ -494,7 +495,7 @@ public class ProcesarPagoFacturaJdeCustom {
 						 
 						 factura.getRpco(),
 						 numeroBatchJde,
-						 valoresJDEInsCredito[8],
+						 valoresJDEIns[8],
 						 
 						 factura.getRppa8(),
 						 saldoFactura.negate().toString(),
@@ -549,9 +550,9 @@ public class ProcesarPagoFacturaJdeCustom {
 								rc.setRzagl( String.valueOf(diferencialCambiario.longValue()));
 								
 								if( diferencialCambiario.compareTo(BigDecimal.ZERO ) == 1  ){
-									rc.setRzaidt( factura.getGainAccountId()  );
+									rc.setRzaidt( DocumuentosTransaccionales.obtenerIDCuentasFCVGanancia(factura.getRpco().substring(3, 5),factura.getRpmcu()) );
 								}else{
-									rc.setRzaidt( factura.getLossAccountId() );
+									rc.setRzaidt( DocumuentosTransaccionales.obtenerIDCuentasFCVPerdida(factura.getRpco().substring(3, 5),factura.getRpmcu()) );
 								}
 								
 							}
@@ -607,9 +608,9 @@ public class ProcesarPagoFacturaJdeCustom {
 								rc.setRzagl( String.valueOf(diferencialCambiario.longValue()));
 								
 								if( diferencialCambiario.compareTo(BigDecimal.ZERO ) == 1  ){
-									rc.setRzaidt( factura.getGainAccountId()  );
+									rc.setRzaidt( DocumuentosTransaccionales.obtenerIDCuentasFCVGanancia(factura.getRpco().substring(3, 5),factura.getRpmcu()) );
 								}else{
-									rc.setRzaidt( factura.getLossAccountId() );
+									rc.setRzaidt( DocumuentosTransaccionales.obtenerIDCuentasFCVPerdida(factura.getRpco().substring(3, 5),factura.getRpmcu()) );
 								}
 								
 							}
@@ -662,9 +663,9 @@ public class ProcesarPagoFacturaJdeCustom {
 								rc.setRzagl( String.valueOf(diferencialCambiario.longValue()));
 
 								if( diferencialCambiario.compareTo(BigDecimal.ZERO ) == 1  ){
-									rc.setRzaidt( factura.getGainAccountId()  );
+									rc.setRzaidt( DocumuentosTransaccionales.obtenerIDCuentasFCVGanancia(factura.getRpco().substring(3, 5),factura.getRpmcu()) );
 								}else{
-									rc.setRzaidt( factura.getLossAccountId() );
+									rc.setRzaidt( DocumuentosTransaccionales.obtenerIDCuentasFCVPerdida(factura.getRpco().substring(3, 5),factura.getRpmcu()) );
 								}
 								
 							}

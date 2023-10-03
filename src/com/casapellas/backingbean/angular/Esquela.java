@@ -13,12 +13,10 @@ public class Esquela {
 		try {
 			Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 			Vautoriz[] vAut = (Vautoriz[]) m.get("sevAut");
-			System.out.println("vAut[0].getId().getLogin().toString(): " + vAut[0].getId().getLogin().toString());
 
 			this.setUsername(vAut[0].getId().getLogin().toString());
 
 		} catch (Exception e) {
-				System.out.print("Se capturó una excepcion en com.casapellas.backingbean.angular.Esquela.onClickEsquela: " + e);
 				e.printStackTrace();
 		}
 	}
