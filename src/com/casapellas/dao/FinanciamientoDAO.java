@@ -5169,9 +5169,6 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 					//
 					sLblCambio1 = sLblCambios1[sLblCambios1.length - 1].substring(0, 3);
 					sLblCambio2 = sLblCambios2[sLblCambios1.length - 1].substring(0, 3);
-					////LogCrtl.sendLogDebgsFinancing("<===========> sLblCambio1:  "+sLblCambio1);
-					////LogCrtl.sendLogDebgsFinancing("<===========> sLblCambio1:  "+sLblCambio2);
-					//
 					if (m.get("bdTasa") != null) {
 						bdTasa = (BigDecimal) m.get("bdTasa");
 					}

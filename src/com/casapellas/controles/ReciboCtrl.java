@@ -4295,7 +4295,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 
 		} catch (Exception ex) {
 			lstRecibojde = null;
-			ex.printStackTrace();
+			LogCajaService.CreateLog("numerosBatchsPorRecibo", "ERR", ex.getMessage());
 		}
 		return lstRecibojde;
 	}
@@ -4312,7 +4312,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				
 			}catch(Exception ex){
 				lstRecibojde = null;
-				ex.printStackTrace();
+				LogCajaService.CreateLog("getEnlaceReciboJDE", "ERR", ex.getMessage());
 			} 
 		 
 		 
@@ -4344,7 +4344,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 						.list();
 
 			}catch(Exception ex){
-				ex.printStackTrace();
+				LogCajaService.CreateLog("leerFacturasxRecibo", "ERR", ex.getMessage());
 			}
 			return lstFacturasRecibo;
 		}
@@ -4362,7 +4362,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 					
 				}
 			}catch(Exception ex){
-				System.out.println("Se capturo una excepcion en ReciboCtrl.leerEstadoBatch: " + ex);
+				LogCajaService.CreateLog("leerEstadoBatch", "ERR", ex.getMessage());
 			}
 			return sEstado;
 		}
@@ -4403,7 +4403,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				recFac = (Vrecfac)session.createQuery(sql).uniqueResult();
 				tx.commit();
 			}catch(Exception ex){
-				System.out.println("Se capturo una excepcion en ReciboCtrl.getReciboFac: " + ex);
+				LogCajaService.CreateLog("getReciboFac", "ERR", ex.getMessage());
 			}finally{
 				session.close();
 			}
@@ -4456,9 +4456,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 			registrado = true;
 			
 		}catch(Exception ex){
-			error = new Exception("@LOGCAJA: Error de sistema al grabar el Encabezado de recibo!!!");
-			errorDetalle = ex;
-			ex.printStackTrace(); 
+			LogCajaService.CreateLog("registrarRecibo", "ERR", ex.getMessage());
 		}
 		return registrado;
 	}
@@ -4503,9 +4501,8 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				//tx.commit();
 				registrado = true;
 			}catch(Exception ex){
-				error = new Exception("@LOGCAJA: Error de sistema al grabar el Encabezado de recibo!!!");
-				errorDetalle = ex;
-				System.out.print("se capturo una excepcion en ReciboCtrl.registrarRecibo: " + ex);
+				LogCajaService.CreateLog("registrarRecibo", "ERR", ex.getMessage());
+			
 			}/*finally {			
 				session.close();
 			}*/
@@ -4569,9 +4566,8 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				}
 				 	
 			}catch(Exception ex){
-				ex.printStackTrace(); 
-				error = new Exception("@LOGCAJA: error de sistema al Registrar el Detalle de recibo de Caja!!! ");
-				errorDetalle = ex;
+				LogCajaService.CreateLog("registrarDetalleRecibo", "ERR", ex.getMessage());
+				
 			} 
 			return registrado;
 		}

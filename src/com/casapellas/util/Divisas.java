@@ -1603,7 +1603,7 @@ public class Divisas {
 					.replace("@CODCOMP", codcomp.trim() )
 					.replace("@CODIGOS_FORMAS_PAGOS", strCondicion);
 			
-			System.out.println("Catalogo Cuenta JDE MP: " + querySelectFrom);
+	
 			
 			LogCajaService.CreateLog("cuentasFormasPago", "QRY", querySelectFrom);
 			@SuppressWarnings("unchecked")
