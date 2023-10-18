@@ -31,6 +31,7 @@ import com.casapellas.navegacion.As400Connection;
 import com.casapellas.reportes.Rptmcaja012Pdf;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.PropertiesSystem;
 import com.casapellas.util.jdbcTransaction;
 import com.casapellas.entidades.ens.Vautoriz;
@@ -707,7 +708,8 @@ public class svltProcesarAjuste extends HttpServlet {
 			NobatchToUse = Divisas.numeroSiguienteJdeE1( );
 			
 			iMontoTotal = Divisas.pasarAenteroLong(  monto_ajuste.doubleValue() );
-			hecho = rcCtrl.registrarBatchA92(session, fechabatch, CodigosJDE1.RECIBOCONTADO, NobatchToUse, iMontoTotal, usuariobatch, 1, "AJUSTE-EXC", CodigosJDE1.BATCH_ESTADO_APROBADO );
+			String[] valoresJDEInsContado = DocumuentosTransaccionales.getValuesJDEContado().split(",");
+			hecho = rcCtrl.registrarBatchA92(session, fechabatch, valoresJDEInsContado[8], NobatchToUse, iMontoTotal, usuariobatch, 1, "AJUSTE-EXC", valoresJDEInsContado[9] );
 			
 			if(!hecho)
 				return false;

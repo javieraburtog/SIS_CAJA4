@@ -80,6 +80,10 @@ public class RevisionArqueoCtrl {
 	BigDecimal bdivaTrader = new BigDecimal(1.13);
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 	private final static String Esquema = PropertiesSystem.ESQUEMA;
+	
+	String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
+	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
+			
 	public Exception errorArqueoCtlr;
 	public Exception getErrorArqueoCtlr() {
 		return errorArqueoCtlr;
@@ -529,7 +533,7 @@ public class RevisionArqueoCtrl {
 			int numeroDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
 			 
 			iTotalTransaccion =  Integer.parseInt( String.format("%1$.2f", dMonto ).replace(".", "")  ); 
-			bHecho = rcCtrl.registrarBatchA92( session, dtFecha, CodigosJDE1.RECIBOCONTADO, numerobatch, iTotalTransaccion, vaut.getId().getLogin(), 1, "APBRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE );
+			bHecho = rcCtrl.registrarBatchA92( session, dtFecha, valoresJdeInsContado[8], numerobatch, iTotalTransaccion, vaut.getId().getLogin(), 1, "APBRARQUEO", valoresJdeInsContado[9] );
 			
 			if(!bHecho){
 				sMsjErrorjde = "No se ha podido grabar Batch por faltante al  cajero " ;

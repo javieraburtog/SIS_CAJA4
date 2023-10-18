@@ -210,7 +210,7 @@ public class CodeUtil {
 		try {
 			ob = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(varname) ;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			LogCajaService.CreateLog("getFromSessionMap", "ERR", e.getMessage());
 		}
 		return ob; 
 	}
@@ -221,7 +221,7 @@ public class CodeUtil {
 		try {
 			ob = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			LogCajaService.CreateLog("getCurrentRequest", "ERR", e.getMessage());
 		}
 		return ob;
 	}
@@ -238,7 +238,7 @@ public class CodeUtil {
 					.getClientId(FacesContext.getCurrentInstance()));		
 			}
 		} catch (Exception e) {
-			 e.printStackTrace();
+			LogCajaService.CreateLog("refreshIgObjects", "ERR", e.getMessage());
 		}
 	}
 	public static void refreshIgObjects(Object igObject){
@@ -249,7 +249,7 @@ public class CodeUtil {
 				.getClientId(FacesContext.getCurrentInstance()));		
 		 
 		} catch (Exception e) {
-			 e.printStackTrace();
+			LogCajaService.CreateLog("refreshIgObjects", "ERR", e.getMessage());
 		}
 	}
 	

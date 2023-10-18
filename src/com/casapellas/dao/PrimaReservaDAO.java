@@ -88,8 +88,8 @@ import com.casapellas.entidades.Vmarca;
 import com.casapellas.entidades.Vmodelo;
 import com.casapellas.entidades.VtipoProd;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
-import com.casapellas.jde.creditos.CodigosJDE1;
-import com.casapellas.jde.creditos.ProcesarReciboRU;
+
+import com.casapellas.jde.creditos.ProcesarReciboRUCustom;
 import com.casapellas.navegacion.As400Connection;
 import com.casapellas.reportes.Prueba;
 import com.casapellas.rpg.P55CA090;
@@ -271,6 +271,11 @@ public class PrimaReservaDAO {
 	//&& ============== proforma de repuestos linea 03
 	private HtmlCheckBox chkValidarProformaRepuestos;
 	private HtmlLink lnkConsultarProformaRepuestos;
+	
+	//Valores de insercion de documentos en JDE	
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	String[] valoresJDEInsFCV = (String[]) m.get("valoresJDEInsFCV");
+	String[] valoresJDEInsPrimaReservas = (String[]) m.get("valoresJDEInsPrimaReservas");
 	
 	public void consultarProformaRepuestos(ActionEvent ev){
 		
@@ -571,7 +576,7 @@ public class PrimaReservaDAO {
 			cn.setAutoCommit(false);
 			
 			recCtrl.actualizarEstadoRecibo(iNumrec,iCaid,sCodsuc,sCodcomp, sCodUsera, "No se completo pago con SP","PR");
-			lstRecibojde = recCtrl.getEnlaceReciboJDE(iCaid, sCodsuc,sCodcomp,iNumrec,"PR");
+			lstRecibojde = recCtrl.getEnlaceReciboJDE(iCaid, sCodsuc,sCodcomp,iNumrec,valoresJDEInsPrimaReservas[0]);
 			
 			if(lstRecibojde != null && lstRecibojde.size() > 0){
 				for(Recibojde rj: lstRecibojde){
@@ -1153,29 +1158,29 @@ public class PrimaReservaDAO {
 						iMontoUSD = (int)(dv.roundDouble(dMontoFOR * 100));
 						iMontoCOR = (int)(dv.roundDouble((dMontoFOR * dTasaJDE)*100));
 						
-						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSucursal, "P9", iNobatchNodoc[1], 1.0, 
+						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSucursal, valoresJDEInsFCV[1], iNobatchNodoc[1], 1.0, 
 																iNobatchNodoc[0], sCUSD[0],	sCUSD[1], sCUSD[3], sCUSD[4],sCUSD[5], 
-																"AA", sMonedaForanea, iMontoCOR, sConcepto,vaut.getId().getLogin(),
+																valoresJDEInsFCV[5], sMonedaForanea, iMontoCOR, sConcepto,vaut.getId().getLogin(),
 																vaut.getId().getCodapp(), new BigDecimal(dTasaJDE), sTipoCliente,
-																"Débito caja Efectivo "+sMonedaForanea,sCUSD[2],"","",sMonedaBase,sCUSD[2],"F");
+																"Débito caja Efectivo "+sMonedaForanea,sCUSD[2],"","",sMonedaBase,sCUSD[2],valoresJDEInsFCV[4]);
 						if(bHecho){
-							bHecho = rcCtrl.registrarAsientoDiario(dtFecha,cn, sAsientoSucursal, "P9", iNobatchNodoc[1], 1.0, 
+							bHecho = rcCtrl.registrarAsientoDiario(dtFecha,cn, sAsientoSucursal, valoresJDEInsFCV[1], iNobatchNodoc[1], 1.0, 
 																	iNobatchNodoc[0], sCUSD[0], sCUSD[1], sCUSD[3], sCUSD[4], sCUSD[5],
-																	"CA", "USD", iMontoUSD, sConcepto, vaut.getId().getLogin(),
+																	valoresJDEInsFCV[2], valoresJDEInsFCV[3], iMontoUSD, sConcepto, vaut.getId().getLogin(),
 																	vaut.getId().getCodapp(), BigDecimal.ZERO, sTipoCliente,
-																	"Débito caja Efectivo "+sMonedaForanea,sCUSD[2],"","",sMonedaForanea,sCUSD[2],"F");
+																	"Débito caja Efectivo "+sMonedaForanea,sCUSD[2],"","",sMonedaForanea,sCUSD[2],valoresJDEInsFCV[4]);
 							if(bHecho){
-								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSucursal, "P9", iNobatchNodoc[1], 2.0, 
+								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSucursal, valoresJDEInsFCV[1], iNobatchNodoc[1], 2.0, 
 																		iNobatchNodoc[0], sCCOR[0],	sCCOR[1], sCCOR[3], sCCOR[4], sCCOR[5], 
-																		"AA", "USD", iMontoCOR*(-1), sConcepto, vaut.getId().getLogin(),
+																		valoresJDEInsFCV[5], "USD", iMontoCOR*(-1), sConcepto, vaut.getId().getLogin(),
 																		vaut.getId().getCodapp(), new BigDecimal(dTasaJDE),sTipoCliente,
-																		"Crédito caja Efectivo "+sMonedaBase,sCCOR[2],"","",sMonedaBase,sCCOR[2],"D");
+																		"Crédito caja Efectivo "+sMonedaBase,sCCOR[2],"","",sMonedaBase,sCCOR[2],valoresJDEInsFCV[7]);
 								if(bHecho){
-									bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSucursal,"P9",iNobatchNodoc[1], 2.0, 
+									bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSucursal,valoresJDEInsFCV[1],iNobatchNodoc[1], 2.0, 
 																			iNobatchNodoc[0], sCCOR[0], sCCOR[1], sCCOR[3], sCCOR[4], sCCOR[5],
-																			"CA", "USD", iMontoUSD*(-1), sConcepto, vaut.getId().getLogin(),
+																			valoresJDEInsFCV[2], valoresJDEInsFCV[3], iMontoUSD*(-1), sConcepto, vaut.getId().getLogin(),
 																			vaut.getId().getCodapp(),  BigDecimal.ZERO, sTipoCliente,
-																			"Crédito caja Efectivo COR",sCCOR[2],"","",sMonedaBase,sCCOR[2],"D");
+																			"Crédito caja Efectivo COR",sCCOR[2],"","",sMonedaBase,sCCOR[2],valoresJDEInsFCV[7]);
 									if(bHecho){
 										//--------Guardar el batch.
 										//bHecho = rcCtrl.registrarBatch(cn,"G", iNobatchNodoc[0], iMontoUSD, vaut[0].getId().getLogin(), 1, MetodosPagoCtrl.DEPOSITO); VERSION A7.3
@@ -1804,15 +1809,15 @@ public class PrimaReservaDAO {
 						
 						//---------- Registrar los asientos de diario.
 						iMonto = (int)dv.roundDouble(dMonto * 100);
-						bHecho  =  rcCtrl.registrarAsientoDiario(dtFecha, cn, sCodsuc.substring(3), "P9", iNoDocumento, dLinea1, iNoBatch, sCtaMpago[0],
-									sCtaMpago[1], sCtaMpago[3], sCtaMpago[4], sCtaMpago[5], "AA", "COR", iMonto, sConcepto,vaut[0].getId().getLogin(),
+						bHecho  =  rcCtrl.registrarAsientoDiario(dtFecha, cn, sCodsuc.substring(3), valoresJDEInsFCV[1], iNoDocumento, dLinea1, iNoBatch, sCtaMpago[0],
+									sCtaMpago[1], sCtaMpago[3], sCtaMpago[4], sCtaMpago[5], valoresJDEInsFCV[5], valoresJDEInsFCV[6], iMonto, sConcepto,vaut[0].getId().getLogin(),
 									vaut[0].getId().getCodapp(),BigDecimal.ZERO, sTipoCliente,"DebCa: Mpago: "+ sMet,sCtaMpago[2],
-									"","","COR",sCtaMpago[2],"D");
+									"","",valoresJDEInsFCV[6],sCtaMpago[2],valoresJDEInsFCV[7]);
 						if(bHecho){
-							bHecho  =  rcCtrl.registrarAsientoDiario(dtFecha, cn, sCodsuc.substring(3),"P9", iNoDocumento, dLinea2, iNoBatch, sCtaDC[0],
-										sCtaDC[1], sCtaDC[3], sCtaDC[4], sCtaDC[5], "AA", "COR", iMonto*-1, sConcepto,vaut[0].getId().getLogin(),
+							bHecho  =  rcCtrl.registrarAsientoDiario(dtFecha, cn, sCodsuc.substring(3),valoresJDEInsFCV[1], iNoDocumento, dLinea2, iNoBatch, sCtaDC[0],
+										sCtaDC[1], sCtaDC[3], sCtaDC[4], sCtaDC[5], valoresJDEInsFCV[5], valoresJDEInsFCV[6], iMonto*-1, sConcepto,vaut[0].getId().getLogin(),
 										vaut[0].getId().getCodapp(),BigDecimal.ZERO, sTipoCliente,"Cred. D/C Caja: Mpago: "+ sMet,
-										sCtaDC[2],"","","COR",sCtaMpago[2],"D");
+										sCtaDC[2],"","",valoresJDEInsFCV[6],sCtaMpago[2],valoresJDEInsFCV[7]);
 							if(!bHecho){
 								m.put("MsgErrorJDE", "No se pudo registrar el asiento diario, linea 2 para Diferencial Cambiario en Caja:" +iCaid + ", Comp: "+sCodcomp + ", Unineg: " +sCodunineg);
 								break;
@@ -1893,15 +1898,15 @@ public class PrimaReservaDAO {
 						
 						//---------- Registrar los asientos de diario.
 						iMonto = (int)dv.roundDouble(dMonto * 100);
-						bHecho  =  rcCtrl.registrarAsientoDiario(dtFecha, cn, sCodsuc.substring(3),"P9", iNoDocumento, 1.0, iNoBatch, sCtaMpago[0],
-									sCtaMpago[1], sCtaMpago[3], sCtaMpago[4], sCtaMpago[5], "AA", "COR", iMonto, sConcepto,vaut[0].getId().getLogin(),
+						bHecho  =  rcCtrl.registrarAsientoDiario(dtFecha, cn, sCodsuc.substring(3),valoresJDEInsFCV[1], iNoDocumento, 1.0, iNoBatch, sCtaMpago[0],
+									sCtaMpago[1], sCtaMpago[3], sCtaMpago[4], sCtaMpago[5], valoresJDEInsFCV[5], valoresJDEInsFCV[6], iMonto, sConcepto,vaut[0].getId().getLogin(),
 									vaut[0].getId().getCodapp(),BigDecimal.ZERO, sTipoCliente,"Deb.Caja: Mpago: "+ sMet,
-									sCtaMpago[2],"","","COR",sCtaMpago[2],"D");
+									sCtaMpago[2],"","",valoresJDEInsFCV[6],sCtaMpago[2],valoresJDEInsFCV[7]);
 						if(bHecho){
-							bHecho  =  rcCtrl.registrarAsientoDiario(dtFecha, cn, sCodsuc.substring(3), "P9", iNoDocumento, 2.0, iNoBatch, sCtaDC[0],
-										sCtaDC[1], sCtaDC[3], sCtaDC[4], sCtaDC[5], "AA", "COR", iMonto*-1, sConcepto,vaut[0].getId().getLogin(),
+							bHecho  =  rcCtrl.registrarAsientoDiario(dtFecha, cn, sCodsuc.substring(3), valoresJDEInsFCV[1], iNoDocumento, 2.0, iNoBatch, sCtaDC[0],
+										sCtaDC[1], sCtaDC[3], sCtaDC[4], sCtaDC[5], valoresJDEInsFCV[5], valoresJDEInsFCV[6], iMonto*-1, sConcepto,vaut[0].getId().getLogin(),
 										vaut[0].getId().getCodapp(),BigDecimal.ZERO, sTipoCliente,"Cred.Cta D/C Caja: Mpago: "+ sMet,
-										sCtaDC[2],"","","COR",sCtaMpago[2],"D");
+										sCtaDC[2],"","",valoresJDEInsFCV[6],sCtaMpago[2],"D");
 							if(bHecho){
 								//-------- guardar el batch para el asiento diario.
 								//bHecho = rcCtrl.registrarBatch(cn,"G", iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, MetodosPagoCtrl.DEPOSITO); VERSION A 7.3
@@ -2380,7 +2385,7 @@ public class PrimaReservaDAO {
 				List<SelectItem> lstUnineg = new ArrayList<SelectItem>();
 				Unegocio[] unegocio = null;
 				SucursalCtrl sucCtrl = new SucursalCtrl();
-				unegocio = sucCtrl.obtenerUninegxSucursal(sCodsuc);
+				unegocio = sucCtrl.obtenerUninegxSucursalV2(sCodsuc);
 				
 				if(unegocio!=null && unegocio.length>0){
 					
@@ -2388,8 +2393,7 @@ public class PrimaReservaDAO {
 					for(int i = 0; i < unegocio.length; i ++){
 						lstUnineg.add(new SelectItem(unegocio[i].getId().getCodunineg().trim()+":" + unegocio[i].getId().getLinea(),
 								unegocio[i].getId().getCodunineg().trim()+": " + unegocio[i].getId().getDesc().trim()
-								+": " + unegocio[i].getId().getLinea(),
-								"U/N: " +unegocio[i].getId().getDesc().trim() +":" + unegocio[i].getId().getLinea()));
+								));
 					}
 					m.put("pr_lstFiltrounineg", lstUnineg);
 					ddlFiltrounineg.dataBind();
@@ -2850,30 +2854,14 @@ public void cancelarIncersion(ActionEvent ev){
 					throw new Exception(msgError);
 				}
 				
-				//**********************************************************
-				//----------------------------------------------------------
-				//++++++++++++++++++      INICIO     +++++++++++++++++++++++
-				//----------------------------------------------------------
-				//**********************************************************
 				
-				
-				//Aqui hace en base a la transacciones de hibernate
-				//control de compromiso de hibernate
-				//Tabla Solicitud 
-				//Ver luego su quitar el metodo con parametro de sesiones y transacion
-				//lfonseca 2019-04-23
 				aplicado = cs.registrarSolicitud2( sessionInsJdeCaja, transInsJdeCaja, iNumSol,iNumRec,
 					"PR", caid, compRc,codsuc, s.getId().getReferencia(),
 					s.getAutoriza(), dtFecharec, s.getObs(), s.getMpago(),
 					s.getMonto(), s.getMoneda());
 				
 				
-				//**********************************************************
-				//----------------------------------------------------------
-				//+++++++++++++++++++       FIN     ++++++++++++++++++++++++
-				//----------------------------------------------------------
-				//**********************************************************
-				
+
 				
 				if(!aplicado){
 					msgError = "Recibo no aplicado, Error al grabar datos " +
@@ -2895,9 +2883,7 @@ public void cancelarIncersion(ActionEvent ev){
 					List<MetodosPago>lstFCVs = new ArrayList<MetodosPago>();
 					lstFCVs.add(mpFCV);
 					
-					//Aqui hace en base a la transacciones de hibernate
-					//control de compromiso de hibernate
-					//Tabla Recibo
+				
 					aplicado = rc.registrarRecibo(sessionInsJdeCaja, transInsJdeCaja, nofcv, 0, compRc,
 							dMtoForFCV, dMtoForFCV, 0, "", dtFecharec, dtFecharec,
 							iCodCli, sNomCli, sCajero, caid,codsuc, sCoduser, 
@@ -2910,9 +2896,7 @@ public void cancelarIncersion(ActionEvent ev){
 						throw new Exception(msgError);
 					}
 					
-					//Aqui hace en base a la transacciones de hibernate
-					//control de compromiso de hibernate
-					//Tabla ReciboDet
+				
 					aplicado = rc.registrarDetalleRecibo(sessionInsJdeCaja, transInsJdeCaja,nofcv,
 										0,compRc, lstFCVs, caid, codsuc, "FCV");
 					if(!aplicado){
@@ -3016,8 +3000,8 @@ public void cancelarIncersion(ActionEvent ev){
 			List<String> numerosRecibosJde = new ArrayList<String>();
 			List<String[]> numerosFacturaRecibo = new ArrayList<String[]>();
 			for (int i = 0; i < lstMetodosPago.size(); i++) {
-				int numeroFactura = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROFACTURARU );
-				int numeroRecibo = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROPAGORECIBO );
+				int numeroFactura = Divisas.numeroSiguienteJdeE1Custom( valoresJdeNumeracion[2],valoresJdeNumeracion[3] );
+				int numeroRecibo = Divisas.numeroSiguienteJdeE1Custom( valoresJdeNumeracion[0],valoresJdeNumeracion[1] );
 				// numeroFactura =549498 ; numeroRecibo =169241 ;
 				numerosFacturaRecibo.add(new String[]{String.valueOf(numeroFactura), String.valueOf(numeroRecibo)});
 				numerosRecibosJde.add( String.valueOf(numeroRecibo) ) ;
@@ -3036,39 +3020,38 @@ public void cancelarIncersion(ActionEvent ev){
 				throw new Exception(msgError);
 			}
 			
-			new  ProcesarReciboRU();
-			ProcesarReciboRU.formasDePago = lstMetodosPago;
-			ProcesarReciboRU.cuentasFormasPago = cuentasFormasPago;
+			new  ProcesarReciboRUCustom();
+			ProcesarReciboRUCustom.formasDePago = lstMetodosPago;
+			ProcesarReciboRUCustom.cuentasFormasPago = cuentasFormasPago;
 			
-			ProcesarReciboRU.numeroBatchJde = String.valueOf( numeroBatchJde );
-			ProcesarReciboRU.numeroFacturaRecibo = numerosFacturaRecibo ;
+			ProcesarReciboRUCustom.numeroBatchJde = String.valueOf( numeroBatchJde );
+			ProcesarReciboRUCustom.numeroFacturaRecibo = numerosFacturaRecibo ;
 			
-			ProcesarReciboRU.tipodebatch = CodigosJDE1.RECIBOPRIMAS;
-			ProcesarReciboRU.fecharecibo = dtFecharec ;
-			ProcesarReciboRU.montoRecibo = new BigDecimal( Double.toString( dMontoApl ) ) ;
-			ProcesarReciboRU.tasaCambioOficial = tasaOficialReciboJde ;
-			ProcesarReciboRU.monedaRecibo = sMonedaApl;
-			ProcesarReciboRU.monedaLocal = sMonedaBase;
-			ProcesarReciboRU.codigoCliente = iCodCli;
-			ProcesarReciboRU.codigoClientePadre = addressParentNumber;
-			ProcesarReciboRU.tipoRecibo = ddlTipodoc.getValue().toString();
+			
+			ProcesarReciboRUCustom.fecharecibo = dtFecharec ;
+			ProcesarReciboRUCustom.montoRecibo = new BigDecimal( Double.toString( dMontoApl ) ) ;
+			ProcesarReciboRUCustom.tasaCambioOficial = tasaOficialReciboJde ;
+			ProcesarReciboRUCustom.monedaRecibo = sMonedaApl;
+			ProcesarReciboRUCustom.monedaLocal = sMonedaBase;
+			ProcesarReciboRUCustom.codigoCliente = iCodCli;
+			ProcesarReciboRUCustom.codigoClientePadre = addressParentNumber;
+			ProcesarReciboRUCustom.tipoRecibo = ddlTipodoc.getValue().toString();
 
-			ProcesarReciboRU.sucursal = codsucProf;
-			ProcesarReciboRU.unidadNegocio1 = sCodunineg;
-			ProcesarReciboRU.unidadNegocio2 = sCodunineg;
-			ProcesarReciboRU.concepto = " Rec:"+iNumRec + " Ca:"+caid+" Co:"+codcomp  ;
+			ProcesarReciboRUCustom.sucursal = codsucProf;
+			ProcesarReciboRUCustom.unidadNegocio1 = sCodunineg;
+			ProcesarReciboRUCustom.unidadNegocio2 = sCodunineg;
+			ProcesarReciboRUCustom.concepto = " Rec:"+iNumRec + " Ca:"+caid+" Co:"+codcomp  ;
 //			ProcesarReciboRU.nombrecliente = sNomCli;
-			ProcesarReciboRU.nombrecliente = sNomCli.replace("'", "");
-			ProcesarReciboRU.idCuentaContableFactura = cuentasContableFactura.get(0)[0]; //"20015020" ;
-			ProcesarReciboRU.claseContableCliente = "UC"; 
-			ProcesarReciboRU.numeroCuota = "001";
-			ProcesarReciboRU.usuario = vAut.getId().getLogin();
-			ProcesarReciboRU.codigousuario = vAut.getId().getCodreg();
-			ProcesarReciboRU.programa = PropertiesSystem.CONTEXT_NAME;
-			ProcesarReciboRU.categoria08 = dtaCliente.getId().getAbac08();
-			ProcesarReciboRU.estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE;
-			ProcesarReciboRU.numeroReciboCaja = iNumRec;
-			
+			ProcesarReciboRUCustom.nombrecliente = sNomCli.replace("'", "");
+			ProcesarReciboRUCustom.idCuentaContableFactura = cuentasContableFactura.get(0)[0]; //"20015020" ;
+			ProcesarReciboRUCustom.claseContableCliente = "UC"; 
+			ProcesarReciboRUCustom.numeroCuota = "001";
+			ProcesarReciboRUCustom.usuario = vAut.getId().getLogin();
+			ProcesarReciboRUCustom.codigousuario = vAut.getId().getCodreg();
+			ProcesarReciboRUCustom.programa = PropertiesSystem.CONTEXT_NAME;
+			ProcesarReciboRUCustom.categoria08 = dtaCliente.getId().getAbac08();
+			ProcesarReciboRUCustom.numeroReciboCaja = iNumRec;
+			ProcesarReciboRUCustom.valoresJDEIns = valoresJDEInsPrimaReservas;
 			
 			//**********************************************************
 			//----------------------------------------------------------
@@ -3077,16 +3060,16 @@ public void cancelarIncersion(ActionEvent ev){
 			//**********************************************************
 			//Creado por Luis Alberto Fonseca Mendez 2019-04-24
 
-			ProcesarReciboRU.procesarRecibo2();
+			ProcesarReciboRUCustom.procesarRecibo2();
 			
-			aplicado = ProcesarReciboRU.msgProceso.isEmpty();
+			aplicado = ProcesarReciboRUCustom.msgProceso.isEmpty();
 			
 			if(!aplicado){
-				msgError = ProcesarReciboRU.msgProceso ;
+				msgError = ProcesarReciboRUCustom.msgProceso ;
 				throw new Exception(msgError);
 			}
 			
-			List<String[]> queriesInsert = ProcesarReciboRU.lstSqlsInserts;
+			List<String[]> queriesInsert = ProcesarReciboRUCustom.lstSqlsInserts;
 			if( queriesInsert == null || queriesInsert.isEmpty() ){
 				aplicado = false;
 				msgError = "Error al crear recibo en JdEdward's por factura de Crédito ";
@@ -3152,9 +3135,6 @@ public void cancelarIncersion(ActionEvent ev){
 				DonacionesCtrl.numrec = iNumRec;
 				DonacionesCtrl.tiporecibo = tiporec;
 				
-				//Cambio realizado por lfonseca
-				
-//				aplicado = DonacionesCtrl.grabarDonacion(pagosConDonacion, vAut, iCodCli );
 				aplicado = DonacionesCtrl.grabarDonacion(sessionInsJdeCaja, pagosConDonacion, vAut, iCodCli );
 				
 				if( !aplicado ){
@@ -3170,13 +3150,7 @@ public void cancelarIncersion(ActionEvent ev){
 				
 			}
 			
-			//**********************************************************
-			//----------------------------------------------------------
-			//++++++++++++++++++       FIN       +++++++++++++++++++++++
-			//----------------------------------------------------------
-			//**********************************************************
 			
-			//&& ====================== guardar el consolidado historico de reservas por proformas
 			String tipodoc =  ddlTipodoc.getValue().toString();
 			if(aplicado && tipodoc.compareTo("X4") == 0) {
 				
@@ -3370,15 +3344,7 @@ public void cancelarIncersion(ActionEvent ev){
 			lstMetodosPago = (List<MetodosPago>)m.get("pr_selectedMet");
 			lstMetodosPago = ponerCodigoBanco(lstMetodosPago);
 			
-//			//------------ Aplicar Pago socketPOS			
-//			//realizar transaccion de tarjeta
-//			if((f55ca01.getId().getCasktpos()+"").equals("Y")){
-//				List lstDatos = (List)m.get("lstDatosTrack_Con");
-//				bRecibo = aplicarPagoSocketPos(lstMetodosPago,lstDatos);
-//			}else{
-//				bRecibo = true;
-//			}
-//			//leer nuevamente los datos del socketPOS
+
 			lstMetodosPago = (List<MetodosPago>)m.get("pr_selectedMet");
 			//----------------------------------------------------------------------
 			if(bRecibo){
@@ -7543,12 +7509,12 @@ public List getLstFiltrosucursal() {
 			for(int i = 0; i < unegocio.length; i ++){
 				
 				
-				String unineg = unegocio[i].getId().getCodunineg().trim();
+				String unineg = unegocio[i].getId().getCodcomp().trim();
 				if(unineg.length() < 5 ) {
 					unineg = CodeUtil.pad(unineg, 5, "0");
 				}
 				
-				lstSuc.add(new SelectItem(unegocio[i].getId().getCodunineg().trim(),
+				lstSuc.add(new SelectItem(unegocio[i].getId().getCodcomp().trim(),
 						   unineg +": "+ unegocio[i].getId().getDesc().trim(),
 						   unegocio[i].getId().getDesc().trim()));
 				

@@ -59,6 +59,9 @@ public class ReintegroDAO {
 
 	private String sObjCtaPuente = "19800";
 	private String sSubCtaPuente = "03";
+	
+	//Valores reimplentacion JDE
+	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
 
 /********************************************************************************/		
 	public void	BuscarReintegros(ActionEvent ev){
@@ -144,7 +147,7 @@ public class ReintegroDAO {
 			
 			int iMonto = Divisas.pasarAentero(r.getMonto().doubleValue());
 		
-			hecho = rCtrl.registrarBatchA92(session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "REINTEGRO", CodigosJDE1.BATCH_ESTADO_PENDIENTE );
+			hecho = rCtrl.registrarBatchA92(session, dtFecha, valoresJdeInsContado[8], iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "REINTEGRO", valoresJdeInsContado[9] );
 			
 			if(!hecho){
 				lblMensaje="No se ha podido grabar el batch";				

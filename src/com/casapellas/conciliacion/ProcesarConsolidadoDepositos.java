@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import javax.faces.context.FacesContext;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -47,6 +50,10 @@ public class ProcesarConsolidadoDepositos {
 	private List<String[]> dtaCuentaAjustesPorExcepcion ;
 	
 	public int[] periodofiscal;
+	
+	static Map<String, Object> m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();	
+	static String[] valoresJDEInsContado = (String[]) m.get("valoresJDEInsContado");
+	
 
 	@SuppressWarnings("unchecked")
 	public ProcesarConsolidadoDepositos() {
@@ -225,7 +232,7 @@ public class ProcesarConsolidadoDepositos {
 			//&& =============== Guardar encabezado de asientos de diario F0011
 			
 			iMontoTotal = Divisas.pasarAenteroLong( coincidencia.getMontoBanco().add( coincidencia.getMontorporajuste() ).doubleValue() );
-			bHecho = rcCtrl.registrarBatchA92(session, dtFechaConfirma, CodigosJDE1.RECIBOCONTADO, NobatchToUse, iMontoTotal, usuarioPreconcilacion, 1,"PRECONCIL", CodigosJDE1.BATCH_ESTADO_APROBADO );
+			bHecho = rcCtrl.registrarBatchA92(session, dtFechaConfirma, valoresJDEInsContado[8], NobatchToUse, iMontoTotal, usuarioPreconcilacion, 1,"PRECONCIL", valoresJDEInsContado[10] );
 			
 			if(!bHecho){
 				msgErrorProceso = "@F0011 <> No se pudo grabar encabezado de batch";
@@ -1004,7 +1011,7 @@ public class ProcesarConsolidadoDepositos {
 				
 				//&& =============== Guardar encabezado de asientos de diario F0011
 				iMontoTotal = Divisas.pasarAenteroLong( coincidencia.getMontoBanco().doubleValue() );
-				bHecho = rcCtrl.registrarBatchA92(session, dtFechaConfirma, CodigosJDE1.RECIBOCONTADO, NobatchToUse, iMontoTotal, usuarioPreconcilacion, 1, "PRECONCIL", CodigosJDE1.BATCH_ESTADO_APROBADO );
+				bHecho = rcCtrl.registrarBatchA92(session, dtFechaConfirma, valoresJDEInsContado[8], NobatchToUse, iMontoTotal, usuarioPreconcilacion, 1, "PRECONCIL", valoresJDEInsContado[10] );
 				if(!bHecho){
 					msgErrorProceso = "@F0011 <> No se pudo grabar encabezado de batch";
 					return bHecho;

@@ -104,6 +104,8 @@ public class solicitarSalida {
 	private HtmlOutputText lblcesMonto,lblConfirmCamEstado;
 	private HtmlDialogWindow dwCambioEstadoSalida;
 	
+	//Valores reimplentacion JDE
+	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
 	
 /*******************************************************************************/
 /**						Procesar la salida de caja				  		  	   */
@@ -159,7 +161,7 @@ public class solicitarSalida {
 				String tipoDocumento = CodigosJDE1.BATCH_CONTADO.codigo();
 						
 			 							
-				bHecho = rcCtrl.registrarBatchA92(session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMtoTotal, vaut.getId().getLogin(), 1, "SALIDAS" , CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+				bHecho = rcCtrl.registrarBatchA92(session, dtFecha, valoresJdeInsContado[8], iNoBatch, iMtoTotal, vaut.getId().getLogin(), 1, "SALIDAS" , valoresJdeInsContado[9]);
 				
 				if(bHecho){
 

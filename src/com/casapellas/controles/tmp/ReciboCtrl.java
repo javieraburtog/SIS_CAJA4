@@ -2148,17 +2148,14 @@ public class ReciboCtrl {
 					sql = "UPDATE " + PropertiesSystem.JDECOM
 							+ ".F0002 SET NNN002 = " + (iNoRPDOC + 1)
 							+ " where NNSY = '03'";
-					Query q = sesion.createSQLQuery(sql);
-					q.executeUpdate();
+					ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, sql);
 				}
 			}
-			trans.commit();
+			
 		} catch (Exception error) {
-			error.printStackTrace();
+			
 			iNoRPDOC = -1;
-		} finally {
-			sesion.close();
-		}
+		} 
 		return iNoRPDOC;
 	}
 
@@ -2174,22 +2171,12 @@ public class ReciboCtrl {
 		String sql = "";
 		String sTabla = "", sPosicion = "";
 		try {
-			if (sCodcomp.equals("E01")) {
-				sTabla = "03";
-				sPosicion = "005";
-			} else if (sCodcomp.equals("E02")) {
-				sTabla = "5555";
-				sPosicion = "001";
-			} else if (sCodcomp.equals("E08")) {
-				sTabla = "5555";
-				sPosicion = "003";
-			} else if (sCodcomp.equals("E03")) {
-				sTabla = "5803";
-				sPosicion = "005";
-			} else if (sCodcomp.equals("E10")) {
-				sTabla = "5655";
-				sPosicion = "001";
-			}
+		String[] documentos=	DocumuentosTransaccionales.obteneConfNumeracionRU(sCodcomp).split(",");
+			
+		
+				sTabla = documentos[0];
+				sPosicion = documentos[1];
+			
 
 			sql = "select f.id.nnn" + sPosicion
 					+ " from Vf0002 f where trim(f.id.nnsy) = '" + sTabla + "'";
@@ -2202,8 +2189,7 @@ public class ReciboCtrl {
 							+ ".F0002 SET NNN" + sPosicion + " = "
 							+ (iNoRPDOCM + 1) + " where trim(NNSY) = '"
 							+ sTabla + "'";
-					Query q = sesion.createSQLQuery(sql);
-					q.executeUpdate();
+					ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, sql);
 				}
 			} else {
 				error = new Exception(
@@ -2219,18 +2205,7 @@ public class ReciboCtrl {
 							+ sCodcomp + ";Tabla:" + sTabla + ";Posicion:"
 							+ sPosicion);
 			errorDetalle = error; 
-			error.printStackTrace();
-		} finally {
-			try {
-				trans.commit();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				sesion.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			
 		}
 		return iNoRPDOCM;
 	}
@@ -2254,17 +2229,14 @@ public class ReciboCtrl {
 					sql = "UPDATE " + PropertiesSystem.JDECOM
 							+ ".F0002 SET NNN007 = " + (iNoRPDOCM + 1)
 							+ " where NNSY = '03'";
-					Query q = sesion.createSQLQuery(sql);
-					q.executeUpdate();
+					ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, sql);
 				}
 			}
-			trans.commit();
+			
 		} catch (Exception error) {
-			error.printStackTrace();
+			
 			iNoRPDOCM = -1;
-		} finally {
-			sesion.close();
-		}
+		} 
 		return iNoRPDOCM;
 	}
 

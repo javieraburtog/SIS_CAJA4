@@ -13,7 +13,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import javax.faces.context.FacesContext;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -66,10 +68,10 @@ import com.casapellas.entidades.Vretencion;
 import com.casapellas.entidades.VtipoProd;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.jde.creditos.BatchControlF0011;
-import com.casapellas.jde.creditos.CodigosJDE1;
 import com.casapellas.jde.creditos.DatosComprobanteF0911;
 import com.casapellas.jde.creditos.DefaultJdeFieldsValues;
 import com.casapellas.jde.creditos.ProcesarEntradaDeDiario;
+import com.casapellas.jde.creditos.ProcesarEntradaDeDiarioCustom;
 import com.casapellas.navegacion.As400Connection;
 import com.casapellas.util.*;
 
@@ -85,6 +87,12 @@ import com.casapellas.util.*;
 public class ReciboCtrl {
 	public Exception errorDetalle;
 	public Exception error;
+	
+	static Map<String, Object> m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();	
+	static String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	static String[] valoresJDEInsContado = (String[]) m.get("valoresJDEInsContado");
+	
+	
 	public Exception getError() {
 		return error;
 	}
@@ -109,9 +117,9 @@ public class ReciboCtrl {
 		String companiaDocumento = "00000";
 	
 		try {
-			
+		
 			int numeroBatchJde = Divisas.numeroSiguienteJdeE1( );
-			int numeroReciboJde = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int numeroReciboJde = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8], valoresJdeNumeracion[9]);
 			
 			if(numeroBatchJde == 0) {
 				 aplicado = false;
@@ -178,34 +186,31 @@ public class ReciboCtrl {
 					 companiaDocumento);
 			 lineasComprobante.add(dtaCordobas);
 			 
-			 new ProcesarEntradaDeDiario();
-			 ProcesarEntradaDeDiario.procesarSql = false;
-			 ProcesarEntradaDeDiario.monedaComprobante = "USD";
-			 ProcesarEntradaDeDiario.monedaLocal = monedaLocal;
-			 ProcesarEntradaDeDiario.fecharecibo = fecharecibo;
-			 ProcesarEntradaDeDiario.tasaCambioParalela = tasaoficial; 
-			 ProcesarEntradaDeDiario.tasaCambioOficial = tasaoficial; 
-			 ProcesarEntradaDeDiario.montoComprobante = montoCambio;
-			 ProcesarEntradaDeDiario.tipoDocumento = CodigosJDE1.BATCH_CONTADO.codigo();
-			 ProcesarEntradaDeDiario.conceptoComprobante = "Ficha:" + numeroficha + " C:"+caid +" Comp:"+codcomp;
-			 ProcesarEntradaDeDiario.numeroBatchJde = String.valueOf( numeroBatchJde );
-			 ProcesarEntradaDeDiario.numeroReciboJde = String.valueOf( numeroReciboJde ) ;
-			 ProcesarEntradaDeDiario.usuario = usuario;
-			 ProcesarEntradaDeDiario.codigousuario = codigousuario;
-			 ProcesarEntradaDeDiario.programaActualiza = PropertiesSystem.CONTEXT_NAME;
-			 ProcesarEntradaDeDiario.lineasComprobante = lineasComprobante;
-			 ProcesarEntradaDeDiario.tipodebatch = CodigosJDE1.RECIBOCONTADO; 
-			 ProcesarEntradaDeDiario.estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE;
-			 ProcesarEntradaDeDiario.procesarEntradaDeDiario(session);
+			 new ProcesarEntradaDeDiarioCustom();
+			 ProcesarEntradaDeDiarioCustom.procesarSql = false;
+			 ProcesarEntradaDeDiarioCustom.monedaComprobante = "USD";
+			 ProcesarEntradaDeDiarioCustom.monedaLocal = monedaLocal;
+			 ProcesarEntradaDeDiarioCustom.fecharecibo = fecharecibo;
+			 ProcesarEntradaDeDiarioCustom.tasaCambioParalela = tasaoficial; 
+			 ProcesarEntradaDeDiarioCustom.tasaCambioOficial = tasaoficial; 
+			 ProcesarEntradaDeDiarioCustom.montoComprobante = montoCambio;
+			 ProcesarEntradaDeDiarioCustom.conceptoComprobante = "Ficha:" + numeroficha + " C:"+caid +" Comp:"+codcomp;
+			 ProcesarEntradaDeDiarioCustom.numeroBatchJde = String.valueOf( numeroBatchJde );
+			 ProcesarEntradaDeDiarioCustom.numeroReciboJde = String.valueOf( numeroReciboJde ) ;
+			 ProcesarEntradaDeDiarioCustom.usuario = usuario;
+			 ProcesarEntradaDeDiarioCustom.codigousuario = codigousuario;
+			 ProcesarEntradaDeDiarioCustom.lineasComprobante = lineasComprobante;
+			 ProcesarEntradaDeDiarioCustom.valoresJdeInsContado = valoresJDEInsContado; 
+			 ProcesarEntradaDeDiarioCustom.procesarEntradaDeDiario(session,session.getTransaction());
 			 
-			 msgEstadoProceso = ProcesarEntradaDeDiario.msgProceso;
+			 msgEstadoProceso = ProcesarEntradaDeDiarioCustom.msgProceso;
 			 aplicado = msgEstadoProceso.isEmpty();
 			 
 			 if(!aplicado){
 				 return msgEstadoProceso ;
 			 }
 			 
-			 List<String[]> querysToExecute = ProcesarEntradaDeDiario.lstSqlsInserts ;
+			 List<String[]> querysToExecute = ProcesarEntradaDeDiarioCustom.lstSqlsInserts ;
 			 if( querysToExecute == null || querysToExecute.isEmpty() ){
 				 return msgEstadoProceso =  "Error al generar datos para grabar batch por compra venta de cambio " ;
 			 }
@@ -259,7 +264,7 @@ public class ReciboCtrl {
 		try {
 			
 			int numeroBatchJde = Divisas.numeroSiguienteJdeE1( );
-			int numeroReciboJde = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int numeroReciboJde = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8], valoresJdeNumeracion[9]);
 			
 			if(numeroBatchJde == 0) {
 				 aplicado = false;
@@ -326,28 +331,26 @@ public class ReciboCtrl {
 					 companiaDocumento);
 			 lineasComprobante.add(dtaCordobas);
 			 
-			 new ProcesarEntradaDeDiario();
-			 ProcesarEntradaDeDiario.monedaComprobante = "USD";
-			 ProcesarEntradaDeDiario.monedaLocal = monedaLocal;
-			 ProcesarEntradaDeDiario.fecharecibo = fecharecibo;
-			 ProcesarEntradaDeDiario.tasaCambioParalela = tasaoficial; 
-			 ProcesarEntradaDeDiario.tasaCambioOficial = tasaoficial; 
-			 ProcesarEntradaDeDiario.montoComprobante = montoCambio;
-			 ProcesarEntradaDeDiario.tipoDocumento = CodigosJDE1.BATCH_CONTADO.codigo();
-			 ProcesarEntradaDeDiario.conceptoComprobante = "Ficha:" + numeroficha + " C:"+caid +" Comp:"+codcomp;
-			 ProcesarEntradaDeDiario.numeroBatchJde = String.valueOf( numeroBatchJde );
-			 ProcesarEntradaDeDiario.numeroReciboJde = String.valueOf( numeroReciboJde ) ;
-			 ProcesarEntradaDeDiario.usuario = usuario;
-			 ProcesarEntradaDeDiario.codigousuario = codigousuario;
-			 ProcesarEntradaDeDiario.programaActualiza = PropertiesSystem.CONTEXT_NAME;
-			 ProcesarEntradaDeDiario.lineasComprobante = lineasComprobante;
-			 ProcesarEntradaDeDiario.tipodebatch = CodigosJDE1.RECIBOCONTADO; 
-			 ProcesarEntradaDeDiario.estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE;
+			 new ProcesarEntradaDeDiarioCustom();
+			 ProcesarEntradaDeDiarioCustom.monedaComprobante = "USD";
+			 ProcesarEntradaDeDiarioCustom.monedaLocal = monedaLocal;
+			 ProcesarEntradaDeDiarioCustom.fecharecibo = fecharecibo;
+			 ProcesarEntradaDeDiarioCustom.tasaCambioParalela = tasaoficial; 
+			 ProcesarEntradaDeDiarioCustom.tasaCambioOficial = tasaoficial; 
+			 ProcesarEntradaDeDiarioCustom.montoComprobante = montoCambio;
+			 ProcesarEntradaDeDiarioCustom.conceptoComprobante = "Ficha:" + numeroficha + " C:"+caid +" Comp:"+codcomp;
+			 ProcesarEntradaDeDiarioCustom.numeroBatchJde = String.valueOf( numeroBatchJde );
+			 ProcesarEntradaDeDiarioCustom.numeroReciboJde = String.valueOf( numeroReciboJde ) ;
+			 ProcesarEntradaDeDiarioCustom.usuario = usuario;
+			 ProcesarEntradaDeDiarioCustom.codigousuario = codigousuario;
+			 ProcesarEntradaDeDiarioCustom.programaActualiza = PropertiesSystem.CONTEXT_NAME;
+			 ProcesarEntradaDeDiarioCustom.lineasComprobante = lineasComprobante;
+			 ProcesarEntradaDeDiarioCustom.valoresJdeInsContado = valoresJDEInsContado;
 			 
-			 ProcesarEntradaDeDiario.procesarEntradaDeDiario(session1);
+			 ProcesarEntradaDeDiarioCustom.procesarEntradaDeDiario(session1,session1.getTransaction());
 			 
 			 
-			 msgEstadoProceso = ProcesarEntradaDeDiario.msgProceso;
+			 msgEstadoProceso = ProcesarEntradaDeDiarioCustom.msgProceso;
 			 aplicado = msgEstadoProceso.isEmpty();
 			 
 			 if(!aplicado){
@@ -357,7 +360,7 @@ public class ReciboCtrl {
 			 aplicado = crearRegistroReciboCajaJde(caid, numeroficha, codcomp, codsuc,  "FCV", "A", numeroBatchJde, Arrays.asList(new String[]{String.valueOf(numeroReciboJde)}));
 			 
 			 if(!aplicado){
-				 msgEstadoProceso = ProcesarEntradaDeDiario.msgProceso = "No se ha creado el enlace entre documentos de caja y edwards para la ficha de cambio " ;
+				 msgEstadoProceso = ProcesarEntradaDeDiarioCustom.msgProceso = "No se ha creado el enlace entre documentos de caja y edwards para la ficha de cambio " ;
 				 return msgEstadoProceso;
 			 }
 			 
@@ -392,7 +395,7 @@ public class ReciboCtrl {
 		try {
 			
 			int numeroBatchJde = Divisas.numeroSiguienteJdeE1( );
-			int numeroReciboJde = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int numeroReciboJde = Divisas.numeroSiguienteJdeE1Custom( valoresJdeNumeracion[8], valoresJdeNumeracion[9] );
 			
 			if(numeroBatchJde == 0) {
 				 aplicado = false;
@@ -459,36 +462,26 @@ public class ReciboCtrl {
 					 companiaDocumento);
 			 lineasComprobante.add(dtaCordobas);
 			 
-			 new ProcesarEntradaDeDiario();
-			 ProcesarEntradaDeDiario.monedaComprobante = "USD";
-			 ProcesarEntradaDeDiario.monedaLocal = monedaLocal;
-			 ProcesarEntradaDeDiario.fecharecibo = fecharecibo;
-			 ProcesarEntradaDeDiario.tasaCambioParalela = tasaoficial; 
-			 ProcesarEntradaDeDiario.tasaCambioOficial = tasaoficial; 
-			 ProcesarEntradaDeDiario.montoComprobante = montoCambio;
-			 ProcesarEntradaDeDiario.tipoDocumento = CodigosJDE1.BATCH_CONTADO.codigo();
-			 ProcesarEntradaDeDiario.conceptoComprobante = "Ficha:" + numeroficha + " C:"+caid +" Comp:"+codcomp;
-			 ProcesarEntradaDeDiario.numeroBatchJde = String.valueOf( numeroBatchJde );
-			 ProcesarEntradaDeDiario.numeroReciboJde = String.valueOf( numeroReciboJde ) ;
-			 ProcesarEntradaDeDiario.usuario = usuario;
-			 ProcesarEntradaDeDiario.codigousuario = codigousuario;
-			 ProcesarEntradaDeDiario.programaActualiza = PropertiesSystem.CONTEXT_NAME;
-			 ProcesarEntradaDeDiario.lineasComprobante = lineasComprobante;
-			 ProcesarEntradaDeDiario.tipodebatch = CodigosJDE1.RECIBOCONTADO; 
-			 ProcesarEntradaDeDiario.estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE;
+			 new ProcesarEntradaDeDiarioCustom();
+			 ProcesarEntradaDeDiarioCustom.monedaComprobante = "USD";
+			 ProcesarEntradaDeDiarioCustom.monedaLocal = monedaLocal;
+			 ProcesarEntradaDeDiarioCustom.fecharecibo = fecharecibo;
+			 ProcesarEntradaDeDiarioCustom.tasaCambioParalela = tasaoficial; 
+			 ProcesarEntradaDeDiarioCustom.tasaCambioOficial = tasaoficial; 
+			 ProcesarEntradaDeDiarioCustom.montoComprobante = montoCambio;
+			 ProcesarEntradaDeDiarioCustom.conceptoComprobante = "Ficha:" + numeroficha + " C:"+caid +" Comp:"+codcomp;
+			 ProcesarEntradaDeDiarioCustom.numeroBatchJde = String.valueOf( numeroBatchJde );
+			 ProcesarEntradaDeDiarioCustom.numeroReciboJde = String.valueOf( numeroReciboJde ) ;
+			 ProcesarEntradaDeDiarioCustom.usuario = usuario;
+			 ProcesarEntradaDeDiarioCustom.codigousuario = codigousuario;
+			 ProcesarEntradaDeDiarioCustom.programaActualiza = PropertiesSystem.CONTEXT_NAME;
+			 ProcesarEntradaDeDiarioCustom.lineasComprobante = lineasComprobante;
+			 ProcesarEntradaDeDiarioCustom.valoresJdeInsContado = valoresJDEInsContado;
 			 
-			//**********************************************************
-			//----------------------------------------------------------
-			//++++++++++++++++++      INICIO     +++++++++++++++++++++++
-			//----------------------------------------------------------
-			//**********************************************************
-			//Creado por Luis Alberto Fonseca Mendez 2019-04-24
+			
+			 ProcesarEntradaDeDiarioCustom.procesarEntradaDeDiario(sesion, trans);
 			 
-			 //Cambio hecho por lfonseca
-//			 ProcesarEntradaDeDiario.procesarEntradaDeDiario();
-			 ProcesarEntradaDeDiario.procesarEntradaDeDiario(sesion, trans);
-			 
-			 msgEstadoProceso = ProcesarEntradaDeDiario.msgProceso;
+			 msgEstadoProceso = ProcesarEntradaDeDiarioCustom.msgProceso;
 			 aplicado = msgEstadoProceso.isEmpty();
 			 
 			 if(!aplicado){
@@ -498,7 +491,7 @@ public class ReciboCtrl {
 			 aplicado = crearRegistroReciboCajaJde(sesion, trans, caid, numeroficha, codcomp, codsuc,  "FCV", "A", numeroBatchJde, Arrays.asList(new String[]{String.valueOf(numeroReciboJde)}));
 			 
 			 if(!aplicado){
-				 msgEstadoProceso = ProcesarEntradaDeDiario.msgProceso = "No se ha creado el enlace entre documentos de caja y edwards para la ficha de cambio " ;
+				 msgEstadoProceso = ProcesarEntradaDeDiarioCustom.msgProceso = "No se ha creado el enlace entre documentos de caja y edwards para la ficha de cambio " ;
 				 return msgEstadoProceso;
 			 }
 			 
@@ -5056,7 +5049,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				 .replace("@GLDGJ@", fechaBatch)
 				 .replace("@GLJELN@", String.valueOf( dLineaJDE ) )
 				 .replace("@GLICU@", String.valueOf( iNoBatch ) ) 
-				 .replace("@GLICUT@", CodigosJDE1.BATCH_CONTADO.posicion() )
+				 .replace("@GLICUT@", valoresJDEInsContado[8] )
 				 .replace("@GLDICJ@", fechaBatch )
 				 .replace("@GLDSYJ@", fechaBatch)
 				 .replace("@GLTICU@", horaBatch)
@@ -5211,7 +5204,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				 .replace("@GLDGJ@", fechaBatch)
 				 .replace("@GLJELN@", String.valueOf( dLineaJDE ) )
 				 .replace("@GLICU@", String.valueOf( iNoBatch ) ) 
-				 .replace("@GLICUT@", CodigosJDE1.BATCH_CONTADO.posicion() )
+				 .replace("@GLICUT@", valoresJDEInsContado[8] )
 				 .replace("@GLDICJ@", fechaBatch )
 				 .replace("@GLDSYJ@", fechaBatch)
 				 .replace("@GLTICU@", horaBatch)
@@ -6098,7 +6091,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 		}
 			/***************************************************************************************************************/
 	
-		public boolean registrarBatchA92(Session session, Date fecha, CodigosJDE1 cjTipoRecibo, int iNoBatch, long iTotalTransaccion, String sUsuario, int iCantDocs, String jobname, CodigosJDE1 statusBatch ) {
+		public boolean registrarBatchA92(Session session, Date fecha, String cjTipoRecibo, int iNoBatch, long iTotalTransaccion, String sUsuario, int iCantDocs, String jobname, String statusBatch ) {
 			boolean update = true;
 			
 			try {
@@ -6108,7 +6101,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				}
 
 				BatchControlF0011 f0011 = new BatchControlF0011(
-						cjTipoRecibo.codigo(),
+						cjTipoRecibo,
 						String.valueOf(iNoBatch),
 						"0",
 						sUsuario,
@@ -6117,7 +6110,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 						"0",
 						fecha,
 						jobname,
-						statusBatch.codigo()
+						statusBatch
 					); 
 					
 				String sqlInsert =  f0011.insertStatement();
@@ -6136,7 +6129,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 			}
 			return update;
 		}
-		public boolean registrarBatchA92Session(Session session, Date fecha, CodigosJDE1 cjTipoRecibo, int iNoBatch, long iTotalTransaccion, String sUsuario, int iCantDocs, String jobname, CodigosJDE1 statusBatch ) {
+		public boolean registrarBatchA92Session(Session session, Date fecha, String cjTipoRecibo, int iNoBatch, long iTotalTransaccion, String sUsuario, int iCantDocs, String jobname, String statusBatch ) {
 			boolean update = true;
 			
 			try {
@@ -6146,7 +6139,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				}
 
 				BatchControlF0011 f0011 = new BatchControlF0011(
-						cjTipoRecibo.codigo(),
+						cjTipoRecibo,
 						String.valueOf(iNoBatch),
 						"0",
 						sUsuario,
@@ -6155,8 +6148,8 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 						"0",
 						fecha,
 						jobname,
-						statusBatch.codigo()
-					); 
+						statusBatch
+						); 
 					
 				String sqlInsert =  f0011.insertStatement();
 				

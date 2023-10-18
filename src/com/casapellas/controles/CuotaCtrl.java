@@ -78,7 +78,7 @@ public class CuotaCtrl {
 					
 			" SELECT "+   
 			" (select gmaid from @JDEDTA.f0901 where "+ 
-			" 	trim(gmmcu) = (case when trim(kgmcu) = '' then '"+Integer.parseInt( sucursal ) +"' else trim(kgmcu) end )  "+       
+			" 	trim(gmmcu) = (case when trim(kgmcu) = '' then '"+ sucursal +"' else trim(kgmcu) end )  "+       
 			" 	and trim(gmobj) = trim(kgobj) "+ 
 			" 	and trim(gmsub) = trim(kgsub) "+ 
 			" ) || '@@' ||  "+ 
@@ -106,6 +106,7 @@ public class CuotaCtrl {
 				return null;
 						
 			for (String idcuenta : cuentas) {
+				if(idcuenta!=null)
 				strIdCuenta.add(  idcuenta.split("@@") ) ;
 			}	
 			

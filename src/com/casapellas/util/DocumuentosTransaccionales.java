@@ -6,14 +6,14 @@ import com.casapellas.controles.ConsolidadoDepositosBcoCtrl;
 
 public class DocumuentosTransaccionales {
 	
-	public static CatalogoGenerico getTipoTRXContado() {
+	public static CatalogoGenerico gettipoTRX() {
 		
 	String query="SELECT TVALALF AS VALOR, TDESC AS DESCRIPCION FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.tipoTrxContado +"' ";     
 		
-		List<CatalogoGenerico> tipoTRXContado= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, CatalogoGenerico.class, true);
+		List<CatalogoGenerico> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, CatalogoGenerico.class, true);
 		
-		if(tipoTRXContado.size()>0)
-		return tipoTRXContado.get(0);
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0);
 		else
 		return null;
 	}
@@ -22,10 +22,10 @@ public class DocumuentosTransaccionales {
 		
 		String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.valuesJDEContado +"' ";     
 			
-			List<Object> tipoTRXContado= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 			
-			if(tipoTRXContado.size()>0)
-			return tipoTRXContado.get(0).toString();
+			if(tipoTRX.size()>0)
+			return tipoTRX.get(0).toString();
 			else
 			return null;
 		}
@@ -33,10 +33,10 @@ public class DocumuentosTransaccionales {
 		
 		String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.valuesJDENumeracion +"' ";     
 			
-			List<Object> tipoTRXContado= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 			
-			if(tipoTRXContado.size()>0)
-			return tipoTRXContado.get(0).toString();
+			if(tipoTRX.size()>0)
+			return tipoTRX.get(0).toString();
 			else
 			return null;
 		}
@@ -44,10 +44,10 @@ public class DocumuentosTransaccionales {
 		
 		String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.valuesJDEDevolucionContado +"' ";     
 			
-			List<Object> tipoTRXContado= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 			
-			if(tipoTRXContado.size()>0)
-			return tipoTRXContado.get(0).toString();
+			if(tipoTRX.size()>0)
+			return tipoTRX.get(0).toString();
 			else
 			return null;
 		}
@@ -55,10 +55,10 @@ public class DocumuentosTransaccionales {
 		
 		String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.valuesJDECredito +"' ";     
 			
-			List<Object> tipoTRXContado= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 			
-			if(tipoTRXContado.size()>0)
-			return tipoTRXContado.get(0).toString();
+			if(tipoTRX.size()>0)
+			return tipoTRX.get(0).toString();
 			else
 			return null;
 		}
@@ -66,10 +66,33 @@ public class DocumuentosTransaccionales {
 		
 		String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.valuesJDEPrimaReserva +"' ";     
 			
-			List<Object> tipoTRXContado= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 			
-			if(tipoTRXContado.size()>0)
-			return tipoTRXContado.get(0).toString();
+			if(tipoTRX.size()>0)
+			return tipoTRX.get(0).toString();
+			else
+			return null;
+		}
+	
+	public static String valoresJDEInsPMT() {
+		
+		String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.valuesJDEPMT +"' ";     
+			
+			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+			
+			if(tipoTRX.size()>0)
+			return tipoTRX.get(0).toString();
+			else
+			return null;
+		}
+	public static String valoresJDEInsFCV() {
+		
+		String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.valuesJDEFCV +"' ";     
+			
+			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+			
+			if(tipoTRX.size()>0)
+			return tipoTRX.get(0).toString();
 			else
 			return null;
 		}
@@ -77,10 +100,10 @@ public static String valoresJDEInsFinanciamiento() {
 		
 		String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.valuesJDEFinanciamiento +"' ";     
 			
-			List<Object> tipoTRXContado= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 			
-			if(tipoTRXContado.size()>0)
-			return tipoTRXContado.get(0).toString();
+			if(tipoTRX.size()>0)
+			return tipoTRX.get(0).toString();
 			else
 			return null;
 		}
@@ -153,6 +176,17 @@ public static String obtenerIDCuentasFCVPerdida(String compania,String cuenta) {
 		
 		if(idCuentaPerdida.size()>0)
 		return idCuentaPerdida.get(0).toString();
+		else
+		return null;
+	}
+public static String obteneConfNumeracionRU(String compania) {
+	
+	String query="SELECT TVALALF  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroNumeracionRU + "' AND COD_COMPANIA = '"+ compania +"' ";     
+		
+		List<Object> configuracion= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(configuracion.size()>0)
+		return configuracion.get(0).toString();
 		else
 		return null;
 	}

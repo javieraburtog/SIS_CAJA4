@@ -15,13 +15,10 @@ import com.casapellas.controles.ConsolidadoDepositosBcoCtrl;
 import com.casapellas.entidades.MetodosPago;
 import com.casapellas.util.FechasUtil;
 
-public class ProcesarReciboRU {
-	
+public class ProcesarReciboRUCustom {
 	public static String msgProceso;
 	public static List<String[]> lstSqlsInserts;
-
-	public static CodigosJDE1 estadobatch;
-	public static CodigosJDE1 tipodebatch;
+	
 	public static String numeroBatchJde;
 	public static String numeroFacturaRu;
 	public static String numeroReciboRu;
@@ -70,8 +67,8 @@ public class ProcesarReciboRU {
 	
 	public static String numeroContrato;
 	public static String tipoContrato;
-	
-	public ProcesarReciboRU(){
+	public static String[] valoresJDEIns;
+	public ProcesarReciboRUCustom(){
 		numeroReciboCaja = 0 ;
 		msgProceso = "" ;
 		montoReciboJde = "0" ;
@@ -82,7 +79,6 @@ public class ProcesarReciboRU {
 		
 		fecharecibo = new Date();
 	}
-	
 	public static void procesarRecibo(Session session){
 		
 		try {
@@ -229,12 +225,7 @@ public class ProcesarReciboRU {
 				
 				try {
 					
-//					boolean execute = ConsolidadoDepositosBcoCtrl .executeSqlQuery(sesion, trans, querys[0]);
-//					
-//					if(!execute){
-//						msgProceso = "error al procesar: " + querys[1];
-//						return;
-//					}
+
 					
 					int rows = sesion.createSQLQuery( querys[0] ).executeUpdate() ;
 					
@@ -483,7 +474,7 @@ public class ProcesarReciboRU {
 					 concepto, 
 					 nombrecliente, 
 					 usuario, 
-					 CodigosJDE1.RECIBOPRIMAS.codigo(),
+					 valoresJDEIns[8],
 					 fecharecibo);
 			
 			if(claseContableCliente == null){
@@ -517,7 +508,7 @@ public class ProcesarReciboRU {
 			
 			NuevaFacturaF0311 f03b11 = new NuevaFacturaF0311(
 					String.valueOf(codigoCliente), tipoRecibo, String.valueOf(numeroFacturaRu), numeroCuota, sucursal, 
-					tipodebatch.codigo(), String.valueOf(numeroBatchJde), monedaRecibo, tasaCambioOficial.toString(), 
+					valoresJDEIns[8], String.valueOf(numeroBatchJde), monedaRecibo, tasaCambioOficial.toString(), 
 					tipoImpuesto, codigoTipoImpuesto, unidadNegocio1, fechajuliana, numeroSolicitud,
 					tipoSolicitud, concepto, nombrecliente, usuario, unidadNegocio2 ,
 					fecharecibo, monedaLocal, idCuentaContableFactura, claseContableCliente
@@ -573,7 +564,7 @@ public class ProcesarReciboRU {
 			
 			
 			BatchControlF0011 f0011 = new BatchControlF0011(
-				tipodebatch.codigo(),
+				valoresJDEIns[8],
 				numeroBatchJde,
 				"0",
 				usuario,
@@ -582,7 +573,7 @@ public class ProcesarReciboRU {
 				"0",
 				fecharecibo,
 				"RPRIMASR",
-				getEstadobatch().codigo()
+				valoresJDEIns[9]
 			); 
 			
 			lstSqlsInserts.add(new String[]{ f0011.insertStatement(), "Grabar registro de control de batchs F0011"});
@@ -593,12 +584,6 @@ public class ProcesarReciboRU {
 		}
 	}
 
-	public static CodigosJDE1 getEstadobatch() {
-		
-		if (estadobatch == null )
-			estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE ;
-		return estadobatch;
-	}
 	
 	
 }

@@ -43,10 +43,8 @@ public class SucursalCtrl {
 			}
 		}catch(Exception ex){
 			iNocontrato = 0; 
-			ex.printStackTrace();
-			ex.printStackTrace();
 		}finally{
-			try{cn.close();}catch(Exception ex2){ex2.printStackTrace();};
+			try{cn.close();}catch(Exception ex2){};
 		}
 		return iNocontrato;
 	}
@@ -81,7 +79,7 @@ public class SucursalCtrl {
 			tx = session.beginTransaction();
 			String sql = "select u.id.desc from Unegocio as u where " +
 					"substring(u.id.codunineg,10,11) like '%"
-					+ sCodsuc + "%' and u.id.tipo = 'BS'";
+					+ sCodsuc + "%' ";
 			sNombreSucursal = (String) session.createQuery(sql).uniqueResult();
 			tx.commit();
 		}catch(Exception ex){
@@ -98,7 +96,7 @@ public class SucursalCtrl {
 
 		try{
 			
-			String sql = "from Unegocio as u where u.id.codcomp = '" + sCodsuc.trim() + "' and u.id.tipo = 'BS' order by codunineg";
+			String sql = "from Unegocio as u where u.id.codcomp = '" + sCodsuc.trim() + "'  order by codunineg";
 			
 			List<Unegocio> lstResultado = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Unegocio.class, false);
 			
@@ -123,6 +121,29 @@ public class SucursalCtrl {
 		try{
 			
 			String sql = "from Unegocio as u where u.id.codsuc = '"+sCodSuc+"'";
+			sql+= " and (select count(*) from Vf0901 f09 ";
+			sql+= " where trim(f09.id.gmmcu) = trim(u.id.codunineg) and f09.id.gmpec not in ('I','N')  ) >0 order by codunineg ";
+			
+			List<Unegocio> unidadesNeg = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Unegocio.class, false);
+			
+			if( unidadesNeg == null || unidadesNeg.isEmpty() )
+				return null;
+			
+			unegocio =  new Unegocio[unidadesNeg.size()];
+			unegocio = unidadesNeg.toArray(unegocio);
+			
+		}catch(Exception ex){
+			ex.printStackTrace(); 
+		} 
+		
+		return unegocio;
+	}
+	public Unegocio[] obtenerUninegxSucursalV2(String sCodSuc){
+		Unegocio[] unegocio = null;
+		 
+		try{
+			
+			String sql = "from Unegocio as u where u.id.codcomp = '"+Integer.parseInt(sCodSuc)+"'";
 			sql+= " and (select count(*) from Vf0901 f09 ";
 			sql+= " where trim(f09.id.gmmcu) = trim(u.id.codunineg) and f09.id.gmpec not in ('I','N')  ) >0 order by codunineg ";
 			

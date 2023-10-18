@@ -162,6 +162,8 @@ public class mainDAO {
 				String[] valoresJDEInsCredito = DocumuentosTransaccionales.valoresJDEInsCredito().split(",");
 				String[] valoresJDEInsPrimaReservas = DocumuentosTransaccionales.valoresJDEInsPrimaReservas().split(",");
 				String[] valoresJDEInsFinanciamiento = DocumuentosTransaccionales.valoresJDEInsFinanciamiento().split(",");
+				String[] valoresJDEInsPMT = DocumuentosTransaccionales.valoresJDEInsPMT().split(",");
+				String[] valoresJDEInsFCV = DocumuentosTransaccionales.valoresJDEInsFCV().split(",");
 				
 				m.put("f55ca017", f55ca017);
 				m.put("sTiposDoc", sTipoDoc);
@@ -172,6 +174,9 @@ public class mainDAO {
 				m.put("valoresJDEInsCredito",valoresJDEInsCredito);
 				m.put("valoresJDEInsPrimaReservas",valoresJDEInsPrimaReservas);
 				m.put("valoresJDEInsFinanciamiento",valoresJDEInsFinanciamiento);
+				m.put("valoresJDEInsPMT",valoresJDEInsPMT);
+				m.put("valoresJDEInsFCV",valoresJDEInsFCV);
+				
 			} catch (Exception e) {
 				 e.printStackTrace();
 			}

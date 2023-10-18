@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.application.NavigationHandler;
@@ -319,6 +320,12 @@ public class RevisionArqueoDAO {
 	private List<HistoricoReservasProformas> detalleContratoPmt ;
 	private HtmlGridView gvDetalleContratoPmt;
 	
+	
+	//Valores reimplentacion JDE
+	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();	
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
+	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
 	
 	Exception errorApr = new Exception();
 	public Exception getErrorApr() {
@@ -967,7 +974,7 @@ public class RevisionArqueoDAO {
  
 			int iMonto = Divisas.pasarAentero(r.getMonto().doubleValue());
 			
-			hecho = rCtrl.registrarBatchA92Session(session, dtFecha, CodigosJDE1.RECIBOCONTADO,  iNoBatch, iMonto, vaut.getId().getLogin(), 1, "APRARQUEO" , CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+			hecho = rCtrl.registrarBatchA92Session(session, dtFecha, valoresJdeInsContado[8],  iNoBatch, iMonto, vaut.getId().getLogin(), 1, "APRARQUEO" , valoresJdeInsContado[9]);
 			
 			if(!hecho){
 				sMensajeError="No se ha podido leer la cuenta de fondo minimo para la moenda: " +  r.getMoneda();				
@@ -1238,7 +1245,7 @@ public class RevisionArqueoDAO {
 					iMontoH = Divisas.pasarAentero( ra.getIvaComision().multiply(tasaOficial).setScale(2, RoundingMode.HALF_UP).doubleValue() ) ;							
 				} 
 				
-				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, valoresJdeInsContado[8], iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO", valoresJdeInsContado[9]);
 				
 				if(bHecho){
 					iNoDocumento = dv.leerActualizarNoDocJDE_AprobArqueo(session);
@@ -1522,7 +1529,7 @@ public class RevisionArqueoDAO {
 				if(bHecho){
 					
 
-					bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMontoTotalBanco, vaut.getId().getLogin(), 1 , "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+					bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, valoresJdeInsContado[8], iNoBatch, iMontoTotalBanco, vaut.getId().getLogin(), 1 , "APRARQUEO", valoresJdeInsContado[9]);
 					
 					
 					if(bHecho){
@@ -2483,7 +2490,7 @@ public class RevisionArqueoDAO {
 					if( montoCA <= 0 ) {
 						
 						//&& =========================== Grabar el encabezado del batch
-						hecho = rcCtrl.registrarBatchA92Session( session, fechadoc, CodigosJDE1.RECIBOCONTADO, iNobatchNodoc[0], montoCA, vaut.getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+						hecho = rcCtrl.registrarBatchA92Session( session, fechadoc, valoresJdeInsContado[8], iNobatchNodoc[0], montoCA, vaut.getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 						
 						if(!hecho) {
 							msgProceso ="No se pudo grabar Comprobante por Monto de Comision a donaciones TC (encabezado de batch) " ;
@@ -2588,7 +2595,7 @@ public class RevisionArqueoDAO {
 					if( montoCA <= 0 ) {
 						
 						//&& =========================== Grabar el encabezado del batch
-						hecho = rcCtrl.registrarBatchA92Session( session, fechadoc, CodigosJDE1.RECIBOCONTADO, iNobatchNodoc[0], montoCA, vaut.getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+						hecho = rcCtrl.registrarBatchA92Session( session, fechadoc,  valoresJdeInsContado[8], iNobatchNodoc[0], montoCA, vaut.getId().getLogin(), 1, "APRARQUEO", valoresJdeInsContado[9]);
 						if(!hecho) {
 							msgProceso ="No se pudo grabar Comprobante por Monto de Retención a donaciones TC (encabezado de batch) " ;
 							return false;
@@ -2772,7 +2779,7 @@ public class RevisionArqueoDAO {
 					iMontoH = dv.pasarAentero((dv.roundDouble(ra.getMontoRetencion().doubleValue() * tasaCambioOficial.doubleValue() )));							
 				} 
 				
-				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 				
 				if(bHecho){
 					iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
@@ -3126,7 +3133,7 @@ public class RevisionArqueoDAO {
 				
 				sSucursalDeposito = sCuentaB[2];
 				
-				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 				
 				if(bHecho){
 					//--- Asiento de pagos en Córdobas.
@@ -6662,7 +6669,7 @@ public class RevisionArqueoDAO {
 			
 				if(bHecho){
 					
-					bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+					bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 					
 					if(bHecho){
 						
@@ -6890,7 +6897,7 @@ public class RevisionArqueoDAO {
 								iMonto = (long)dv.roundDouble((v.getId().getMontoneto().doubleValue() * 100));
 								
 								//&& ====== Encabezado
-								bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+								bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 								
 								if(!bHecho){
 									CodeUtil.putInSessionMap("sMensajeError", "No se registró Batch para "
@@ -7141,7 +7148,7 @@ public class RevisionArqueoDAO {
 												
 											if(bHecho){
 												
-												bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMontocom, vaut[0].getId().getLogin(), 1 , "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+												bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontocom, vaut[0].getId().getLogin(), 1 , "APRARQUEO",  valoresJdeInsContado[9]);
 												
 												if(bHecho){
 														
@@ -7246,7 +7253,7 @@ public class RevisionArqueoDAO {
 															 sCompCuentaCaja, "", "", monedaBaseCompania, sCompCuentaCaja,"F", 0);
 													if(bHecho){
 														
-														bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMontocom, vaut[0].getId().getLogin(), 1 , "APRARQUEO" , CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+														bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontocom, vaut[0].getId().getLogin(), 1 , "APRARQUEO" ,  valoresJdeInsContado[9]);
 														
 														if(bHecho){
 															
@@ -7574,7 +7581,7 @@ public class RevisionArqueoDAO {
 				
 					if(bHecho){
 						
-						bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+						bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 						
 						if(bHecho){
 							
@@ -7802,7 +7809,7 @@ public class RevisionArqueoDAO {
 									iMonto = (long)dv.roundDouble((v.getId().getMontoneto().doubleValue() * 100));
 									
 									//&& ====== Encabezado
-									bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+									bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMonto, vaut[0].getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 									
 									if(!bHecho){
 										CodeUtil.putInSessionMap("sMensajeError", "No se registró Batch para "
@@ -8053,7 +8060,7 @@ public class RevisionArqueoDAO {
 													
 												if(bHecho){
 													
-													bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMontocom, vaut[0].getId().getLogin(), 1 , "APRARQUEO", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+													bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontocom, vaut[0].getId().getLogin(), 1 , "APRARQUEO",  valoresJdeInsContado[9]);
 													
 													if(bHecho){
 															
@@ -8158,7 +8165,7 @@ public class RevisionArqueoDAO {
 																 sCompCuentaCaja, "", "", monedaBaseCompania, sCompCuentaCaja,"F", 0);
 														if(bHecho){
 															
-															bHecho = recCtrl.registrarBatchA92Session( session, dtFecha, CodigosJDE1.RECIBOCONTADO, iNoBatch, iMontocom, vaut[0].getId().getLogin(), 1 , "APRARQUEO" , CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+															bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontocom, vaut[0].getId().getLogin(), 1 , "APRARQUEO" ,  valoresJdeInsContado[9]);
 															
 															if(bHecho){
 																

@@ -7,8 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -52,6 +54,10 @@ public class DonacionesCtrl {
 	public static String tiporecibo ;
 	public static int iddncrsm = 0 ;
 	
+	static Map<String, Object> m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();	
+	static String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	static String[] valoresJDEInsContado = (String[]) m.get("valoresJDEInsContado");
+	static String[] valoresJDEInsPMT = (String[]) m.get("valoresJDEInsPMT");
 	
 	public static String totalDonacionxMoneda( List<MetodosPago>selectedMet ){
 		String totalesxmoneda = "" ;
@@ -109,7 +115,7 @@ public class DonacionesCtrl {
 
 //				nobatch = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMEROBATCH );
 				nobatch = Divisas.numeroSiguienteJdeE1(  );
-				nodocjde = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROPAGOVOUCHER );
+				nodocjde = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[4],valoresJdeNumeracion[5] );
 
 				hecho = generarAsientosContablesCierreDonacion(dncCierre, monedabase, vaut, session);
 
@@ -277,7 +283,7 @@ public class DonacionesCtrl {
 			
 			//&& =========================== Grabar el encabezado del batch
 
-			hecho = rcCtrl.registrarBatchA92Session(session, fechadoc, CodigosJDE1.BATCH_ANTICIPO_PMT, nobatch, montoCA, vaut.getId().getLogin(), 1, "Donacion", CodigosJDE1.BATCH_ESTADO_PENDIENTE);
+			hecho = rcCtrl.registrarBatchA92Session(session, fechadoc, valoresJDEInsPMT[8], nobatch, montoCA, vaut.getId().getLogin(), 1, "Donacion", valoresJDEInsPMT[9]);
 			
 			if(!hecho) {
 				msgProceso =" no se pudo grabar cargo a cuenta de beneficiario en jde (encabezado de batch) " ;
@@ -741,7 +747,7 @@ public class DonacionesCtrl {
 				int montototal = Integer.parseInt(String.valueOf( dtaF0011.get(0) ) ) ;
 				
 				//done = rcCtrl.registrarBatchA92(new Date(), cn,"G", iNobatchNodoc[0], montototal, vaut.getId().getLogin(), 1, "N");
-				done = rcCtrl.registrarBatchA92(session, new Date(), CodigosJDE1.RECIBOCONTADO, iNobatchNodoc[0], montototal, vaut.getId().getLogin(), 1 , "Donacion", CodigosJDE1.BATCH_ESTADO_PENDIENTE );
+				done = rcCtrl.registrarBatchA92(session, new Date(), valoresJDEInsContado[8], iNobatchNodoc[0], montototal, vaut.getId().getLogin(), 1 , "Donacion", valoresJDEInsContado[9] );
 				
 				
 				if(!done){

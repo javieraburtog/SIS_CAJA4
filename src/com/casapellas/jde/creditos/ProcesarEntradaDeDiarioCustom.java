@@ -98,12 +98,7 @@ public class ProcesarEntradaDeDiarioCustom {
 		}
 	}
 	
-	//**********************************************************
-	//----------------------------------------------------------
-	//++++++++++++++++++      INICIO     +++++++++++++++++++++++
-	//----------------------------------------------------------
-	//**********************************************************
-	//Creado por Luis Alberto Fonseca Mendez 2019-04-24
+	
 	public static void procesarEntradaDeDiario(Session sesion, Transaction trans){
 		try {
 			

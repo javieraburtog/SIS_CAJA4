@@ -51,6 +51,7 @@ public class PropertiesSystem {
 		public final static String parametroCaja="30";
 		public final static String parametroFCVGanancia="11";
 		public final static String parametroFCVPerdida="10";
+		public final static String parametroNumeracionRU="36";
 		//-Contado
 		public final static String tipoTrxContado="CO";
 		public final static String valuesJDEContado="CONTADO_JDE_INS";
@@ -59,6 +60,8 @@ public class PropertiesSystem {
 		public final static String valuesJDECredito="CREDITO_JDE_INS";
 		public final static String valuesJDEPrimaReserva="PRIMAS_JDE_INS";
 		public final static String valuesJDEFinanciamiento="FINAN_JDE_INS";
+		public final static String valuesJDEPMT="PMT_JDE_INS";
+		public final static String valuesJDEFCV="FCV_JDE_INS";
 				
    // Datos de Servidor de Base de Datos.
 	public final static String IPSERVERDB2 = "192.168.1.3";

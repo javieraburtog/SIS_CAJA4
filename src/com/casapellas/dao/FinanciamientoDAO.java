@@ -4539,17 +4539,7 @@ public class FinanciamientoDAO {
 							
 						}
 					}
-//					else{
-//						cn.rollback();
-//						tx.rollback();
-//						dwRecibo.setWindowState("hidden");
-//						dwProcesaRecibo.setWindowState("hidden");
-//						dwMensajeError.setWindowState("normal");
-//						dwMensajeError.setStyle("width:390px;height:145px");
-//						//cancelar transacciones con socket POS si hubieron 
-//						anularPagosSP(lstMetodosPago);
-//						m.remove("lstDatosTrack_Con");
-//					}
+
 
 					m.remove("fn_processRecibo");
 					dwRecibo.setWindowState("hidden");
@@ -4562,8 +4552,6 @@ public class FinanciamientoDAO {
 					dwMensajeError.setStyle("width:390px;height:145px");
 					tx.rollback();
 					
-					//cancelar transacciones con socket POS si hubieron 
-					//anularPagosSP(lstMetodosPago);
 					m.remove("lstDatosTrack_Con");
 				}
 			}
