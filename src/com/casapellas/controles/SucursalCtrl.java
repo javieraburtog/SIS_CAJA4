@@ -88,6 +88,30 @@ public class SucursalCtrl {
 		return sNombreSucursal;
 	}
 /*********Obtiene una lista de sucursales por codigo de compania**************************************************/
+	public Unegocio[] obtenerSucursalesxCompania(String sCodsuc,String Tipo){
+		Unegocio[] unegocio = null;
+
+		try{
+			
+			String sql = "from Unegocio as u where u.id.codcomp = '" + sCodsuc.trim() + "' and u.id.tipo = '" + Tipo.trim() + "' order by codunineg";
+			
+			List<Unegocio> lstResultado = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Unegocio.class, false);
+			
+			if( lstResultado == null  || lstResultado.isEmpty() )
+				return null;
+			
+			unegocio =  new Unegocio[lstResultado.size()];
+			unegocio = lstResultado.toArray(unegocio);
+			
+			
+		}catch(Exception ex){
+			 ex.printStackTrace(); 
+		} 
+		
+		
+		return unegocio;
+	}
+	
 	public Unegocio[] obtenerSucursalesxCompania(String sCodsuc){
 		Unegocio[] unegocio = null;
 

@@ -5314,15 +5314,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 			
 			sCodUnineg = com.casapellas.util.CodeUtil.pad(sCodUnineg.trim(), 12," ");
 			
-			 /*
-			if(sCodUnineg.length() == 2){
-				sCodUnineg = "          "+sCodUnineg;
-				sCuenta = "          "+sCuenta;
-			}else{
-				sCodUnineg = "        "+sCodUnineg;
-				sCuenta = "        "+sCuenta;
-			}
-			*/
+			
 			
 			if(sCuenta == null || sCuenta.trim().isEmpty() ) {
 				sCuenta = sCodUnineg + "." + sCuentaObj + ( sCuentaSub.trim().isEmpty() ? "" : "."  + sCuentaSub ) ;
