@@ -1318,7 +1318,7 @@ public class IngExtraordinarioDAO {
 /*********************************************************************************/
 /** Llenar la lista de unidades de negocio a partir de la sucursal seleccionada **/
 	public void cambiarSucursal(ValueChangeEvent ev){
-		String sCodsuc;
+		String sCodsuc,sCodComp;
 		List<SelectItem> lstUnineg = null;
 		
 		try {
@@ -1328,31 +1328,30 @@ public class IngExtraordinarioDAO {
 			
 			resetTipoOperacion(); 
 			
+			sCodComp = ddlFiltroCompanias.getValue().toString();
 			sCodsuc = ddlFiltrosucursal.getValue().toString();
 			
 			if(sCodsuc.compareTo( "SUC" ) == 0 ){
 				return ;
 			}
 			
-			Unegocio[] unegocio = null;
+			List<String[]> unegocio = null;
 			SucursalCtrl sucCtrl = new SucursalCtrl();
 			
-			unegocio = sucCtrl.obtenerUninegxSucursal(sCodsuc);
+			unegocio = sucCtrl.obtenerUninegxSucursal(sCodsuc,sCodComp);
 			
 			if( unegocio == null  ){
 				return;
 			}
 			
-			for(int i = 0; i < unegocio.length; i ++){
-				lstUnineg.add(new SelectItem(unegocio[i].getId().getCodunineg().trim(),
-						unegocio[i].getId().getCodunineg().trim()+": " + unegocio[i].getId().getDesc().trim(),
-						"U/N: " +unegocio[i].getId().getDesc().trim()) );
-			}
-			
-			
+			for (Object[] unidad : unegocio) {
+					lstUnineg.add(new SelectItem(String.valueOf(unidad[0]),
+						String.valueOf(unidad[0]) +": "+ String.valueOf(unidad[2]).trim(),
+						"U/N: " +String.valueOf(unidad[2]).trim()));	
+			}	
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("cambiarSucursal", "ERR", error.getMessage());
 		} finally{
 			
 			CodeUtil.putInSessionMap( "iex_lstFiltrounineg", lstUnineg);
@@ -1385,7 +1384,7 @@ public class IngExtraordinarioDAO {
 				}
 			}
 		}catch(Exception ex){
-			ex.printStackTrace();
+			LogCajaService.CreateLog("ponerCodigoBanco", "ERR", ex.getMessage());
 		}
 		return lstMetodosPago;
 	}
@@ -1482,7 +1481,8 @@ public class IngExtraordinarioDAO {
 			try {
 				idProceso = Long.parseLong(String.valueOf(m.get("iex_idNumericPago"))) ;
 			} catch (Exception e) {
-				e.printStackTrace();
+				
+				LogCajaService.CreateLog("cambiarSucursal", "ERR", e.getMessage());
 				msgError = "La transacción no ha sido completada, intente nuevamente";
 				rcNoduplicado = false;
 				aplicado = false;
@@ -6368,28 +6368,28 @@ public boolean validarSolicitud() {
 				List lstSuc = new ArrayList();
 				lstSuc.add(new SelectItem("SUC","Sucursal","Seleccione la Sucursal a utilizar en el pago"));
 		
-				Unegocio[] unegocio = null;
+				List<String[]>  unegocio = null;
 				SucursalCtrl sucCtrl = new SucursalCtrl();
 				ClsParametroCaja cajaparm = new ClsParametroCaja();
-				String strTipo="";
-				
-				strTipo =  cajaparm.getParametros("33", "0", "INGEXT_TIPOSUC").getValorAlfanumerico().toString();
 				
 				
-				unegocio = sucCtrl.obtenerSucursalesxCompania( ddlFiltroCompanias.getValue().toString(),strTipo );
-				for(int i = 0; i < unegocio.length; i ++){
+				unegocio = sucCtrl.obtenerSucursalesxCompania( ddlFiltroCompanias.getValue().toString() );
+				
+				for (Object[] sucursal : unegocio) {
+				
+					String unineg = String.valueOf(sucursal[0]);
 					
-					String unineg = unegocio[i].getId().getCodunineg().trim();
 					if(unineg.length() < 5 ) {
 						unineg = CodeUtil.pad(unineg, 5, "0");
 					}
 					
-					lstSuc.add(new SelectItem(unegocio[i].getId().getCodunineg().trim(),
-							   unineg +": "+ unegocio[i].getId().getDesc().trim(),
-							   unegocio[i].getId().getDesc().trim()));
 					
+					lstSuc.add(new SelectItem(String.valueOf(sucursal[0]),
+							unineg +": "+ String.valueOf(sucursal[2]).trim(),
+									String.valueOf(sucursal[2]).trim()));
 					
 				}
+					
 				lstFiltrosucursal = lstSuc;
 				m.put("iex_lstFiltrosucursal", lstSuc);
 			}else

@@ -19,6 +19,7 @@ import com.casapellas.entidades.TallerUn;
 import com.casapellas.entidades.Unegocio;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.navegacion.As400Connection;
+import com.casapellas.util.PropertiesSystem;
 
 public class SucursalCtrl {
 /*********************************************************************************************/
@@ -87,71 +88,39 @@ public class SucursalCtrl {
 		}
 		return sNombreSucursal;
 	}
-/*********Obtiene una lista de sucursales por codigo de compania**************************************************/
-	public Unegocio[] obtenerSucursalesxCompania(String sCodsuc,String Tipo){
-		Unegocio[] unegocio = null;
+/*********Obtiene una lista de sucursales por codigo de compania**************************************************/	
+	public List<String[]> obtenerSucursalesxCompania(String sCodsuc){
+		List<String[]>  lstResultado = null;
 
 		try{
 			
-			String sql = "from Unegocio as u where u.id.codcomp = '" + sCodsuc.trim() + "' and u.id.tipo = '" + Tipo.trim() + "' order by codunineg";
+			String sql = "SELECT * FROM "+ PropertiesSystem.ESQUEMA +".VSUCURSALES WHERE TRIM(CODCOMP) =" + sCodsuc.trim() +" order by CODSUC";
 			
-			List<Unegocio> lstResultado = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Unegocio.class, false);
+			lstResultado = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, null, true);
 			
 			if( lstResultado == null  || lstResultado.isEmpty() )
 				return null;
-			
-			unegocio =  new Unegocio[lstResultado.size()];
-			unegocio = lstResultado.toArray(unegocio);
-			
+		
 			
 		}catch(Exception ex){
 			 ex.printStackTrace(); 
 		} 
 		
 		
-		return unegocio;
+		return lstResultado;
 	}
 	
-	public Unegocio[] obtenerSucursalesxCompania(String sCodsuc){
-		Unegocio[] unegocio = null;
-
-		try{
-			
-			String sql = "from Unegocio as u where u.id.codcomp = '" + sCodsuc.trim() + "' and u.id.tipo = 'BS' order by codunineg";
-			
-			List<Unegocio> lstResultado = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Unegocio.class, false);
-			
-			if( lstResultado == null  || lstResultado.isEmpty() )
-				return null;
-			
-			unegocio =  new Unegocio[lstResultado.size()];
-			unegocio = lstResultado.toArray(unegocio);
-			
-			
-		}catch(Exception ex){
-			 ex.printStackTrace(); 
-		} 
-		
-		
-		return unegocio;
-	}
-/*****************************************************************************************************************/
-	public Unegocio[] obtenerUninegxSucursal(String sCodSuc){
-		Unegocio[] unegocio = null;
+	/*****************************************************************************************************************/
+	public 	List<String[]> obtenerUninegxSucursal(String sCodSuc, String sCodComp){
+		List<String[]> unegocio = null;
 		 
 		try{
+			String sql = "SELECT * FROM  "+ PropertiesSystem.ESQUEMA +".VUNINEGOCIOXSUCURSAL WHERE TRIM(CODSUC ) ='" + sCodSuc.trim() + "' AND TRIM(CODCOMP) = '" + sCodComp.trim() + "' order by CODUNINEG";
 			
-			String sql = "from Unegocio as u where u.id.codsuc = '"+sCodSuc+"' and u.id.tipo in ('IS','EX')";
-			sql+= " and (select count(*) from Vf0901 f09 ";
-			sql+= " where trim(f09.id.gmmcu) = trim(u.id.codunineg) and f09.id.gmpec not in ('I','N')  ) >0 order by codunineg ";
+			unegocio = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, null, true);
 			
-			List<Unegocio> unidadesNeg = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Unegocio.class, false);
-			
-			if( unidadesNeg == null || unidadesNeg.isEmpty() )
+			if( unegocio == null || unegocio.isEmpty() )
 				return null;
-			
-			unegocio =  new Unegocio[unidadesNeg.size()];
-			unegocio = unidadesNeg.toArray(unegocio);
 			
 		}catch(Exception ex){
 			ex.printStackTrace(); 
@@ -159,5 +128,8 @@ public class SucursalCtrl {
 		
 		return unegocio;
 	}
+	
+/*****************************************************************************************************************/
+	
 
 }

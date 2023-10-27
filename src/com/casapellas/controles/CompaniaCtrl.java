@@ -109,9 +109,6 @@ public class CompaniaCtrl {
 			
 		} catch (Exception e) {
 			sMndxln = "";
-//			System.out.println("Error en CompaniaCtrl.obtenerMonedaLineaN: " +
-//					"al consultar moneda para " +
-//					"linea de Negocio:"+sLineaNeg);
 			e.printStackTrace();
 		}
 		return sMndxln;

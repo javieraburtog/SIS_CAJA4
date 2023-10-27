@@ -96,7 +96,7 @@ public class SucursalCtrl {
 
 		try{
 			
-			String sql = "from Unegocio as u where u.id.codcomp = '" + sCodsuc.trim() + "'  order by codunineg";
+			String sql = "from Unegocio as u where u.id.codcomp = '" + sCodsuc.trim() + "' and u.id.tipo = 'BS' order by codunineg";
 			
 			List<Unegocio> lstResultado = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Unegocio.class, false);
 			

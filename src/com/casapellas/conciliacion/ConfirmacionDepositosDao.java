@@ -2110,15 +2110,30 @@ public class ConfirmacionDepositosDao {
 			String sCodcomp = ddlfcCompania.getValue().toString().trim();
 			lstfcSucursal = new ArrayList<SelectItem>();
 			lstfcSucursal.add(new SelectItem("NSUC","Sucursal","Seleccione la sucursal a utilizar en filtros"));
+			List<String[]>  sucursales = null;
 			
 			if(!sCodcomp.equals("NCP")){
-				Unegocio[] sucursales = new SucursalCtrl().obtenerSucursalesxCompania(sCodcomp);
-				if(sucursales!=null){
-					for (Unegocio sSucs : sucursales) 
-						lstfcSucursal.add(new SelectItem("000"+sSucs.getId().getCodunineg().trim(),
-										"000"+sSucs.getId().getCodunineg().trim() +": "+ sSucs.getId().getDesc().trim(),
-										"000"+sSucs.getId().getCodunineg().trim() +": "+ sSucs.getId().getDesc().trim()));
+				 sucursales = new SucursalCtrl().obtenerSucursalesxCompania(sCodcomp);
+				
+				 
+				 if(sucursales!=null){
+					 
+					 for (Object[] sucursal : sucursales) {
+						
+						 String unineg = String.valueOf(sucursal[0]);
+							
+							if(unineg.length() < 5 ) {
+								unineg = CodeUtil.pad(unineg, 5, "0");
+							}
+							lstfcSucursal.add(new SelectItem(String.valueOf(sucursal[0]),
+									unineg +": "+ String.valueOf(sucursal[2]).trim(),
+											String.valueOf(sucursal[2]).trim()));
+							
+									 
+					 }
+					 
 				}
+				
 			}
 			m.put("cdb_lstfcSucursal", lstfcSucursal);
 			ddlfcSucursal.dataBind();
