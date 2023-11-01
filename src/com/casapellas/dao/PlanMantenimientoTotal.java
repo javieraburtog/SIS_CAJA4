@@ -2445,11 +2445,6 @@ public class PlanMantenimientoTotal {
 			
 				String unineg = String.valueOf(sucursal[0]).trim();
 				
-				if(unineg.length() < 5 ) {
-					unineg = CodeUtil.pad(unineg, 5, "0");
-				}
-				
-				
 				sucursalesPorCompania.add(new SelectItem(String.valueOf(sucursal[0]),
 						unineg +": "+ String.valueOf(sucursal[2]).trim(),
 								String.valueOf(sucursal[2]).trim()));
