@@ -161,9 +161,13 @@ public class PlanMantenimientoTotal {
 	private HtmlLink lnkBuscarCuotasPendientes;
 	
 	public static String SELECT_ITEM_FIRST_VALUE = "00";
+	@SuppressWarnings("rawtypes")
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 	
-	
+	//Nuevos valores para JDE
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	String[] valoresJDEInsPMT = (String[]) m.get("valoresJDEInsPMT");
+	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
 	public void seleccionarCuotaParaProcesar(ActionEvent ev){
 		try {
 			
@@ -519,7 +523,7 @@ public class PlanMantenimientoTotal {
 		String codsuc = "" ;
 		String codsucSeleccionada;
 		String codunineg;
-		String tiporec ="PM";
+		String tiporec =valoresJDEInsPMT[0];
 		String strClienteNombre;
 		String strConceptoPago;
 		String strMonedaAplicada;
@@ -582,9 +586,9 @@ public class PlanMantenimientoTotal {
 				montoCuotaCOR = ((BigDecimal) CodeUtil.getFromSessionMap("pmt_MontoAnticipo")).multiply(tasaOficial) ;
 			}
 			
-			codsucSeleccionada = ddlFiltroSucursal.getValue().toString();
-			codcomp = ddlFiltroCompania.getValue().toString();
-			codsuc = datos_caja.getId().getCaco();
+			codsucSeleccionada = CodeUtil.pad(ddlFiltroCompania.getValue().toString().trim(), 5, "0");
+			codcomp = ddlFiltroCompania.getValue().toString().trim();//ddlFiltroCompania.getValue().toString();
+			codsuc = CodeUtil.pad(datos_caja.getId().getCaco(), 5, "0");//datos_caja.getId().getCaco();
 			codunineg = ddlFiltroUnidadNegocio.getValue().toString();
 			strClienteNombre = txtBusquedaNombreCliente.getValue().toString();
 			strConceptoPago = txtConceptoAnticipo.getValue().toString();
@@ -780,6 +784,10 @@ public class PlanMantenimientoTotal {
 			planMantCtrl.formas_de_pago = lstFormasDePagoRecibidas;
 			planMantCtrl.compra_venta_Cambio = lstFCVs;
 			planMantCtrl.numero_recibo_fcv = numrec_fcv;
+			
+			planMantCtrl.valoresJdeInsContado = valoresJdeInsContado;
+			planMantCtrl.valoresJDEInsPMT = valoresJDEInsPMT;
+			planMantCtrl.valoresJdeNumeracion = valoresJdeNumeracion;
 					
 			//&& =============== actualizar el registro de la cuota en Sotmpba
 			Vwbitacoracobrospmt v = (Vwbitacoracobrospmt)CodeUtil.getFromSessionMap("pmt_CuotaPendienteSeleccionada") ;
@@ -2083,7 +2091,7 @@ public class PlanMantenimientoTotal {
 			
 		try {
 			
-			lstFiltroUnidadNegocio = unidadesPorSucursal(ddlFiltroSucursal.getValue().toString());
+			lstFiltroUnidadNegocio = unidadesPorSucursal(ddlFiltroSucursal.getValue().toString().trim(),ddlFiltroCompania.getValue().toString().trim());
 			CodeUtil.putInSessionMap("pmt_lstFiltroUnidadNegocio", lstFiltroUnidadNegocio) ;
 			ddlFiltroUnidadNegocio.dataBind();
 			refreshlist.add(ddlFiltroUnidadNegocio);
@@ -2109,7 +2117,7 @@ public class PlanMantenimientoTotal {
 			ddlFiltroSucursal.dataBind();
 			refreshlist.add(ddlFiltroSucursal);
 			
-			lstFiltroUnidadNegocio = unidadesPorSucursal(ddlFiltroSucursal.getValue().toString());
+			lstFiltroUnidadNegocio = unidadesPorSucursal(ddlFiltroSucursal.getValue().toString().trim(),ddlFiltroCompania.getValue().toString().trim());
 			CodeUtil.putInSessionMap("pmt_lstFiltroUnidadNegocio", lstFiltroUnidadNegocio) ;
 			ddlFiltroUnidadNegocio.dataBind();
 			refreshlist.add(ddlFiltroUnidadNegocio);
@@ -2422,30 +2430,30 @@ public class PlanMantenimientoTotal {
 	
 	public List<SelectItem> sucursalesPorCompania(String codcomp){
 		List<SelectItem> sucursalesPorCompania =  new ArrayList<SelectItem>();
+		
+
+		List<String[]>  unegocio2 = null;
+		com.casapellas.controles.SucursalCtrl sucCtrl = new com.casapellas.controles.SucursalCtrl();
 		try {
 			
 			
 			sucursalesPorCompania.add(new SelectItem(SELECT_ITEM_FIRST_VALUE, "Seleccione Sucursal" , "Seleccione Sucursal"));
 			
-			String strSQl = " select * from " + PropertiesSystem.ESQUEMA +".Unegocio u where  u.tipo = 'BS' and trim(u.codcomp) = '"+codcomp.trim()+"' order by codunineg" ;
+			unegocio2 = sucCtrl.obtenerSucursalesxCompania( codcomp);
 			
-			@SuppressWarnings("unchecked")
-			List<Unegocio> sucursales = (ArrayList<Unegocio>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(strSQl, true, Unegocio.class);
-		 	
-			for (Unegocio s : sucursales) {
+			for (Object[] sucursal : unegocio2) {
 			
-				if(s.getId().getCodunineg().trim().chars().count()==5)
-				{
-					sucursalesPorCompania.add( 
-							new SelectItem( s.getId().getCodunineg().trim(),
-							 s.getId().getCodunineg().trim() + " " + CodeUtil.capitalize( s.getId().getDesc().trim() ) ) 
-						) ;				
-				}else
-				{sucursalesPorCompania.add( 
-						new SelectItem( "000" + s.getId().getCodunineg().trim(),
-						"000" + s.getId().getCodunineg().trim() + " " + CodeUtil.capitalize( s.getId().getDesc().trim() ) ) 
-					) ;	}
-
+				String unineg = String.valueOf(sucursal[0]).trim();
+				
+				if(unineg.length() < 5 ) {
+					unineg = CodeUtil.pad(unineg, 5, "0");
+				}
+				
+				
+				sucursalesPorCompania.add(new SelectItem(String.valueOf(sucursal[0]),
+						unineg +": "+ String.valueOf(sucursal[2]).trim(),
+								String.valueOf(sucursal[2]).trim()));
+				
 			}
 			
 		} catch (Exception e) {
@@ -2456,7 +2464,7 @@ public class PlanMantenimientoTotal {
 		return sucursalesPorCompania ;
 	}
 	
-	public List<SelectItem> unidadesPorSucursal(String codsuc){
+	public List<SelectItem> unidadesPorSucursal(String codsuc, String codcomp){
 		List<SelectItem> unidades =  new ArrayList<SelectItem>();
 		try {
 			
@@ -2467,21 +2475,24 @@ public class PlanMantenimientoTotal {
 				return unidades ;
 			}
 			
-			String strSQl = 
-					" select * from "+PropertiesSystem.ESQUEMA+".unegocio u where u.tipo in ('IS','EX') and u.codsuc = '"+codsuc.replace("000", "")+"' " +
-					" and ( select count(*) from "+PropertiesSystem.ESQUEMA+".Vf0901 f09 where trim(f09.gmmcu) = trim(u.codunineg) and f09.gmpec not in ('I','"+MetodosPagoCtrl.DEPOSITO+"')  ) > 0  order by codunineg " ;
+		
 			
-			@SuppressWarnings("unchecked")
-			List<Unegocio> unidadesNegs = (ArrayList<Unegocio>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(strSQl, true, Unegocio.class);
-		 
-			for (Unegocio s : unidadesNegs) {
-				unidades.add( 
-					new SelectItem(
-						s.getId().getCodunineg().trim(),
-						"[ "+s.getId().getCodunineg().trim() +":" +s.getId().getLinea().trim()  +" ] " + CodeUtil.capitalize( s.getId().getDesc().trim() ) 
-					)
-				) ;
+			List<String[]>  unegocio2 = null;
+			com.casapellas.controles.SucursalCtrl sucCtrl = new com.casapellas.controles.SucursalCtrl();
+			
+			unegocio2 = sucCtrl.obtenerUninegxSucursal(codsuc,codcomp);
+			
+			if( unegocio2 == null  ){
+				return unidades;
 			}
+			
+			
+			for (Object[] unidad : unegocio2) {
+				unidades.add(new SelectItem(String.valueOf(unidad[0]),
+					String.valueOf(unidad[0]) +": "+ String.valueOf(unidad[2]).trim(),
+					"U/N: " +String.valueOf(unidad[2]).trim()));	
+		}
+			
 			
 		} catch (Exception e) {
 			unidades =  new ArrayList<SelectItem>();
@@ -2500,7 +2511,7 @@ public class PlanMantenimientoTotal {
 				return  lstFiltroUnidadNegocio = (ArrayList<SelectItem>)CodeUtil.getFromSessionMap("pmt_lstFiltroUnidadNegocio") ;
 			}
 			
-			lstFiltroUnidadNegocio =  unidadesPorSucursal( ddlFiltroSucursal.getValue().toString() ) ;
+			lstFiltroUnidadNegocio =  unidadesPorSucursal( ddlFiltroSucursal.getValue().toString().trim(),ddlFiltroCompania.getValue().toString().trim() ) ;
 			
 			CodeUtil.putInSessionMap("pmt_lstFiltroUnidadNegocio", lstFiltroUnidadNegocio ) ;
 			

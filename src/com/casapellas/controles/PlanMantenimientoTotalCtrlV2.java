@@ -20,10 +20,10 @@ import com.casapellas.entidades.HistoricoReservasProformas;
 import com.casapellas.entidades.MetodosPago;
 import com.casapellas.entidades.Recibo;
 import com.casapellas.entidades.Vf0901;
-import com.casapellas.jde.creditos.CodigosJDE1;
 import com.casapellas.jde.creditos.DefaultJdeFieldsValues;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
@@ -55,9 +55,12 @@ public class PlanMantenimientoTotalCtrlV2 {
 	public  List<MetodosPago>compra_venta_Cambio;
 	public  Connection cn ;
 	public  List<String[]> numeros_batch_documento ;
-
+	public String[] valoresJdeNumeracion ;
+	public String[] valoresJDEInsPMT ;
+	public String[] valoresJdeInsContado;
+	
 	public  String  comprantesPorCompraVenta(final List<MetodosPago> formas_pago_compraVenta, List<String[]> cuentasPorMetodoPago, 
-								Vautoriz vaut, int iClienteCodigo, String unidadNegocioCaja, int numero_recibo_caja, Session session, String unidadNegociosCaja ){
+								Vautoriz vaut, int iClienteCodigo, String unidadNegocioCaja, int numero_recibo_caja, Session session, String unidadNegociosCaja, String codcomp ){
 		String strMensajeProceso = "";
 		boolean hecho = true;
 		long lngMontoFormaDePagoExt;
@@ -68,10 +71,10 @@ public class PlanMantenimientoTotalCtrlV2 {
 		try {
 			
 			
-			String companiaRpkco =  unidadNegocioCaja.substring(0,2);
+			String companiaRpkco =  codcomp;
 			double lineadoc = 0 ;
 			Date fechaRecibo = new Date();
-			String tipodocjde = PropertiesSystem.TIPODOC_REFER_P9;
+			String tipodocjde = valoresJdeInsContado[1];
 			String concepto = "RC:"+numero_recibo+" C:"+codigo_caja+" PMT:"+numero_contrato;
 			String observacion ;
 			
@@ -87,7 +90,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 			
 //			int numero_batch = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROBATCH );
 			int numero_batch = Divisas.numeroSiguienteJdeE1( );
-			int numero_documento = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int numero_documento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8], valoresJdeNumeracion[9] );
 			
 			if(numero_batch == 0) {
 				 hecho = false;
@@ -114,7 +117,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 			
 			lngMontoFormaDePagoExt = Long.parseLong( String.format("%1$.2f", bdTotalCompraVenta.doubleValue() ).replace(".", "")   );
 		
-			hecho = recCtrl.registrarBatchA92(session, fechaRecibo, CodigosJDE1.RECIBOCONTADO, numero_batch, lngMontoFormaDePagoExt, vaut.getId().getLogin(), 1, "PMT", CodigosJDE1.BATCH_ESTADO_PENDIENTE ); 
+			hecho = recCtrl.registrarBatchA92Custom(session, fechaRecibo, valoresJdeInsContado[8], numero_batch, lngMontoFormaDePagoExt, vaut.getId().getLogin(), 1, "PMT", valoresJdeInsContado[9] ); 
 			
 			if(!hecho){
 				return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera";
@@ -179,7 +182,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 								( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
 								moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, lngMontoFormaDePagoExt, concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 								mp.getTasa(),  //tasaoficial, //
-								"", observacion, ctaBnfMcu,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
+								"", observacion, codcomp,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 								companiaRpkco, "F", 0 );
 					
 					
@@ -191,7 +194,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, lngMontoFormaDePagoNac, concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, ctaBnfMcu,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
+							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
 					
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -207,7 +210,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 							( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, ctaBnfMcu,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
+							"", observacion, codcomp,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 							companiaRpkco, "F", 0);
 					
 					if(!hecho){
@@ -218,7 +221,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoNac*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial,//
-							"", observacion, ctaBnfMcu,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
+							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
 	
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -238,7 +241,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 								( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
 								moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 								mp.getTasa(),  //tasaoficial, //
-								"", observacion, ctaBnfMcu,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
+								"", observacion, codcomp,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 								companiaRpkco, "F", 0 );
 					
 					
@@ -250,7 +253,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, ((lngMontoFormaDePagoNac-lngMontoFormaDePago)*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, ctaBnfMcu,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
+							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
 					
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -266,7 +269,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 							( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, ctaBnfMcu,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
+							"", observacion, codcomp,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 							companiaRpkco, "F", 0);
 					
 					if(!hecho){
@@ -277,7 +280,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoNac-lngMontoFormaDePago), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial,//
-							"", observacion, ctaBnfMcu,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
+							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
 	
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -287,8 +290,11 @@ public class PlanMantenimientoTotalCtrlV2 {
 					
 					if(lngMontoFormaDePago!=0)
 					{
-						String sCtaObDif = "66000";
-						String sCtaSubDif = "01";
+						String comp = Integer.parseInt(codcomp)+"";
+						String[] fcvCuentaPerdiav2 = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(comp).split(",");
+						
+						String sCtaObDif = fcvCuentaPerdiav2[0];
+						String sCtaSubDif = fcvCuentaPerdiav2[1];
 						Vf0901 cuenta_diferencial  = new Divisas().validarCuentaF0901( unidadNegociosCaja, sCtaObDif, sCtaSubDif);
 						
 						if(cuenta_diferencial == null){
@@ -343,7 +349,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 		
 		String strMensajeProceso = "";
 		
-		String tipodocjde = "PV";
+		String tipodocjde = valoresJDEInsPMT[1];
 		String tipocliente = "";
 		String codbnf_aux = ""; 
 		String tipoAuxiliar = "";
@@ -464,7 +470,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 			if(formas_pago_compraVenta != null && !formas_pago_compraVenta.isEmpty() ){
 				
 				strMensajeProceso = comprantesPorCompraVenta(formas_pago_compraVenta, cuentasPorMetodoPago, vaut, iClienteCodigo, 
-						unidadNegociosCaja, numero_recibo, session, unidadNegociosCaja);
+						unidadNegociosCaja, numero_recibo, session, unidadNegociosCaja,codigo_sucursal_usuario);
 				
 				if( !strMensajeProceso.isEmpty() )
 					return 	strMensajeProceso ;
@@ -474,8 +480,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 			//&& ====================== comprobante de pasivo
 			
 			numero_batch = Divisas.numeroSiguienteJdeE1(  );
-			//numero_documento = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROPAGOVOUCHER );
-			numero_documento = Divisas.numeroSiguienteJdeDocumentoE1(CodigosJDE1.NUMEROPAGOVOUCHER);
+			numero_documento = Divisas.numeroSiguienteJdeDocumentoE1Custom(valoresJdeNumeracion[4],valoresJdeNumeracion[5]);
 		
 			if(numero_batch == 0) {
 				hecho = false;
@@ -498,11 +503,11 @@ public class PlanMantenimientoTotalCtrlV2 {
 			
 			//&& ================ grabar el encabezado del batch.
 
-			hecho = rcCtrl.registrarBatchA92(session, fechaRecibo, CodigosJDE1.BATCH_ANTICIPO_PMT, numero_batch, 
+			hecho = rcCtrl.registrarBatchA92Custom(session, fechaRecibo, valoresJDEInsPMT[8], numero_batch, 
 					(moneda_contrato.compareTo(moneda_base)==0 ? 
 							Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_cod).replace(".", "")   ) : 
 							Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_usd).replace(".", "")   )) ,
-					vaut.getId().getLogin(), 1, "PMT", CodigosJDE1.BATCH_ESTADO_PENDIENTE );
+					vaut.getId().getLogin(), 1, "PMT", valoresJDEInsPMT[9] );
 			
 			if(!hecho) {
 				return 	strMensajeProceso =" Error al grabar encabezado de Comprobante(F0011)" ;
@@ -610,7 +615,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 						(++lineadoc), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, 
 						"AA", moneda_contrato, lngMontoFormaDePago, concepto, vaut.getId().getLogin(),
 						vaut.getId().getCodapp(), tasaoficial, tipocliente, observacion, 
-						ctaBnfMcu, codbnf_aux, tipoAuxiliar, moneda_base, companiaRpkco, tipoDocxMon, 
+						companiaRpkco, codbnf_aux, tipoAuxiliar, moneda_base, companiaRpkco, tipoDocxMon, 
 						"V", iClienteCodigo, numeroContrato, moneda_base, lngMontoFormaDePagoEq);
 				
 				if(!hecho){
@@ -625,7 +630,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 			if(compra_venta_Cambio != null && !compra_venta_Cambio.isEmpty()){
 				
 				strMensajeProceso = comprantesPorCompraVenta(compra_venta_Cambio, cuentasPorMetodoPago, 
-											vaut, iClienteCodigo, unidadNegociosCaja, numero_recibo_fcv, session, unidadNegociosCaja) ;
+											vaut, iClienteCodigo, unidadNegociosCaja, numero_recibo_fcv, session, unidadNegociosCaja,codigo_sucursal_usuario) ;
 				
 				if( !(hecho = strMensajeProceso.isEmpty() ) ){
 					return strMensajeProceso = "Error al grabar el ajuste por diferencial cambiario por cambio Mixto ";
@@ -1422,7 +1427,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 				 .replace("@RPPN@" ,  Integer.toString( calendar.get(Calendar.MONTH) + 1 ))
 				 .replace("@RPCO@",   companiaRpco)  
 				 .replace("@RPICU@",  Integer.toString(nobatch))
-				 .replace("@RPICUT@", CodigosJDE1.BATCH_ANTICIPO_PMT.codigo() )
+				 .replace("@RPICUT@", valoresJDEInsPMT[8])
 				 .replace("@RPDICJ@", strFechaActualJuliana)  
 				 .replace("@RPBALJ@", "Y") 
 				 .replace("@RPPST@",  payStatusCode)  
@@ -1608,7 +1613,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 				 .replace("@RPPN@" ,  Integer.toString( calendar.get(Calendar.MONTH) + 1 ))
 				 .replace("@RPCO@",   companiaRpco)  
 				 .replace("@RPICU@",  Integer.toString(nobatch))
-				 .replace("@RPICUT@", CodigosJDE1.BATCH_ANTICIPO_PMT.codigo() )
+				 .replace("@RPICUT@", valoresJDEInsPMT[8])
 				 .replace("@RPDICJ@", strFechaActualJuliana)  
 				 .replace("@RPBALJ@", "Y") 
 				 .replace("@RPPST@",  payStatusCode)  

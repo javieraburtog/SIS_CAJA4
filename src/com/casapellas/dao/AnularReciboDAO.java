@@ -1292,22 +1292,7 @@ public class AnularReciboDAO {
 				}
 			}
 			
-//			//&& ======================== validar la compra/venta de cambio dolares
-//			Recibo reciboCompraVenta = null;
-//			List<Recibojde> batchPorReciboFichas = null ;
-//			if(rc.getRecjde() != 0){
-//				reciboCompraVenta = ReciboCtrl.obtenerFichaCV(rc.getRecjde(), caid, codcomp, codsuc,"FCV");
-//				batchPorReciboFichas = recCtrl.getEnlaceReciboJDE( caid, codsuc, codcomp, rc.getRecjde(), reciboCompraVenta.getId().getTiporec() );
-//			}
-//			
-//			//&& ======================== validar que no esten contabilizados los batchs.
-//			String numerosBatch = "";
-//			List<Recibojde> lstBatchPorRecibo = ReciboCtrl.numerosBatchsPorRecibo( caid , codsuc, codcomp, numrec, tiporec);
-//			
-//			if(lstBatchPorRecibo == null || lstBatchPorRecibo.isEmpty() ){
-//				strMsgValidacion = "No se han encontrado batchs para el recibo en gcpmcaja " ;
-//				return;
-//			}
+
 			
 			//&& ======================== validar la compra/venta de cambio dolares
 			Recibo reciboCompraVenta = null;
@@ -1315,11 +1300,7 @@ public class AnularReciboDAO {
 			if(rc.getRecjde() != 0){
 				reciboCompraVenta = ReciboCtrl.obtenerFichaCV(rc.getRecjde(), caid, codcomp, codsuc,"FCV");
 				
-//				batchPorReciboFichas = recCtrl.getEnlaceReciboJDE( caid, codsuc, codcomp, rc.getRecjde(), reciboCompraVenta.getId().getTiporec() );
-				
-				//Cambio hecho por LFonseca 2018-08-14
-				//El Objeto reciboCompraVenta en ocasiones viene en null, haciendo que esta condicion
-				//reciboCompraVenta.getId().getTiporec() de error y no deje anular el recibo.
+
 				if(reciboCompraVenta!=null){
 					batchPorReciboFichas = recCtrl.getEnlaceReciboJDE( caid, codsuc, codcomp, rc.getRecjde(), reciboCompraVenta.getId().getTiporec() );
  
@@ -1532,10 +1513,7 @@ public class AnularReciboDAO {
 			if( lstFacturasPorRecibo != null && !lstFacturasPorRecibo.isEmpty() ){
 				CodeUtil.putInSessionMap("anrec_facturasPorRecibo", lstFacturasPorRecibo);
 			}
-			
-			
-			//TODO verificar si tiene liga el recibo de primas y reservas.
-			
+
 						
 			if(rc.getId().getTiporec().compareTo("FN") == 0 ){
 				

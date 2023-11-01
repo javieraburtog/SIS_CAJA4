@@ -2605,5 +2605,40 @@ public class Divisas {
 
 			return numeroSiguiente;
 		}
+		
+		public static int numeroSiguienteJdeDocumentoE1Custom( String posicion,String codigo) {
+			int numeroSiguiente = 0;
+
+			try {
+				
+				String strQuery = "{CALL " + PropertiesSystem.ESQUEMA + ".GETDOCUMENTNUMBERFROMF0002( ?, ? )}";
+				
+				AllConectionMngt conectionMngt = new AllConectionMngt();
+				Connection cn = conectionMngt.getSimpleDriverConnection();
+
+				CallableStatement callableStatement = cn.prepareCall(strQuery);
+				callableStatement.setString(1, codigo);
+				callableStatement.registerOutParameter(2, java.sql.Types.INTEGER);
+				
+				LogCajaService.CreateLog("numeroSiguienteJdeDocumentoE1", "QRY", strQuery);
+				
+				callableStatement.executeUpdate();
+				Object out2 = callableStatement.getObject(2);
+
+				String sResultado = out2.toString();
+				
+				numeroSiguiente = Integer.parseInt( sResultado.trim() );
+				LogCajaService.CreateLog("numeroSiguienteJdeE1", "INFO", "NoBatchGenerado: " + String.valueOf(numeroSiguiente));
+
+				cn.close();
+
+			} catch (Exception e) {
+				LogCajaService.CreateLog("numeroSiguienteJdeDocumentoE1", "ERR", "Error al Generar No Documento" + e.getMessage());
+				e.printStackTrace();
+				numeroSiguiente = 0;
+			}
+
+			return numeroSiguiente;
+		}
 	
 }

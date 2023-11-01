@@ -160,8 +160,6 @@ public class FacContadoDAO {
 	private HtmlOutputText lblFechaVenceT;
 	private HtmlInputText txtFechaVenceT;
 
-	String sObjeto = "43100";
-	String sSubsidiaria = "10";
 	String sCredyCobMail = "creditoycobro@casapellas.com.ni";
 
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
@@ -1220,7 +1218,7 @@ public class FacContadoDAO {
 			for(int i = 0;i < lstPagos.size();i++){
 				mPago = (MetodosPago)lstPagos.get(i);
 				if(mPago.getMetodo().equals(MetodosPagoCtrl.TARJETA) && mPago.getVmanual().equals("2")){
-					 rd = rc.leerPagoRecibo(iCaid,sCodSuc,sCodComp,iNumrec, "CO",mPago.getMetodo(),
+					 rd = rc.leerPagoRecibo(iCaid,sCodSuc,sCodComp,iNumrec, valoresJdeIns[0],mPago.getMetodo(),
 											mPago.getReferencia(),mPago.getReferencia2(),mPago.getReferencia3(),
 											mPago.getReferencia4(),mPago.getMoneda());
 					//leer terminal por afiliado caja
@@ -1816,7 +1814,7 @@ public class FacContadoDAO {
 									}
 								
 								}else{
-									lblMensajeValidacion.setValue("La cuenta: "+ dev.getUnineg()+"."+ sObjeto+"."+sSubsidiaria+" no existe en el mestro de cuentas!!!");
+									lblMensajeValidacion.setValue("La cuenta: "+ dev.getUnineg()+" no existe en el mestro de cuentas!!!");
 									return false;
 								}
 							}else{
@@ -4999,7 +4997,7 @@ public class FacContadoDAO {
 					nombreEvento= " recCtrl.fillEnlaceMcajaJde:(I) ["+sdf.format(new Date())+"] << -- >>" ;
 					
 
-					bContabilizado = recCtrl.fillEnlaceMcajaJde(s, tx, iNumrec, sCodComp,iNoDocumentoFor, iNoBatch, iCajaId, f55ca01.getId().getCaco(), "A", "CO");
+					bContabilizado = recCtrl.fillEnlaceMcajaJde(s, tx, iNumrec, sCodComp,iNoDocumentoFor, iNoBatch, iCajaId, f55ca01.getId().getCaco(), "A", valoresJdeIns[0]);
 					
 					nombreEvento+= "(F) ["+sdf.format(new Date())+"]";
 
@@ -5210,7 +5208,7 @@ public class FacContadoDAO {
 			sTipoDoc		= new String[lstFacturasSelected.size()];
 			Solicitud sol = null;
 			
-			BitacoraSecuenciaReciboService.insertarLogReciboNumerico(iCajaId,iNumRec,sCodComp,CodeUtil.pad(f55ca01.getId().getCaco(), 5, "0"),"CO");
+			BitacoraSecuenciaReciboService.insertarLogReciboNumerico(iCajaId,iNumRec,sCodComp,CodeUtil.pad(f55ca01.getId().getCaco(), 5, "0"),valoresJdeIns[0]);
 			
 			if (cmbTiporecibo.getValue().toString().equals("AUTOMATICO")) {// RECIBO AUTOMATICO
 			
@@ -5228,7 +5226,7 @@ public class FacContadoDAO {
 						dMontoRec, dCambio, sConcepto, dFecha, dHora,
 						iCodCli, sNomCli, sCajero, iCajaId, f55ca01.getId()
 								.getCaco(), vautoriz[0].getId()
-								.getCoduser(), "CO", 0, "", 0, new Date(),
+								.getCoduser(), valoresJdeIns[0], 0, "", 0, new Date(),
 						hFac.getCodunineg().trim(), "", hFac.getMoneda());
 				
 				if (reciboHeader) {
@@ -5241,7 +5239,7 @@ public class FacContadoDAO {
 					
 					reciboDetalle = conCtrl.registrarDetalleRecibo(session,tx,
 										iNumRec, iNumRecm, sCodComp,lstMetodosPago2, 
-										iCajaId, f55ca01.getId().getCaco(), "CO");
+										iCajaId, f55ca01.getId().getCaco(), valoresJdeIns[0]);
 					
 					if (reciboDetalle) {
 						
@@ -5257,7 +5255,7 @@ public class FacContadoDAO {
 						// ************************************************************************
 						enlace = conCtrl.fillEnlaceReciboFac(session, tx,iNumRec,
 								sCodComp, iNumFac, dMonto,sTipoDoc, iCajaId,
-								sCodsuc, sPartida,sCodunineg,"CO",iCodCli,
+								sCodsuc, sPartida,sCodunineg,valoresJdeIns[0],iCodCli,
 								new FechasUtil().DateToJulian(dFecha) );
 						// ************************************************************************
 //						enlace = true;
@@ -5267,7 +5265,7 @@ public class FacContadoDAO {
 									sol = (Solicitud) lstSolicitud.get(i);
 									iNumSol = solCtrl.getNumeroSolicitud();
 									if (iNumSol > 0) {
-										bSolicitud = solCtrl.registrarSolicitud(session,tx,iNumSol,iNumRec,"CO",iCajaId,
+										bSolicitud = solCtrl.registrarSolicitud(session,tx,iNumSol,iNumRec,valoresJdeIns[0],iCajaId,
 														sCodComp,f55ca01.getId().getCaco(),sol.getId().getReferencia(),
 														sol.getAutoriza(),dFecha,sol.getObs(),sol.getMpago(),sol.getMonto(),sol.getMoneda());
 									} else {
@@ -5299,7 +5297,7 @@ public class FacContadoDAO {
 						dMontoRec, dCambio, sConcepto, dFecha, dHora,
 						iCodCli, sNomCli, sCajero, iCajaId, f55ca01.getId()
 								.getCaco(), vautoriz[0].getId()
-								.getCoduser(), "CO", 0, "", 0, dFecha, hFac
+								.getCoduser(), valoresJdeIns[0], 0, "", 0, dFecha, hFac
 								.getCodunineg().trim(), "", hFac
 								.getMoneda());
 				
@@ -5307,7 +5305,7 @@ public class FacContadoDAO {
 					// guardar detalle de recibo
 					lstMetodosPago2 = ponerCodigoBanco(lstMetodosPago);
 					reciboDetalle = conCtrl.registrarDetalleRecibo(session,tx, iNumRec, iNumRecm, sCodComp,
-							lstMetodosPago2, iCajaId, f55ca01.getId().getCaco(), "CO");
+							lstMetodosPago2, iCajaId, f55ca01.getId().getCaco(), valoresJdeIns[0]);
 					
 					if (reciboDetalle) {
 						// llenar enlaces entre recibo y factura leer facturas seleccionadas
@@ -5324,7 +5322,7 @@ public class FacContadoDAO {
 						//--------------------------------------------------------
 						enlace = conCtrl.fillEnlaceReciboFac(session, tx,iNumRec, 
 								sCodComp, iNumFac, dMonto, sTipoDoc, iCajaId, 
-								sCodsuc, sPartida,sCodunineg,"CO", iCodCli,
+								sCodsuc, sPartida,sCodunineg,valoresJdeIns[0], iCodCli,
 								new FechasUtil().DateToJulian(dFecha) );
 						//--------------------------------------------------------
 						
@@ -5337,7 +5335,7 @@ public class FacContadoDAO {
 									sol = (Solicitud) lstSolicitud.get(i);
 									iNumSol = solCtrl.getNumeroSolicitud();
 									if (iNumSol > 0) {
-										bSolicitud = solCtrl.registrarSolicitud(session,tx,iNumSol,iNumRec,"CO",iCajaId,sCodComp,
+										bSolicitud = solCtrl.registrarSolicitud(session,tx,iNumSol,iNumRec,valoresJdeIns[0],iCajaId,sCodComp,
 														f55ca01.getId().getCaco(),sol.getId().getReferencia(),sol.getAutoriza(),
 														dFecha, sol.getObs(),sol.getMpago(),sol.getMonto(),sol.getMoneda());
 									} else {
@@ -5382,8 +5380,8 @@ public class FacContadoDAO {
 					if (m.get("bdTasa") != null) {
 						bdTasa = (BigDecimal) m.get("bdTasa");
 					}
-					cambio = conCtrl.registrarCambio(session, tx, iNumRec,sCodComp, sLblCambio1, divisas.formatStringToDouble(sCambio1),iCajaId, f55ca01.getId().getCaco(), bdTasa,"CO");
-					cambio = conCtrl.registrarCambio(session, tx, iNumRec,sCodComp, sLblCambio2, divisas.formatStringToDouble(sCambio2),iCajaId, f55ca01.getId().getCaco(), bdTasa,"CO");						
+					cambio = conCtrl.registrarCambio(session, tx, iNumRec,sCodComp, sLblCambio1, divisas.formatStringToDouble(sCambio1),iCajaId, f55ca01.getId().getCaco(), bdTasa,valoresJdeIns[0]);
+					cambio = conCtrl.registrarCambio(session, tx, iNumRec,sCodComp, sLblCambio2, divisas.formatStringToDouble(sCambio2),iCajaId, f55ca01.getId().getCaco(), bdTasa,valoresJdeIns[0]);						
 
 				} else {
 					sCambio1 = txtCambio.getValue().toString();
@@ -5406,7 +5404,7 @@ public class FacContadoDAO {
 					cambio = conCtrl.registrarCambio(session, tx, iNumRec,
 								sCodComp, sLblCambio1, 
 								divisas.formatStringToDouble(sCambio1),
-								iCajaId, f55ca01.getId().getCaco(), bdTasa,"CO");
+								iCajaId, f55ca01.getId().getCaco(), bdTasa,valoresJdeIns[0]);
 				}
 			} else {
 				throw new Exception("");
@@ -6119,7 +6117,7 @@ public class FacContadoDAO {
 							iCajaId, f55ca01.getId().getCaco(), 
 							vautoriz[0].getId().getCoduser(), "DCO", 
 							Integer.parseInt(lblNoReciboOdev.getValue().toString()),
-							"CO", 0, dFecha,((Hfactura) lstFacturasSelected.get(0))
+							valoresJdeIns[0], 0, dFecha,((Hfactura) lstFacturasSelected.get(0))
 							.getCodunineg().trim(),"",hFac.getMoneda());
 					
 					
@@ -6168,7 +6166,7 @@ public class FacContadoDAO {
 							f55ca01.getId().getCaco(), 
 							vautoriz[0].getId().getCoduser(), "DCO", 
 							Integer.parseInt(lblNoReciboOdev.getValue().toString()), 
-							"CO", 0, dFecha, ((Hfactura) lstFacturasSelected.get(0))
+							valoresJdeIns[0], 0, dFecha, ((Hfactura) lstFacturasSelected.get(0))
 								.getCodunineg().trim(), "", hFac.getMoneda());
 					
 					
@@ -7696,7 +7694,7 @@ public class FacContadoDAO {
 								hDev.getNofactura(), hDev.getTotal(), 
 								hDev.getTipofactura(),f5.getId().getCaid(),
 								f5.getId().getCaco(), "", hDev.getCodunineg(), 
-								"CO", hDev.getCodcli(), hDev.getFechadev());
+								valoresJdeIns[0], hDev.getCodcli(), hDev.getFechadev());
 						
 						if(!bHecho){
 							sMensaje = "No se ha podido realizar la operación de procesar la devolución: RECIBOFAC";
@@ -14575,7 +14573,7 @@ public class FacContadoDAO {
 		double dMontoFicha = 0;
 		String codsuc = new String("");
 		String codcomp = new String("");
-		String tiporec = "CO";
+		String tiporec = valoresJdeIns[0];
 		String msgError = new String("");
 		F55ca014 dtComp = null;
 		
@@ -14938,7 +14936,7 @@ public class FacContadoDAO {
 				if(aplicado) {				
 					tx.commit();
 					// Marcar el recibo como satisfactorio
-					BitacoraSecuenciaReciboService.actualizarSatisfactorioLogReciboNumerico(caid, iNumrec, codcomp,codsuc, "CO");
+					BitacoraSecuenciaReciboService.actualizarSatisfactorioLogReciboNumerico(caid, iNumrec, codcomp,codsuc, valoresJdeIns[0]);
 					
 					LogCajaService.CreateLog("procesaReciboContado", "INFO", "FIN METODO => procesaReciboContado");
 				}
@@ -15357,7 +15355,7 @@ public class FacContadoDAO {
 							if (bHayFicha) {
 								// actualizar el recibo con el numero de ficha
 	 							recCtrl.actualizarNoFicha(cn, iNumrec, Integer.parseInt(m.get("iNoFicha").toString()),
-								f55ca01.getId().getCaid(), hFac.getCodcomp(), f55ca01.getId().getCaco(), "CO");
+								f55ca01.getId().getCaid(), hFac.getCodcomp(), f55ca01.getId().getCaco(), valoresJdeIns[0]);
 								cn.commit();
 							}
 							
@@ -15376,7 +15374,7 @@ public class FacContadoDAO {
 									insertado = recCtrl.actualizarReferenciasRecibo(
 											iNumrec, iCajaId, sCodComp,
 											f55ca01.getId().getCaco(),
-											"CO", lstMetodosPago);
+											valoresJdeIns[0], lstMetodosPago);
 									if(insertado){
 										imprimirVoucher(lstMetodosPago,sCodComp,"V", f14);
 									}else{
@@ -15420,7 +15418,7 @@ public class FacContadoDAO {
 								getP55recibo().setNORECIBO(bdNumrec);
 								getP55recibo().setIDEMPRESA(sCodComp.trim());
 								getP55recibo().setIDSUCURSAL(f55ca01.getId().getCaco());
-								getP55recibo().setTIPORECIBO("CO");
+								getP55recibo().setTIPORECIBO(valoresJdeIns[0]);
 								getP55recibo().setRESULTADO("");
 								getP55recibo().setCOMANDO("");
 								getP55recibo().invoke();

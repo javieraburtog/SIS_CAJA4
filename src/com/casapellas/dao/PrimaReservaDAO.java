@@ -288,7 +288,7 @@ public class PrimaReservaDAO {
 			int numero_proforma = 0;
 			
 			String codcomp = cmbCompanias.getValue().toString();
-			String codsuc = ddlFiltrosucursal.getValue().toString();
+			String codsuc = cmbCompanias.getValue().toString().trim();
 			String strProformaNumero = txtNoItem.getValue().toString().trim();
 			String strCodigoCliente = lblCodigoSearch.getValue().toString().trim();
 			String monedaAplicada = ddlMonedaAplicada.getValue().toString();
@@ -666,8 +666,7 @@ public class PrimaReservaDAO {
 
 			sCodunineg = ddlFiltrounineg.getValue().toString();
 			if(!sCodunineg.equals("UN")){
-				sLinea = (sCodunineg.split(":"))[1];
-				sCodunineg = (sCodunineg.split(":"))[0];						
+				sLinea = (sCodunineg.trim().substring(2,4));									
 			}
 	
 			lstResult = f36.buscarDocsxLinea(cmbCompanias.getValue().toString(), sLinea);
@@ -2364,14 +2363,17 @@ public class PrimaReservaDAO {
 /*********************************************************************************/
 /** Llenar la lista de unidades de negocio a partir de la sucursal seleccionada **/
 	public void cambiarSucursal(ValueChangeEvent ev){
-		String sCodsuc;
+		String sCodsuc,sCodComp;
 		
 		try {
 			ddlTipodoc.dataBind();
-			sCodsuc = ddlFiltrosucursal.getValue().toString();
-			
+			sCodsuc = ddlFiltrosucursal.getValue().toString().trim();
+			sCodComp = cmbCompanias.getValue().toString();
 			limpiarPantalla( );
 			restablecerEstilos( );
+
+			List<String[]>  unegocio2 = null;
+			com.casapellas.controles.SucursalCtrl sucCtrl = new com.casapellas.controles.SucursalCtrl();
 			
 			//esconder datos de solicitar contrato
 			chkContrato.setStyle("width: 20px; display: none");chkContrato.setChecked(true);
@@ -2383,18 +2385,19 @@ public class PrimaReservaDAO {
 			}else{
 				
 				List<SelectItem> lstUnineg = new ArrayList<SelectItem>();
-				Unegocio[] unegocio = null;
-				SucursalCtrl sucCtrl = new SucursalCtrl();
-				unegocio = sucCtrl.obtenerUninegxSucursalV2(sCodsuc);
 				
-				if(unegocio!=null && unegocio.length>0){
+
+				unegocio2 = sucCtrl.obtenerUninegxSucursal(sCodsuc,sCodComp);
+				
+				if(unegocio2!=null && unegocio2.size()>0){
 					
 					lstUnineg.add(new SelectItem("UN","Unidad de Negocio","Seleccione la Unidad de negocio a utilizar en el pago"));
-					for(int i = 0; i < unegocio.length; i ++){
-						lstUnineg.add(new SelectItem(unegocio[i].getId().getCodunineg().trim()+":" + unegocio[i].getId().getLinea(),
-								unegocio[i].getId().getCodunineg().trim()+": " + unegocio[i].getId().getDesc().trim()
-								));
-					}
+			
+					for (Object[] unidad : unegocio2) {
+						lstUnineg.add(new SelectItem(String.valueOf(unidad[0]),
+							String.valueOf(unidad[0]) +": "+ String.valueOf(unidad[2]).trim(),
+							"U/N: " +String.valueOf(unidad[2]).trim()));	
+				}
 					m.put("pr_lstFiltrounineg", lstUnineg);
 					ddlFiltrounineg.dataBind();
 				}
@@ -2816,7 +2819,7 @@ public void cancelarIncersion(ActionEvent ev){
 			String sMarca  = cmbMarcas.getValue().toString().trim();
 			String sModelo = cmbModelos.getValue().toString().trim();
 			String sNoItem = txtNoItem.getValue().toString().trim();
-			String codsucProf = CodeUtil.pad(ddlFiltrosucursal.getValue().toString().trim(), 5, "0"); //"000" + ddlFiltrosucursal.getValue().toString();
+			String codsucProf = CodeUtil.pad(cmbCompanias.getValue().toString().trim(), 5, "0"); 
 			
 			if( chkValidarProformaRepuestos.isChecked() ){
 				try {
@@ -3163,7 +3166,7 @@ public void cancelarIncersion(ActionEvent ev){
 				.replace("@GCPMCAJA",PropertiesSystem.ESQUEMA )
 				.replace("@CAID", Integer.toString(caid) )
 				.replace("@CODCOMP", compRc.trim() )	
-				.replace("@CODSUC",	 "000" + ddlFiltrosucursal.getValue().toString().trim() )
+				.replace("@CODSUC",	 "000" + cmbCompanias.getValue().toString().trim() )
 				.replace("@CODUNINEG",  ddlFiltrounineg.getValue().toString().split(":")[0])	
 				.replace("@CODCLI",	Integer.toString(iCodCli) )
 				.replace("@NUMREC", Integer.toString(iNumRec) )
@@ -3411,7 +3414,7 @@ public void cancelarIncersion(ActionEvent ev){
 				sMarca  = cmbMarcas.getValue().toString().trim();
 				sModelo = cmbModelos.getValue().toString().trim();
 				sNoItem = txtNoItem.getValue().toString().trim();
-				String codsucProf = "000" + ddlFiltrosucursal.getValue().toString();
+				String codsucProf = "000" + cmbCompanias.getValue().toString();
 								
 				//------------- obtener el número del último recibo, sumarle 1 y actualizarlo.
 				iNumRec = rcCtrl.obtenerUltimoRecibo(null, null, iCajaId, sCodComp);
@@ -3885,7 +3888,7 @@ public boolean validarDatosRecibo(){
 			int codigo_cliente = Integer.parseInt(lblCodigoSearch.getValue().toString().trim());
 			int numero_proforma = Integer.parseInt(txtNoItem.getValue().toString().trim());
 			String codcompProf = cmbCompanias.getValue().toString();
-			String codsucProf = ddlFiltrosucursal.getValue().toString();
+			String codsucProf = cmbCompanias.getValue().toString();
 			String monedaAplicada = ddlMonedaAplicada.getValue().toString();
 			codsucProf = "000"+codsucProf;
 			
@@ -6056,7 +6059,7 @@ public void cleanWindow(){
 		
  		List lstCajas = (List)m.get("lstCajas");
 		ReciboCtrl recCtrl = new ReciboCtrl();
-		String sCodcomp = cmbCompanias.getValue()!=null? cmbCompanias.getValue().toString(): "E01";
+		String sCodcomp = cmbCompanias.getValue()!=null? cmbCompanias.getValue().toString(): "10";
 		int iCaid = ((Vf55ca01)lstCajas.get(0)).getId().getCaid();
 		
 		lblNumeroRecibo = recCtrl.obtenerUltimoRecibo(null, null, iCaid, sCodcomp) + "";		
@@ -7502,23 +7505,25 @@ public List getLstFiltrosucursal() {
 			List lstSuc = new ArrayList();
 			lstSuc.add(new SelectItem("SUC","Sucursal","Seleccione la Sucursal a utilizar en el pago"));
 			
-			String sCodcomp = cmbCompanias.getValue().toString();
-			Unegocio[] unegocio = null;
-			SucursalCtrl sucCtrl = new SucursalCtrl();
-			unegocio = sucCtrl.obtenerSucursalesxCompania(sCodcomp);
-			for(int i = 0; i < unegocio.length; i ++){
+			String sCodcomp = cmbCompanias.getValue().toString().trim();
+			List<String[]>  unegocio2 = null;
+			com.casapellas.controles.SucursalCtrl sucCtrl = new com.casapellas.controles.SucursalCtrl();
+			unegocio2 = sucCtrl.obtenerSucursalesxCompania( cmbCompanias.getValue().toString() );
+			
+			for (Object[] sucursal : unegocio2) {
+			
+				String unineg = String.valueOf(sucursal[0]).trim();
 				
-				
-				String unineg = unegocio[i].getId().getCodcomp().trim();
 				if(unineg.length() < 5 ) {
 					unineg = CodeUtil.pad(unineg, 5, "0");
-				}
+				}			
 				
-				lstSuc.add(new SelectItem(unegocio[i].getId().getCodcomp().trim(),
-						   unineg +": "+ unegocio[i].getId().getDesc().trim(),
-						   unegocio[i].getId().getDesc().trim()));
+				lstSuc.add(new SelectItem(String.valueOf(sucursal[0]),
+						unineg +": "+ String.valueOf(sucursal[2]).trim(),
+								String.valueOf(sucursal[2]).trim()));
 				
 			}
+			
 			
 			lstFiltrosucursal = lstSuc;
 			m.put("pr_lstFiltrosucursal", lstSuc);

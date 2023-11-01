@@ -344,18 +344,7 @@ public class FacturaContadoCtrl {
 			
 			lstResult = (ArrayList<Df4211>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(strSql.replace("@DF4211X", "DF42119"), true, Df4211.class );		
 			
-			/*
-			sql = "from Df4211 as f where trim(f.id.codunineg) = '"
-					+ f.getId().getCodunineg().trim() + "'" 
-					+ " and f.id.nofactura = " + f.getId().getNofactura()
-					+ " and f.id.tipofactura='" + f.getId().getTipofactura() + "'" 
-					+ " and f.id.codsuc = '" + f.getId().getCodsuc() + "'" 
-					+ " and f.id.codcli = "+ f.getId().getCodcli()
-					+ " and f.id.fecha = "+f.getId().getFecha();
-			
-			lstResult = session.createQuery(sql).list();*/
-			
-			
+					
 		}catch(Exception ex){
 			ex.printStackTrace(); 
 		} 

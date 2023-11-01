@@ -44,6 +44,7 @@ import org.apache.commons.collections.Predicate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.casapellas.controles.ClsParametroCaja;
 import com.casapellas.controles.DonacionesCtrl;
 import com.casapellas.controles.SendMailsCtrl;
 import com.casapellas.controles.VerificarFacturaProceso;
@@ -3580,9 +3581,9 @@ else{//facturas en cor F: COR
 			if(txtParametroCredito.getValue() != null) {
 				strParametro = txtParametroCredito.getValue().toString().trim();
 				sMoneda = cmbFiltroMonedas.getValue().toString();
-				sCodComp = ddlCompaniaCre.getValue().toString();
+				sCodComp = ddlCompaniaCre.getValue().toString().trim();
 				sCodunineg = ddlUninegCred.getValue().toString();
-				sCodSuc = ddlSucursalCred.getValue().toString();
+				sCodSuc =  CodeUtil.pad( sCodComp, 5, "0");
 				int busqueda = 1;
 				if (m.get("strBusquedaCredito") != null){
 					busqueda = Integer.parseInt((String)m.get("strBusquedaCredito"));
@@ -3828,28 +3829,58 @@ else{//facturas en cor F: COR
 /******************************************************************************************************************/
 	public void onCompaniaChange(ValueChangeEvent ev){
 		String sCodComp = "";
-		Unegocio[] unegocio = null;
+
+		List<String[]>  unegocio2 = null;
+		com.casapellas.controles.SucursalCtrl sucCtrl = new com.casapellas.controles.SucursalCtrl();
 		try{
 			sCodComp = ddlCompaniaCre.getValue().toString();
 			if(!sCodComp.equals("10")){
-				//
-				SucursalCtrl sucCtrl = new SucursalCtrl();
-				//
-				unegocio = sucCtrl.obtenerSucursalesxCompania(sCodComp);
+			
 				
 				List lstFiltro = new ArrayList();				
 				lstFiltro.add(new SelectItem("00010","Todas","Seleccione una Compañía primero"));
-				for(int i = 0; i < unegocio.length; i ++){
-					lstFiltro.add(new SelectItem(unegocio[i].getId().getCodunineg().trim(),unegocio[i].getId().getCodunineg().trim() + ": " + unegocio[i].getId().getDesc().trim(),unegocio[i].getId().getCodunineg().trim()));
+				
+				unegocio2 = sucCtrl.obtenerSucursalesxCompania( ddlCompaniaCre.getValue().toString() );
+				
+				for (Object[] sucursal : unegocio2) {
+				
+					String unineg = String.valueOf(sucursal[0]).trim();
+					
+					if(unineg.length() < 5 ) {
+						unineg = CodeUtil.pad(unineg, 5, "0");
+					}
+					
+					
+					lstFiltro.add(new SelectItem(String.valueOf(sucursal[0]),
+							unineg +": "+ String.valueOf(sucursal[2]).trim(),
+									String.valueOf(sucursal[2]).trim()));
+					
 				}
+				
 				m.put("lstSucursalCred", lstFiltro);	
 				ddlSucursalCred.dataBind();
 				//
 				realizarBusquedaFacturas();
 			}else{
 				List lstFiltro = new ArrayList();				
-				lstFiltro.add(new SelectItem("00010","Todas","Seleccione una Compañía primero"));				
-				m.put("lstSucursalCred", lstFiltro);
+				unegocio2 = sucCtrl.obtenerSucursalesxCompania( ddlCompaniaCre.getValue().toString() );
+				
+				for (Object[] sucursal : unegocio2) {
+				
+					String unineg = String.valueOf(sucursal[0]).trim();
+					
+					if(unineg.length() < 5 ) {
+						unineg = CodeUtil.pad(unineg, 5, "0");
+					}
+					
+					
+					lstFiltro.add(new SelectItem(String.valueOf(sucursal[0]),
+							unineg +": "+ String.valueOf(sucursal[2]).trim(),
+									String.valueOf(sucursal[2]).trim()));
+					
+				}
+				
+				m.put("lstSucursalCred", lstFiltro);	
 				ddlSucursalCred.dataBind();
 				lstFiltro = new ArrayList();				
 				lstFiltro.add(new SelectItem("10","Todas","Seleccione una Sucursal primero"));				
@@ -3863,19 +3894,33 @@ else{//facturas en cor F: COR
 /*************************************************************************************************/
 /*************************************************************************************************/
 public void onSucursalChange(ValueChangeEvent ev){
-	String sCodSuc = "";
+	String sCodsuc,sCodComp;
 	Unegocio[] unegocio = null;
 	try{
-		sCodSuc = ddlSucursalCred.getValue().toString();
-		sCodSuc = sCodSuc.substring(3,5);
-		if(!sCodSuc.equals("10")){
-			SucursalCtrl sucCtrl = new SucursalCtrl();
-			unegocio = sucCtrl.obtenerUninegxSucursal(sCodSuc);
+
+		sCodComp = ddlCompaniaCre.getValue().toString();
+		sCodsuc = ddlSucursalCred.getValue().toString();
+		if(!sCodsuc.equals("10")){
+			
 			List lstFiltro = new ArrayList();
 			lstFiltro.add(new SelectItem("10","Todas","Seleccione una Sucursal primero"));
-			for(int i = 0; i < unegocio.length; i ++){
-				lstFiltro.add(new SelectItem(unegocio[i].getId().getCodunineg().trim(),unegocio[i].getId().getCodunineg().trim() + ": " + unegocio[i].getId().getDesc().trim(),unegocio[i].getId().getCodunineg().trim()));
+			
+			List<String[]>  unegocio2 = null;
+			com.casapellas.controles.SucursalCtrl sucCtrl = new com.casapellas.controles.SucursalCtrl();
+			
+			unegocio2 = sucCtrl.obtenerUninegxSucursal(sCodsuc,sCodComp);
+			
+			if( unegocio2 == null  ){
+				return;
 			}
+			
+			
+			for (Object[] unidad : unegocio2) {
+				lstFiltro.add(new SelectItem(String.valueOf(unidad[0]),
+					String.valueOf(unidad[0]) +": "+ String.valueOf(unidad[2]).trim(),
+					"U/N: " +String.valueOf(unidad[2]).trim()));	
+		}
+			
 			m.put("lstUninegCred", lstFiltro);	
 			ddlUninegCred.dataBind();
 			//
@@ -3892,9 +3937,6 @@ public void onSucursalChange(ValueChangeEvent ev){
 	}
 }
 	
-/*************************************************************************************************/
-/*************************************************************************************************/
-			
 	public void agregarFacturaRecibo(ActionEvent e){
 		List lstAgregarFactura;
 		ArrayList<Credhdr>lstFacturaSelected;
@@ -4017,7 +4059,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 			sMoneda = cmbFiltroMonedas.getValue().toString();
 			sCodComp = ddlCompaniaCre.getValue().toString();
 			sCodunineg = ddlUninegCred.getValue().toString();
-			sCodSuc = ddlSucursalCred.getValue().toString();
+			sCodSuc = CodeUtil.pad(sCodComp, 5, "0");
 			
 			if (dcFechaDesde.getValue() != null){
 				dFechaDesde = (Date)dcFechaDesde.getValue();	
