@@ -1127,7 +1127,7 @@ public class IngExtraordinarioDAO {
 										//-------Seleccionar la sucursal de la unidad de negocio del primer metodo de pago.
 										if(i==0)
 											//sReciboSuc += sCtaMpago[2];
-											sReciboSuc = CodeUtil.pad(sCtaMpago[2], 5, "0");
+											sReciboSuc = sCtaMpago[2]; //CodeUtil.pad(sCtaMpago[2], 5, "0");
 										
 										sIdctampago = sCtaMpago[1];
 										
@@ -1169,7 +1169,7 @@ public class IngExtraordinarioDAO {
 										//------Seleccionar la sucursal de la unidad de negocio del primer metodo de pago.
 										if(i==0)
 											//sReciboSuc += sCtaMpago[2];
-											sReciboSuc = CodeUtil.pad( sCtaMpago[2], 5, "0");
+											sReciboSuc = sCtaMpago[2];//CodeUtil.pad( sCtaMpago[2], 5, "0");
 										
 										if(sMonMpago.equals(sMonedaBase)){
 											iMtodomes =   (long)dv.roundDouble(dMtoequiv*dTasaOf*100*-1);
@@ -6378,11 +6378,6 @@ public boolean validarSolicitud() {
 				for (Object[] sucursal : unegocio) {
 				
 					String unineg = String.valueOf(sucursal[0]);
-					
-					if(unineg.length() < 5 ) {
-						unineg = CodeUtil.pad(unineg, 5, "0");
-					}
-					
 					
 					lstSuc.add(new SelectItem(String.valueOf(sucursal[0]),
 							unineg +": "+ String.valueOf(sucursal[2]).trim(),
