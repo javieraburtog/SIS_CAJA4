@@ -29,7 +29,11 @@ import com.infragistics.faces.input.component.html.HtmlDropDownList;
  * Última modificación: Carlos Manuel Hernández Morrison
  * Modificado por.....:	02/03/2010
  * Descripción:.......: manejo de datos para el reporte de transacciones JDE. 
+ * Modificado Por: Daniel Sebastian Cordero
+ * Fecha Modificacion: 03 Nov 2023
+ * 
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class RpttransjdeDAO {
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 	
@@ -100,7 +104,7 @@ public class RpttransjdeDAO {
 /*********************************************************************************/
 /** Validar y ejecutar la búsqueda a partir de los valores de los filtros       **/
 	public void buscarTransJDE(ActionEvent ev){
-		String sCaid,sCodcomp,sNomcomp;
+		String sCaid,sCodcomp,sNomcomp, sCodSuc;
 		Date dtFechaini,dtFechafin;
 		List lstTransJde= new ArrayList(),lstTransCO = new ArrayList(),lstTransCR   = new ArrayList();
 		List lstTransPR = new ArrayList(),lstTrasDep = new ArrayList(),lstHeaderRpt = new ArrayList();
@@ -142,7 +146,6 @@ public class RpttransjdeDAO {
 							
 							if(lstTransJde != null && lstTransJde.size()>0){
 								rHeader  = new TransJdeHeaderR();				
-								int iCo=0,iCr=0,iPr=0,iD=0;
 																
 								//--------- Datos para el encabezado del reporte.
 								sNomcomp   = cCtrl.obtenerNombreComp(sCodcomp, caja.getId().getCaid(), null, null);
@@ -150,9 +153,10 @@ public class RpttransjdeDAO {
 								rHeader.setCodcomp(sCodcomp);
 								rHeader.setSfechainicial(format.format(dtFechaini));
 								rHeader.setSfechafinal(format.format(dtFechafin));
-								rHeader.setCodsuc(caja.getId().getCaco());
+								rHeader.setCodsuc(caja.getId().getCasucur());
 								rHeader.setNombrecaja(caja.getId().getCaname());
-								rHeader.setNombresuc(caja.getId().getCaconom());
+								rHeader.setNombresuc(caja.getId().getCasucurname());
+								sCodSuc = caja.getId().getCasucur();
 								rHeader.setNombrecomp(sNomcomp);
 								lstHeaderRpt.add(rHeader);
 								
@@ -164,7 +168,7 @@ public class RpttransjdeDAO {
 									rDetalleTr = new TransJdeDetalleR();
 									rDetalleTr.setCaid(v.getId().getCaid());
 									rDetalleTr.setCodcomp(sCodcomp);
-									rDetalleTr.setCodsuc(v.getId().getCodsuc());
+									rDetalleTr.setCodsuc(sCodSuc);
 									rDetalleTr.setNumrecdep(v.getId().getNumrecdep());
 									rDetalleTr.setMonto(v.getId().getMonto().doubleValue());
 									rDetalleTr.setNobatch(v.getId().getNobatch());
@@ -175,23 +179,19 @@ public class RpttransjdeDAO {
 
 									//clasificar las transacciones, contado,devolucion de contado, crédito, primas y depósitos.
 									if(sTiporec.equals("CO") || sTiporec.equals("DCO")){
-										iCo++;
 										lstTransCO.add(rDetalleTr);
 									}else
 									if(sTiporec.equals("CR")){
 										rDetalleTr.setTipodocumento(v.getId().getTipodocumento());
 										lstTransCR.add(rDetalleTr);
-										iCr++;
 									}else
 									if(sTiporec.equals("PR")){
 										rDetalleTr.setTipodocumento(v.getId().getTipodocumento());
 										lstTransPR.add(rDetalleTr);
-										iPr++;
 									}else
 									if(sTiporec.equals("D")){
 										rDetalleTr.setNumrefer(v.getId().getNumrefer());
 										lstTrasDep.add(rDetalleTr);						
-										iD++;
 									}else 
 									if(sTiporec.equals("EX")){
 										rDetalleTr.setTipodocumento(v.getId().getTipodocumento());
@@ -238,9 +238,6 @@ public class RpttransjdeDAO {
 				
 				FacesContext.getCurrentInstance().getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME+"/reportes/rptmcaja003.faces"); 
 				
-//				FacesContext fcInicio = FacesContext.getCurrentInstance();		
-//				NavigationHandler nhInicio = fcInicio.getApplication().getNavigationHandler();		
-//				nhInicio.handleNavigation(fcInicio, null, "rptmcaja003");
 			}
 		} catch (Exception error) {
 			error.printStackTrace();

@@ -56,6 +56,10 @@ public class Vf55ca01Id implements java.io.Serializable {
 	private String caautimail;
 	
 	private char casktpos;
+	
+	private String casucur;
+	
+	private String casucurname;
 
 	public Vf55ca01Id() {
 	}
@@ -309,6 +313,24 @@ public class Vf55ca01Id implements java.io.Serializable {
 
 	public void setCasktpos(char casktpos) {
 		this.casktpos = casktpos;
+	}
+	
+	
+
+	public String getCasucur() {
+		return casucur;
+	}
+
+	public void setCasucur(String casucur) {
+		this.casucur = casucur;
+	}
+
+	public String getCasucurname() {
+		return casucurname;
+	}
+
+	public void setCasucurname(String casucurname) {
+		this.casucurname = casucurname;
 	}
 
 	public boolean equals(Object other) {
