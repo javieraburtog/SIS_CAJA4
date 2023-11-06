@@ -219,7 +219,6 @@ public class PropertiesSystem {
 		{ "COR",  "1.00" },
 	};
 	
-	public final static int ID_CUENTA_BANCO_PV = 20000103;
 	
 	public final static List<MetodosPago> formasPagoConfiguradas = MetodosPagoCtrl.formasPagoConfiguradas();
 	
@@ -246,7 +245,6 @@ public class PropertiesSystem {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
 			pcinfo = null;
 		}finally{
 			

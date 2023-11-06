@@ -78,6 +78,8 @@ import com.casapellas.util.SqlUtil;
 
 public class RevisionArqueoCtrl {
 	BigDecimal bdivaTrader = new BigDecimal(1.13);
+	
+	
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 	private final static String Esquema = PropertiesSystem.ESQUEMA;
 	
@@ -188,6 +190,7 @@ public class RevisionArqueoCtrl {
 	public static int generarReferenciaDeposito(int reference, String tipopago, String codcomp, String moneda){
 		int referencia = reference;
 		String tipodocjde = "";
+		ClsParametroCaja cajaparm = new ClsParametroCaja();
 		
 		try {
 			
@@ -220,8 +223,9 @@ public class RevisionArqueoCtrl {
 				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_N;
 			}
 			if (tipopago.compareTo("ZX") == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_REFER_ZX;
+				tipodocjde = cajaparm.getParametros("37", "0", "ARQ_TDOCREFER").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_REFER_ZX;
 				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_5;
+				
 			}
 			
 		
@@ -246,13 +250,11 @@ public class RevisionArqueoCtrl {
 				evalua++;
 				
 				if(Integer.parseInt(strReference) != reference ){
-//					LogCrtl.sendLogDebgs("Cambio de referencia : "+ strReference +" ||| "+reference);
 				}
 			}
 			
 			//&& ======== Generar el numero de documento para el deposito (cambio de referencias).
 			if(!valido){
-//				LogCrtl.sendLogDebgs("Numero aleatorio de referencia: "+strReference+", "+tipopago);
 				
 				reference =  Divisas.numeroSiguienteJde( codigoJDE, codcomp );
 				
@@ -275,6 +277,7 @@ public class RevisionArqueoCtrl {
 	public static int generarReferenciaDeposito(int reference, String tipopago, String codcomp, String moneda, Session session){
 		int referencia = reference;
 		String tipodocjde = "";
+		ClsParametroCaja cajaparm = new ClsParametroCaja();
 		
 		try {
 			
@@ -307,7 +310,7 @@ public class RevisionArqueoCtrl {
 				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_N;
 			}
 			if (tipopago.compareTo("ZX") == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_REFER_ZX;
+				tipodocjde = cajaparm.getParametros("37", "0", "ARQ_TDOCREFER").getValorAlfanumerico().toString();//opertiesSystem.TIPODOC_REFER_ZX;
 				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_5;
 			}
 			

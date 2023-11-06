@@ -27,10 +27,10 @@ public class ConfigConnection {
     public static String CONTEXT_NAME_CAJA_N = "gcpcajarest";
     
    // Ambiente de Desarrollo/Pruebas, ESQUEMAS de Base de Datos  
-    public static String SchemaCaja = "E1GCPMCAJA";								// Esquema Sistema de Caja
-    public final static String SchemaENS = "E1ENS";								// Esquema de Entorno de Navegación y Seguridad (ENS)
-	public final static String SchemaJDEDTA = "CRPDTA";							// Esquema de Jd Edwards E1 
-	public final static String SChemaJDECTL = "CRPCTL";							// Esquema de Jd Edwards E1 - Tablas compartidas
+    public static String SchemaCaja = "E2GCPMCAJA";								// Esquema Sistema de Caja
+    public final static String SchemaENS = "E2ENS";								// Esquema de Entorno de Navegación y Seguridad (ENS)
+	public final static String SchemaJDEDTA = "PRODDTA920";							// Esquema de Jd Edwards E1 
+	public final static String SChemaJDECTL = "PRODCTL920";							// Esquema de Jd Edwards E1 - Tablas compartidas
 	
    // Código de Usuario para Conexión a Base de Datos DB2  
     public static String USUARIO = "appcp";
