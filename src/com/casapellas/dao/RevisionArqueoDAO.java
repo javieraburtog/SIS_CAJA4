@@ -5902,7 +5902,6 @@ public class RevisionArqueoDAO {
 						+"' Moneda: '"+dac.getMoneda()+"' || Usuario '"
 						+ vaut[0].getId().getLogin()+"'" ;
 				
-//				LogCrtl.sendLogInfo(strEventhashcode + " ||||  Inicia proceso de aprobacion de cierre: DtaCierre["+strDtaAprCierre+"]");
 				
 				f14 = CompaniaCtrl.obtenerF55ca014(iCaid, sCodcomp);
 				if(f14==null){
@@ -5937,12 +5936,11 @@ public class RevisionArqueoDAO {
 				String sCtaBcoTransitoria[] = new String[6];
 				Vf0901 vCtaBcoTransitoria = null;
 				
-//				LogCrtl.sendLogInfo(strEventhashcode + " Paso 1(I): Cuentas Transitorias " );
+
 				sCtaBcoTransitoria = dv.obtenerCuentaTransitoBanco (dac.getMoneda(), dac.getCodcomp(), f14.getId().getC4bnc(), sessionAprArqueo) ; 
 				if(sCtaBcoTransitoria == null){
 					sMensaje =  "No se pudo obtener las cuentas transitorias de banco " +  f14.getId().getC4bnc() ;
 				}
-//				LogCrtl.sendLogInfo(strEventhashcode + " Paso 1(F): Cuentas Transitorias " );
 				
 				//********** Montos para efectivo y cheques.
 				BigDecimal bdMonto5 = dv.roundBigDecimal(new BigDecimal(lblCDC_depositoFinal.getValue().toString()));
@@ -6020,8 +6018,6 @@ public class RevisionArqueoDAO {
 				}
 				
 				if(bHecho){
-//					LogCrtl.sendLogInfo(strEventhashcode + "(I) Depositos Alpesa" );
-					
 				//===== Liquidacion para transacciones cheque efectivo de ALPESA ======= // 
 					if(dac.getCodcomp().trim().equals("E03")){
 						boolean bChequeEfectivo = false;
@@ -6070,18 +6066,15 @@ public class RevisionArqueoDAO {
 											sessionAprArqueo, sCtaBcoTransitoria, f14, ar, tipoEmpleado, tasaOficial);
 							
 						}
-//						LogCrtl.sendLogInfo(strEventhashcode + "(F) Depositos Alpesa" );
 						
 					}else{			
 						//-------------- depósitos por cheques y efectivo --------------------/
 						if(dTotal5 >0){
 							dTotalQ = 0;
-//							LogCrtl.sendLogInfo(strEventhashcode + "(I) Depositos Cheques Efectivo" );
 							bHecho = realizarTrasladoBanco(dac.getNoarqueo(),iCaid, sCodcomp,sCodsuc, dac.getFechaarqueo(),dac.getHoraarqueo(),
 											dac.getDepositoRefer(),dTotal5, dTotalQ, null, null, null,null,null,null, null, null,
 											dac.getMoneda(), 1, sCtaBcoTransitoria, f14, null, ar, sessionAprArqueo, tipoEmpleado, tasaOficial);
 							
-//							LogCrtl.sendLogInfo(strEventhashcode + "(F) Depositos Cheques Efectivo" );
 						}
 					}
 				}
@@ -6089,12 +6082,10 @@ public class RevisionArqueoDAO {
 				if(bHecho){			
 					if(lstRecibosN8 != null && lstRecibosN8.size()>0){
 						
-//						LogCrtl.sendLogInfo(strEventhashcode + "(I) Depositos Transferencias y Depositos directos" );
 						bHecho = realizarTrasladoBanco(dac.getNoarqueo(), iCaid, sCodcomp,sCodsuc, dac.getFechaarqueo(),
 										   dac.getHoraarqueo(),"", 0, 0, lstRecibosN8, null,null, null,null, 
 										   null, null, null,dac.getMoneda(), 2,  sCtaBcoTransitoria,  f14, null, ar, 
 										   sessionAprArqueo, tipoEmpleado, tasaOficial);
-//						LogCrtl.sendLogInfo(strEventhashcode + "(F) Depositos Transferencias y Depositos directos" );
 					
 					}
 				} 	
@@ -6116,20 +6107,17 @@ public class RevisionArqueoDAO {
 					//&& ====================== realizar depositos de monto en banco
 					if( bCredito || incluyeDonacionesTc ){
 						
-//						LogCrtl.sendLogInfo(strEventhashcode + "(I) Depositos Tarjetas de Credito: Depositos" );
 						
 						bHecho = registrarDepositosAfiliados(dac.getNoarqueo(), lstResumenAfiliado, iCaid,sCodcomp, 
 				 							  sCodsuc, dac.getFechaarqueo(),dac.getHoraarqueo(),dac.getMoneda(),
 				 							  sCtaBcoTransitoria,f14, ar, sessionAprArqueo, tipoEmpleado, tasaOficial );
 						
-//						LogCrtl.sendLogInfo(strEventhashcode + "(F) Depositos Tarjetas de Credito: Depositos" );
 					}
 					
 					//&& ====================== asientos de diario solo por pagos con tarjeta de credito que no es donacion
 					if( bHecho && bCredito  ){
 						
 						//&& ====================== realizar depositos de comision
-//						LogCrtl.sendLogInfo(strEventhashcode + "(I) Depositos Tarjetas de Credito: Comisiones" );					
 						
 						bHecho = realizarTrasladoBanco2(dac.getNoarqueo(), iCaid, sCodcomp,sCodsuc, dac.getFechaarqueo(),
 									dac.getHoraarqueo(),"",0, 0, null,bdMtoPos, bdMontoNetoPos, 
@@ -6137,24 +6125,19 @@ public class RevisionArqueoDAO {
 									dac.getMoneda(), 3, sCtaBcoTransitoria, f14, marcaTarjeta, ar, 
 									sessionAprArqueo, tipoEmpleado, tasaOficial);	
 						
-//						LogCrtl.sendLogInfo(strEventhashcode + "(F) Depositos Tarjetas de Credito: Comisiones" );
 						
 						
 						//&& ====================== realizar depositos de retencion
 						if(bHecho ){
-//							LogCrtl.sendLogInfo(strEventhashcode + "(I) Depositos Tarjetas de Credito: Retenciones" );						
 							bHecho = registrarRetencionAfiliados(dac.getNoarqueo(), lstResumenAfiliado, iCaid, sCodcomp, sCodsuc, 
 		 			                   			dac.getFechaarqueo(), dac.getHoraarqueo(), dac.getMoneda(),
 		 			                   			f14, sessionAprArqueo, tipoEmpleado, tasaOficial );
-//							LogCrtl.sendLogInfo(strEventhashcode + "(F) Depositos Tarjetas de Credito: Retenciones" );	
 						}
 						
 						//&& ====================== impuesto sobre comision para Trader
 						if(bHecho &&  sCodcomp.trim().compareTo("E08") == 0 ){
-//							LogCrtl.sendLogInfo(strEventhashcode + "(I) Depositos Tarjetas de Credito: Alpesa ComisionIVA" );
 							bHecho = registrarIVAcomisionAfiliado(dac.getNoarqueo(), lstResumenAfiliado, iCaid, sCodcomp, sCodsuc, 
 	 			                   			dac.getFechaarqueo(), dac.getHoraarqueo(), dac.getMoneda(), f14, sessionAprArqueo, tipoEmpleado, tasaOficial);
-//							LogCrtl.sendLogInfo(strEventhashcode + "(F) Depositos Tarjetas de Credito: Alpesa ComisionIVA" );
 						}
 					}
 					
@@ -6165,7 +6148,6 @@ public class RevisionArqueoDAO {
 					ArrayList<Ctaxdeposito> lstCtasxDeps = null;
 					List lstDeps = (ArrayList) CodeUtil.getFromSessionMap("rv_listaDepositos");
 
-//					LogCrtl.sendLogInfo(strEventhashcode + "(I) Guarda Registro de depositos en gcpmcaja" );
 					
 					for (int i = 0; i < lstDeps.size(); i++) {
 						
@@ -6197,7 +6179,6 @@ public class RevisionArqueoDAO {
 	     						bdTasa, vaut[0].getId().getCodreg().intValue(), codigobanco ,
 	     						sessionAprArqueo, ar.getId().getCodcajero(), lstCtasxDeps, referdep, depctatran, f14.getId().getC4bcrcd() );
 						
-//						LogCrtl.sendLogInfo(strEventhashcode + "(F) Guarda Registro de depositos en GCPMCAJA" );
 						
 						if(!bHecho){	
 							CodeUtil.putInSessionMap("sMensajeError", "No fue posible crear " +
@@ -6209,7 +6190,6 @@ public class RevisionArqueoDAO {
 				}
 				//------- Leer el objeto arqueo seleccionado y actualizar su estado a "APROBADO" 
 				if(bHecho){
-//					LogCrtl.sendLogInfo(strEventhashcode + "(I) Actualizacion de estado de arqueo" );
 					if(CodeUtil.getFromSessionMap( "rva_VARQUEO")==null){
 						bHecho = false;
 						sMensaje = "No se ha podido realizar la operación: no se ha recuperar el objeto VARQUEO del SESION MAP";
@@ -6221,7 +6201,6 @@ public class RevisionArqueoDAO {
 						if(!bHecho)
 							sMensaje = "No se ha podido realizar la operación: no se ha actualizado el estado del arqueo a 'APROBADO'";
 					}
-//					LogCrtl.sendLogInfo(strEventhashcode + "(F) Actualizacion de estado de arqueo" );
 				}
 				
 				//&& ======================= hacer depositos por donaciones
@@ -6243,23 +6222,18 @@ public class RevisionArqueoDAO {
 				
 				//-------------- FINALIZADAS TODAS LAS OPERACIONES CON ÉXITO ----------------/
 				
-				//bHecho = true;
+				
 				
 				if(bHecho){
 					dwDetalleArqueo.setWindowState("hidden");
 					sMensaje = "Se han realizado correctamente los registros por depósitos en banco.";
-					
-//					LogCrtl.sendLogInfo(strEventhashcode + "(I) Commit de Transacciones Caja / JDE " );
- 
+				
 					try {
 						transactionAprArqueo.commit();
 					} catch (Exception e) {
 						e.printStackTrace() ;
 						bHecho = false;
 					}
-					
-					
-//					LogCrtl.sendLogInfo(strEventhashcode + "(F) Commit de Transacciones Caja / JDE " );
 					
 					CodeUtil.removeFromSessionMap( "rv_DAC");
 					CodeUtil.removeFromSessionMap( "rva_VARQUEO");
@@ -6269,7 +6243,6 @@ public class RevisionArqueoDAO {
 					CodeUtil.removeFromSessionMap( "aprar_processRecibo");
 
 				}else{		
-//					LogCrtl.sendLogInfo(strEventhashcode + "(I) Rollback de Transacciones Caja / JDE " );
 					
 					try {
 						transactionAprArqueo.rollback();
@@ -6278,7 +6251,6 @@ public class RevisionArqueoDAO {
 						bHecho = false;
 					}
 
-//					LogCrtl.sendLogInfo(strEventhashcode + "(F) Rollback de Transacciones Caja / JDE " );
 					
 					
 					if( CodeUtil.getFromSessionMap( "sMensajeError") != null )
@@ -6301,12 +6273,9 @@ public class RevisionArqueoDAO {
 			
 			
 			error.printStackTrace();
-//			LogCrtl.imprimirError(error);
 			
 			try{
 				
-//				LogCrtl.sendLogInfo(strEventhashcode + "Error del sistema, bloque Catch del metodo aprobar arqueo: "+error.getMessage() );
-//				LogCrtl.imprimirError(error);
 
 				CodeUtil.removeFromSessionMap( "aprar_processRecibo");
 				CodeUtil.removeFromSessionMap( "sMensajeError");
@@ -6327,7 +6296,6 @@ public class RevisionArqueoDAO {
 				HibernateUtilPruebaCn.closeSession(sessionAprArqueo);
 			} catch (Exception e) {
 				e.printStackTrace();
-//				LogCrtl.imprimirError(e);
 			}
 			
 			dwValidarAprobacionArqueo.setWindowState("normal");			
