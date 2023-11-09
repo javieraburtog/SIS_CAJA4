@@ -52,6 +52,7 @@ public class PropertiesSystem {
 		public final static String parametroFCVGanancia="11";
 		public final static String parametroFCVPerdida="10";
 		public final static String parametroNumeracionRU="36";
+		public final static String parametroCuentaSalida="38";
 		//-Contado
 		public final static String tipoTrxContado="CO";
 		public final static String valuesJDEContado="CONTADO_JDE_INS";

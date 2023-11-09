@@ -53,6 +53,7 @@ import com.casapellas.navegacion.As400Connection;
 import com.casapellas.rpg.P55RECIBO;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.PropertiesSystem;
 import com.ibm.faces.component.html.HtmlJspPanel;
 import com.infragistics.faces.grid.component.RowItem;
@@ -173,29 +174,12 @@ public class solicitarSalida {
 						
 						//----- Efectivo 
 						if(sMetodoP.equals( MetodosPagoCtrl.EFECTIVO )){
-							if(vId.getCodcomp().equals("E01")){ // Casa Pellas
-								sCtaDeudoresV = "24.13600";						
-								sCdv1mcu	  = "24";
-								sCdvobj		  = "13600";
-								sCdvsub	 	  = "";	
-							}else if(vId.getCodcomp().equals("E02")){  //Velosa
-								sCtaDeudoresV = "75.13600";						
-								sCdv1mcu	  = "75";
-								sCdvobj		  = "13600";
-								sCdvsub	 	  = "";	
-							}
-							else if(vId.getCodcomp().equals("E08")){  //TRADER
-								sCtaDeudoresV = "60.13600";						
-								sCdv1mcu	  = "60";
-								sCdvobj		  = "13600";
-								sCdvsub	 	  = "";	
-							}
-							else if(vId.getCodcomp().equals("E03")){  //ALPESA
-								sCtaDeudoresV = "80.13600";						
-								sCdv1mcu	  = "80";
-								sCdvobj		  = "13600";
-								sCdvsub	 	  = "";	
-							}
+							String [] cuentas = DocumuentosTransaccionales.obtenerCuentaSalida(vId.getCodcomp()).split(",");
+							sCtaDeudoresV = cuentas[1]+"."+cuentas[2];							
+							sCdv1mcu	  = cuentas[0];
+							sCdvobj		  = cuentas[1];
+							sCdvsub	 	  = cuentas[2];	
+							
 							vf = iexCtrl.validarCuentaF0901(sCdv1mcu, sCdvobj, sCdvsub); //--Validar que exista la cuenta.
 							if(vf != null){
 								
@@ -1069,7 +1053,8 @@ public class solicitarSalida {
 			
 			//------ Validar el número de la solicitud
 			sNumSalida = lblNumeroSolicitud2.getValue().toString().trim();
-			if(Integer.parseInt(sNumSalida.trim())<=0){
+			int numSalida=Integer.parseInt(sNumSalida)+1;
+			if(numSalida<=0){
 				bValido = false;
 				sMensajeError = sMensajeError + sEstiloMserror +"El número para Salidas no se encuentra configurado<br>";
 				y = y + 5;

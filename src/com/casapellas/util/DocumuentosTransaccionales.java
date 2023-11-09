@@ -190,4 +190,18 @@ public static String obteneConfNumeracionRU(String compania) {
 		else
 		return null;
 	}
+
+public static String obtenerCuentaSalida(String compania) {
+	
+	String query="SELECT CONCAT(IFNULL(COD_UNIDAD_NEGOCIO,''),CONCAT(',',CONCAT(CONCAT( COD_CUENTA_OBJETO,',' ),IFNULL(COD_SUBCUENTA,''))))"
+			+ " CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCuentaSalida +
+			"' AND COD_COMPANIA = '"+ compania +"' ";     
+		
+		List<Object> cuentaPerdida= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(cuentaPerdida.size()>0)
+		return cuentaPerdida.get(0).toString();
+		else
+		return null;
+	}
 }
