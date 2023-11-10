@@ -351,7 +351,8 @@ public class AprobarSalidaDAO {
 		try {
 			List lstCajas = (List)m.get("lstCajas");
     		Vf55ca01 f5 = ((Vf55ca01)lstCajas.get(0));
-    		pNum = Pattern.compile("^[0-9]+$");
+    		//pNum = Pattern.compile("^[0-9]+$");
+    		pNum  = Pattern.compile("^[a-zA-Z_0-9]+$");
     		lblMsgExistSalida.setValue("");
     		
 			sBusqueda  = ddlTipoBusqueda.getValue().toString();

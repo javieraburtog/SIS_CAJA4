@@ -629,6 +629,7 @@ public class IngExtraordinarioDAO {
 			String sCajaId = (String) m.get("sCajaId");
 			Pattern pAlfa = Pattern.compile("^[A-Za-z0-9-\\p{Blank}]+$");
 			pNumero = Pattern.compile("^[0-9]+\\.?[0-9]*$");
+			pNumero = Pattern.compile("^[0-9]+\\.?[0-9]*$");
 			Pattern pAlfaRef1 = Pattern.compile("^[A-Za-z0-9-]+$");
 			String ref1 = getTxtReferencia1().getValue().toString().trim();
 			String ref2 = getTxtReferencia2().getValue().toString().trim();
@@ -2686,7 +2687,7 @@ public class IngExtraordinarioDAO {
 				tx=s.getTransaction();
 			
 			dTasaJDE = m.get("iex_valortasajde")!= null? Double.parseDouble(m.get("iex_valortasajde").toString()): 1.0000;
-			//dTasaP   = m.get("iex_valortasap")  != null? Double.parseDouble(m.get("iex_valortasap").toString()): 1.0000;
+		
 			
 			
 			sHtmlError  = "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> ";
@@ -2737,7 +2738,8 @@ public class IngExtraordinarioDAO {
 					String sCtaGpura = "",sPartesCta[];
 					Vf0901 v = null;
 					sCtaGpura = txtCtaGpura.getValue().toString().trim();
-					pUN  = Pattern.compile("^[0-9]{2,12}\\.[0-9]{1,6}\\.?[0-9]{1,8}?");
+					//pUN  = Pattern.compile("^[0-9]{2,12}\\.[0-9]{1,6}\\.?[0-9]{1,8}?");
+					pUN  = Pattern.compile("[a-zA-Z_0-9]{2,14}\\.[a-zA-Z_0-9]{1,6}\\.?[a-zA-Z_0-9]{1,8}?");
 					
 					if(pUN.matcher(sCtaGpura).matches()){
 						sPartesCta = txtCtaGpura.getValue().toString().trim().split("\\.");
@@ -2770,13 +2772,7 @@ public class IngExtraordinarioDAO {
 						Vf0901 v  = iex.validarCuentaF0901(v1 .getId().getGmmcu(),v1 .getId().getGmobj(),v1 .getId().getGmsub());
 						m.put("iex_VF0901", v); //------guardar el registro de la cuenta.
 					}
-					//------- validar la selección en el ddl de cuentas. Cuentas por tipo de operación.
-//					if(ddlcuentasxoperacion.getValue().toString().equals("CTO")) {
-//						sMensajeError = sMensajeError + sHtmlError +  "Debe seleccionar la cuenta a utilizar <br>";
-//						ddlcuentasxoperacion.setStyleClass("frmInput2Error3");
-//						bValido = false;
-//						y=y+14;
-//					}
+
 				}
 			}
 			//----------- Validar el concepto del recibo.
@@ -2962,48 +2958,18 @@ public class IngExtraordinarioDAO {
 				txtFiltroUN.setStyleClass("frmInput2Error");
 				lblMsgErrorFiltroCta.setStyle("color: red; text-align: center; visibility: visible");
 				lblMsgErrorFiltroCta.setValue("Debe Ingresar el valor para la unidad de negocio");
-			}else{
-				pNumero = Pattern.compile("^[0-9]+$");
-				if(pNumero.matcher(sUN).matches()){
-					if(!sUN.equals("") && (sUN.length() == 2 ||sUN.length() == 4)){
-						//---------- Cuenta Objeto.
-						if(!sCob.equals("")){
-							if(pNumero.matcher(sCob).matches()){
-								if(sCob.trim().length() >  6){
-									bValido = false;
-									txtFiltroCobjeto.setStyleClass("frmInput2Error");
-									sMensaje = "El valor Cuenta Objeto debe tener 5 dígitos máximo.";
-								}
-							}else{
-								bValido = false;
-								txtFiltroCobjeto.setStyleClass("frmInput2Error");
-								sMensaje = "El valor Cuenta Objeto contiene caracteres inválidos";
-							}
-						}
-						//---------- Cuenta Subsidiaria.
-						if(!sCsub .equals("")){
-							if(pNumero.matcher(sCsub).matches()){
-								if(sCsub.trim().length()>8){
-									bValido = false;
-									txtFiltroCsub.setStyleClass("frmInput2Error");
-									sMensaje = "El valor Cuenta subsidiaria debe tener 2 dígitos máximo.";
-								}
-							}else{
-								bValido = false;
-								txtFiltroCsub.setStyleClass("frmInput2Error");
-								sMensaje = "El valor Cuenta subsidiaria contiene caracteres inválidos";
-							}
-						}
-					}else {
-						bValido = false;
-						txtFiltroUN.setStyleClass("frmInput2Error");
-						sMensaje = "El valor Uidad de Negocio debe contener 2 o 4 dígitos";
-					}
-				}else{
-					txtFiltroUN.setStyleClass("frmInput2Error");
-					sMensaje = "El valor Uidad de Negocio contiene datos inválidos";
-					bValido = false;
-				}
+			}
+			if(sCob.equals("")){
+				txtFiltroUN.setStyleClass("frmInput2Error");
+				lblMsgErrorFiltroCta.setStyle("color: red; text-align: center; visibility: visible");
+				lblMsgErrorFiltroCta.setValue("Debe Ingresar el valor para la Cuenta Objeto");
+			}
+			if(sCsub.equals("")){
+				txtFiltroUN.setStyleClass("frmInput2Error");
+				lblMsgErrorFiltroCta.setStyle("color: red; text-align: center; visibility: visible");
+				lblMsgErrorFiltroCta.setValue("Debe Ingresar el valor para la subsidiaria");
+			}
+			else{
 				
 				//------ filtrar o no la lista de cuentas.
 				if(bValido){
