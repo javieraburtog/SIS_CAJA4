@@ -102,6 +102,8 @@ public class VreciboId implements java.io.Serializable {
 
 	private String refer4;
 	
+	
+
 	//----------------------
 	private String horarecibo;
 	
@@ -114,6 +116,9 @@ public class VreciboId implements java.io.Serializable {
 	private double dmontorec;
 	
 	private double dmontoneto;
+	
+	private String casucur;
+	private String casucurname;
 	
 	public VreciboId() {
 	}
@@ -223,6 +228,72 @@ public class VreciboId implements java.io.Serializable {
 		this.refer2 = refer2;
 		this.refer3 = refer3;
 		this.refer4 = refer4;
+	}
+	
+	public VreciboId(int numrec, String codcomp, String nomcomp, String codsuc, String nomsuc, Date fecha, Date hora,
+			int codcli, String cliente, String concepto, BigDecimal montoapl, BigDecimal montorec, String cajero,
+			String mpago, String metdesc, String moneda, BigDecimal monto, BigDecimal cambio, String moncam,
+			long numfac, String partida, BigDecimal montfac, int caid, String caprnt, String tiporec, String descrec,
+			BigDecimal tasa, BigDecimal equiv, long nodoco, String tipodoco, BigDecimal totaldoco, String restado,
+			String monfact, String mondev, Date fechafact, Long fechadev, String estadofact, String estadodev,
+			BigDecimal pendiente, BigDecimal saldo, String codunineg, String unineg, String refer1, String refer2,
+			String refer3, String refer4, String horarecibo, double dmonto, double dcambio, double dmontoapl,
+			double dmontorec, double dmontoneto, String casucur, String casucurname) {
+		super();
+		this.numrec = numrec;
+		this.codcomp = codcomp;
+		this.nomcomp = nomcomp;
+		this.codsuc = codsuc;
+		this.nomsuc = nomsuc;
+		this.fecha = fecha;
+		this.hora = hora;
+		this.codcli = codcli;
+		this.cliente = cliente;
+		this.concepto = concepto;
+		this.montoapl = montoapl;
+		this.montorec = montorec;
+		this.cajero = cajero;
+		this.mpago = mpago;
+		this.metdesc = metdesc;
+		this.moneda = moneda;
+		this.monto = monto;
+		this.cambio = cambio;
+		this.moncam = moncam;
+		this.numfac = numfac;
+		this.partida = partida;
+		this.montfac = montfac;
+		this.caid = caid;
+		this.caprnt = caprnt;
+		this.tiporec = tiporec;
+		this.descrec = descrec;
+		this.tasa = tasa;
+		this.equiv = equiv;
+		this.nodoco = nodoco;
+		this.tipodoco = tipodoco;
+		this.totaldoco = totaldoco;
+		this.restado = restado;
+		this.monfact = monfact;
+		this.mondev = mondev;
+		this.fechafact = fechafact;
+		this.fechadev = fechadev;
+		this.estadofact = estadofact;
+		this.estadodev = estadodev;
+		this.pendiente = pendiente;
+		this.saldo = saldo;
+		this.codunineg = codunineg;
+		this.unineg = unineg;
+		this.refer1 = refer1;
+		this.refer2 = refer2;
+		this.refer3 = refer3;
+		this.refer4 = refer4;
+		this.horarecibo = horarecibo;
+		this.dmonto = dmonto;
+		this.dcambio = dcambio;
+		this.dmontoapl = dmontoapl;
+		this.dmontorec = dmontorec;
+		this.dmontoneto = dmontoneto;
+		this.casucur = casucur;
+		this.casucurname = casucurname;
 	}
 
 	public int getNumrec() {
@@ -641,7 +712,24 @@ public class VreciboId implements java.io.Serializable {
 	public void setHorarecibo(String horarecibo) {
 		this.horarecibo = horarecibo;
 	}
+	
 	//----------------------------
+
+	public String getCasucur() {
+		return casucur;
+	}
+
+	public void setCasucur(String casucur) {
+		this.casucur = casucur;
+	}
+
+	public String getCasucurname() {
+		return casucurname;
+	}
+
+	public void setCasucurname(String casucurname) {
+		this.casucurname = casucurname;
+	}
 
 	public boolean equals(Object other) {
 		if ((this == other))

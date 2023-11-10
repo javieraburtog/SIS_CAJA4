@@ -44,6 +44,8 @@ public class VarqueoId implements java.io.Serializable {
 	private String nombrecajero;
 	private String caname;
 	private String estadodesc;
+	private String casucur;
+	private String casucurname;
 
 	public VarqueoId() {
 	}
@@ -130,6 +132,49 @@ public class VarqueoId implements java.io.Serializable {
 		this.nombrecajero = nombrecajero;
 		this.caname = caname;
 		this.estadodesc = estadodesc;
+	}
+	
+	public VarqueoId(int caid, String codcomp, String codsuc, int noarqueo, Date fecha, Date hora, String estado,
+			int codcajero, BigDecimal tingreso, BigDecimal tegresos, BigDecimal netorec, BigDecimal minimo,
+			BigDecimal dsugerido, BigDecimal efectcaja, BigDecimal sf, BigDecimal dfinal, BigDecimal tpagos,
+			String moneda, Date fechamod, Date horamod, String coduser, String motivo, String referdep,
+			int referencenumber, int depctatran, int codusermod, String datapcinfo, String nombrecomp, String nombresuc,
+			String nombrecajero, String caname, String estadodesc, String casucur, String casucurname) {
+		super();
+		this.caid = caid;
+		this.codcomp = codcomp;
+		this.codsuc = codsuc;
+		this.noarqueo = noarqueo;
+		this.fecha = fecha;
+		this.hora = hora;
+		this.estado = estado;
+		this.codcajero = codcajero;
+		this.tingreso = tingreso;
+		this.tegresos = tegresos;
+		this.netorec = netorec;
+		this.minimo = minimo;
+		this.dsugerido = dsugerido;
+		this.efectcaja = efectcaja;
+		this.sf = sf;
+		this.dfinal = dfinal;
+		this.tpagos = tpagos;
+		this.moneda = moneda;
+		this.fechamod = fechamod;
+		this.horamod = horamod;
+		this.coduser = coduser;
+		this.motivo = motivo;
+		this.referdep = referdep;
+		this.referencenumber = referencenumber;
+		this.depctatran = depctatran;
+		this.codusermod = codusermod;
+		this.datapcinfo = datapcinfo;
+		this.nombrecomp = nombrecomp;
+		this.nombresuc = nombresuc;
+		this.nombrecajero = nombrecajero;
+		this.caname = caname;
+		this.estadodesc = estadodesc;
+		this.casucur = casucur;
+		this.casucurname = casucurname;
 	}
 
 	public int getCaid() {
@@ -386,6 +431,22 @@ public class VarqueoId implements java.io.Serializable {
 
 	public void setEstadodesc(String estadodesc) {
 		this.estadodesc = estadodesc;
+	}
+	
+	public String getCasucur() {
+		return casucur;
+	}
+
+	public void setCasucur(String casucur) {
+		this.casucur = casucur;
+	}
+
+	public String getCasucurname() {
+		return casucurname;
+	}
+
+	public void setCasucurname(String casucurname) {
+		this.casucurname = casucurname;
 	}
 
 	@Override

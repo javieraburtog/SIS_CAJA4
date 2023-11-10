@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import javax.faces.application.NavigationHandler;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -121,7 +120,9 @@ public class Rptmcaja004DAO {
 						 VreciboId vb = new VreciboId();
 						 vb.setCaid(a.getId().getCaid());
 						 vb.setCodcomp(a.getId().getCodcomp());
-						 vb.setCodsuc(a.getId().getCodsuc());
+						 vb.setCodsuc(a.getId().getCasucur());
+						 vb.setCasucur(a.getId().getCasucur());
+						 vb.setCasucurname(a.getId().getCasucurname());
 						 vb.setTiporec(sMpago[i]);
 						 lstRptmcaja004body.add(vb);
 					 }
@@ -135,6 +136,8 @@ public class Rptmcaja004DAO {
 						//----- Establecer datos para tipo de recibo contado con efectivo
 						vid.setHorarecibo(f.formatDatetoString(vid.getHora(), "hh:mm:ss a"));
 						vid.setDmonto(vid.getMonto().doubleValue());
+						vid.setCodsuc(a.getId().getCasucur());
+						vid.setNomsuc(a.getId().getCasucurname());
 
 						//----- Filtrar los recibos por método de pago.
 						if(vid.getMpago().equals(MetodosPagoCtrl.EFECTIVO)){
@@ -184,13 +187,13 @@ public class Rptmcaja004DAO {
 			 rh.setCaid(a.getId().getCaid());
 			 rh.setCodcajero(a.getId().getCodcajero());
 			 rh.setCodcomp(a.getId().getCodcomp());
-			 rh.setCodsuc(a.getId().getCodsuc());
+			 rh.setCodsuc(a.getId().getCasucur());
 			 rh.setMoneda(a.getId().getMoneda());
 			 rh.setNoarqueo(a.getNoarqueo());
 			 rh.setNombrecaja(a.getId().getCaname());
 			 rh.setNombrecajero(a.getId().getNombrecajero());
 			 rh.setNombrecomp(a.getId().getNombrecomp());
-			 rh.setNombresuc(a.getId().getNombresuc());
+			 rh.setNombresuc(a.getId().getCasucurname());
 			 rh.setSfechafinal("");
 			 
 			 sFechaArqueo  = FechasUtil.formatDatetoString(a.getId().getFecha(), "dd/MM/yyyy");
@@ -199,11 +202,13 @@ public class Rptmcaja004DAO {
 			 
 			 rh.setSfechainicial(sFechaArqueo +" " + sHoraArqueo);
 			 rh.setSfechareporte(sFechaReporte);
+			 rh.setCasucur(a.getId().getCasucur());
+			 rh.setCasucurname(a.getId().getCasucurname());
 			 lstRptmcaja004Hdr.add(rh);
 			 
 			 //--------- Monto total por unidad de negocio.
 			 List<Rptmcaja004Sumary> lstUnineg = RevisionArqueoCtrl.obtenerTotalxUnineg(a.getId().getCaid(), a.getId().getCodsuc(),
-					 								a.getId().getCodcomp(), sListaRecibos, a.getId().getFecha());
+					 								a.getId().getCodcomp(), sListaRecibos, a.getId().getFecha(), a.getId().getCasucur());
 			 if(lstUnineg == null )
 				 lstUnineg = new ArrayList<Rptmcaja004Sumary>();
 			 
@@ -218,9 +223,6 @@ public class Rptmcaja004DAO {
 			 CodeUtil.putInSessionMap("rptmcaja004_rN", lstRecN);
 
 			//------- Navegación hacia la página del reporte.
-//			FacesContext fcInicio = FacesContext.getCurrentInstance();		
-//			NavigationHandler nhInicio = fcInicio.getApplication().getNavigationHandler();		
-//			nhInicio.handleNavigation(fcInicio, null, "rptmcaja004");
 			FacesContext.getCurrentInstance().getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME+"/reportes/rptmcaja004.faces");
 			System.out.println("?..");
 			

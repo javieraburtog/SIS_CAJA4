@@ -1373,7 +1373,7 @@ public class RevisionArqueoCtrl {
 	
 /***********************************************************************************************/
 /**		obtener los montos totales por unidad de negocio de los recibos incluidos en el arqueo */
-	public static List<Rptmcaja004Sumary> obtenerTotalxUnineg(int iCaid, String sCodsuc, String sCodcomp, String sListarec,Date dtFecha){
+	public static List<Rptmcaja004Sumary> obtenerTotalxUnineg(int iCaid, String sCodsuc, String sCodcomp, String sListarec,Date dtFecha, String sCasucur){
 		List<Rptmcaja004Sumary> lstUnineg = null;
 		
 		try {
@@ -1386,7 +1386,7 @@ public class RevisionArqueoCtrl {
 			sql += " and rd.moneda = cd.moneda) else rd.monto end )) total";
 			sql += " from "+PropertiesSystem.ESQUEMA+".recibo r  inner join "+PropertiesSystem.ESQUEMA+".recibodet rd on r.caid = rd.caid and r.codcomp = rd.codcomp";
 			sql += " and r.codsuc = rd.codsuc and r.numrec = rd.numrec and r.tiporec = rd.tiporec";
-			sql += " inner join "+PropertiesSystem.JDEDTA+".F0006 on trim(MCMCU) = trim(codunineg) and MCSTYL  = 'IS'";
+			sql += " inner join "+PropertiesSystem.JDEDTA+".F0006 on trim(MCMCU) = trim(codunineg) /*and MCSTYL  = 'IS'*/";
 			sql += " and r.caid = "+iCaid+" and r.codsuc = '"+sCodsuc+"' and r.codcomp = '"+sCodcomp+"'";
 			sql += " and r.fecha = '"+sFecha+"' and r.numrec in " + sListarec;
 			sql += " group by r.codunineg, MCDL01";
@@ -1402,7 +1402,7 @@ public class RevisionArqueoCtrl {
 					Rptmcaja004Sumary rs = new Rptmcaja004Sumary();
 					rs.setCaid(iCaid);
 					rs.setCodcomp(sCodcomp);
-					rs.setCodsuc(sCodsuc);
+					rs.setCodsuc(sCasucur);
 					rs.setCodunineg(ob[0].toString());
 					rs.setNomunineg(ob[1].toString());
 					rs.setMontototal((new BigDecimal(ob[2].toString()).doubleValue()));
@@ -1426,7 +1426,7 @@ public class RevisionArqueoCtrl {
 			
 			sFecha = FechasUtil.formatDatetoString(dtFechaAr, "yyyy-MM-dd");			
 			sql =  " from Vrecibo v where v.id.caid = "+iCaid+ " and v.id.codcomp = '"+sCodcomp+"'";
-			sql += " and v.id.codsuc = '"+sCodsuc+"' and v.id.fecha = '"+sFecha+"' ";
+			sql += " and trim(v.id.codsuc) = '"+sCodsuc.trim()+"' and v.id.fecha = '"+sFecha+"' ";
 			sql += " and v.id.moneda = '"+sMoneda+"' and v.id.numrec in "+sLstRecibos;
 			
 			lstRecibos =  ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Vrecibo.class, false); 

@@ -144,6 +144,13 @@
             <key-property name="refer4" type="string">
                 <column name="REFER4" length="150" />
             </key-property>
+            <key-property name="casucur" type="string">
+                <column name="CASUCUR" length="5" />
+            </key-property>
+            
+            <key-property name="casucurname" type="string">
+                <column name="CASUCURNAME" length="30" />
+            </key-property>
         </composite-id>
     </class>
 </hibernate-mapping>

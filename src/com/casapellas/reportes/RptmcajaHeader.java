@@ -16,6 +16,9 @@ public class RptmcajaHeader {
 	private String moneda;
 	private String nombrecajero;
 	
+	private String casucur;
+	private String casucurname;
+	
 	public RptmcajaHeader(){
 		
 	}
@@ -36,6 +39,28 @@ public class RptmcajaHeader {
 		this.sfechareporte = sfechareporte;
 		this.moneda = moneda;
 		this.nombrecajero = nombrecajero;
+	}
+	
+	
+	public RptmcajaHeader(int caid, int codcajero, int noarqueo, String codsuc, String codcomp, String nombrecaja,
+			String nombrecomp, String nombresuc, String sfechainicial, String sfechafinal, String sfechareporte,
+			String moneda, String nombrecajero, String casucur, String casucurname) {
+		super();
+		this.caid = caid;
+		this.codcajero = codcajero;
+		this.noarqueo = noarqueo;
+		this.codsuc = codsuc;
+		this.codcomp = codcomp;
+		this.nombrecaja = nombrecaja;
+		this.nombrecomp = nombrecomp;
+		this.nombresuc = nombresuc;
+		this.sfechainicial = sfechainicial;
+		this.sfechafinal = sfechafinal;
+		this.sfechareporte = sfechareporte;
+		this.moneda = moneda;
+		this.nombrecajero = nombrecajero;
+		this.casucur = casucur;
+		this.casucurname = casucurname;
 	}
 	public int getCaid() {
 		return caid;
@@ -115,6 +140,16 @@ public class RptmcajaHeader {
 	public void setSfechareporte(String sfechareporte) {
 		this.sfechareporte = sfechareporte;
 	}
-	
-	
+	public String getCasucur() {
+		return casucur;
+	}
+	public void setCasucur(String casucur) {
+		this.casucur = casucur;
+	}
+	public String getCasucurname() {
+		return casucurname;
+	}
+	public void setCasucurname(String casucurname) {
+		this.casucurname = casucurname;
+	}
 }
