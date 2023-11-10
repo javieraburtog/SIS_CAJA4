@@ -581,9 +581,9 @@ public class FinanciamientoDAO {
 			cn = As400Connection.getJNDIConnection("DSMCAJA2");
 			cn.setAutoCommit(false);
 			
-			recCtrl.actualizarEstadoRecibo(iNumrec,iCaid,sCodsuc,sCodcomp, vAut[0].getId().getCoduser(), "No se completo pago con SP","FN");
-			lstRecibojde = recCtrl.getEnlaceReciboJDE(iCaid, sCodsuc,sCodcomp,iNumrec,"FN");
-			lstReciboFac = cuotaCtrl.leerFacturasReciboFinan2(iCaid, sCodcomp, iNumrec, "FN", iCodcli);
+			recCtrl.actualizarEstadoRecibo(iNumrec,iCaid,sCodsuc,sCodcomp, vAut[0].getId().getCoduser(), "No se completo pago con SP",valoresJDEInsFinanciamiento[0]);
+			lstRecibojde = recCtrl.getEnlaceReciboJDE(iCaid, sCodsuc,sCodcomp,iNumrec,valoresJDEInsFinanciamiento[0]);
+			lstReciboFac = cuotaCtrl.leerFacturasReciboFinan2(iCaid, sCodcomp, iNumrec, valoresJDEInsFinanciamiento[0], iCodcli);
 
 			for(Vf0311fn hFac2: lstReciboFac ){
 				
@@ -3608,7 +3608,7 @@ public class FinanciamientoDAO {
 				 
 				
 				if(bHecho){
-					bHecho = recCtrl.fillEnlaceMcajaJde(s,tx,iNumrec, fh.getId().getCodcomp(), iNodoc, iNobatch,f55ca01.getId().getCaid(),f55ca01.getId().getCaco(),"R","FN");
+					bHecho = recCtrl.fillEnlaceMcajaJde(s,tx,iNumrec, fh.getId().getCodcomp(), iNodoc, iNobatch,f55ca01.getId().getCaid(),f55ca01.getId().getCaco(),"R",valoresJDEInsFinanciamiento[0]);
 					 
 					if(bHayFicha && bHecho){
 						String[] sCuentaCajaDom = d.obtenerCuentaCaja(f55ca01.getId().getCaid(),fh.getId().getCodcomp(),MetodosPagoCtrl.EFECTIVO,sMonedaBase,null,null,null,null);
@@ -3685,7 +3685,7 @@ public class FinanciamientoDAO {
 		String msgProceso = new String("");
 		String codsuc     = new String("");
 		String codcomp    = new String("");
-		String tiporec    = new String("FN"); 
+		String tiporec    = new String(valoresJDEInsFinanciamiento[0]); 
 		String monedabase = new String("");
 				
 		BigDecimal tasaofi  = BigDecimal.ONE;
@@ -4116,7 +4116,7 @@ public class FinanciamientoDAO {
 			try {
 				if(aplicado) { 
 					transInsJdeCaja.commit();
-					BitacoraSecuenciaReciboService.actualizarSatisfactorioLogReciboNumerico(caid, numrec, codcomp,codsuc, "FN");
+					BitacoraSecuenciaReciboService.actualizarSatisfactorioLogReciboNumerico(caid, numrec, codcomp,codsuc, valoresJDEInsFinanciamiento[0]);
 				}
 			} catch (Exception e) {
 				LogCajaService.CreateLog("grabarRecibo", "ERR", e.getMessage());
@@ -4486,7 +4486,7 @@ public class FinanciamientoDAO {
 								
 								recCtrl.actualizarReferenciasRecibo(iNumRecCredito,f55ca01.getId().getCaid(),
 														f.getId().getCodcomp(),f55ca01.getId().getCaco(),
-														"FN",lstMetodosPago);
+														valoresJDEInsFinanciamiento[0],lstMetodosPago);
 							}else{
 								
 								int iNoficha = (m.get("iNoFichaFinan") == null)? 0:
@@ -4528,14 +4528,14 @@ public class FinanciamientoDAO {
 						getP55recibo().setNORECIBO(bdNumrec);
 						getP55recibo().setIDEMPRESA(f.getId().getCodcomp().trim());
 						getP55recibo().setIDSUCURSAL(f55ca01.getId().getCaco().trim());
-						getP55recibo().setTIPORECIBO("FN");
+						getP55recibo().setTIPORECIBO(valoresJDEInsFinanciamiento[0]);
 						getP55recibo().setRESULTADO("");
 						getP55recibo().setCOMANDO("");
 						getP55recibo().invoke();
 						getP55recibo().getRESULTADO();
 						if (bHayFicha) {
 							recCtrl.actualizarNoFichaWithSession(s, Integer.parseInt(m.get("iNumRecFinan").toString()), Integer.parseInt(m.get("iNoFichaFinan").toString()),
-							f55ca01.getId().getCaid(), f.getId().getCodcomp(), f55ca01.getId().getCaco(), "FN");
+							f55ca01.getId().getCaid(), f.getId().getCodcomp(), f55ca01.getId().getCaco(), valoresJDEInsFinanciamiento[0]);
 							
 						}
 					}
@@ -5012,7 +5012,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 				return false;
 			}
 			
-			BitacoraSecuenciaReciboService.insertarLogReciboNumerico(f55ca01.getId().getCaid(),iNumrec,hFac.getId().getCodcomp(),CodeUtil.pad(f55ca01.getId().getCaco(), 5, "0"),"FN");
+			BitacoraSecuenciaReciboService.insertarLogReciboNumerico(f55ca01.getId().getCaid(),iNumrec,hFac.getId().getCodcomp(),CodeUtil.pad(f55ca01.getId().getCaco(), 5, "0"),valoresJDEInsFinanciamiento[0]);
 			
 			if (iNumrec > 0) {
 			
@@ -5073,7 +5073,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 						dCambio, sConcepto, dFecha, dFecha, hFac.getId()
 								.getCodcli(), hFac.getNomcli(), sCajero,
 						f55ca01.getId().getCaid(), f55ca01.getId().getCaco(),
-						vAut.getId().getCoduser(), "FN", 0, "", 0, new Date(),
+						vAut.getId().getCoduser(), valoresJDEInsFinanciamiento[0], 0, "", 0, new Date(),
 						sCodunineg, "", hFac.getId().getMoneda());
 				
 				if (insertado) {
@@ -5085,7 +5085,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 					com.casapellas.controles.BancoCtrl.datosPreconciliacion(lstMetodosPago, f55ca01.getId().getCaid(), hFac.getId().getCodcomp()) ;
 					
 					insertado = recCtrl.registrarDetalleRecibo(s, tx, iNumrec, iNumrecm,  hFac.getId().getCodcomp(), lstMetodosPago, 
-								f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), "FN");
+								f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), valoresJDEInsFinanciamiento[0]);
  
 					if (insertado) {
 						//leer facturas seleccionadas
@@ -5113,7 +5113,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 										sol = (Solicitud) lstSolicitud.get(i);
 										iNumsol = solCtrl.getNumeroSolicitud();
 										if (iNumsol > 0) {
-											insertado = solCtrl.registrarSolicitud(s, tx, iNumsol,iNumrec,"FN",f55ca01.getId().getCaid(),
+											insertado = solCtrl.registrarSolicitud(s, tx, iNumsol,iNumrec,valoresJDEInsFinanciamiento[0],f55ca01.getId().getCaid(),
 															hFac.getId().getCodcomp(),f55ca01.getId().getCaco(),sol.getId().getReferencia(),
 															sol.getAutoriza(),dFecha,sol.getObs(),sol.getMpago(),sol.getMonto(),sol.getMoneda());
 											
@@ -5160,9 +5160,9 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 					if (m.get("bdTasa") != null) {
 						bdTasa = (BigDecimal) m.get("bdTasa");
 					}
-					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio1, d.formatStringToDouble(sCambio1),f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), bdTasa,"FN");
+					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio1, d.formatStringToDouble(sCambio1),f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), bdTasa,valoresJDEInsFinanciamiento[0]);
 					////LogCrtl.sendLogDebgsFinancing("<===========> registrarCambio:  "+insertado);
-					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio2, d.formatStringToDouble(sCambio2),f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), bdTasa,"FN");
+					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio2, d.formatStringToDouble(sCambio2),f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), bdTasa,valoresJDEInsFinanciamiento[0]);
 					////LogCrtl.sendLogDebgsFinancing("<===========> registrarCambio:  "+insertado);
 				} else {
 					sCambio1 = txtCambio.getValue().toString();
@@ -5174,7 +5174,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 					if (m.get("bdTasa") != null) {
 						bdTasa = (BigDecimal) m.get("bdTasa");
 					}
-					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio1, d.formatStringToDouble(sCambio1),f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), bdTasa,"FN");
+					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio1, d.formatStringToDouble(sCambio1),f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), bdTasa,valoresJDEInsFinanciamiento[0]);
 					////LogCrtl.sendLogDebgsFinancing("<===========> registrarCambio:  "+insertado);
 				}
 			} 
@@ -8024,7 +8024,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			Tpararela[] tparalelaTmp =  TasaCambioCtrl.obtenerTasaCambioParalela();
 			CodeUtil.putInSessionMap("tpcambio", tparalelaTmp);
 			
-			String[] dtatasacte = EmpleadoCtrl.validarClienteTasaEspecial(hFac.getId().getCodcli(), "FN");
+			String[] dtatasacte = EmpleadoCtrl.validarClienteTasaEspecial(hFac.getId().getCodcli(), valoresJDEInsFinanciamiento[0]);
 			boolean clienteTasaEspecial = (dtatasacte != null && dtatasacte.length > 0 ) ;
 			if(clienteTasaEspecial){
 				Tpararela paralela = TasaCambioCtrl.crearTParalelaDeTOficial(((Tcambio[]) m.get("tcambio"))[0]);
