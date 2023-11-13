@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.NavigationHandler;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -12,7 +11,6 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import com.casapellas.controles.CtrlCajas;
 import com.casapellas.controles.MonedaCtrl;
-import com.casapellas.entidades.F55ca01;
 import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.PropertiesSystem;
@@ -118,14 +116,11 @@ public class Rptmcaja005DAO {
 				m.put("rptmcaja005_bd", lstRecibos);
 				
 				//realizar la navegación sobre la misma página aplicar filtros al reporte.
-				//FacesContext fcInicio = FacesContext.getCurrentInstance();		
-				//NavigationHandler nhInicio = fcInicio.getApplication().getNavigationHandler();		
-				FacesContext.getCurrentInstance().getExternalContext().redirect("/"+ PropertiesSystem.CONTEXT_NAME + "/reportes/rptmcaja005.faces");//nhInicio.handleNavigation(fcInicio, null, "rptmcaja005");
+				FacesContext.getCurrentInstance().getExternalContext().redirect("/"+ PropertiesSystem.CONTEXT_NAME + "/reportes/rptmcaja005.faces");
 			}
 			
 		} catch (Exception error) {
 			error.printStackTrace();
-//			LogCrtl.imprimirError(error);
 		}
 	}
 
@@ -279,7 +274,6 @@ public class Rptmcaja005DAO {
 			if(m.get("rpt005_lstFiltroCompania")==null){
 				List lstcaja = (ArrayList)m.get("lstCajas");
 				Vf55ca01 caja = (Vf55ca01)lstcaja.get(0);
-				//CtrlCajas cc = new CtrlCajas();
 				List lstComp = new ArrayList();
 			
 				lstComp.add(new SelectItem("SCO","Compañía","Selección de compañía"));

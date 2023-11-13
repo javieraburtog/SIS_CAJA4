@@ -27,11 +27,9 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-//import org.apache.commons.mail.MultiPartEmail;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -43,7 +41,6 @@ import com.casapellas.entidades.F55ca017;
 import com.casapellas.entidades.F55ca020;
 import com.casapellas.entidades.Hfactjdecon;
 import com.casapellas.entidades.ens.Vautoriz;
-//import com.casapellas.entidades.Finandet;
 import com.casapellas.entidades.Vf0101;
 import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.entidades.Vf55ca01Id;
@@ -53,7 +50,6 @@ import com.casapellas.entidades.Vrptmcaja006;
 import com.casapellas.entidades.Vrptmcaja006Id;
 import com.casapellas.entidades.Vtransaccionesjde;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
-//import com.casapellas.navegacion.As400Connection;
 import com.casapellas.util.CustomEmailAddress;
 import com.casapellas.util.Divisas;
 import com.casapellas.util.FechasUtil;
@@ -106,8 +102,6 @@ public class CtrlCajas {
 		List<F55ca01> cajas = null;
 		Session sesion = null; 
 		
-		boolean newCn = false ;
-		
 		try {
 			
 			sesion = HibernateUtilPruebaCn.currentSession();
@@ -146,10 +140,6 @@ public class CtrlCajas {
 			
 		} catch (Exception e) {
 			sMensaje = "";
-//			System.out.println(" com.casapellas.controles " + new Date());
-//			System.out
-//					.println(": Excepción capturada en :generarMensajeBlk Mensaje:\n "
-//							+ e);
 			e.printStackTrace();
 		}
 		return sMensaje;
@@ -264,7 +254,6 @@ public class CtrlCajas {
 								+ vf01.getId().getAbalph().trim().toLowerCase()+ sComodin
 								+ vf.getId().getCaan8nom().trim();
 				
-				// MultiPartEmail me = new MultiPartEmail();
 				List<CustomEmailAddress> toList = new ArrayList<CustomEmailAddress>();
 				
 				String[] lstCorreos = sCorreos.split(sComodin);
@@ -328,9 +317,6 @@ public class CtrlCajas {
 			trans.commit();
 
 		} catch (Exception e) {
-//			System.out.println(" com.casapellas.controles " + new Date());
-//			System.out.println(": Excepción capturada en " +
-//					": bloquearCaja Mensaje:\n " + e);
 			e.printStackTrace();
 		}finally{
 			try { sesion.close(); } catch (Exception e2){}
@@ -377,10 +363,6 @@ public class CtrlCajas {
 			
 		} catch (Exception e) {
 			bExiste = false;
-//			System.out.println(" com.casapellas.controles " + new Date());
-//			System.out
-//					.println(": Excepción capturada en : validarReferenciaJDE Mensaje:\n "
-//							+ e);
 			e.printStackTrace();
 			e = null;
 		}
@@ -462,13 +444,11 @@ public class CtrlCajas {
 			}	
 			rs.close();
 		}catch(Exception ex){
-//			System.out.println("==> Excepción capturada en obtenerCajaxXCodigo: " + ex);
 			ex.printStackTrace();
 		}finally {			
 			try {
 				ps.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -485,9 +465,9 @@ public class CtrlCajas {
 		try{
 			ps = cn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = ps.executeQuery();
-			rs.last();//move to last row
-			int numHeaders = rs.getRow();//rowcount
-			rs.beforeFirst();//move before the first row
+			rs.last();
+			int numHeaders = rs.getRow();
+			rs.beforeFirst();
 			
 			if (numHeaders > 0){
 				lstCajas = new ArrayList();
@@ -528,14 +508,12 @@ public class CtrlCajas {
 			}	
 			rs.close();
 		}catch(Exception ex){
-//			System.out.print("==> Excepción capturada en getAllCajas: " + ex);
 			ex.printStackTrace();
 		}finally{
 		
 			try {
 				ps.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -688,7 +666,6 @@ public class CtrlCajas {
 			}
 		} catch (Exception error) {
 			lstDtsCaja = null;
-//			System.out.println("Error en CtrlCajas.leerConfiguracionCaja  " + error);
 			error.printStackTrace();
 		}
 		return lstDtsCaja;
@@ -812,7 +789,6 @@ public class CtrlCajas {
 			}
 			
 		}catch(Exception ex){
-//			System.out.print("Se capturo una Excepcion en CtrlCajas.leerFacturasDelDia: " + ex);
 			ex.printStackTrace();
 		}
 	return lstFacturas;
@@ -833,7 +809,6 @@ public class CtrlCajas {
 				lstCajas = sesion.createQuery(sql).list();			
 			
 		}catch(Exception error){
-//			System.out.print("Error en CtrlCajas.obtenerListaCajas " + error);
 			error.printStackTrace();
 		}
 		return lstCajas;
@@ -849,7 +824,6 @@ public class CtrlCajas {
 		String sql = "", sCuenta[];
 		Divisas dv = new Divisas();
 		int iResul=0;
-		boolean bNuevaSesionENS = false;
 		
 		try {
 			
@@ -876,7 +850,6 @@ public class CtrlCajas {
 			
 		} catch (Exception error) {
 			iResul = -1;
-//			System.out.println("Error en CtrlCajas.verificarReferdeposito911 " + error);
 			error.printStackTrace();
 		}
 		return iResul;
@@ -902,7 +875,6 @@ public class CtrlCajas {
 		
 		} catch (Exception error) {
 			lstDatosDev = null;
-//			System.out.println("Error en CtrlCajas.obtenerF55CA028  " + error);
 			error.printStackTrace();
 		}
 		return lstDatosDev;
@@ -921,62 +893,11 @@ public class CtrlCajas {
 				v = (Vf55ca01)ob;
 		} catch (Exception error) {
 			v = null;
-//			System.out.println("Error en CtrlCajas.obtenerDatosCaja " + error);
 			error.printStackTrace();
 		} 
 		return v;
 	}
-/*****************************************************************************************************/
-/**	 		Obtiene los datos para generar el reporte de emisión de recibos rptmcaja007				**/
-	public List obtieneRecibosrpt007(int iCaid, String sCodcomp,Date dtIni,Date dtFin){ 
-		/*List<Vrptmcaja007> lstRecibos = null;
-		List<Vrptmcaja007Id>lstRpt07 = null;
-		String sql = "",sFechaIni="",sFechaFin="";
-		FechasUtil f = new FechasUtil();
-		Transaction trans = null;
-		Session sesion = HibernateUtil.getSessionFactoryMCAJAR().openSession();
-		
-		try {
-			sFechaIni = f.formatDatetoString(dtIni, "yyyy-MM-dd");
-			sFechaFin = f.formatDatetoString(dtFin, "yyyy-MM-dd");
-			sql = sql.concat("from Vrptmcaja007 v where v.id.codcomp = '").concat(sCodcomp);
-			sql = sql.concat("' and v.id.caid = ").concat(String.valueOf(iCaid));
-			sql = sql.concat(" and v.id.fecha between '").concat(sFechaIni).concat("' and '");
-			sql = sql.concat(sFechaFin).concat("' order by v.id.numrec asc");
 
-			trans = sesion.beginTransaction();
-			lstRecibos = (ArrayList<Vrptmcaja007>)sesion.createQuery(sql).list();
-			trans.commit();
-			
-			if(lstRecibos!=null && lstRecibos.size()>0){
-				lstRpt07 = new ArrayList<Vrptmcaja007Id>(lstRecibos.size());
-				for(Vrptmcaja007 v : lstRecibos) {
-					Vrptmcaja007Id vid = v.getId();	
-					vid.setFecharecibo(f.formatDatetoString(vid.getFecha(), "dd-MM-yyyy"));
-					vid.setDftasa(vid.getFtasa().doubleValue());
-					vid.setDmontoapl(vid.getMontoapl().doubleValue());
-					vid.setInofactura(vid.getNofactura().intValue());
-					vid.setDfmonto(vid.getFmonto().doubleValue());
-					if(vid.getCliente().trim().length()>28)
-						vid.setCliente(vid.getCliente().trim().substring(0,28));
-					lstRpt07.add(vid);
-				}
-			}
-		} catch (Exception error) {
-			lstRecibos = null;
-			System.out.println("Error en CtrlCajas.obtieneRecibosrpt007 " + error);
-		} finally {
-			try {
-				sesion.close();
-				sesion = null;
-				trans = null;
-			} catch (Exception e) {
-				lstRecibos = null;
-				System.out.println("Error al cerrar sesion en CtrlCajas.obtieneRecibosrpt007 " + e);
-			}
-		}*/
-		return null;/*lstRpt07*/
-	}
 /*****************************************************************************************************/
 /**	 		Obtiene los datos para generar el reporte de emisión de recibos rptmcaja006				**/
 	public List<Vrptmcaja006Id> obtieneRecibosrpt006(int iCaid,String sCodcomp,String sMoneda,Date dtIni,Date dtFin){ 
@@ -1146,7 +1067,6 @@ public class CtrlCajas {
 		
 			
 		} catch (Exception error) {
-//			System.out.println("Error en  CtrlCajas.obtenerFechasTransaciones" + error);
 			error.printStackTrace();
 		}		
 		return lstFechas;
@@ -1159,8 +1079,6 @@ public class CtrlCajas {
 	
 	public List<Vtransaccionesjde> obtenerTransaccionesJDE(int iCaid,String sCodcomp,Date dtFechaini,Date dtFechafin){
 		List<Vtransaccionesjde> lstTrans = null;
-		//Session sesion = HibernateUtil.getSessionFactoryMCAJAR().openSession();
-		//Transaction trans = null;
 		String sConsulta,sFechaini,sFechafin;
 		
 		try {
@@ -1173,14 +1091,11 @@ public class CtrlCajas {
 			sConsulta += " and v.id.nobatch >0 and v.id.nodocumento >0 and v.id.monto > 0";
 			sConsulta += " and v.id.restado <>'A' order by v.id.nobatch,v.id.tiporec";
 			
-			//trans = sesion.beginTransaction();
-			lstTrans = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sConsulta, Vtransaccionesjde.class, false);//lstTrans = sesion.createQuery(sConsulta).list();
-			//trans.commit();
+			lstTrans = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sConsulta, Vtransaccionesjde.class, false);
 			
 		} catch (Exception error) {
 			error.printStackTrace();
 		} finally {
-			//sesion.close();
 		}
 		return lstTrans;
 	}
@@ -1190,25 +1105,20 @@ public class CtrlCajas {
 /** 	Obtiene la lista de compañías asignadas al contador.
  **************/
 	public static List<Object[]> cargarCompaniaxContador(int iCodContador,int iCaid){
-		//Session sesion = HibernateUtil.getSessionFactoryMCAJAR().openSession();
-		//Transaction trans = null;	
 		String consulta = "";
 		List<Object[]> lstMonedas = new ArrayList<Object[]>();
 		
 		try{
-			consulta =  " select distinct(co.id.c4rp01d1),co.id.c4rp01";//,c.id.cacont ,c.id.caid";
+			consulta =  " select distinct(co.id.c4rp01d1),co.id.c4rp01";
 			consulta += " from F55ca01 c, F55ca014 co where co.id.c4id = c.id.caid and c.id.cacont = "+iCodContador;
 			if(iCaid != 0)
 				consulta += " and co.id.c4id = "+iCaid;
 
-			//trans = sesion.beginTransaction();
-			lstMonedas = ConsolidadoDepositosBcoCtrl.executeSqlQuery(consulta, null, false) ; //sesion.createQuery(consulta).list();
-			//trans.commit();
+			lstMonedas = ConsolidadoDepositosBcoCtrl.executeSqlQuery(consulta, null, false) ; 
 			
 		}catch(Exception error){
 			error.printStackTrace();
 		}finally{
-			//sesion.close();
 		}
 		return lstMonedas;
 	}	
@@ -1262,7 +1172,6 @@ public class CtrlCajas {
 	public void getCajas() {
 		Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 		String cajero = (String) m.get("NombreCajero");
-//		System.out.println("Cajero # " + cajero);
 				
         Session session =  HibernateUtilPruebaCn.currentSession();
         
@@ -1287,7 +1196,6 @@ public class CtrlCajas {
 	        }
 	        
 		}catch(Exception ex){
-//			System.out.println("Excepcion en getCajas # " + ex);
 			ex.printStackTrace();
 			
 		} 
@@ -1318,7 +1226,6 @@ public class CtrlCajas {
 	        }
 	        
 		}catch(Exception ex){
-//			System.out.println("getRecibosCaja # " + ex);
 			ex.printStackTrace();
 			
 		} finally {			
@@ -1339,7 +1246,6 @@ public class CtrlCajas {
 			.list();
 				
 		}catch(Exception ex){
-//			System.out.print("==> Excepción capturada en getAllCajas: " + ex);
 			ex.printStackTrace();
 		}finally {			
 			session.close();
@@ -1359,7 +1265,6 @@ public class CtrlCajas {
 			.list();
 			
 		}catch(Exception ex){
-//			System.out.print("==> Excepción capturada en getAllCajas: " + ex);
 			ex.printStackTrace();
 		}finally {			
 			try{session.close();}catch(Exception ex2){};
@@ -1630,7 +1535,6 @@ public class CtrlCajas {
 			
 		
 			sql = "select * from "+PropertiesSystem.ESQUEMA+".Hfactjdecon as f where f.fecha =" + iFechaActual +" and trim(f.estado)<>'A' and f.tipofactura in (";
-			//String sql = "from Hfactjdecon as f where f.id.fecha =" + iFechaActual +" and f.id.subtotal > 0 and f.id.tipofactura in (";
 			//agregar tipos de documentos
 			for (int i = 0; i < sTipoDoc.length; i++){
 				if (i == sTipoDoc.length - 1){
@@ -1702,7 +1606,6 @@ public class CtrlCajas {
 					sql = sql + "'" + sTipoDoc[i] + "',";
 				}
 			}
-			//sql = sql + ") order by f.id.fecha desc, f.id.hora desc ";
 			sql = sql + ") and f.id.codsuc = '"+sCodSuc+ "' and trim(f.id.estado) = '' and f.id.nofactura not in(select rf.id.numfac from Recibofac as rf where rf.id.numfac = f.id.nofactura and rf.id.codcomp = f.id.codcomp and rf.id.tipofactura = f.id.tipofactura and trim(rf.codunineg) = trim(f.codunineg)) order by f.id.fecha desc, f.id.hora desc ";
 			lstFacturas = session
 			.createQuery(sql)			
