@@ -1,7 +1,6 @@
 package com.casapellas.util;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -173,7 +172,7 @@ public class MailHelper {
 			// send the message
 			Transport.send(message);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("SendEmail", "ERR", e.getMessage());
 		}
 	}
 	

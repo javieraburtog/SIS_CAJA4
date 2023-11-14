@@ -45,6 +45,8 @@ public class PropertiesSystem {
 		public final static String ENS = "ENS";
 		public final static String GCPSISEVA = "GCPSISEVA2";
 		public final static String INV = "E2INV";
+		
+		public final static Boolean Is_Debug_Mode = true;
 	
 		
    // Configuraciones para obtener cuentas

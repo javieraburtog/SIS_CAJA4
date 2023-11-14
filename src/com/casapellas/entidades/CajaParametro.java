@@ -12,6 +12,10 @@ public class CajaParametro {
 	private String descripcion;
 	private Double valorNumerico;
 	private String valorAlfanumerico;
+	private String codigoCuentaObjeto;
+	private String codigoSubCuenta;
+	private String codigoUnidadNegocio;
+	private String codigoCompania;
 	
 	public String getCodParametro() {
 		return codParametro;
@@ -48,6 +52,30 @@ public class CajaParametro {
 	}
 	public void setValorAlfanumerico(String valorAlfanumerico) {
 		this.valorAlfanumerico = valorAlfanumerico;
+	}
+	public String getCodigoCuentaObjeto() {
+		return codigoCuentaObjeto;
+	}
+	public void setCodigoCuentaObjeto(String codigoCuentaObjeto) {
+		this.codigoCuentaObjeto = codigoCuentaObjeto;
+	}
+	public String getCodigoSubCuenta() {
+		return codigoSubCuenta;
+	}
+	public void setCodigoSubCuenta(String codigoSubCuenta) {
+		this.codigoSubCuenta = codigoSubCuenta;
+	}
+	public String getCodigoUnidadNegocio() {
+		return codigoUnidadNegocio;
+	}
+	public void setCodigoUnidadNegocio(String codigoUnidadNegocio) {
+		this.codigoUnidadNegocio = codigoUnidadNegocio;
+	}
+	public String getCodigoCompania() {
+		return codigoCompania;
+	}
+	public void setCodigoCompania(String codigoCompania) {
+		this.codigoCompania = codigoCompania;
 	}
 		
 }

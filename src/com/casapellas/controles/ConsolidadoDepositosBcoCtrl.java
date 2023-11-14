@@ -294,7 +294,6 @@ public class ConsolidadoDepositosBcoCtrl {
 				} catch (Exception e) {
 					LogCajaService.CreateLog("executeSqlQueries", "ERR", e.getMessage());
 					executed = false;
-					e.printStackTrace(); 
 					setMsgStatus("Query for position " + iQueryIndex + " executed with error : "+ e.getMessage()  ) ;
 					break;
 				}
@@ -309,12 +308,9 @@ public class ConsolidadoDepositosBcoCtrl {
 			}
 			
 		} catch (Exception e) {
-			
+			LogCajaService.CreateLog("executeSqlQueries", "ERR", e.getMessage());
 			executed = false;
 			setMsgStatus("Error on execute Query for position " + iQueryIndex + "  >> error : "+ e.getMessage()  ) ;
-			
-			e.printStackTrace();
-			
 		}finally{
 			
 			if( newCn && trans.isActive() && session.isOpen()  ){
@@ -328,7 +324,7 @@ public class ConsolidadoDepositosBcoCtrl {
 					}
 				} catch (Exception e2) {
 					executed = false;
-					e2.printStackTrace();
+					LogCajaService.CreateLog("executeSqlQueries", "ERR", e2.getMessage());
 				}
 			
 			}
@@ -413,14 +409,11 @@ public class ConsolidadoDepositosBcoCtrl {
 				setMsgStatus("") ;
 				
 				try {
-					rowsAffected  = session.createSQLQuery( queryToExecute ).executeUpdate();
-					
 					LogCajaService.CreateLog("executeSqlQueryTx", "QRY", queryToExecute);
-	
+					rowsAffected  = session.createSQLQuery( queryToExecute ).executeUpdate();
 				} catch (Exception e) {
 					LogCajaService.CreateLog("executeSqlQueryTx", "ERR", e.getMessage());
 					executed = false;
-					e.printStackTrace(); 
 					setMsgStatus("Query for position " + iQueryIndex + " executed with error : "+ e.getMessage()  ) ;
 					return executed;
 				}
@@ -435,12 +428,7 @@ public class ConsolidadoDepositosBcoCtrl {
 				LogCajaService.CreateLog("executeSqlQueryTx", "ERR", e.getMessage());
 				executed = false;
 				setMsgStatus("Error on execute Query for position " + iQueryIndex + "  >> error : "+ e.getMessage()  ) ;
-				
-				e.printStackTrace();
-				
 			}finally{
-				
-				
 				setAffectedRowsOnExecute(iTotalRowsAffectedByQuery);
 			}
 		}else {
@@ -448,6 +436,7 @@ public class ConsolidadoDepositosBcoCtrl {
 				AllConectionMngt conectionMngt = new AllConectionMngt();
 				Connection cn = conectionMngt.getSimpleDriverConnection();
 				
+				LogCajaService.CreateLog("executeSqlQueryTx", "QRY", queryToExecute);
 				PreparedStatement stmt = cn.prepareStatement(queryToExecute);				
 				
 				stmt.executeUpdate();				
@@ -455,11 +444,10 @@ public class ConsolidadoDepositosBcoCtrl {
 				
 				cn.close();
 				executed=true;
-				LogCajaService.CreateLog("executeSqlQueryTx", "QRY", queryToExecute);
+				
 			}catch(Exception e) {
 				executed=false;
 				LogCajaService.CreateLog("executeSqlQueryTx", "ERR", e.getMessage());
-				e.printStackTrace();
 			}
 			
 		}

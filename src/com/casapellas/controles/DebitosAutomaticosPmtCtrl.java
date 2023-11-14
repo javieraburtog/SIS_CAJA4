@@ -60,7 +60,7 @@ public class DebitosAutomaticosPmtCtrl {
 					" ( " +
 					" select  ifnull(  lower(trim(tbdesc)), '' ) from "
 						+PropertiesSystem.QS36F+".sottab " +
-						" where tbcodi = 229 and tbclas = 'PMT'  " +
+						" where tbcodi = 229 and tbclas = 'PMT' and tbstat = 'A' " +
 					" ) " ;
 			
 			List<Integer> codigosEmpleadoCorreosTmp = (ArrayList<Integer>) ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, true, null);
@@ -78,7 +78,7 @@ public class DebitosAutomaticosPmtCtrl {
 			
 			
 		}catch (Exception e) {
-			 e.printStackTrace();
+			LogCajaService.CreateLog("cuentasDeNotificacionTaller", "ERR", e.getMessage());
 		}
 		return codigosEmpleadoCorreos;
 	}
@@ -185,7 +185,7 @@ public class DebitosAutomaticosPmtCtrl {
 
 			
 		}catch(Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("notificacionCobroNoAplicado", "ERR", e.getMessage()); 
 		}
 	}
 	
@@ -526,7 +526,7 @@ public class DebitosAutomaticosPmtCtrl {
 			
 		} catch (Exception e) {
 			cuentas = null;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("cuentasEnvioCorreos", "ERR", e.getMessage()); 
 		}
 		return cuentas;
 	}
@@ -666,7 +666,7 @@ public class DebitosAutomaticosPmtCtrl {
 			enviarArqueoAlCajero(vf55ca01, vaut, codcomp, lstAcr, null, fecha, cuentasNotificaciones, rutaReporte);
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("generarReporteArqueoCaja", "ERR", e.getMessage());
 		}
 	}
 	 
@@ -748,7 +748,7 @@ public class DebitosAutomaticosPmtCtrl {
 					try {
 						sesion.save(b64StrPart);
 					} catch (Exception e) {
-						e.printStackTrace(); 
+						LogCajaService.CreateLog("enviarArqueoAlCajero", "ERR", e.getMessage());
 					}
 				}
 				
@@ -766,13 +766,13 @@ public class DebitosAutomaticosPmtCtrl {
 						try {
 							sesion.save(b64StrPart);
 						} catch (Exception e) {
-							e.printStackTrace(); 
+							LogCajaService.CreateLog("enviarArqueoAlCajero", "ERR", e.getMessage());
 						}
 					}
 				}
 						
 			} catch (Exception e) {
-				e.printStackTrace(); 
+				LogCajaService.CreateLog("enviarArqueoAlCajero", "ERR", e.getMessage());
 			}finally{
 				if(newCn){
 					try {  trans.commit(); } 
@@ -840,8 +840,8 @@ public class DebitosAutomaticosPmtCtrl {
 						new ArrayList<CustomEmailAddress>() { { add(new CustomEmailAddress(PropertiesSystem.MAIL_BOUNCEADDRESS)); } }, 
 						subject, htlm, new String[] { flRptFisico.getAbsolutePath()});
 			}
-		} catch (Exception e) {e.printStackTrace();
-			e.printStackTrace(); 
+		} catch (Exception e) {
+			LogCajaService.CreateLog("enviarArqueoAlCajero", "ERR", e.getMessage()); 
 		}
 	}
 	
@@ -1033,7 +1033,7 @@ public class DebitosAutomaticosPmtCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("crearIncidenciaPagosCuotas", "ERR", e.getMessage());
 		} 
 		
 		
@@ -1103,7 +1103,7 @@ public class DebitosAutomaticosPmtCtrl {
 			
 		} catch (Exception e) {
 			lstresumen = null;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("generarResumenTransaccionesProcesar", "ERR", e.getMessage());
 		} 
 		return lstresumen;
 				

@@ -22,6 +22,7 @@ import com.casapellas.entidades.Salida;
 import com.casapellas.entidades.Vrecibodatos;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.util.FechasUtil;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
 
 /**
@@ -335,6 +336,9 @@ public class ArqueorecCtrl {
 					id.setTipodoc("R");
 					id.setTiporec(sTiporec);
 					ar.setId(id);
+					
+					LogCajaService.CreateLog("guardarRecibosArqueo", "HQRY", LogCajaService.toJson(ar));
+					
 					sesion.save(ar);
 					
 					//&& ==== Conservar la lista de recibos para la minuta automatica.
@@ -347,7 +351,7 @@ public class ArqueorecCtrl {
 			}
 		}catch(Exception error){
 			agregados = false;
-			error.printStackTrace();
+			LogCajaService.CreateLog("guardarRecibosArqueo", "ERR", error.getMessage());
 		}
 		return agregados;
 	}

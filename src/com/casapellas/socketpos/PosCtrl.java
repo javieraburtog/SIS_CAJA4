@@ -72,8 +72,6 @@ public class PosCtrl {
 			TransactionsSocketPosBac.transaction_type = TransactionsTypes.TEST;
 			boolean exec = TransactionsSocketPosBac.executeTransactionRequested();
 		
-//			LogCrtl.sendLogDebgs("Data Connection: " + TransactionsSocketPosBac.dtaConnection); No se encontro No. de ficha
-
 			if (!exec) {
 				
 				return strMensajeValidacion = "No se ha podido crear interfaz de comunicación con Socket Pos";
@@ -87,9 +85,6 @@ public class PosCtrl {
 				
 				return strMensajeValidacion = "No se ha podido crear interfaz de comunicación con Socket Pos";
 			}
-
-//			LogCrtl.sendLogDebgs(tr.toString());
-//			LogCrtl.sendLogDebgs(r.toString());
 			
 			//&& ============ comunicacion establecida
 			if( r.getResponseCode().compareTo( ResponseCodes.APROBADO.CODE ) != 0){
@@ -100,8 +95,7 @@ public class PosCtrl {
 
 		} catch (Exception e) {
 			strMensajeValidacion = "Se ha generado un error al tratar de establecer conexion con Socket POS credomatic";
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("credomatic_SocketPos_TestConnection", "ERR", e.getMessage());
 		}
 		return strMensajeValidacion;
 	}
@@ -322,8 +316,7 @@ public class PosCtrl {
 			return sppendientes = (List<Transactsp>) ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, true, Transactsp.class);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("cobrosSocketPosPendientes", "ERR", e.getMessage());
 		}
 		
 		return sppendientes;
@@ -359,48 +352,23 @@ public class PosCtrl {
 						+ " where termid = '" + terminalid
 						+ "' and status = 'PND' and stat_cred = 0";
 				
-				Session sesion = null;
-				Transaction trans = null;
-				boolean newCn = false;
+				
 				
 				try {
-					sesion = HibernateUtilPruebaCn.currentSession();
-					trans = (newCn = !(sesion.getTransaction().isActive())) ? sesion
-							.beginTransaction() : sesion.getTransaction();
-							
+					Session sesion = HibernateUtilPruebaCn.currentSession();
+					
+					LogCajaService.CreateLog("cobrosSocketPosPendientes_cierrePOS", "QRY", sql);
+					
 					sesion.createSQLQuery(sql).executeUpdate();
 				} catch (Exception e) {
-					e.printStackTrace(); 
-				}
-				finally {
-					try {
-						trans.commit();
-						sppendientes=null;
-					} catch (Exception e2) {
-						e2.printStackTrace(); 
-						try
-						{
-							trans.rollback();
-						}
-						catch (Exception e) {
-							// TODO: handle exception
-							e.printStackTrace();
-						}
-					}
-					try {
-						if(newCn && sesion != null && sesion.isOpen() )
-							HibernateUtilPruebaCn.closeSession(sesion);
-					} catch (Exception e2) {
-						e2.printStackTrace(); 
-					}
+					LogCajaService.CreateLog("cobrosSocketPosPendientes_cierrePOS", "ERR", e.getMessage());
 				}
 				
 			}
 				
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("cobrosSocketPosPendientes_cierrePOS", "ERR", e.getMessage());
 		}
 		
 		return sppendientes;
@@ -417,13 +385,14 @@ public class PosCtrl {
 					+ terminalid + "' and date(created) = '"
 					+ new SimpleDateFormat("yyyy-MM-dd").format(fechavalidar)
 					+ "' and status =  0 ";
+			
+			LogCajaService.CreateLog("listarCobrosRespuestaPendiente", "QRY", sql);
 			 
 			return pendientes =  (List<HistoricoCobrosSocketpos>) ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, true, HistoricoCobrosSocketpos.class);
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("listarCobrosRespuestaPendiente", "ERR", e.getMessage());
 		}  
 		return pendientes;
 	}
@@ -476,7 +445,7 @@ public class PosCtrl {
 
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("aplicarReversionPagosNoValidados", "ERR", e.getMessage());
 		}
 	}
 	
@@ -634,9 +603,7 @@ public class PosCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
-//			LogCrtl.sendLogDebgs(e);
-//			LogCrtl.sendLogDebgs(e);
+			LogCajaService.CreateLog("crearReporteCierre", "ERR", e.getMessage());
 			strParts = null;
 		}
 		return strParts;

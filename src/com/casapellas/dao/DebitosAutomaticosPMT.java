@@ -22,6 +22,7 @@ import org.hibernate.Transaction;
 
 import com.casapellas.controles.ArqueoCajaCtrl;
 import com.casapellas.controles.ArqueorecCtrl;
+import com.casapellas.controles.ClsCajaConfiguracionJde;
 import com.casapellas.controles.ClsParametroCaja;
 import com.casapellas.controles.ConsolidadoDepositosBcoCtrl;
 import com.casapellas.controles.DebitosAutomaticosPmtCtrl;
@@ -67,7 +68,7 @@ import ni.com.casapellas.db2.pojo.ResultadoECommerce;
 import ni.com.casapellas.db2.pojo.TransactBanco;
 
 public class DebitosAutomaticosPMT {
-	private static String TIPO_RECIBO_PMT = "PM" ;
+	// private static String TIPO_RECIBO_PMT = "PM" ;
 
 	private HtmlGridView gvCuotasPendientesDebitos;
 	private HtmlGridView gvResumenCobrosAutomaticosProcesar;
@@ -87,8 +88,7 @@ public class DebitosAutomaticosPMT {
 	public HtmlDialogWindow dwConfirmacionProcesoDebitosPorNivel;
 	public HtmlDialogWindow dwConfirmarProcesoCuotaIndividual;
 	
-	public HtmlDialogWindowHeader dwTituloMensajeValidacion;
-	
+	public HtmlDialogWindowHeader dwTituloMensajeValidacion;	
 	
 	public static List<List<String[]>> codigosNotificar(Vf55ca01 datos_caja, Integer codcajero) {
 	 
@@ -103,14 +103,17 @@ public class DebitosAutomaticosPMT {
 				 codigosCuentasNotificacionTaller.addAll(codigosConfiguradosTaller);
 			}
 			
-			codigosCuentasNotificacionTaller.addAll(    
-					 Arrays.asList( 
-						 new Integer[]{
-							 codcajero,
-							 datos_caja.getId().getCaan8()
-							 }	
-						 )
-					 ) ;
+			//Si estoy en modo de pruebas no agregar el correo del cajero ni del supervisor, solo los configurados en la tabla SOTTAB
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				codigosCuentasNotificacionTaller.addAll(    
+						 Arrays.asList( 
+							 new Integer[]{
+								 codcajero,
+								 datos_caja.getId().getCaan8()
+								 }	
+							 )
+						 ) ;
+			}
 			 
 			 List<String> ctanot = new ArrayList<String>();
 			 
@@ -132,7 +135,7 @@ public class DebitosAutomaticosPMT {
 			
 			
 		}catch(Exception ex) {
-			ex.printStackTrace();
+			LogCajaService.CreateLog("codigosNotificar", "ERR", ex.getMessage());
 			cuentasNotificaciones = null;
 		}
 		return cuentasNotificaciones;
@@ -159,6 +162,8 @@ public class DebitosAutomaticosPMT {
 		int establoqueadodebito = 0;
 		try {
 			
+			LogCajaService.CreateLog("procesarCuotaIndipendiente", "INFO", "INICIO METODO - procesarCuotaIndipendiente");
+			
 			//&& ============ debitos automaticos bloqueados.
 			ClsParametroCaja clsPC = new ClsParametroCaja();
 			
@@ -174,6 +179,21 @@ public class DebitosAutomaticosPMT {
 			{
 				establoqueadodebito = 1;
 				strMensajeProceso  = "No se pudo bloquear proceso de pago";
+				return;
+			}
+			
+			ClsCajaConfiguracionJde servicio = new ClsCajaConfiguracionJde();
+			CajaConfiguracionJde cfg = servicio.obtenerConfiguracionCajaJde("PMT_JDE_INS");
+			
+			if (cfg == null) {
+				strMensajeProceso  = "No se ha logrado encontrar la configuracion de caja para el parametro PMT_JDE_INS";
+				return;
+			}
+			
+			CajaConfiguracionJde cfgFCV = servicio.obtenerConfiguracionCajaJde("FCV_JDE_INS");
+			
+			if (cfgFCV == null) {
+				strMensajeProceso  = "No se ha logrado encontrar la configuracion de caja para el parametro FCV_JDE_INS";
 				return;
 			}
 			
@@ -210,6 +230,22 @@ public class DebitosAutomaticosPMT {
 					 v.getRowcount()
 					 ) ;
 			
+			//Validar que el numero de contrato exista antes de empezar con el procesamiento		
+			Object[] queryNumberContrato = PlanMantenimientoTotalCtrl
+												.queryNumberContrato(v.getMpbnctto(),
+																	v.getMpbcli(), 
+																	v.getCodcomp().trim(), "");
+			
+			if(queryNumberContrato == null){
+				strMensajeProceso = "-> No se ha encontrado datos asociados al número de Contrato " + v.getMpbnctto();
+				v.setEstadoProceso("Error");
+				v.setObservaciones(strMensajeProceso);
+				v.setErrorpagotarjeta(false);
+				v.setRegistroprocesado(false);
+				p.setObservaciones(strMensajeProceso);
+				return;
+			}
+			
 			//&& ================= aplicar el cobro en credomatic
 			strMensajeProceso = procesarPagoSocketPos(v, datos_caja.getId().getCaid(), vautoriz.getId().getCodreg() );
 			
@@ -226,7 +262,10 @@ public class DebitosAutomaticosPMT {
 				 
 				DebitosAutomaticosPmtCtrl.crearIncidenciaPagosCuotas(null, v, "01");
 				 
-				DebitosAutomaticosPmtCtrl.notificacionCobroNoAplicado( Arrays.asList(new Vwbitacoracobrospmt[] {v} ) );
+				if (!PropertiesSystem.Is_Debug_Mode) {
+					// Enviar los correos solo si estamos en Produccion
+					DebitosAutomaticosPmtCtrl.notificacionCobroNoAplicado( Arrays.asList(new Vwbitacoracobrospmt[] {v} ) );	
+				}
 				
 				return;
 			 }
@@ -239,7 +278,7 @@ public class DebitosAutomaticosPMT {
 			 //Cerrar la session para liberar los recursos antes de iniciar el proceso del recibo
 			 HibernateUtilPruebaCn.closeSession();
 			 
-			 strMensajeProceso =  procesarReciboCaja(v, vautoriz, datos_caja, transaccionesSocket) ;
+			 strMensajeProceso =  procesarReciboCaja(v, vautoriz, datos_caja, transaccionesSocket, cfg, cfgFCV) ;
 			
 			 if( !strMensajeProceso.isEmpty() ){
 				 anularPagoSocketPos(v);
@@ -260,9 +299,7 @@ public class DebitosAutomaticosPMT {
 			v.setRegistroprocesado(true);
 			v.setEstadoProceso("Aplicado");			 
 			
-			//&& ============ notificacion al cliente del cobro de la cuota 
-			//DebitosAutomaticosPmtCtrl.notificacionCorreoCuotaAplicada( Arrays.asList( new Vwbitacoracobrospmt[]{v} ), cuentasNotificacionesCobros  );
-			
+			//&& ============ notificacion al cliente del cobro de la cuota 			
 			p.setNotificacioncliente( v.isNotificado() );
 			
 			 
@@ -275,6 +312,7 @@ public class DebitosAutomaticosPMT {
 					PropertiesSystem.getDataFromPcClient() ) ;
 			
 			PmtDtCobroAutomatico[] cuotasDtaProceso = new PmtDtCobroAutomatico[]{p};
+			
 			registrarBitacoraCobroAutomatico(mt, cuotasDtaProceso) ;
 			 
 			List<Vwbitacoracobrospmt> cuotasAplicadas = new ArrayList<Vwbitacoracobrospmt>(); 
@@ -314,11 +352,11 @@ public class DebitosAutomaticosPMT {
 				} 
 			}
 			
-
+			LogCajaService.CreateLog("procesarCuotaIndipendiente", "INFO", "INICIO METODO - procesarCuotaIndipendiente");
 			
 		} catch (Exception e) {
 			strMensajeProceso = "No se ha podido aplicar el cargo a la cuota " ;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("procesarCuotaIndipendiente", "ERR", e.getMessage());
 		}finally{
 			
 			//&& Verificar si es un mensaje de debito automatico bloqueo
@@ -387,9 +425,11 @@ public class DebitosAutomaticosPMT {
 		
 		try {
 		
-			strMessage = PosCtrl.credomatic_SocketPos_TestConnection() ;
-			if( !strMessage.isEmpty() ) {
-				return ;
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				strMessage = PosCtrl.credomatic_SocketPos_TestConnection() ;
+				if( !strMessage.isEmpty() ) {
+					return ;
+				}
 			}
 			
 			RowItem ri = (RowItem) ev.getComponent().getParent().getParent();
@@ -525,6 +565,8 @@ public class DebitosAutomaticosPMT {
 		int establoqueadodebito=0;
 		try {
 			
+			LogCajaService.CreateLog("procesarCobrosAutomaticosPorNivel", "INFO", "procesarCobrosAutomaticosPorNivel - INICIO");
+			
 			ClsParametroCaja clsPC = new ClsParametroCaja();
 			
 			CajaParametro lstCP = clsPC.getParametros("06", "0", "DEBAUT");
@@ -543,6 +585,21 @@ public class DebitosAutomaticosPMT {
 				establoqueadodebito=1;
 				return;
 			}
+			
+			ClsCajaConfiguracionJde servicio = new ClsCajaConfiguracionJde();
+			CajaConfiguracionJde cfg = servicio.obtenerConfiguracionCajaJde("PMT_JDE_INS");
+			
+			if (cfg == null) {
+				strMensajeProceso  = "No se ha logrado encontrar la configuracion de caja para el parametro PMT_JDE_INS";
+				return;
+			}
+			
+			CajaConfiguracionJde cfgFCV = servicio.obtenerConfiguracionCajaJde("FCV_JDE_INS");
+			
+			if (cfgFCV == null) {
+				strMensajeProceso  = "No se ha logrado encontrar la configuracion de caja para el parametro FCV_JDE_INS";
+				return;
+			}			
 			
 			final ResumenCobroAutomatico r = (ResumenCobroAutomatico) CodeUtil.getFromSessionMap("debatm_ResumenCobroAplicar");
 			
@@ -604,6 +661,25 @@ public class DebitosAutomaticosPMT {
 				 if(v.isRegistroprocesado()){
 					 continue;
 				 }
+				 
+				//Validar que el numero de contrato exista antes de empezar con el procesamiento		
+				Object[] queryNumberContrato = PlanMantenimientoTotalCtrl
+													.queryNumberContrato(v.getMpbnctto(),
+																		v.getMpbcli(), 
+																		v.getCodcomp().trim(), "");
+				
+				if(queryNumberContrato == null){
+					strMensajeProceso = "-> No se ha encontrado datos asociados al número de Contrato " + v.getMpbnctto();
+					v.setEstadoProceso("Error");
+					v.setObservaciones(strMensajeProceso);
+					v.setErrorpagotarjeta(false);
+					v.setRegistroprocesado(false);
+					 
+					cuotasDtaProceso[indexCuota].setObservaciones(strMensajeProceso);
+					cuotasDtaProceso[indexCuota].setCodigorespuestasp("");
+					cuotasDtaProceso[indexCuota].setDescripcionrespuestasp("");
+					continue;
+				}
 				 	
 				 //&& ================= aplicar el cobro en credomatic
 				 strMensajeProceso = procesarPagoSocketPos(v, datos_caja.getId().getCaid(), vautoriz.getId().getCodreg() );
@@ -629,7 +705,7 @@ public class DebitosAutomaticosPMT {
 				 cuotasDtaProceso[indexCuota].setNumerovoucher( Long.parseLong( v.getReferenceNumber().trim() ) );
 				 
 				 //&& ================= grabar el recibo en caja y el  pasivo en Edward's
-				 strMensajeProceso =  procesarReciboCaja(v, vautoriz, datos_caja, transaccionesSocket) ;
+				 strMensajeProceso =  procesarReciboCaja(v, vautoriz, datos_caja, transaccionesSocket, cfg, cfgFCV) ;
 
 				 if( !strMensajeProceso.isEmpty() ){
 					 anularPagoSocketPos(v);
@@ -662,7 +738,9 @@ public class DebitosAutomaticosPMT {
 			}
 			 
 			//&& ============ notificaciones de proceso por correo
-			DebitosAutomaticosPmtCtrl.notificacionCorreoCuotaAplicada( cuotasAplicadas, cuentasNotificacionesCobros  );
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				DebitosAutomaticosPmtCtrl.notificacionCorreoCuotaAplicada( cuotasAplicadas, cuentasNotificacionesCobros);	
+			}			
 			 
 			//&& ================= verificar la notificacion por correo.
 			for (PmtDtCobroAutomatico dtaPrc : cuotasDtaProceso) {
@@ -729,14 +807,15 @@ public class DebitosAutomaticosPMT {
 			lstCuotasPendientesDebitos = (List<Vwbitacoracobrospmt>) CollectionUtils.subtract(lstCuotasPendientesDebitos, cuotasAplicadas);
 			
 			//&& ============ notificaciones a los clientes que no se les pudo aplicar el cargo
-			List<Vwbitacoracobrospmt> notificacionesNoAplicado =  (List<Vwbitacoracobrospmt>) CollectionUtils.subtract(cuotasProcesar, cuotasAplicadas);   
-			if(notificacionesNoAplicado != null && !notificacionesNoAplicado.isEmpty() ) {
-				DebitosAutomaticosPmtCtrl.notificacionCobroNoAplicado(notificacionesNoAplicado);
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				List<Vwbitacoracobrospmt> notificacionesNoAplicado =  (List<Vwbitacoracobrospmt>) CollectionUtils.subtract(cuotasProcesar, cuotasAplicadas);   
+				if(notificacionesNoAplicado != null && !notificacionesNoAplicado.isEmpty() ) {
+					DebitosAutomaticosPmtCtrl.notificacionCobroNoAplicado(notificacionesNoAplicado);
+				}
 			}
 			
-			
 		} catch (Exception e) {
-			 e.printStackTrace(); 
+			LogCajaService.CreateLog("procesarCobrosAutomaticosPorNivel", "ERR", e.getMessage());
 			 procesados  = false;
 			 strMensajeProceso = "Error en el procedimiento de cobros por cliente";
 		}finally{
@@ -783,14 +862,14 @@ public class DebitosAutomaticosPMT {
 				dwMensajesValidacion.setWindowState("normal");
 				lblMensajeValidacion.setValue(strMensajeProceso);
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticosPorNivel", "ERR", e.getMessage());
 			}
 			
 			try {
 				dwConfirmacionProcesoDebitos.setWindowState("hidden");
 				dwResumenProcedimientoCobroAutomatico.setWindowState("hidden");
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticosPorNivel", "ERR", e.getMessage());
 			}
 			
 			ClsParametroCaja clsPC = new ClsParametroCaja();
@@ -805,7 +884,7 @@ public class DebitosAutomaticosPMT {
 				gvCuotasPendientesDebitos.dataBind();
 				gvCuotasPendientesDebitos.setPageIndex(0);
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticosPorNivel", "ERR", e.getMessage());
 			}
 			try {
 				CodeUtil.refreshIgObjects(new Object[] { dwMensajesValidacion,
@@ -813,20 +892,22 @@ public class DebitosAutomaticosPMT {
 				                     					gvCuotasPendientesDebitos,
 				                     					dwResumenProcedimientoCobroAutomatico });
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticosPorNivel", "ERR", e.getMessage());
 			}
 			
 			try {
 				crearReporteResumenCuotas1("Débitos Automáticos", "Resultado de Cobros por Compañía y Moneda", 
 						cuotasProcesar, cuentasNotificaciones,idemision, parentrowid );
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticosPorNivel", "ERR", e.getMessage());
 			}
 			
 			// ==========================================================			
 			CodeUtil.removeFromSessionMap("debatm_ResumenCobroAplicar" ) ;
 
 		}
+		
+		LogCajaService.CreateLog("procesarCobrosAutomaticosPorNivel", "INFO", "procesarCobrosAutomaticosPorNivel - FIN");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -856,6 +937,8 @@ public class DebitosAutomaticosPMT {
 		int establoqueadodebito=0;
 		try {
 			
+			LogCajaService.CreateLog("procesarCobrosAutomaticos", "INFO", "procesarCobrosAutomaticos - INICIO");
+			
 			ClsParametroCaja clsPC = new ClsParametroCaja();
 			
 			CajaParametro lstCP = clsPC.getParametros("06", "0", "DEBAUT");
@@ -872,6 +955,21 @@ public class DebitosAutomaticosPMT {
 				establoqueadodebito=1;
 				return;
 				
+			}
+			
+			ClsCajaConfiguracionJde servicio = new ClsCajaConfiguracionJde();
+			CajaConfiguracionJde cfg = servicio.obtenerConfiguracionCajaJde("PMT_JDE_INS");
+			
+			if (cfg == null) {
+				strMensajeProceso  = "No se ha logrado encontrar la configuracion de caja para el parametro PMT_JDE_INS";
+				return;
+			}
+			
+			CajaConfiguracionJde cfgFCV = servicio.obtenerConfiguracionCajaJde("FCV_JDE_INS");
+			
+			if (cfgFCV == null) {
+				strMensajeProceso  = "No se ha logrado encontrar la configuracion de caja para el parametro FCV_JDE_INS";
+				return;
 			}
 			
 			vautoriz = ((Vautoriz[])CodeUtil.getFromSessionMap("sevAut") )[0];
@@ -956,6 +1054,25 @@ public class DebitosAutomaticosPMT {
 					 if(v.isRegistroprocesado()){
 						 continue;
 					 }
+					 
+					//Validar que el numero de contrato exista antes de empezar con el procesamiento		
+					Object[] queryNumberContrato = PlanMantenimientoTotalCtrl
+														.queryNumberContrato(v.getMpbnctto(),
+																			v.getMpbcli(), 
+																			v.getCodcomp().trim(), "");
+					
+					if(queryNumberContrato == null){
+						strMensajeProceso = "-> No se ha encontrado datos asociados al número de Contrato " + v.getMpbnctto();
+						v.setEstadoProceso("Error");
+						v.setObservaciones(strMensajeProceso);
+						v.setErrorpagotarjeta(false);
+						v.setRegistroprocesado(false);
+						 
+						cuotasDtaProceso[indexCuota].setObservaciones(strMensajeProceso);
+						cuotasDtaProceso[indexCuota].setCodigorespuestasp("");
+						cuotasDtaProceso[indexCuota].setDescripcionrespuestasp("");
+						continue;
+					}
 					 	
 					 //&& ================= aplicar el cobro en credomatic
 					 strMensajeProceso = procesarPagoSocketPos(v, datos_caja.getId().getCaid(), vautoriz.getId().getCodreg() );
@@ -981,7 +1098,7 @@ public class DebitosAutomaticosPMT {
 					 cuotasDtaProceso[indexCuota].setNumerovoucher( Long.parseLong( v.getReferenceNumber().trim() ) );
 					 
 					 //&& ================= grabar el recibo en caja y el  pasivo en Edward's
-					 strMensajeProceso =  procesarReciboCaja(v, vautoriz, datos_caja, transaccionesSocket) ;
+					 strMensajeProceso =  procesarReciboCaja(v, vautoriz, datos_caja, transaccionesSocket, cfg, cfgFCV) ;
 					 
 					 if( !strMensajeProceso.isEmpty() ){
 						//lfonseca
@@ -1038,8 +1155,10 @@ public class DebitosAutomaticosPMT {
 				
 				
 				//&& ================= enviar el correo de notificacion de las cuotas que se aplicaron
-				DebitosAutomaticosPmtCtrl.notificacionCorreoCuotaAplicada( cuotasAplicadas, cuentasNotificacionesCobros );
-				
+				if (!PropertiesSystem.Is_Debug_Mode) {
+					DebitosAutomaticosPmtCtrl.notificacionCorreoCuotaAplicada( cuotasAplicadas, cuentasNotificacionesCobros );	
+				}
+
 				//&& ================= sacar de la lista de pendientes las cuotas que si se cobraron
 				lstCuotasPendientesDebitos = (List<Vwbitacoracobrospmt>) CollectionUtils.subtract(lstCuotasPendientesDebitos, cuotasAplicadas);
 				
@@ -1048,8 +1167,10 @@ public class DebitosAutomaticosPMT {
 			}
 			
 			//&& ================= enviar el correo de notificacion de las cuotas que No se pudieron cobrar
-			DebitosAutomaticosPmtCtrl.notificacionCobroNoAplicado(lstCuotasPendientesDebitos);
-			
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				DebitosAutomaticosPmtCtrl.notificacionCobroNoAplicado(lstCuotasPendientesDebitos);	
+			}
+
 			//&& ================= verificar la notificacion por correo.
 			for (PmtDtCobroAutomatico dtaPrc : cuotasDtaProceso) {
 				final long rowid = dtaPrc.getRowcountBitacora();
@@ -1082,7 +1203,7 @@ public class DebitosAutomaticosPMT {
 			
 			
 		} catch (Exception e) {
-			 e.printStackTrace(); 
+			LogCajaService.CreateLog("procesarCobrosAutomaticos", "ERR", e.getMessage());
 			 procesados  = false;
 			 strMensajeProceso = "Error en el procedimiento de cobros por cliente";
 		}finally{
@@ -1124,14 +1245,14 @@ public class DebitosAutomaticosPMT {
 				dwMensajesValidacion.setWindowState("normal");
 				lblMensajeValidacion.setValue(strMensajeProceso);
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticos", "ERR", e.getMessage());
 			}
 			
 			try {
 				dwConfirmacionProcesoDebitos.setWindowState("hidden");
 				dwResumenProcedimientoCobroAutomatico.setWindowState("hidden");
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticos", "ERR", e.getMessage());
 			}
 
 			try {
@@ -1140,26 +1261,30 @@ public class DebitosAutomaticosPMT {
 				gvCuotasPendientesDebitos.dataBind();
 				gvCuotasPendientesDebitos.setPageIndex(0);
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticos", "ERR", e.getMessage());
 			}
 			try {
 				CodeUtil.refreshIgObjects(new Object[]{ dwMensajesValidacion, dwConfirmacionProcesoDebitos, lblMensajeValidacion, gvCuotasPendientesDebitos, dwResumenProcedimientoCobroAutomatico} );
 			}catch(Exception e) {
-				 e.printStackTrace(); 
+				LogCajaService.CreateLog("procesarCobrosAutomaticos", "ERR", e.getMessage());
 			}
 			
 			try {
 				crearReporteResumenCuotas1("Débitos Automáticos", "Resumen Resultado Proceso Cobros", cuotasReporte,  cuentasNotificaciones, 0, "");
 			}catch(Exception e) { 
-				e.printStackTrace();
+				LogCajaService.CreateLog("procesarCobrosAutomaticos", "ERR", e.getMessage());
 			}
 
 			//&& ================= enviar el correo de notificacion de las cuotas que No se pudieron cobrar
-			if(!cuotasNoAplicadas.isEmpty() ) {
-				DebitosAutomaticosPmtCtrl.notificacionCobroNoAplicado(cuotasNoAplicadas);
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				if(!cuotasNoAplicadas.isEmpty() ) {
+					DebitosAutomaticosPmtCtrl.notificacionCobroNoAplicado(cuotasNoAplicadas);
+				}			
 			}
-			
+
 		}
+		
+		LogCajaService.CreateLog("procesarCobrosAutomaticos", "INFO", "procesarCobrosAutomaticos - FIN");
 	}
 	
 	public static void registrarBitacoraCobroAutomatico(PmtMtCobroAutomatico p, PmtDtCobroAutomatico[] cuotasDtaProceso){
@@ -1195,7 +1320,7 @@ public class DebitosAutomaticosPMT {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("registrarBitacoraCobroAutomatico", "ERR", e.getMessage());
 		}
 	}
 	
@@ -1253,12 +1378,12 @@ public class DebitosAutomaticosPMT {
 					fecha_transaccion );
 
 			try {
+				LogCajaService.CreateLog("aplicarCierreTerminal", "QRY", LogCajaService.toJson(cs));
 				sesion.save(cs);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LogCajaService.CreateLog("aplicarCierreTerminal", "ERR", e.getMessage());
 				return strMensaje = "Error al guardar cierre de SocketPos en Caja ";
-			}
-			
+			}			
 			
 			//&& ============ 3. Actualizar detalle de cierre de terminal
 			
@@ -1268,9 +1393,11 @@ public class DebitosAutomaticosPMT {
 					+ "' and status = 'PND' and stat_cred = 0";
 			
 			try {
+				LogCajaService.CreateLog("aplicarCierreTerminal", "QRY", sql);
+				
 				 sesion.createSQLQuery(sql).executeUpdate();
 			} catch (Exception e) {
-				e.printStackTrace(); 
+				LogCajaService.CreateLog("aplicarCierreTerminal", "ERR", e.getMessage());
 				return strMensaje = "Error al actualizar detalle de transacciones de SocketPos ";
 			}
 			
@@ -1307,7 +1434,7 @@ public class DebitosAutomaticosPMT {
 					try {
 						sesion.save(b64StrPart);
 					} catch (Exception e) {
-						e.printStackTrace();  
+						LogCajaService.CreateLog("aplicarCierreTerminal", "ERR", e.getMessage());
 						return strMensaje = "Error al guardar documento pdf  de transacciones de SocketPos ";
 					}
 				}
@@ -1318,8 +1445,7 @@ public class DebitosAutomaticosPMT {
 		
 			
 		} catch (Exception e) {
-			 
-			e.printStackTrace();
+			LogCajaService.CreateLog("aplicarCierreTerminal", "ERR", e.getMessage());
 			return strMensaje = "Error al guardar documento pdf  de transacciones de SocketPos ";
 			
 		}finally{
@@ -1329,14 +1455,14 @@ public class DebitosAutomaticosPMT {
 					trans.commit();
 				} catch (Exception e2) {
 					strMensaje = "Error al confirmar transacciones de socket pos en gcpmcaja " ;
-					e2.printStackTrace();  
+					LogCajaService.CreateLog("aplicarCierreTerminal", "ERR", e2.getMessage());  
 				}
 			}
 			if ( !strMensaje.isEmpty() && trans != null	&& trans.isActive() ){
 				try {
 					trans.rollback();
 				} catch (Exception e2) {
-					e2.printStackTrace();  
+					LogCajaService.CreateLog("aplicarCierreTerminal", "ERR", e2.getMessage()); 
 				}
 			}
 			
@@ -1344,7 +1470,7 @@ public class DebitosAutomaticosPMT {
 				if( sesion != null && sesion.isOpen() )
 					HibernateUtilPruebaCn.closeSession(sesion);
 			} catch (Exception e2) {
-				e2.printStackTrace();  
+				LogCajaService.CreateLog("aplicarCierreTerminal", "ERR", e2.getMessage());
 			}
 		}
 		
@@ -1375,6 +1501,8 @@ public class DebitosAutomaticosPMT {
 		
 		try {
 			
+			LogCajaService.CreateLog("aplicarCierreCaja", "INFO", "aplicarCierreCaja - INICIO");
+			
 			CodeUtil.removeFromSessionMap("debatm_DatosArqueo");
 			
 			vautoriz = ((Vautoriz[])CodeUtil.getFromSessionMap("sevAut") )[0];
@@ -1389,12 +1517,19 @@ public class DebitosAutomaticosPMT {
 			
 			Date dtHoraArprevio = null;		
 			
+			ClsCajaConfiguracionJde servicio = new ClsCajaConfiguracionJde();
+			CajaConfiguracionJde cfg = servicio.obtenerConfiguracionCajaJde("PMT_JDE_INS");
+			
+			if (cfg == null) {
+				return strMensaje  = "No se ha logrado encontrar la configuracion de caja para el parametro PMT_JDE_INS";
+			}
+			
 			List<Object[]>lstRecibosCierre = new ArrayList<Object[]>();
 			
 			
 			List<Integer> numrecibos = (List<Integer>) CodeUtil.selectPropertyListFromEntity(cuotasAplicadas, "mpbnumrec", true);
 			for (Integer numrec : numrecibos) {
-				lstRecibosCierre.add(new Object[]{numrec, TIPO_RECIBO_PMT});
+				lstRecibosCierre.add(new Object[]{numrec, cfg.getTipoRecibo()}); //TIPO_RECIBO_PMT
 			}
 			
 			
@@ -1432,19 +1567,17 @@ public class DebitosAutomaticosPMT {
 			
 			CodeUtil.putInSessionMap("debatm_DatosArqueo", new Object[] {noarqueo, fecha} );
 			
+			LogCajaService.CreateLog("aplicarCierreCaja", "INFO", "aplicarCierreCaja - FIN");
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			LogCajaService.CreateLog("aplicarCierreCaja", "ERR", e.getMessage());
 		}finally{
-			
-			
 			if(hecho){
 				try{
 					trans.commit();
 				}catch(Exception ex){
 					hecho = false;
-					ex.printStackTrace(); 
+					LogCajaService.CreateLog("aplicarCierreCaja", "ERR", ex.getMessage());
 					strMensaje = "No se ha podido registrar el cierre de caja para el proceso";
 				}
 			}
@@ -1452,19 +1585,17 @@ public class DebitosAutomaticosPMT {
 				try {
 					trans.rollback();
 				} catch (Exception e) {
-					e.printStackTrace(); 
+					LogCajaService.CreateLog("aplicarCierreCaja", "ERR", e.getMessage());
 				}
 			}
 			
 			try {
 				HibernateUtilPruebaCn.closeSession(sesion);
 			} catch (Exception e) {
-				e.printStackTrace(); 
+				LogCajaService.CreateLog("aplicarCierreCaja", "ERR", e.getMessage());
 			}
 			
 			if(hecho){
-				
-				
 				String rutaReporte = ArqueoCajaDAO.generarReporteRecibosArqueo(noarqueo, caid, codcomp, fecha, dtHoraInicio, dtHoraFinaliza );
 				
 				DebitosAutomaticosPmtCtrl.generarReporteArqueoCaja(datos_caja, vautoriz, moneda, 
@@ -1485,32 +1616,31 @@ public class DebitosAutomaticosPMT {
 		
 		try {
 			
-			TransactionsSocketPosBac.transaction_type = TransactionType.SETTLEMENT.TYPE;
-			TransactionsSocketPosBac.terminalid = terminalId ;
-			TransactionsSocketPosBac.executeTransactionRequested();
-			
-			ExecuteTransactionResult tr = TransactionsSocketPosBac.transaction_result;
-			
-			if (tr == null) { 
-				return null;
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				TransactionsSocketPosBac.transaction_type = TransactionType.SETTLEMENT.TYPE;
+				TransactionsSocketPosBac.terminalid = terminalId ;
+				TransactionsSocketPosBac.executeTransactionRequested();
+				
+				ExecuteTransactionResult tr = TransactionsSocketPosBac.transaction_result;
+				
+				if (tr == null) { 
+					return null;
+				}
+				
+				response = TransactionsSocketPosBac.response;
+			} else {
+				response = new Response();
+				response.setResponseCode("00");
+				response.setSystemTraceNumber("12345678");
+				response.setSalesTransactions("1");
+				response.setRefundsTransactions("0"); 
+				response.setSalesAmount("123456");
+				response.setRefundsAmount("0"); 
+				response.setAuthorizationNumber("12345678");
+				response.setReferenceNumber("12345678");
 			}
-			
-			response = TransactionsSocketPosBac.response;
-			
-			/*
-			response = new Response();
-			response.setResponseCode("00");
-			response.setSystemTraceNumber("12345678");
-			response.setSalesTransactions("1");
-			response.setRefundsTransactions("0"); 
-			response.setSalesAmount("123456");
-			response.setRefundsAmount("0"); 
-			response.setAuthorizationNumber("12345678");
-			response.setReferenceNumber("12345678");
-			*/
-			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("cerrarTerminalSocketPos", "ERR", e.getMessage());
 			response = null;
 		} finally{
 			
@@ -1526,49 +1656,60 @@ public class DebitosAutomaticosPMT {
 		
 		try {
 
-			TransactionsSocketPosBac.transaction_type = TransactionType.VOID.TYPE;
-			TransactionsSocketPosBac.terminalid = v.getCodigoterminal().trim() ;
-			TransactionsSocketPosBac.transaction_authorization_number = v.getAuthorizationNumber() ; //transaction_authorization_number ;
-			TransactionsSocketPosBac.transaction_reference_number = v.getReferenceNumber(); //transaction_reference_number;
-			TransactionsSocketPosBac.transaction_system_trace_number = v.getSystemTraceNumber() ; // transaction_system_trace_number ;
+			ClsCajaConfiguracionJde servicio = new ClsCajaConfiguracionJde();
+			CajaConfiguracionJde cfg = servicio.obtenerConfiguracionCajaJde("PMT_JDE_INS");
 			
-			boolean exec = TransactionsSocketPosBac.executeTransactionRequested();
-			
-			if(!exec){
-				v.setResponseCode("XX");
-				v.setResponseCodeDescription("ERROR AL ANULAR");
-				LogCajaService.CreateLog("anularPagoSocketPos", "ERR", strMensajeProceso);
-				return strMensajeProceso = "La transaccion por cobro en CREDOMATIC no se ha podido anular";
-			}else
-			{
-				PosCtrl.setLogIntoTransactSPBanco(v.getReferenceNumber());
+			if (cfg == null) {
+				return strMensajeProceso  = "No se ha logrado encontrar la configuracion de caja para el parametro PMT_JDE_INS";
 			}
 			
-			
-			ExecuteTransactionResult tr = TransactionsSocketPosBac.transaction_result;
-			 
-			@SuppressWarnings("unused")
-			Response r = TransactionsSocketPosBac.response;
-			 
-			if(tr.getResponseCode().compareTo( ResponseCodes.APROBADO.CODE ) != 0 ){
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				TransactionsSocketPosBac.transaction_type = TransactionType.VOID.TYPE;
+				TransactionsSocketPosBac.terminalid = v.getCodigoterminal().trim() ;
+				TransactionsSocketPosBac.transaction_authorization_number = v.getAuthorizationNumber() ; //transaction_authorization_number ;
+				TransactionsSocketPosBac.transaction_reference_number = v.getReferenceNumber(); //transaction_reference_number;
+				TransactionsSocketPosBac.transaction_system_trace_number = v.getSystemTraceNumber() ; // transaction_system_trace_number ;
+				
+				boolean exec = TransactionsSocketPosBac.executeTransactionRequested();
+				
+				if(!exec){
+					v.setResponseCode("XX");
+					v.setResponseCodeDescription("ERROR AL ANULAR");
+					LogCajaService.CreateLog("anularPagoSocketPos", "ERR", strMensajeProceso);
+					return strMensajeProceso = "La transaccion por cobro en CREDOMATIC no se ha podido anular";
+				}else
+				{
+					PosCtrl.setLogIntoTransactSPBanco(v.getReferenceNumber());
+				}
+				
+				
+				ExecuteTransactionResult tr = TransactionsSocketPosBac.transaction_result;
+				 
+				@SuppressWarnings("unused")
+				Response r = TransactionsSocketPosBac.response;
+				 
+				if(tr.getResponseCode().compareTo( ResponseCodes.APROBADO.CODE ) != 0 ){
+					v.setResponseCode(tr.getResponseCode());
+					v.setResponseCodeDescription(tr.getResponseCodeDescription());
+					return strMensajeProceso = "La transaccion por cobro en CREDOMATIC no se ha podido anular, codigo de respuesta: " + tr.getResponseCode();
+				}
+				
 				v.setResponseCode(tr.getResponseCode());
 				v.setResponseCodeDescription(tr.getResponseCodeDescription());
-				return strMensajeProceso = "La transaccion por cobro en CREDOMATIC no se ha podido anular, codigo de respuesta: " + tr.getResponseCode();
+			} else {
+				v.setResponseCode("01");
+				v.setResponseCodeDescription("TRANSACCION ANULADA MODO PRUEBAS");
 			}
-			
-			v.setResponseCode(tr.getResponseCode());
-			v.setResponseCodeDescription(tr.getResponseCodeDescription());
-			
 			//&& ================ marcar como anular las transacciones del SocketPos (Transactsp )
 			 
 			MetodosPago mp = v.metodosPagoDesdeCuota();
 			mp.setStatuspago("ANL");
 			PosCtrl.actualizarTransacciones(Arrays.asList(new MetodosPago[]{mp}), v.getMpbcaid(), v.getMpbcodcomp().trim(), 
-					TIPO_RECIBO_PMT);
+					cfg.getTipoRecibo());
 
 		} catch (Exception e) {
 			strMensajeProceso = "Error al intentar aplicar la anulacion del pago" ;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("anularPagoSocketPos", "ERR", e.getMessage());
 		}finally{
 			
 		}
@@ -1672,107 +1813,109 @@ public class DebitosAutomaticosPMT {
 			    	}
 			    }
 				
-				/*Solo para pruebas
-				v.setAuthorizationNumber("038005");
-				v.setReferenceNumber("038005");
-				v.setResponseCode("00"); //00
-				v.setResponseCodeDescription("APROBADO"); //APROBADO
-				v.setSalesAmount( v.getMontocobrarentarjeta().toString() );
-				v.setTransactionId("038005");
-				v.setSystemTraceNumber("038005");
-				v.setFechatransaccion("2023-01-24");
 				
-				hc.setStatus(1);
-				hc.setResponsecode( "00" ) ;
-				ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, hc.updateStatment() );
-				*/
 				
-				//&& ================== parametros de invocacion del webservice
-				TransactionsSocketPosBac.terminalid =  v.getCodigoterminal().trim() ; //"EMVNIC01"; //
-				TransactionsSocketPosBac.transaction_entry_mode = TransactionType.ENTRYMODE_MANUAL.TYPE;
-				TransactionsSocketPosBac.transaction_type = TransactionType.SALE.TYPE;
-				TransactionsSocketPosBac.transaction_invoice_number = v.getInvoicenumber() ;
-				
-				TransactionsSocketPosBac.transaction_amount = v.getMontocobrarentarjeta().doubleValue(); // 1.0d; //
-				TransactionsSocketPosBac.transaction_card_number = String.valueOf( v.getMpbntrj() ); //"377701702258912"; //
-				TransactionsSocketPosBac.transaction_card_expiration_date = String.valueOf( v.getMpbvtrj() ); // "2211"; //
-	
-				TransactionsSocketPosBac.executeTransactionRequested();
-				ExecuteTransactionResult tr = TransactionsSocketPosBac.transaction_result;
-				
-				if(tr == null){
+			    if (!PropertiesSystem.Is_Debug_Mode) {
+			    	//&& ================== parametros de invocacion del webservice
+					TransactionsSocketPosBac.terminalid =  v.getCodigoterminal().trim() ; //"EMVNIC01"; //
+					TransactionsSocketPosBac.transaction_entry_mode = TransactionType.ENTRYMODE_MANUAL.TYPE;
+					TransactionsSocketPosBac.transaction_type = TransactionType.SALE.TYPE;
+					TransactionsSocketPosBac.transaction_invoice_number = v.getInvoicenumber() ;
 					
-					v.setResponseCode("XX");
-					v.setResponseCodeDescription("No se logra el intento de aplicar cobro a tarjeta ");
+					TransactionsSocketPosBac.transaction_amount = v.getMontocobrarentarjeta().doubleValue(); // 1.0d; //
+					TransactionsSocketPosBac.transaction_card_number = String.valueOf( v.getMpbntrj() ); //"377701702258912"; //
+					TransactionsSocketPosBac.transaction_card_expiration_date = String.valueOf( v.getMpbvtrj() ); // "2211"; //
+		
+					TransactionsSocketPosBac.executeTransactionRequested();
+					ExecuteTransactionResult tr = TransactionsSocketPosBac.transaction_result;
 					
-					return strMensajeProceso = "No se ha podido aplicar el cobro a la tarjeta " + v.getNumerotarjetadsp(); 
-					
-				}
+					if(tr == null){
+						
+						v.setResponseCode("XX");
+						v.setResponseCodeDescription("No se logra el intento de aplicar cobro a tarjeta ");
+						
+						return strMensajeProceso = "No se ha podido aplicar el cobro a la tarjeta " + v.getNumerotarjetadsp(); 
+						
+					}
 
-				//&& ================== actualizar el estado la transaccion enviada a credomatic
-				hc.setStatus(1);
-				hc.setResponsecode( tr.getResponseCode() ) ;				
-				
-				ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, hc.updateStatment() );
-				
-				//&& ================== continuar con el procedimiento de cobro
-				
-				Response rs =  TransactionsSocketPosBac.response;
-				
-				if( rs.getResponseCode().compareTo( ResponseCodes.APROBADO.CODE ) == 0 ){
+					//&& ================== actualizar el estado la transaccion enviada a credomatic
+					hc.setStatus(1);
+					hc.setResponsecode( tr.getResponseCode() ) ;				
 					
-					v.setAuthorizationNumber(tr.getAuthorizationNumber());
-					v.setReferenceNumber(tr.getReferenceNumber());
-					v.setResponseCode( tr.getResponseCode() );
-					v.setResponseCodeDescription(tr.getResponseCodeDescription());
+					ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, hc.updateStatment() );
+					
+					//Continuar con el procedimiento de cobro					
+					Response rs =  TransactionsSocketPosBac.response;
+					
+					if( rs.getResponseCode().compareTo( ResponseCodes.APROBADO.CODE ) == 0 ){
+						
+						v.setAuthorizationNumber(tr.getAuthorizationNumber());
+						v.setReferenceNumber(tr.getReferenceNumber());
+						v.setResponseCode( tr.getResponseCode() );
+						v.setResponseCodeDescription(tr.getResponseCodeDescription());
+						v.setSalesAmount( v.getMontocobrarentarjeta().toString() );
+						v.setTransactionId( tr.getTransactionId() );
+						v.setSystemTraceNumber( tr.getSystemTraceNumber());
+						v.setFechatransaccion( rs.getTransactionDate() );
+						
+					} else { 
+						
+						v.setAuthorizationNumber("");
+						v.setReferenceNumber("00000000");
+						v.setSystemTraceNumber(tr.getSystemTraceNumber() );
+						
+						v.setResponseCode( tr.getResponseCode() );
+						v.setResponseCodeDescription( tr.getResponseCodeDescription() );
+						
+						ResultadoECommerce re = new ResultadoECommerce();
+						re.setCodigoAutorizado(v.getAuthorizationNumber());
+						re.setCodigoRespuesta(v.getResponseCode().compareTo(ResponseCodes.APROBADO.CODE)==0?1:2);
+						re.setCodigoRespuesta2(v.getResponseCode());
+						re.setDescripcionRespuesta(v.getResponseCodeDescription());
+						re.setHash("");
+						re.setHashRespuesta("");
+						re.setMontoTransaccion(v.getMontocobrarentarjeta().doubleValue());
+						re.setNumeroTarjeta(String.valueOf(v.getMpbntrj()));
+						re.setOrderId(v.getInvoicenumber());
+						re.setTransactionId(v.getReferenceNumber());
+						re.setCantidadPuntosDisp(0.0d);
+						re.setType("PMT");
+						
+						AccesoDB2 a = new AccesoDB2(PropertiesSystem.IPSERVERDB2, 
+													PropertiesSystem.ESQUEMA, 
+													PropertiesSystem.CN_USRNAME, 
+													PropertiesSystem.CN_USRPWD, 
+													String.valueOf(coduser), "PMT", 
+													PropertiesSystem.CONTEXT_NAME, 
+													PropertiesSystem.CONTEXT_NAME);
+						
+						try
+						{
+							clsECommerceT.setTransaccionInsert(a, String.valueOf(caid), "0", "", "", "", "0", "0", "0", re);
+						}
+						catch (Exception e) {
+							LogCajaService.CreateLog("procesarPagoSocketPos - TransactionInsert", "ERR", e.getMessage());
+						}
+						
+					
+						return strMensajeProceso = "No se ha podido aplicar el cobro a la tarjeta " + v.getNumerotarjetadsp()
+							+ ",  Codigo de Razon: " + tr.getResponseCode() + " > " + tr.getResponseCodeDescription().trim();
+					}
+
+				} else {
+					v.setAuthorizationNumber("038005");
+					v.setReferenceNumber("038005");
+					v.setResponseCode("00"); //00
+					v.setResponseCodeDescription("APROBADO"); //APROBADO
 					v.setSalesAmount( v.getMontocobrarentarjeta().toString() );
-					v.setTransactionId( tr.getTransactionId() );
-					v.setSystemTraceNumber( tr.getSystemTraceNumber());
-					v.setFechatransaccion( rs.getTransactionDate() );
+					v.setTransactionId("038005");
+					v.setSystemTraceNumber("038005");
+					v.setFechatransaccion("2023-01-24");
 					
-				} else { 
-					
-					v.setAuthorizationNumber("");
-					v.setReferenceNumber("00000000");
-					v.setSystemTraceNumber(tr.getSystemTraceNumber() );
-					
-					v.setResponseCode( tr.getResponseCode() );
-					v.setResponseCodeDescription( tr.getResponseCodeDescription() );
-					
-					ResultadoECommerce re = new ResultadoECommerce();
-					re.setCodigoAutorizado(v.getAuthorizationNumber());
-					re.setCodigoRespuesta(v.getResponseCode().compareTo(ResponseCodes.APROBADO.CODE)==0?1:2);
-					re.setCodigoRespuesta2(v.getResponseCode());
-					re.setDescripcionRespuesta(v.getResponseCodeDescription());
-					re.setHash("");
-					re.setHashRespuesta("");
-					re.setMontoTransaccion(v.getMontocobrarentarjeta().doubleValue());
-					re.setNumeroTarjeta(String.valueOf(v.getMpbntrj()));
-					re.setOrderId(v.getInvoicenumber());
-					re.setTransactionId(v.getReferenceNumber());
-					re.setCantidadPuntosDisp(0.0d);
-					re.setType("PMT");
-					
-					AccesoDB2 a = new AccesoDB2(PropertiesSystem.IPSERVERDB2, 
-												PropertiesSystem.ESQUEMA, 
-												PropertiesSystem.CN_USRNAME, 
-												PropertiesSystem.CN_USRPWD, 
-												String.valueOf(coduser), "PMT", 
-												PropertiesSystem.CONTEXT_NAME, 
-												PropertiesSystem.CONTEXT_NAME);
-					
-					try
-					{
-						clsECommerceT.setTransaccionInsert(a, String.valueOf(caid), "0", "", "", "", "0", "0", "0", re);
-					}
-					catch (Exception e) {
-						// TODO: handle exception
-					}
-					
-				
-					return strMensajeProceso = "No se ha podido aplicar el cobro a la tarjeta " + v.getNumerotarjetadsp()
-						+ ",  Codigo de Razon: " + tr.getResponseCode() + " > " + tr.getResponseCodeDescription().trim();
-				}
+					hc.setStatus(1);
+					hc.setResponsecode( "00" ) ;
+					ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, hc.updateStatment() );
+				}				
 				
 				ResultadoECommerce re = new ResultadoECommerce();
 				re.setCodigoAutorizado(v.getAuthorizationNumber());
@@ -1801,7 +1944,7 @@ public class DebitosAutomaticosPMT {
 					clsECommerceT.setTransaccionInsert(a, String.valueOf(caid), "0", "", "", "", "0", "0", "0", re);
 				}
 				catch (Exception e) {
-					// TODO: handle exception
+					LogCajaService.CreateLog("procesarPagoSocketPos - TransactionInsert", "ERR", e.getMessage());
 				}
 			} 
 		} catch (Exception e) {
@@ -1810,7 +1953,7 @@ public class DebitosAutomaticosPMT {
 			v.setResponseCodeDescription(" error al procesar el cobro a la tarjeta  " + v.getNumerotarjetadsp());
 			
 			e.printStackTrace(); 
-			strMensajeProceso = "No se ha podido aplicar el cobro " ; 
+			strMensajeProceso = "No se ha podido aplicar el cobro en Socket Pos" ; 
 			LogCajaService.CreateLog("generarCobroPos", "ERR", e.getMessage());
 		}
 		
@@ -1820,7 +1963,7 @@ public class DebitosAutomaticosPMT {
 	}
 	
 	
-	public String procesarReciboCaja(Vwbitacoracobrospmt v, Vautoriz vautoriz, Vf55ca01 datos_caja, List<Transactsp> transacciones ) {
+	public String procesarReciboCaja(Vwbitacoracobrospmt v, Vautoriz vautoriz, Vf55ca01 datos_caja, List<Transactsp> transacciones, CajaConfiguracionJde cajaCfg, CajaConfiguracionJde cajaCfgFCV ) {
 		
 		String strMensajeProceso = "" ;
 		boolean aplicado = true;
@@ -1831,7 +1974,7 @@ public class DebitosAutomaticosPMT {
 		
 		String codcomp = "";
 		String codsuc = "";
-		String tiporec = TIPO_RECIBO_PMT;
+		String tiporec = cajaCfg.getTipoRecibo();
 		int caid = 0;
 		int numrec = 0;
 		List<MetodosPago> lstFormasDePagoRecibidas = null;
@@ -1847,7 +1990,7 @@ public class DebitosAutomaticosPMT {
 			BigDecimal bdMontoCambioExt = BigDecimal.ZERO;
 			BigDecimal bdMontoCambioLocal = BigDecimal.ZERO;
 			BigDecimal tasaOficial = tasaOficial();
-			BigDecimal tasaParalela  = tasaParalela("USD");
+			BigDecimal tasaParalela  = tasaParalela(cajaCfg.getCodMonedaForanea());
 			
 			Date dtFechaGrabacion = new Date() ;	
 			
@@ -1859,7 +2002,7 @@ public class DebitosAutomaticosPMT {
 			String codunineg = v.getCodunineg().trim();
 			String strMonedaAplicada = v.getMpbmon();
 			String monedaBaseCompania = monedaBaseActual();
-			String monedaContrato = "COR";
+			String monedaContrato = cajaCfg.getCodMonedaLocal();
 
 			codsuc = datos_caja.getId().getCaco();			
 			codcomp = v.getCodcomp().trim();
@@ -1945,7 +2088,7 @@ public class DebitosAutomaticosPMT {
 						tasaOficial,tiporec);
 
 			aplicado = rc.registrarCambio(session, transaction, numrec, codcomp,
-					"USD", bdMontoCambioExt.doubleValue(), caid, codsuc, 
+					cajaCfg.getCodMonedaForanea(), bdMontoCambioExt.doubleValue(), caid, codsuc, 
 					tasaOficial,tiporec);
 
 			if(!aplicado){
@@ -1982,8 +2125,8 @@ public class DebitosAutomaticosPMT {
 			//&& ============== crear las transacciones en JDE 
 			PlanMantenimientoTotalCtrl.moneda_base = monedaBaseCompania;
 			PlanMantenimientoTotalCtrl.moneda_aplicada = strMonedaAplicada;
-			PlanMantenimientoTotalCtrl.codigo_compania = codcomp;
-			PlanMantenimientoTotalCtrl.codigo_sucursal_usuario = v.getCodsuc();
+			PlanMantenimientoTotalCtrl.codigo_compania = codcomp.trim();
+			PlanMantenimientoTotalCtrl.codigo_sucursal_usuario = v.getCodsuc().trim();
 			PlanMantenimientoTotalCtrl.codigo_unidad_negocio_usuario = v.getCodunineg().trim();
 			PlanMantenimientoTotalCtrl.monto_aplicado = bdMontoaplicado;
 			PlanMantenimientoTotalCtrl.diferencia = BigDecimal.ZERO;
@@ -1999,6 +2142,8 @@ public class DebitosAutomaticosPMT {
 			PlanMantenimientoTotalCtrl.moneda_contrato = monedaContrato;
 			PlanMantenimientoTotalCtrl.cuota_contrato_pmt_cod = v.getMpbvpag().multiply(tasaOficial);
 			PlanMantenimientoTotalCtrl.cuota_contrato_pmt_usd = v.getMpbvpag();
+			PlanMantenimientoTotalCtrl.cajaCfg = cajaCfg;
+			PlanMantenimientoTotalCtrl.cajaCfgFCV = cajaCfgFCV;
 			
 			strMensajeProceso = PlanMantenimientoTotalCtrl.generarComprobantesContablesPMT(dtFechaGrabacion, clienteCodigo, vautoriz, v.getMpbnpag(), session );
 			aplicado = strMensajeProceso.trim().isEmpty() ;
@@ -2177,12 +2322,15 @@ public class DebitosAutomaticosPMT {
 
 		try {
 
-			strMensaje = PosCtrl.credomatic_SocketPos_TestConnection();
-
-			if (strMensaje.trim().isEmpty()) {
-				strMensaje = "Conexión establecida correctamente";
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				strMensaje = PosCtrl.credomatic_SocketPos_TestConnection();	
+				
+				if (strMensaje.trim().isEmpty()) {
+					strMensaje = "Conexión establecida correctamente";
+				}
+			} else {
+				strMensaje = "Aplicación configurada en modo de Prueba. La conexión con el socket pos no fue establecida";
 			}
-
 		} catch (Exception e) {
 			strMensaje = ">>> No se ha podido crear el enlace de conexión";
 			e.printStackTrace(); 
@@ -2206,10 +2354,15 @@ public class DebitosAutomaticosPMT {
 		String strMensajeValidacion = "" ;
 		
 		try {
-			strMensajeValidacion = PosCtrl.credomatic_SocketPos_TestConnection() ;
-			if( !strMensajeValidacion.isEmpty() ) {
-				return ;
+			LogCajaService.CreateLog("invocarProcesoCobrosAutomaticos", "INFO", "INICIO - invocarProcesoCobrosAutomaticos");
+			//Si el modo es debug no hacer esta verificacion
+			if (!PropertiesSystem.Is_Debug_Mode) {
+				strMensajeValidacion = PosCtrl.credomatic_SocketPos_TestConnection() ;
+				if( !strMensajeValidacion.isEmpty() ) {
+					return ;
+				}
 			}
+			
 			
 			HibernateUtilPruebaCn.closeSession();
 			
@@ -2262,7 +2415,7 @@ public class DebitosAutomaticosPMT {
 
 		} catch (Exception e) {
 			strMensajeValidacion = "No se podido completar el proceso de resumen de transacciones ";
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("invocarProcesoCobrosAutomaticos", "ERR", e.getMessage());
 		}finally{
 			
 			if(strMensajeValidacion.isEmpty()){
@@ -2274,6 +2427,8 @@ public class DebitosAutomaticosPMT {
 				return;
 			}
 		}
+		
+		LogCajaService.CreateLog("invocarProcesoCobrosAutomaticos", "INFO", "FIN - invocarProcesoCobrosAutomaticos");
 	}
 	
 	public void crearReporteResumenCuotas1(String titulo1, String titulo2, List<Vwbitacoracobrospmt> cuotas, 
@@ -2331,35 +2486,6 @@ public class DebitosAutomaticosPMT {
 			if ( codigosNotificaciones  != null ){
 				
 				List<String[]>MontosMonedas = new ArrayList<String[]>();
-				
-				
-				/*
-				@SuppressWarnings("unchecked")
-				List<Vwbitacoracobrospmt> cuotasNoAplicadas = (ArrayList<Vwbitacoracobrospmt>)
-					CollectionUtils.select(cuotas, new Predicate(){
-						@Override
-						public boolean evaluate(Object o) {
-							Vwbitacoracobrospmt vtmp = (Vwbitacoracobrospmt)o;
-							return vtmp.getResponseCode().compareTo( ResponseCodes.APROBADO.CODE  ) != 0 ; 
-						}
-					}); 
-				
-				@SuppressWarnings("unchecked")
-				final List<String> monedas = (ArrayList<String>)CodeUtil.selectPropertyListFromEntity(cuotasNoAplicadas, "mpbmon", true);
-				 
-				
-				for (final String moneda : monedas) {
-					
-					@SuppressWarnings("unchecked")
-					List<Vwbitacoracobrospmt> cuotaxmoneda = (ArrayList<Vwbitacoracobrospmt>)
-						CollectionUtils.select(cuotas, new Predicate(){
-							@Override
-							public boolean evaluate(Object o) {
-								Vwbitacoracobrospmt vtmp = (Vwbitacoracobrospmt)o;
-								return vtmp.getMpbmon().compareTo(moneda) == 0  ; 
-							}
-						}); 
-					*/
 					
 					List<Vwbitacoracobrospmt> cuotasNoAplicadas = cuotas.stream()
 							.filter( cuota -> cuota.getResponseCode().compareTo( ResponseCodes.APROBADO.CODE  ) != 0 )
@@ -2381,11 +2507,12 @@ public class DebitosAutomaticosPMT {
 							
 				}
 				
-				DebitosAutomaticosPmtCtrl.notificacionResumenProcesoCobros(cuotas.get(0).getNombrecaja(), cuotas.size(), codigosNotificaciones, sRutaFisica, MontosMonedas) ;
+				DebitosAutomaticosPmtCtrl.notificacionResumenProcesoCobros(cuotas.get(0).getNombrecaja(), cuotas.size(), codigosNotificaciones, sRutaFisica, MontosMonedas) ;	
+
 			}
 			
 		} catch (Exception e) { 
-			e.printStackTrace();
+			LogCajaService.CreateLog("crearReporteResumenCuotas1", "ERR", e.getMessage());
 		}
 	}
 	
@@ -2440,8 +2567,7 @@ public class DebitosAutomaticosPMT {
 			CodeUtil.putInSessionMap( "dbat_OBJCONFIGCOMP", objConfigComp);
 			
 		} catch (Exception e) {
-			objConfigComp = null;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("generarObjConfigComp", "ERR", e.getMessage());
 		}
 	
 	}

@@ -345,9 +345,7 @@ public class ArqueoCajaCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
-//			LogCrtl.sendLogDebgs(e);
-//			LogCrtl.sendLogDebgs(e);
+			LogCajaService.CreateLog("crearMinutaStringArray", "ERR", e.getMessage());
 			strParts = null;
 		}
 		return strParts;
@@ -2093,14 +2091,17 @@ public class ArqueoCajaCtrl {
 			String sEstado = obtenerEstadoArqueo(iEstadoId);
 			arqueo.setEstado(sEstado);
 			id.setNoarqueo(noarqueo);
-			arqueo.setId(id);			
+			arqueo.setId(id);	
+			
+			LogCajaService.CreateLog("guardarArqueoCaja", "HQRY", LogCajaService.toJson(arqueo));
+			
 			sesCaja.save(arqueo);
 			
 			CodeUtil.putInSessionMap("ac_ArqueoActual", arqueo) ;
 			
 		}catch(Exception error){
 			bHecho = false;
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("guardarArqueoCaja", "ERR", error.getMessage());
 		}
 		return bHecho;
 	}	

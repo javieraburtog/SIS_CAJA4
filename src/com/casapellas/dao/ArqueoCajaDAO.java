@@ -2528,12 +2528,6 @@ public class ArqueoCajaDAO {
 			String strHoraIni = horaIni != null?  "00:00:00" : new SimpleDateFormat("HH:mm:ss").format(horaIni);
 			String strHoraFin = new SimpleDateFormat("HH:mm:ss").format( (HoraFin  == null ? new Date() : HoraFin ) );
 			
-			
-//			HttpServletRequest sHttpRqst  = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-			
-//			@SuppressWarnings("deprecation")
-//			String rutaf = sHttpRqst.getRealPath(File.separatorChar + PropertiesSystem.CARPETA_DOCUMENTOS_EXPORTAR + File.separatorChar);
-			
 			String rutaf = PropertiesSystem.RUTA_DOCUMENTOS_EXPORTAR ;
 			String nombrereporte = "RecibosCaja_"+caid+"_Arqueo_" + noarqueo+"_"+new SimpleDateFormat("ddMMyyyyHHmmss").format(fecha)+".xlsx";
 			
@@ -2561,15 +2555,13 @@ public class ArqueoCajaDAO {
 			rpt.generarReporteRecibos();
 			
 			if(rpt.getMensajeProceso() != null && !rpt.getMensajeProceso().trim().isEmpty()){
-//				LogCrtl.sendLogDebgs(rpt.getMensajeProceso());
 				return rutaReporte = "";
 			}
 			
 			
 		} catch (Exception e) {
-			 e.printStackTrace(); 
-//			 LogCrtl.sendLogDebgs(e);
-			 rutaReporte = "" ;
+			LogCajaService.CreateLog("generarReporteRecibosArqueo", "ERR", e.getMessage());
+			rutaReporte = "" ;
 		}
 		return rutaReporte;//= "C:\\workspace\\Preconciliacion\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp1\\GCPMCAJA\\ConfirmacionRecibosCaja_8_Arqueo_3717_15072016230000.xlsx"; 
 	}

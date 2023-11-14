@@ -12,16 +12,16 @@ import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 import com.casapellas.controles.tmp.ReciboCtrl;
 import com.casapellas.donacion.entidades.GValidate;
+import com.casapellas.entidades.CajaParametro;
 import com.casapellas.entidades.HistoricoReservasProformas;
 import com.casapellas.entidades.MetodosPago;
 import com.casapellas.entidades.Recibo;
 import com.casapellas.entidades.Vf0901;
 import com.casapellas.jde.creditos.CodigosJDE1;
 import com.casapellas.jde.creditos.DefaultJdeFieldsValues;
+import com.casapellas.util.CajaConfiguracionJde;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
 import com.casapellas.util.FechasUtil;
@@ -55,8 +55,8 @@ public class PlanMantenimientoTotalCtrl {
 	public static List<MetodosPago>compra_venta_Cambio;
 	public static Connection cn ;
 	public static List<String[]> numeros_batch_documento ;
-	
-	
+	public static CajaConfiguracionJde cajaCfg;
+	public static CajaConfiguracionJde cajaCfgFCV;	
 	
 	@SuppressWarnings("unchecked")
 	public static List<HistoricoReservasProformas>  detalleContratoPMT(Recibo rc){
@@ -83,7 +83,6 @@ public class PlanMantenimientoTotalCtrl {
 		} catch (Exception e) {
 			LogCajaService.CreateLog("detalleContratoPMT", "ERR", e.getMessage());
 			detalleContratoPmt = null;
-			e.printStackTrace(); 
 		}
 		 return detalleContratoPmt ;
 	}
@@ -115,8 +114,7 @@ public class PlanMantenimientoTotalCtrl {
 			
 		} catch (Exception e) {
 			LogCajaService.CreateLog("queryNumberContrato", "ERR", e.getMessage());
-			dtaContrato = null;
-			e.printStackTrace(); 
+			dtaContrato = null; 
 		}
 		
 		return  dtaContrato ;
@@ -141,14 +139,14 @@ public class PlanMantenimientoTotalCtrl {
 				 return returnList;
 				
 			} catch (Exception e) {				
-				e.printStackTrace(); 
+				LogCajaService.CreateLog("getListaPagosPMT", "ERR", e.getMessage());
 			}
 		 
 			 return null;
 	 }
 	
 	public static String  comprantesPorCompraVenta(final List<MetodosPago> formas_pago_compraVenta, List<String[]> cuentasPorMetodoPago, 
-								Vautoriz vaut, int iClienteCodigo, String unidadNegocioCaja, int numero_recibo_caja, Session session, String unidadNegociosCaja ){
+								Vautoriz vaut, int iClienteCodigo, String unidadNegocioCaja, int numero_recibo_caja, Session session, String unidadNegociosCaja, String companiaRpkco ){
 		String strMensajeProceso = "";
 		boolean hecho = true;
 		long lngMontoFormaDePagoExt;
@@ -157,12 +155,11 @@ public class PlanMantenimientoTotalCtrl {
 		String msgLog = "" ;
 		
 		try {
-			
-			
-			String companiaRpkco =  unidadNegocioCaja.substring(0,2);
+
+			//String companiaRpkco =  unidadNegocioCaja.substring(0,2);
 			double lineadoc = 0 ;
 			Date fechaRecibo = new Date();
-			String tipodocjde = PropertiesSystem.TIPODOC_REFER_P9;
+			String tipodocjde = cajaCfgFCV.getTipoDocContJde(); // PropertiesSystem.TIPODOC_REFER_P9;
 			String concepto = "RC:"+numero_recibo+" C:"+codigo_caja+" PMT:"+numero_contrato;
 			String observacion ;
 			
@@ -176,9 +173,9 @@ public class PlanMantenimientoTotalCtrl {
 			
 			msgLog = concepto;
 			
-//			int numero_batch = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROBATCH );
 			int numero_batch = Divisas.numeroSiguienteJdeE1( );
-			int numero_documento = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			//int numero_documento = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int numero_documento = Divisas.numeroSiguienteJdeE1Custom( cajaCfgFCV.getContDocJdeIdx(), cajaCfgFCV.getContDocJdeKey() );
 			
 			if(numero_batch == 0) {
 				 hecho = false;
@@ -194,7 +191,7 @@ public class PlanMantenimientoTotalCtrl {
 					Integer.toString( numero_documento ),
 					Integer.toString( numero_recibo_caja ),
 					"A",
-					"FCV",
+					cajaCfgFCV.getTipoRecibo(), //"FCV"
 					tipodocjde
 				});
 			
@@ -205,8 +202,8 @@ public class PlanMantenimientoTotalCtrl {
 			
 			lngMontoFormaDePagoExt = Long.parseLong( String.format("%1$.2f", bdTotalCompraVenta.doubleValue() ).replace(".", "")   );
 		
-			//hecho = recCtrl.registrarBatchA92(cn, "G", numero_batch, lngMontoFormaDePagoExt, vaut.getId().getLogin(), 1,"N");
-			hecho = recCtrl.registrarBatchA92(session, fechaRecibo, CodigosJDE1.RECIBOCONTADO, numero_batch, lngMontoFormaDePagoExt, vaut.getId().getLogin(), 1, "PMT", CodigosJDE1.BATCH_ESTADO_PENDIENTE ); 
+			//hecho = recCtrl.registrarBatchA92(session, fechaRecibo, CodigosJDE1.RECIBOCONTADO, numero_batch, lngMontoFormaDePagoExt, vaut.getId().getLogin(), 1, "PMT", CodigosJDE1.BATCH_ESTADO_PENDIENTE );
+			hecho = recCtrl.registrarBatchA92Custom(session, fechaRecibo, cajaCfgFCV.getTipoBatch(), numero_batch, lngMontoFormaDePagoExt, vaut.getId().getLogin(), 1, "PMT", "" );
 			
 			if(!hecho){
 				return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera";
@@ -220,7 +217,6 @@ public class PlanMantenimientoTotalCtrl {
 						public boolean evaluate(Object o) {
 							String[] dtacta = (String[])o;
 							return 
-//							dtacta[8].compareTo(mp.getMoneda()) == 0 && 
 							dtacta[8].compareTo("USD") == 0 && 
 							dtacta[9].compareTo(mp.getMetodo()) == 0 ; 
 						}
@@ -243,7 +239,7 @@ public class PlanMantenimientoTotalCtrl {
 						
 				ctaBnfcuenta = dtactaExt[0].trim();
 				ctaBnfGmaid = dtactaExt[1];
-				ctaBnfMcu = dtactaExt[3];
+				ctaBnfMcu = companiaRpkco; // dtactaExt[3]; Aqui va el codigo de la compania columna GLCO
 			    ctaBnfObj = dtactaExt[4];
 				ctaBnfSub = dtactaExt[5];
 				
@@ -292,7 +288,7 @@ public class PlanMantenimientoTotalCtrl {
 					
 					ctaBnfcuenta = dtactaNac[0].trim();
 					ctaBnfGmaid = dtactaNac[1];
-					ctaBnfMcu = dtactaNac[3];
+					ctaBnfMcu = companiaRpkco; //dtactaNac[3]; Aqui va el codigo de la compania columna GLCO
 					ctaBnfObj = dtactaNac[4];
 					ctaBnfSub = dtactaNac[5];
 				
@@ -349,11 +345,11 @@ public class PlanMantenimientoTotalCtrl {
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
 					}
 					
-					 ctaBnfcuenta = dtactaNac[0].trim();
-					 ctaBnfGmaid = dtactaNac[1];
-					 ctaBnfMcu = dtactaNac[3];
-					 ctaBnfObj = dtactaNac[4];
-					 ctaBnfSub = dtactaNac[5];
+					ctaBnfcuenta = dtactaNac[0].trim();
+					ctaBnfGmaid = dtactaNac[1];
+					ctaBnfMcu = companiaRpkco; //dtactaNac[3]; Aqui va el codigo de la compania columna GLCO
+					ctaBnfObj = dtactaNac[4];
+					ctaBnfSub = dtactaNac[5];
 				
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 							( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
@@ -380,9 +376,24 @@ public class PlanMantenimientoTotalCtrl {
 					
 					if(lngMontoFormaDePago!=0)
 					{
-						String sCtaObDif = "66000";
-						String sCtaSubDif = "01";
-						Vf0901 cuenta_diferencial  = new Divisas().validarCuentaF0901( unidadNegociosCaja, sCtaObDif, sCtaSubDif);
+						String sCtaObDif = ""; //"66000";
+						String sCtaSubDif = ""; //"01";
+						
+						ClsParametroCaja servCajaParametro = new ClsParametroCaja();
+						CajaParametro cajaParametro = servCajaParametro.getParametros("11", "0", String.format("CTA_INGRESO_%s", codigo_compania.trim()));
+						
+						if (cajaParametro == null) {
+							return strMensajeProceso = "No se encuentra la configuracion asociada a las cuentas por diferencial cambiario CTA_INGRESO_" + companiaRpkco;
+						}
+						
+						sCtaObDif = cajaParametro.getCodigoCuentaObjeto().trim();
+						sCtaSubDif = cajaParametro.getCodigoSubCuenta().trim();	
+						
+						if (sCtaObDif.length() <= 0 && sCtaSubDif.length() <= 0) {
+							return strMensajeProceso = "Los codigo de cuentas para ingreso por diferencial cambiario no estan configurados";
+						}
+						
+						Vf0901 cuenta_diferencial  = new Divisas().validarCuentaF0901( unidadNegociosCaja.trim(), sCtaObDif, sCtaSubDif);
 						
 						if(cuenta_diferencial == null){
 							return strMensajeProceso = "No se encuentra la cuenta " +  unidadNegociosCaja+"."+sCtaObDif+"."+sCtaSubDif 
@@ -423,20 +434,19 @@ public class PlanMantenimientoTotalCtrl {
 		} catch (Exception e) {
 			strMensajeProceso = "Error al grabar comprobante de compra venta de Monedas Extranjeras"; 
 			LogCajaService.CreateLog("comprantesPorCompraVenta", "ERR", e.getMessage());
-			e.printStackTrace(); 
-		}finally{
-			
 		}
+
 		return strMensajeProceso;
 	}
 	
 	static long lngMontoAplicadoForaneo = 0;
+	@SuppressWarnings("unused")
 	public static String generarComprobantesContablesPMT(Date fechaRecibo, int iClienteCodigo, 
 			Vautoriz vaut, int numero_cuota, Session session  ){
 		
 		String strMensajeProceso = "";
 		
-		String tipodocjde = "PV";
+		String tipodocjde = cajaCfg.getTipoDocContJde(); // "PV";
 		String tipocliente = "";
 		String codbnf_aux = ""; 
 		String tipoAuxiliar = "";
@@ -449,12 +459,18 @@ public class PlanMantenimientoTotalCtrl {
 		long lngMontoFormaDePagoEq;
 		
 		try {
+			if (cajaCfg == null) {
+				return strMensajeProceso = "El parametro cajaCfg no ha sido suministrado correctamente";
+			}
+			
+			if (cajaCfgFCV == null) {
+				return strMensajeProceso = "El parametro cajaCfgFCV no ha sido suministrado correctamente";
+			}
 			
 			numeros_batch_documento = new ArrayList<String[]>();
 			
 			if( moneda_aplicada.compareTo(moneda_base) != 0 ){
 				lngMontoAplicadoForaneo = Long.parseLong( String.format("%1$.2f", monto_aplicado ).replace(".", "")   );
-//				monto_aplicado = monto_aplicado.multiply( tasaoficial ).setScale(2, RoundingMode.HALF_UP);
 			}
 			lngMontoAplicadoLocal =  moneda_aplicada.compareTo(moneda_base) != 0 ? 
 					Long.parseLong( String.format("%1$.2f", monto_aplicado.multiply( tasaoficial ).setScale(2, RoundingMode.HALF_UP) ).replace(".", "")   ) :
@@ -467,6 +483,9 @@ public class PlanMantenimientoTotalCtrl {
 			@SuppressWarnings("unchecked")
 			String unidadNegociosCaja = ( ( ArrayList<String>) ConsolidadoDepositosBcoCtrl.executeSqlQuery( strQueryExecute, true, null ) ).get(0) ;
 			
+			//	&& ================ Grabar las transacciones en F0911 por cada metodo de pago.			
+			String companiaRpkco = codigo_sucursal_usuario.trim();
+			String unidadNegCtaLiquida  = CodeUtil.pad(codigo_unidad_negocio_usuario.trim(), 12, " ");
 			
 			//&& ========== verificar si hay pagos en dolares, convertirlos a cordobas y hacer asientos contables por compra venta 
 			
@@ -478,16 +497,8 @@ public class PlanMantenimientoTotalCtrl {
 				public void execute(Object o) {
 					 MetodosPago mp = (MetodosPago)o;
 					 
-//					 if( mp.getMoneda().compareTo(moneda_base) != 0) {
-					 if( mp.getMoneda().compareTo(moneda_contrato) != 0) {
-
-//						 if( moneda_aplicada.compareTo(moneda_base) != 0 ){
-//							 monto_aplicado = monto_aplicado.multiply( tasaoficial ).setScale(2, RoundingMode.HALF_UP);
-//						 }
-						 
-						 formas_pago_compraVenta.add( mp.clone() ); 
-
-						 
+					 if( mp.getMoneda().compareTo(moneda_contrato) != 0) {						 
+						 formas_pago_compraVenta.add( mp.clone() ); 						 
 					 }
 
 				}
@@ -566,7 +577,7 @@ public class PlanMantenimientoTotalCtrl {
 			if(formas_pago_compraVenta != null && !formas_pago_compraVenta.isEmpty() ){
 				
 				strMensajeProceso = comprantesPorCompraVenta(formas_pago_compraVenta, cuentasPorMetodoPago, vaut, iClienteCodigo, 
-						unidadNegociosCaja, numero_recibo, session, unidadNegociosCaja);
+						unidadNegociosCaja, numero_recibo, session, unidadNegociosCaja, companiaRpkco);
 				
 				if( !strMensajeProceso.isEmpty() )
 					return 	strMensajeProceso ;
@@ -576,7 +587,8 @@ public class PlanMantenimientoTotalCtrl {
 			//&& ====================== comprobante de pasivo
 			
 			numero_batch = Divisas.numeroSiguienteJdeE1(  );
-			numero_documento = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROPAGOVOUCHER );
+			//numero_documento = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROPAGOVOUCHER );
+			numero_documento = Divisas.numeroSiguienteJdeE1Custom(cajaCfg.getContDocJdeIdx(), cajaCfg.getContDocJdeKey());
 		
 			if(numero_batch == 0) {
 				hecho = false;
@@ -599,22 +611,23 @@ public class PlanMantenimientoTotalCtrl {
 			
 			//&& ================ grabar el encabezado del batch.
 
+			/* Borrar Despues
 			hecho = rcCtrl.registrarBatchA92(session, fechaRecibo, CodigosJDE1.BATCH_ANTICIPO_PMT, numero_batch, 
-					//lngMontoAplicadoLocal, 
 					(moneda_contrato.compareTo(moneda_base)==0 ? 
 							Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_cod).replace(".", "")   ) : 
 							Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_usd).replace(".", "")   )) ,
 					vaut.getId().getLogin(), 1, "PMT", CodigosJDE1.BATCH_ESTADO_PENDIENTE );
+			*/
+			
+			hecho = rcCtrl.registrarBatchA92Custom(session, fechaRecibo, cajaCfg.getTipoBatch(), numero_batch, 
+					(moneda_contrato.compareTo(moneda_base)==0 ? 
+							Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_cod).replace(".", "")   ) : 
+							Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_usd).replace(".", "")   )) ,
+					vaut.getId().getLogin(), 1, "PMT", "A" );
 			
 			if(!hecho) {
 				return 	strMensajeProceso =" Error al grabar encabezado de Comprobante(F0011)" ;
-			}
-
-			//&& ================ Grabar las transacciones en F0911 por cada metodo de pago.
-			
-			String companiaRpkco = codigo_sucursal_usuario;
-			String unidadNegCtaLiquida  = CodeUtil.pad(codigo_unidad_negocio_usuario.trim(), 12, " ");  
-			
+			}			
 			
 			//&& =========== Grabar el registro en F0411 
 			
@@ -634,7 +647,6 @@ public class PlanMantenimientoTotalCtrl {
 								cuota_contrato_pmt_cod : cuota_contrato_pmt_usd) , //monto_aplicado,
 						tasaoficial, idcuenta, unidadNegCtaLiquida, cdtaObjCtaLiquida,
 						cdtaSubCtaLiquida, numeroContrato, vaut.getId().getLogin(), observacion,
-//						Integer.toString(numero_contrato), "LC",  "#", "PMT" ) ;
 						Integer.toString(numero_contrato), " ",  "#", "PMT" ) ;
 			
 			if(!hecho){
@@ -714,17 +726,14 @@ public class PlanMantenimientoTotalCtrl {
 						(++lineadoc), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, 
 						"AA", moneda_contrato, lngMontoFormaDePago, concepto, vaut.getId().getLogin(),
 						vaut.getId().getCodapp(), tasaoficial, tipocliente, observacion, 
-						ctaBnfMcu, codbnf_aux, tipoAuxiliar, moneda_base, companiaRpkco, tipoDocxMon, 
+						companiaRpkco, codbnf_aux, tipoAuxiliar, moneda_base, companiaRpkco, tipoDocxMon, 
 						"V", iClienteCodigo, numeroContrato, moneda_base, lngMontoFormaDePagoEq);
 				
 				if(!hecho){
 					return strMensajeProceso = "Error al grabar el detalle para metodo de pago " + mp.getMetododescrip();
 				}
 				
-//				break;
-				
 			}
-			 
 
 			/* ********************************************************************************************************************* */
 			/* *********************** no mandar a generar asientos contables por cambios en moneda local   ************************ */
@@ -732,12 +741,11 @@ public class PlanMantenimientoTotalCtrl {
 			if(compra_venta_Cambio != null && !compra_venta_Cambio.isEmpty()){
 				
 				strMensajeProceso = comprantesPorCompraVenta(compra_venta_Cambio, cuentasPorMetodoPago, 
-											vaut, iClienteCodigo, unidadNegociosCaja, numero_recibo_fcv, session, unidadNegociosCaja) ;
+											vaut, iClienteCodigo, unidadNegociosCaja, numero_recibo_fcv, session, unidadNegociosCaja, companiaRpkco) ;
 				
 				if( !(hecho = strMensajeProceso.isEmpty() ) ){
 					return strMensajeProceso = "Error al grabar el ajuste por diferencial cambiario por cambio Mixto ";
 				}
-				System.out.println( "F comprantesPorCompraVenta : " +  new SimpleDateFormat("HH:mm:ss.SSS").format(new Date() ) );
 			}
 			
 			/* **********************************************************************************************************************/
@@ -748,9 +756,7 @@ public class PlanMantenimientoTotalCtrl {
 			LogCajaService.CreateLog("generarComprobantesContablesPMT", "ERR", e.getMessage());
 			e.printStackTrace(); 
 		}
-//		finally{
-//			System.out.println( "Finaliza generarComprobantesContablesPMT : " +  new SimpleDateFormat("HH:mm:ss.SSS").format(new Date() ) );
-//		}
+
 		return strMensajeProceso;
 	}
 	
@@ -853,13 +859,6 @@ public class PlanMantenimientoTotalCtrl {
 						.replace("@MONEDA", moneda_contrato)
 						.replace("@FORMADEPAGO", mp.getMetodo() );
 				
-//				if( mp.getMoneda().compareTo(moneda_base) !=0 ){
-//					strWhere += strSqlOr.replace("@CAID", Integer.toString(codigo_caja))
-//							.replace("@CODCOMP", codigo_compania)
-//							.replace("@MONEDA", moneda_base )
-//							.replace("@FORMADEPAGO", mp.getMetodo() );
-//				}
-				
 			}
 			strWhere = strWhere.substring(0, strWhere.lastIndexOf("or"));
 			
@@ -874,7 +873,7 @@ public class PlanMantenimientoTotalCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("cuentasPorMetodoPago_PV", "ERR", e.getMessage());
 			dtaCuentaFromQuery = null;
 		}
 		
@@ -900,7 +899,7 @@ public class PlanMantenimientoTotalCtrl {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(dtFechaAsiento);
 			
-			String companiacuenta = CodeUtil.pad(sCodSucCuenta.trim(), 5 , "0");
+			String companiacuenta = sCodSucCuenta.trim(); //CodeUtil.pad(sCodSucCuenta.trim(), 5 , "0");
 			
 			String hora = new SimpleDateFormat("HHmmss").format(dtFechaAsiento); 
 			String fechajulian = String.valueOf( FechasUtil.dateToJulian(dtFechaAsiento) );
@@ -970,7 +969,6 @@ public class PlanMantenimientoTotalCtrl {
 					.replace("@GLGLC@", sTipoCliente)
 					.replace("@GLEXR@", sObservacion)
 					
-//					.replace("@GLBCRC@", sGlbcrc)
 					.replace("@GLBCRC@", moneda_base)
 					.replace("@GLHCO@", sGlhco)
 					.replace("@GLCRRM@",  "D")
@@ -993,7 +991,7 @@ public class PlanMantenimientoTotalCtrl {
 					//Se envia por medio de parametros la session para el manejo de control de compromiso
 					aplicado = ConsolidadoDepositosBcoCtrl .executeSqlQueryTx(  sesion, sqlInsert );
 				} catch (Exception e) {
-					e.printStackTrace();
+					LogCajaService.CreateLog("registrarF0911PMT", "ERR", e.getMessage());
 					aplicado = false;
 				}
 			
@@ -1068,7 +1066,7 @@ public class PlanMantenimientoTotalCtrl {
 				try {
 					aplicado = ConsolidadoDepositosBcoCtrl .executeSqlQueryTx( sesion,  sqlInsert );
 				} catch (Exception e) {
-					e.printStackTrace();
+					LogCajaService.CreateLog("registrarF0911PMT", "ERR", e.getMessage());
 					aplicado = false;
 				}
 				
@@ -1142,31 +1140,15 @@ public class PlanMantenimientoTotalCtrl {
 					try {
 						aplicado = ConsolidadoDepositosBcoCtrl .executeSqlQueryTx( sesion,   sqlInsert );
 					} catch (Exception e) {
-						e.printStackTrace();
+						LogCajaService.CreateLog("registrarF0911PMT", "ERR", e.getMessage());
 						aplicado = false;
 					}
 				}
 			}
 			
-			/*
-			PreparedStatement ps = null;
-			try {
-
-				ps = cn.prepareStatement(strExecute);
-				int rs = ps.executeUpdate();
-				aplicado = rs == 1;
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				aplicado = false;
-			}
-			
-			ps.close();
-			*/
-			
 		} catch (Exception ex) {
 			aplicado = false;
-			ex.printStackTrace(); 
+			LogCajaService.CreateLog("registrarF0911PMT", "ERR", ex.getMessage());
 		}
 		return aplicado;
 	}
@@ -1265,6 +1247,7 @@ public class PlanMantenimientoTotalCtrl {
 				
 			try {
 				
+				LogCajaService.CreateLog("registrarF0911PMT", "QRY", sqlInsert);
 				int rows = session.createSQLQuery(sqlInsert).executeUpdate();
 				aplicado = rows == 1 ;
 				
@@ -1275,7 +1258,7 @@ public class PlanMantenimientoTotalCtrl {
 			
 		} catch (Exception ex) {
 			aplicado = false;
-			ex.printStackTrace(); 
+			LogCajaService.CreateLog("registrarF0911PMT", "ERR", ex.getMessage());
 		}
 		return aplicado;
 	}
@@ -1291,13 +1274,11 @@ public class PlanMantenimientoTotalCtrl {
 			"A6ABA1, A6APRC, A6MINO, A6MAXO, A6AN8R, A6BADT, A6ANCR, A6CARS, A6LTDT, A6INVC, A6PLST, A6EDPM, A6EDQD, " +
 			"A6EDAD, A6EDF1, A6MNSC, A6ATO, A6RVNT, A6URDT, A6URAT, A6URAB, A6USER, A6PID, A6JOBN, A6UPMJ, A6UPMT, A6AVCH, A6PYIN " +
 			" ) " +
-//			"A6RMTA, A6TORG, A6FHD3, A6FHD4) " +
 			"VALUES " +
 			"(@A6AN8C, '@A6APC', @A6DCAP, @A6TAWH, @A6PCWH, '@A6SCK', @A6SNTO, @A6FLD, @A6SQNL, '@A6CRCA', @A6AYPD, @A6APPD, @A6ABAM, " +
 			"@A6ABA1, @A6APRC, @A6MINO, @A6MAXO, @A6AN8R, '@A6BADT', @A6ANCR, @A6CARS, @A6LTDT, @A6INVC, '@A6PLST', '@A6EDPM', @A6EDQD, " +
 			"@A6EDAD, '@A6EDF1', @A6MNSC, '@A6ATO', '@A6RVNT', @A6URDT, @A6URAT, @A6URAB, '@A6USER', '@A6PID', '@A6JOBN', @A6UPMJ, @A6UPMT, '@A6AVCH', '@A6PYIN' " +
 			" ) ";
-//			"@A6RMTA, '@A6TORG', @A6FHD3, @A6FHD4)";
 			
 			sqlInsert = sqlInsert
 					
@@ -1342,39 +1323,17 @@ public class PlanMantenimientoTotalCtrl {
 			.replace("@A6UPMJ", Integer.toString( FechasUtil.dateToJulian(new Date() ) ) )
 			.replace("@A6UPMT", new SimpleDateFormat("HHmmss").format(new Date() ) )
 			.replace("@A6AVCH", "N" )
-			.replace("@A6PYIN", MetodosPagoCtrl.TRANSFERENCIA )
-			
-			;
-//			.replace("@A6RMTA",  "0" )
-//			.replace("@A6TORG",  usuario )
-//			.replace("@A6FHD3",  "0" )
-//			.replace("@A6FHD4",  "0" ) ;
+			.replace("@A6PYIN", MetodosPagoCtrl.TRANSFERENCIA );
 			
 			try {
 				insert = ConsolidadoDepositosBcoCtrl .executeSqlQueryTx( sesion,  sqlInsert );
 			} catch (Exception e) {
-				e.printStackTrace();
+				LogCajaService.CreateLog("insertConfigProveedor", "ERR", e.getMessage());
 				insert = false;
 			}
-			
-			/*
-			PreparedStatement ps = null;
-			try {
 
-				ps = cn.prepareStatement(sqlInsert);
-				int rs = ps.executeUpdate();
-				insert = rs == 1;
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				insert = false;
-			}
-			
-			ps.close();
-			*/
-			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("insertConfigProveedor", "ERR", e.getMessage());
 			insert = false;
 		}
 		return insert;
@@ -1390,13 +1349,11 @@ public class PlanMantenimientoTotalCtrl {
 			"A6ABA1, A6APRC, A6MINO, A6MAXO, A6AN8R, A6BADT, A6ANCR, A6CARS, A6LTDT, A6INVC, A6PLST, A6EDPM, A6EDQD, " +
 			"A6EDAD, A6EDF1, A6MNSC, A6ATO, A6RVNT, A6URDT, A6URAT, A6URAB, A6USER, A6PID, A6JOBN, A6UPMJ, A6UPMT, A6AVCH, A6PYIN " +
 			" ) " +
-//			"A6RMTA, A6TORG, A6FHD3, A6FHD4) " +
 			"VALUES " +
 			"(@A6AN8C, '@A6APC', @A6DCAP, @A6TAWH, @A6PCWH, '@A6SCK', @A6SNTO, @A6FLD, @A6SQNL, '@A6CRCA', @A6AYPD, @A6APPD, @A6ABAM, " +
 			"@A6ABA1, @A6APRC, @A6MINO, @A6MAXO, @A6AN8R, '@A6BADT', @A6ANCR, @A6CARS, @A6LTDT, @A6INVC, '@A6PLST', '@A6EDPM', @A6EDQD, " +
 			"@A6EDAD, '@A6EDF1', @A6MNSC, '@A6ATO', '@A6RVNT', @A6URDT, @A6URAT, @A6URAB, '@A6USER', '@A6PID', '@A6JOBN', @A6UPMJ, @A6UPMT, '@A6AVCH', '@A6PYIN' " +
 			" ) ";
-//			"@A6RMTA, '@A6TORG', @A6FHD3, @A6FHD4)";
 			
 			sqlInsert = sqlInsert
 					
@@ -1441,15 +1398,12 @@ public class PlanMantenimientoTotalCtrl {
 			.replace("@A6UPMJ", Integer.toString( FechasUtil.dateToJulian(new Date() ) ) )
 			.replace("@A6UPMT", new SimpleDateFormat("HHmmss").format(new Date() ) )
 			.replace("@A6AVCH", "N" )
-			.replace("@A6PYIN", MetodosPagoCtrl.TRANSFERENCIA )
-			
-			;
+			.replace("@A6PYIN", MetodosPagoCtrl.TRANSFERENCIA );
 			
 			try {
-				
+				LogCajaService.CreateLog("insertConfigProveedor", "QRY", sqlInsert);
 				int rows = session.createSQLQuery(sqlInsert).executeUpdate();
 				insert = rows == 1 ;
-				//insert = session.create  ConsolidadoDepositosBcoCtrl .executeSqlQuery( sqlInsert );
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1457,7 +1411,7 @@ public class PlanMantenimientoTotalCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("insertConfigProveedor", "ERR", e.getMessage());
 			insert = false;
 		}
 		return insert;
@@ -1506,10 +1460,10 @@ public class PlanMantenimientoTotalCtrl {
 				"IFNULL( (cast( abac10 as varchar(3) ccsid 37 )),'') " +
 				" from "+PropertiesSystem.JDEDTA+".f0101 where aban8 = " + codigobeneficiario;
 			
+			LogCajaService.CreateLog("registrarF0411PorPMT", "QRY", strF0101);
 			List<Object[]>dtaF0101 = (ArrayList<Object[]>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(strF0101, true,null );
 			
 			if(dtaF0101 == null || dtaF0101.isEmpty() ){
-				System.out.println("strF0101 is null " + strF0101);
 				return aplicado = false;
 			}
 			
@@ -1572,7 +1526,6 @@ public class PlanMantenimientoTotalCtrl {
 				 .replace("@RPSFX@",  numerocuota)  
 				 .replace("@RPAN8@",  Integer.toString(codigobeneficiario))
 				 .replace("@RPPYE@",  Integer.toString(codigobeneficiario))
-//				 .replace("@RPPYE@",  "B01")
 				 .replace("@RPDIVJ@", strFechaActualJuliana)
 				 .replace("@RPDSVJ@", strFechaActualJuliana)
 				 .replace("@RPDDJ@",  strFechaActualJuliana)
@@ -1630,7 +1583,6 @@ public class PlanMantenimientoTotalCtrl {
 				 .replace("@RPPO@", CodeUtil.pad(numeroContrato, 8, "0"))
 				
 				 //&& ===== en E1 va en blanco
-				 //.replace("@RPPDCT@", tipoDocLiga);
 				.replace("@RPPDCT@", " ");
 			
 			
@@ -1641,6 +1593,7 @@ public class PlanMantenimientoTotalCtrl {
 				
 				
 				try {
+					LogCajaService.CreateLog("registrarF0411PorPMT", "QRY", strSqlInsertF0411);
 					aplicado = ConsolidadoDepositosBcoCtrl .executeSqlQueryTx( sesion,    strSqlInsertF0411 );
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1649,7 +1602,7 @@ public class PlanMantenimientoTotalCtrl {
 				
 		} catch (Exception e) {
 			aplicado = false;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("registrarF0411PorPMT", "ERR", e.getMessage());
 		} 
 		return aplicado;
 	}
@@ -1698,11 +1651,11 @@ public class PlanMantenimientoTotalCtrl {
 				"IFNULL( (cast( abac10 as varchar(3) ccsid 37 )),'') " +
 				" from "+PropertiesSystem.JDEDTA+".f0101 where aban8 = " + codigobeneficiario;
 			
-			//List<Object[]>dtaF0101 = (ArrayList<Object[]>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(strF0101, true,null );
+			LogCajaService.CreateLog("registrarF0411PorPMT", "QRY", strF0101);
+			
 			List<Object[]>dtaF0101 = (ArrayList<Object[]>)session.createSQLQuery(strF0101).list();
 			
 			if(dtaF0101 == null || dtaF0101.isEmpty() ){
-				System.out.println("strF0101 is null " + strF0101);
 				return aplicado = false;
 			}
 			
@@ -1732,15 +1685,13 @@ public class PlanMantenimientoTotalCtrl {
 					"IFNULL( (cast( a6pyin as varchar(1) ccsid 37 )), '"+MetodosPagoCtrl.TRANSFERENCIA+"' )  a6pyin from " +
 					PropertiesSystem.JDEDTA+".f0401 where a6an8 = " + codigobeneficiario ;
 
-			//List<Object[]> dtaBnfF0401 = ( ArrayList<Object[]> )ConsolidadoDepositosBcoCtrl.executeSqlQuery( strSqlPayInstruent, true,null ) ;
+			LogCajaService.CreateLog("registrarF0411PorPMT", "QRY", strSqlPayInstruent);
 			List<Object[]> dtaBnfF0401 = ( ArrayList<Object[]> )session.createSQLQuery(strSqlPayInstruent).list() ;
 			
 			//&& =============== crear la configuracion de proveedor al cliente si no existe 
 			if(dtaBnfF0401 == null || dtaBnfF0401.isEmpty() ){
 				
 				insertConfigProveedor( session,  codigobeneficiario, usrA400, newApClass );
-				
-				System.out.println("no hay configuracion en F0401 strSqlPayInstruent  "+strSqlPayInstruent);
 				
 				glapclass = newApClass;
 				paymentInstrument = MetodosPagoCtrl.TRANSFERENCIA;
@@ -1823,7 +1774,6 @@ public class PlanMantenimientoTotalCtrl {
 				 .replace("@RPPO@", CodeUtil.pad(numeroContrato, 8, "0"))
 				
 				 //&& ===== en E1 va en blanco
-				 //.replace("@RPPDCT@", tipoDocLiga);
 				.replace("@RPPDCT@", " ");
 			
 			
@@ -1833,7 +1783,7 @@ public class PlanMantenimientoTotalCtrl {
 						.replace("@VALUES_TO_INSERT", insertValues);
 				
 				try {
-					
+					LogCajaService.CreateLog("registrarF0411PorPMT", "QRY", strSqlInsertF0411);
 					int rows = session.createSQLQuery(strSqlInsertF0411).executeUpdate();
 					aplicado = rows == 1 ;
 					
@@ -1845,7 +1795,7 @@ public class PlanMantenimientoTotalCtrl {
 				
 		} catch (Exception e) {
 			aplicado = false;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("registrarF0411PorPMT", "ERR", e.getMessage());
 		} 
 		return aplicado;
 	}

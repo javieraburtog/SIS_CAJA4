@@ -22,6 +22,7 @@ import com.casapellas.entidades.Vcompania;
 import com.casapellas.entidades.Vreporterecibos;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.FechasUtil;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
 import com.infragistics.faces.grid.component.html.HtmlGridView;
 import com.infragistics.faces.input.component.html.HtmlDateChooser;
@@ -71,8 +72,6 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 		
 		
 		try {
-			
-			boolean sinFiltroFecha = txtFiltrosFechaInicio.getValue() == null  && txtFiltrosFechaFinal.getValue() == null ;
 			boolean filtroCodigo =  txtCodigoCliente.getValue() != null &&  
 									txtCodigoCliente.getValue().toString().trim().matches(PropertiesSystem.REGEXP_NUMBER) ;
 		 
@@ -84,9 +83,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 				cal.set( Calendar.DAY_OF_MONTH, (cal.getActualMinimum(Calendar.DAY_OF_MONTH)  ) );
 				fechaini = cal.getTime();
 			}else{
-				
 				fechaini =  (Date) txtFiltrosFechaInicio.getValue();
-				
 			}
 			
 			if( fechaini.after(fechafin) ){
@@ -107,10 +104,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			List<String[]> params = new ArrayList<String[]>() ;
 			params.add(new String[] {"=","codcomp",  "'"+ ddlFiltroCompanias.getValue().toString() +"'" } );
 			params.add(new String[] {"=","mpago",    "'"+ddlFiltroFormaDePago.getValue().toString()+"'"} );
-			params.add(new String[] {"=","moneda",   "'"+ddlFiltroMonedas.getValue().toString()+"'"} );
-			params.add(new String[] {">=","fecha", 	 "'" + new SimpleDateFormat("yyyy-MM-dd").format( fechaini ) + "'" } );
-			params.add(new String[] {"<=","fecha", 	 "'" + new SimpleDateFormat("yyyy-MM-dd").format( fechafin ) + "'" } );
-			
+			params.add(new String[] {"=","moneda",   "'"+ddlFiltroMonedas.getValue().toString()+"'"} );			
 			
 			if( !grupoCajaSeleccionado.isEmpty() ){
 				params.add(new String[] {"in","caprnt", grupoCajaSeleccionado.toString().replace("[", "(").replace("]", ")")} );
@@ -122,7 +116,6 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 				params.add(new String[] {"in","tiporec", tiposReciboSeleccionados.toString().replace("[", "(").replace("]", ")")} );
 			}
 			
-			 
 			if( filtroCodigo ) {
 				params.add(new String[] {"=","codcli", String.valueOf( txtCodigoCliente.getValue().toString() )  } );
 			}
@@ -133,12 +126,15 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			int countparam = 0 ; 
 			for (String[] paramValor : params) {
 				
-				if(paramValor[2].trim().contains("00") || paramValor[2].trim().isEmpty() || paramValor[2].trim().contains("XX"))
+				if(!paramValor[1].trim().equals("caid") && (paramValor[2].trim().contains("00") || paramValor[2].trim().isEmpty() || paramValor[2].trim().contains("XX")))
 					continue;
 				
 				strSql += " and " + paramValor[1] +" " + paramValor[0] + " " + paramValor[2] +"  ";
 				countparam ++;
 			}
+			
+			//Agregamos el filtro de fecha. Si el usuario no elije un filtro de fechas se usa el mes en curso como filtro
+			strSql += " and (fecha >= '" + new SimpleDateFormat("yyyy-MM-dd").format( fechaini ) + "' and fecha <= '" + new SimpleDateFormat("yyyy-MM-dd").format( fechafin ) + "')";
  
 			if(countparam == 0){
 				strSql += " fetch first 1000 rows only " ;
@@ -177,13 +173,10 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("filtrarRecibosCaja", "ERR", e.getMessage());
 		}finally{
-			
 			lblMsgResultadoBusqueda.setValue(resultados);
 			CodeUtil.refreshIgObjects(lblMsgResultadoBusqueda);
-			
 		}
 	}
 	
@@ -193,16 +186,14 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			txtCodigoCliente.setValue(" ");
 			dwFiltrosBusquedaRecibos.setWindowState("normal");
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("mostrarFiltrosBusqueda", "ERR", e.getMessage());
 		}
 	}
 	public void ocultarFiltrosBusqueda(ActionEvent ev){
 		try {
 			dwFiltrosBusquedaRecibos.setWindowState("hidden");
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("ocultarFiltrosBusqueda", "ERR", e.getMessage());
 		}
 	}
 	
@@ -248,8 +239,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			}
 				
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("getLstfcCajas", "ERR", e.getMessage());
 		}finally{
 			if(lstfcCajas == null ){
 				lstfcCajas = new ArrayList<SelectItem>();
@@ -280,8 +270,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			} 
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("getLstFiltroCompanias", "ERR", e.getMessage());
 		}finally{
 			if(lstFiltroCompanias == null)
 				lstFiltroCompanias = new ArrayList<SelectItem>();
@@ -313,8 +302,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("getLstFiltroFormaDePago", "ERR", e.getMessage());
 		}finally{
 			
 			if(lstFiltroFormaDePago == null)
@@ -346,8 +334,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			}
 		
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("getLstFiltroMonedas", "ERR", e.getMessage());
 		}finally{
 			if(lstFiltroFormaDePago == null)
 				lstFiltroFormaDePago = new ArrayList<SelectItem>();
@@ -359,9 +346,8 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 	public void setLstFiltroMonedas(List<SelectItem> lstFiltroMonedas) {
 		this.lstFiltroMonedas = lstFiltroMonedas;
 	}
+	@SuppressWarnings("unchecked")
 	public List<SelectItem> getLstGruposDeCajas() {
-		
-		
 		try {
 			
 			if(CodeUtil.getFromSessionMap("rrc_lstGruposDeCajas") != null)
@@ -376,7 +362,6 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 				"  group by caprnt "+ 
 				"  having  count( caprnt )  > 1   ";
 			
-			@SuppressWarnings("unchecked")
 			List<Object[]> lstCajas = (ArrayList<Object[]> ) ConsolidadoDepositosBcoCtrl.executeSqlQuery(stSql, true,null);
 			
 			 for (Object[] dtaCaja : lstCajas) {
@@ -389,8 +374,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			}
 				
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("getLstGruposDeCajas", "ERR", e.getMessage());
 		}finally{
 			if(lstGruposDeCajas == null ){
 				lstGruposDeCajas = new ArrayList<SelectItem>();
@@ -458,6 +442,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 	public void setGvRecibosDeCaja(HtmlGridView gvRecibosDeCaja) {
 		this.gvRecibosDeCaja = gvRecibosDeCaja;
 	}
+	@SuppressWarnings("unchecked")
 	public List<Vreporterecibos> getLstReporteRecibosCaja() {
 		
 		try {
@@ -466,7 +451,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 				return lstReporteRecibosCaja = (ArrayList<Vreporterecibos>)CodeUtil.getFromSessionMap("rrc_lstReporteRecibosCaja");
 			
 		} catch (Exception e) {
-			 e.printStackTrace();
+			LogCajaService.CreateLog("getLstReporteRecibosCaja", "ERR", e.getMessage());
 		}finally{
 			
 			if(lstReporteRecibosCaja == null){
@@ -497,6 +482,7 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 	public void setTiposReciboSeleccionados(List<String> tiposReciboSeleccionados) {
 		this.tiposReciboSeleccionados = tiposReciboSeleccionados;
 	}
+	@SuppressWarnings("unchecked")
 	public List<SelectItem> getLstTiposDeRecibo() {
 		
 		try {
@@ -509,7 +495,6 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 		
 			String strSql = "select tiporec,  desc from " + PropertiesSystem.ESQUEMA+".tiporecibo " ; 
 			
-			@SuppressWarnings("unchecked")
 			List<Object[]> tiposDeRecibo = (ArrayList<Object[]>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(strSql, true, null);
 			
 			if(tiposDeRecibo == null)
@@ -517,20 +502,15 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 			
 			for (Object[] dtTiporec : tiposDeRecibo) {
 				lstTiposDeRecibo.add(new SelectItem( "'"+String.valueOf( dtTiporec[0] ) +"'", CodeUtil.capitalize( String.valueOf( dtTiporec[1] ) )  ));
-			}
-			
-//			lstTiposDeRecibo.add(new SelectItem("AA", "Solo Anulados "));
-			
+			}			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("getLstTiposDeRecibo", "ERR", e.getMessage());
 		}finally{
 			if(lstTiposDeRecibo == null)
 				lstTiposDeRecibo = new ArrayList<SelectItem>();
 			CodeUtil.putInSessionMap("rrc_lstTiposDeRecibo", lstTiposDeRecibo);
-		}
-		
+		}		
 		
 		return lstTiposDeRecibo;
 	}

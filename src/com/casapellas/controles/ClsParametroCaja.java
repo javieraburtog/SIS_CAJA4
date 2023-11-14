@@ -9,6 +9,7 @@ import java.util.List;
 
 
 import com.casapellas.entidades.CajaParametro;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
 
 import ni.com.casapellas.util.net.DB2Connection;
@@ -119,7 +120,11 @@ public class ClsParametroCaja {
 									  "tcod codigo," + 
 									  "tdesc descripcion," + 
 									  "tvalnum valorNumerico," + 
-									  "tvalalf valorAlfanumerico " +
+									  "tvalalf valorAlfanumerico, " +
+									  "IFNULL(COD_COMPANIA, '') AS codigoCompania, " +
+									  "IFNULL(COD_UNIDAD_NEGOCIO, '') AS codigoUnidadNegocio, " +
+									  "IFNULL(COD_CUENTA_OBJETO, '') AS codigoCuentaObjeto, " +
+									  "IFNULL(COD_SUBCUENTA, '') AS codigoSubCuenta " +
 							  "from cajaparm where tparm = '" + strTipoParametro + "' and " +
 							  					  "caid = " + strNumeroCaja + " and "
 							  					+ "tcod = '" + strCodigoParm + "' ";
@@ -136,7 +141,10 @@ public class ClsParametroCaja {
 				cp.setNoCaja(rs.getInt("noCaja"));
 				cp.setValorNumerico(rs.getDouble("valorNumerico"));
 				cp.setValorAlfanumerico(rs.getString("valorAlfanumerico"));
-				
+				cp.setCodigoCompania(rs.getString("codigoCompania"));
+				cp.setCodigoUnidadNegocio(rs.getString("codigoUnidadNegocio"));
+				cp.setCodigoCuentaObjeto(rs.getString("codigoCuentaObjeto"));
+				cp.setCodigoSubCuenta(rs.getString("codigoSubCuenta"));				
 				break;
 			}
 			
@@ -144,7 +152,7 @@ public class ClsParametroCaja {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			LogCajaService.CreateLog("getParametros", "ERR", e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 		finally
@@ -154,7 +162,7 @@ public class ClsParametroCaja {
 			dbC.closedConnection(conn);
 			}
 			catch (Exception e) {
-				// TODO: handle exception
+				LogCajaService.CreateLog("getParametros", "ERR", e.getMessage());
 			}
 		}
 		
