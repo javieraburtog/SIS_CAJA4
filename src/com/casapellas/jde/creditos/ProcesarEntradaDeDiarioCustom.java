@@ -52,6 +52,34 @@ public class ProcesarEntradaDeDiarioCustom {
 	public static Date fechafactura;
 	public static boolean procesarSql = true;
 	
+	public ProcesarEntradaDeDiarioCustom() {
+		
+		msgProceso = "";
+		lstSqlsInserts = new ArrayList<String[]>();
+		lineasComprobante = null;
+		monedaComprobante = "";
+		monedaLocal = "";
+		fecharecibo = null;
+		tasaCambioParalela = null;
+		tasaCambioOficial = null;
+		montoComprobante = null;
+		tipoDocumento = "";
+		conceptoComprobante = "";
+		numeroBatchJde = "";
+		numeroReciboJde = "";
+		usuario = "";
+		codigousuario = 0;
+		programaActualiza = "";
+		fecharecibojde = "";
+		
+		tiposolicitud = "";
+		numerosolicitud = "";
+		numerocuota = "";
+		tipointeres = "";
+		
+		 procesarSql = true;
+		
+	}
 
 	public static void procesarEntradaDeDiarioCustom(Session sesion){
 		try {

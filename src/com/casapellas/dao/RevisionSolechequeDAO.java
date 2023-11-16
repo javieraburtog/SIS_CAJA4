@@ -51,7 +51,7 @@ import com.casapellas.entidades.VsolechequeId;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.jde.creditos.CodigosJDE1;
 import com.casapellas.jde.creditos.DatosComprobanteF0911;
-import com.casapellas.jde.creditos.ProcesarEntradaDeDiario;
+import com.casapellas.jde.creditos.ProcesarEntradaDeDiarioCustom;
 import com.casapellas.navegacion.As400Connection;
 import com.casapellas.reportes.Rptmcaja008;
 import com.casapellas.util.CodeUtil;
@@ -107,6 +107,9 @@ public class RevisionSolechequeDAO {
 	private HtmlInputText txtDestinoCarta,txtOrigenCarta,txtCartaDigitosTarjeta,txtCartaCodAutoriz;
 	private HtmlOutputText lblMsgAprSolicitud;
 	
+	//Nuevos valores para JDE
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");	
+	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
 	
 	public void cerrarCartaReversion(ActionEvent ev) {
 		try {
@@ -252,28 +255,27 @@ public class RevisionSolechequeDAO {
 			 lineasComprobante.add(dtaCtaFormaPago);
 	
 			int iNumeroBatch = Divisas.numeroSiguienteJdeE1(    );
-			int iNumeroDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int iNumeroDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9]);
 			 
-			 new ProcesarEntradaDeDiario();
-			 ProcesarEntradaDeDiario.monedaComprobante = sMoneda;
-			 ProcesarEntradaDeDiario.monedaLocal = sMonedaBase;
-			 ProcesarEntradaDeDiario.fecharecibo = dtFecha;
-			 ProcesarEntradaDeDiario.tasaCambioParalela = tasaCambio; 
-			 ProcesarEntradaDeDiario.tasaCambioOficial = tasaCambio; 
-			 ProcesarEntradaDeDiario.montoComprobante = montoComprobante;
-			 ProcesarEntradaDeDiario.tipoDocumento = CodigosJDE1.BATCH_CONTADO.codigo();
-			 ProcesarEntradaDeDiario.conceptoComprobante = sConcepto ;
-			 ProcesarEntradaDeDiario.numeroBatchJde = String.valueOf( iNumeroBatch );
-			 ProcesarEntradaDeDiario.numeroReciboJde = String.valueOf( iNumeroDocumento ) ;
-			 ProcesarEntradaDeDiario.usuario = vaut.getId().getLogin();
-			 ProcesarEntradaDeDiario.codigousuario = vaut.getId().getCodreg();
-			 ProcesarEntradaDeDiario.programaActualiza = PropertiesSystem.CONTEXT_NAME;
-			 ProcesarEntradaDeDiario.lineasComprobante = lineasComprobante;
-			 ProcesarEntradaDeDiario.tipodebatch = CodigosJDE1.RECIBOCONTADO; 
-			 ProcesarEntradaDeDiario.estadobatch = CodigosJDE1.BATCH_ESTADO_PENDIENTE ;
-			 ProcesarEntradaDeDiario.procesarEntradaDeDiario(session);
+			 new ProcesarEntradaDeDiarioCustom();
+			 ProcesarEntradaDeDiarioCustom.monedaComprobante = sMoneda;
+			 ProcesarEntradaDeDiarioCustom.monedaLocal = sMonedaBase;
+			 ProcesarEntradaDeDiarioCustom.fecharecibo = dtFecha;
+			 ProcesarEntradaDeDiarioCustom.tasaCambioParalela = tasaCambio; 
+			 ProcesarEntradaDeDiarioCustom.tasaCambioOficial = tasaCambio; 
+			 ProcesarEntradaDeDiarioCustom.montoComprobante = montoComprobante;
+			 ProcesarEntradaDeDiarioCustom.tipoDocumento = valoresJdeInsContado[1];
+			 ProcesarEntradaDeDiarioCustom.conceptoComprobante = sConcepto ;
+			 ProcesarEntradaDeDiarioCustom.numeroBatchJde = String.valueOf( iNumeroBatch );
+			 ProcesarEntradaDeDiarioCustom.numeroReciboJde = String.valueOf( iNumeroDocumento ) ;
+			 ProcesarEntradaDeDiarioCustom.usuario = vaut.getId().getLogin();
+			 ProcesarEntradaDeDiarioCustom.codigousuario = vaut.getId().getCodreg();
+			 ProcesarEntradaDeDiarioCustom.programaActualiza = PropertiesSystem.CONTEXT_NAME;
+			 ProcesarEntradaDeDiarioCustom.lineasComprobante = lineasComprobante;
+			 ProcesarEntradaDeDiarioCustom.valoresJdeInsContado = valoresJdeInsContado;
+			 ProcesarEntradaDeDiarioCustom.procesarEntradaDeDiarioCustom(session);
 			 
-			 sMensaje = ProcesarEntradaDeDiario.msgProceso;	
+			 sMensaje = ProcesarEntradaDeDiarioCustom.msgProceso;	
 			 bHecho = sMensaje.isEmpty();	
 			
 			 if(!bHecho){

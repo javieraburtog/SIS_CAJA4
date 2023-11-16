@@ -584,10 +584,10 @@ public class FacCreditoDAO {
 			cn = As400Connection.getJNDIConnection("DSMCAJA2");
 			cn.setAutoCommit(false);
 			
-			recCtrl.actualizarEstadoRecibo(iNumrec,iCaid,sCodsuc,sCodcomp, sCodUsera, "No se completo pago con SP","CR");
+			recCtrl.actualizarEstadoRecibo(iNumrec,iCaid,sCodsuc,sCodcomp, sCodUsera, "No se completo pago con SP",valoresJDEInsCredito[0]);
 			
-			lstRecibojde = recCtrl.getEnlaceReciboJDE(iCaid, sCodsuc,sCodcomp, iNumrec, "CR");
-			lstReciboFac = recCtrl.leerFacturasReciboCredito2(iCaid, sCodcomp, iNumrec, "CR", iCodcli);
+			lstRecibojde = recCtrl.getEnlaceReciboJDE(iCaid, sCodsuc,sCodcomp, iNumrec, valoresJDEInsCredito[0]);
+			lstReciboFac = recCtrl.leerFacturasReciboCredito2(iCaid, sCodcomp, iNumrec, valoresJDEInsCredito[0], iCodcli);
 			
 			for(int j = 0;j < lstReciboFac.size(); j ++){
 				hFac =  (Hfacturajde)lstReciboFac.get(j);
@@ -2805,7 +2805,7 @@ else{//facturas en cor F: COR
 					 
 					bHecho = rcCtrl.registrarBatchA92(cn,"R", iNobatch,iTotalTransaccion, vaut.getId().getLogin(), 1, MetodosPagoCtrl.DEPOSITO);
 					if(bHecho){
-						bHecho = rcCtrl.fillEnlaceMcajaJde(s,tx,iNumRecCredito, hFac.getId().getCodcomp(), iNoReciboJDE, iNobatch,f55ca01.getId().getCaid(),f55ca01.getId().getCaco(),"R","CR");							
+						bHecho = rcCtrl.fillEnlaceMcajaJde(s,tx,iNumRecCredito, hFac.getId().getCodcomp(), iNoReciboJDE, iNobatch,f55ca01.getId().getCaid(),f55ca01.getId().getCaco(),"R",valoresJDEInsCredito[0]);							
 						
 						if(bHayFicha && bHecho){
 							String[] sCuentaCajaDom = d.obtenerCuentaCaja(f55ca01.getId().getCaid(),hFac.getId().getCodcomp(), MetodosPagoCtrl.EFECTIVO ,sMonedaBase,null,null,null,null);
@@ -3245,7 +3245,7 @@ else{//facturas en cor F: COR
 						//grabar batch de recibo en el F0011
 						bHecho = rcCtrl.registrarBatchA92(cn, "R", iNobatch, iTotalTransaccion, vaut.getId().getLogin(), 1, MetodosPagoCtrl.DEPOSITO);
 						if(bHecho){
-							bHecho = rcCtrl.fillEnlaceMcajaJde(s, tx, iNumRecCredito, hFac.getId().getCodcomp(), iNoReciboJDE, iNobatch, f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), "R", "CR");							
+							bHecho = rcCtrl.fillEnlaceMcajaJde(s, tx, iNumRecCredito, hFac.getId().getCodcomp(), iNoReciboJDE, iNobatch, f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), "R", valoresJDEInsCredito[0]);							
 							
 							if(!bHecho){
 								strMensajeValidacion = rcCtrl.getError() + " <BR/> DETALLE: " + rcCtrl.getErrorDetalle();		
@@ -8748,7 +8748,7 @@ public void cancelarSolicitud(ActionEvent e) {
 			try {
 				if(aplicado) {
 					transCreditos.commit();
-					BitacoraSecuenciaReciboService.actualizarSatisfactorioLogReciboNumerico(caid, numrec, codcomp,codsuc, "CR");
+					BitacoraSecuenciaReciboService.actualizarSatisfactorioLogReciboNumerico(caid, numrec, codcomp,codsuc, valoresJDEInsCredito[0]);
 					
 					dwRecibo.setWindowState("hidden");
 				}
@@ -9113,7 +9113,7 @@ public void cancelarSolicitud(ActionEvent e) {
 										    	
 							if(bHayFicha){
 								//actualizar el recibo con el numero de ficha
-								recCtrl.actualizarNoFicha(cn, iNumRecCredito, Integer.parseInt(m.get("iNoFicha").toString()), f55ca01.getId().getCaid(),hFac.getId().getCodcomp() , f55ca01.getId().getCaco(), "CR");
+								recCtrl.actualizarNoFicha(cn, iNumRecCredito, Integer.parseInt(m.get("iNoFicha").toString()), f55ca01.getId().getCaid(),hFac.getId().getCodcomp() , f55ca01.getId().getCaco(), valoresJDEInsCredito[0]);
 								cn.commit();
 							}
 							
@@ -9126,7 +9126,7 @@ public void cancelarSolicitud(ActionEvent e) {
 								imprimirVoucher(lstMetodosPago,hFac.getId().getCodcomp(), "V", f14);
 								recCtrl.actualizarReferenciasRecibo(iNumRecCredito, f55ca01.getId().getCaid(),
 												hFac.getId().getCodcomp(),f55ca01.getId().getCaco(),
-												"CR",lstMetodosPago);
+												valoresJDEInsCredito[0],lstMetodosPago);
 							}else{
 								int iNoficha = (m.get("iNoFicha") == null )? 0:
 												Integer.parseInt(
@@ -9169,7 +9169,7 @@ public void cancelarSolicitud(ActionEvent e) {
 							getP55recibo().setNORECIBO(bdNumrec);
 							getP55recibo().setIDEMPRESA(hFac.getId().getCodcomp().trim());
 							getP55recibo().setIDSUCURSAL(f55ca01.getId().getCaco().trim());
-							getP55recibo().setTIPORECIBO("CR");
+							getP55recibo().setTIPORECIBO(valoresJDEInsCredito[0]);
 							getP55recibo().setRESULTADO("");
 							getP55recibo().setCOMANDO("");
 							getP55recibo().invoke();
@@ -9282,7 +9282,7 @@ public void cancelarSolicitud(ActionEvent e) {
 						"configurado para la compañia: " + sCodComp ; 
 				return false;
 			}
-			BitacoraSecuenciaReciboService.insertarLogReciboNumerico(iCajaId,iNumRec,sCodComp,CodeUtil.pad(f55ca01.getId().getCaco(), 5, "0"),"CR");
+			BitacoraSecuenciaReciboService.insertarLogReciboNumerico(iCajaId,iNumRec,sCodComp,CodeUtil.pad(f55ca01.getId().getCaco(), 5, "0"),valoresJDEInsCredito[0]);
 			
 			dMontoAplicar = divisas.formatStringToDouble(txtMontoAplicar.getValue().toString());
 			dMontoRec = divisas.formatStringToDouble(txtMontoRecibido.getValue().toString());
@@ -9356,7 +9356,7 @@ public void cancelarSolicitud(ActionEvent e) {
 				
 				bHecho = creCtrl.registrarDetalleRecibo(session, transaction, 
 						iNumRec, iNumRecm, sCodComp, lstMetodosPago2,
-						iCajaId,f55ca01.getId().getCaco(),"CR");		
+						iCajaId,f55ca01.getId().getCaco(),valoresJDEInsCredito[0]);		
 				
 				if(bHecho){
 					//leer facturas seleccionadas

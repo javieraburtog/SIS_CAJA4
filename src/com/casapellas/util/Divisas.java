@@ -1684,12 +1684,12 @@ public class Divisas {
 						sCompCtaCaja = ( sCcmcu.length() >= 4) ? sCcmcu.substring(0,2) : sCcmcu ;
 					}
 					
-					sCuentaCaja[0] = sCuenta;
-					sCuentaCaja[1] = sIdCtaCaja;
-					sCuentaCaja[2] = sCompCtaCaja;
-					sCuentaCaja[3] = sCcmcu;
-					sCuentaCaja[4] = sCcobj;
-					sCuentaCaja[5] = sCcsub;
+					sCuentaCaja[0] = sCuenta.trim();
+					sCuentaCaja[1] = sIdCtaCaja.trim();
+					sCuentaCaja[2] = sCompCtaCaja.trim();
+					sCuentaCaja[3] = sCcmcu.trim();
+					sCuentaCaja[4] = sCcobj.trim();
+					sCuentaCaja[5] = sCcsub.trim();
 					
 				}else{
 					sCuentaCaja = null;
@@ -2550,12 +2550,12 @@ public class Divisas {
 							sCompCtaPos = ( sCxmcu.length() >= 4) ? sCxmcu.substring(0,2) : sCxmcu ;
 						}
 						
-						sCuentaDC[0] = sCuenta;
-						sCuentaDC[1] = sIdCtaPos;
-						sCuentaDC[2] = sCompCtaPos;
-						sCuentaDC[3] = sCxmcu;
-						sCuentaDC[4] = sCxobj;
-						sCuentaDC[5] = sCxsub;	
+						sCuentaDC[0] = sCuenta.trim();
+						sCuentaDC[1] = sIdCtaPos.trim();
+						sCuentaDC[2] = sCompCtaPos.trim();
+						sCuentaDC[3] = sCxmcu.trim();
+						sCuentaDC[4] = sCxobj.trim();
+						sCuentaDC[5] = sCxsub.trim();	
 						
 					}else{
 						sCuentaDC = null;						
