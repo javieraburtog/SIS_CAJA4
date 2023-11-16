@@ -2954,7 +2954,7 @@ public class IngExtraordinarioDAO {
 			sCob  = txtFiltroCobjeto.getValue().toString().trim();
 			sCsub = txtFiltroCsub.getValue().toString().trim();
 			
-			if(sUN.equals("")){
+			/*if(sUN.equals("")){
 				txtFiltroUN.setStyleClass("frmInput2Error");
 				lblMsgErrorFiltroCta.setStyle("color: red; text-align: center; visibility: visible");
 				lblMsgErrorFiltroCta.setValue("Debe Ingresar el valor para la unidad de negocio");
@@ -2963,8 +2963,8 @@ public class IngExtraordinarioDAO {
 				txtFiltroUN.setStyleClass("frmInput2Error");
 				lblMsgErrorFiltroCta.setStyle("color: red; text-align: center; visibility: visible");
 				lblMsgErrorFiltroCta.setValue("Debe Ingresar el valor para la Cuenta Objeto");
-			}
-			if(sCsub.equals("")){
+			}*/
+			if(sUN.equals("") || sCob.equals("") || sCsub.equals("")){
 				txtFiltroUN.setStyleClass("frmInput2Error");
 				lblMsgErrorFiltroCta.setStyle("color: red; text-align: center; visibility: visible");
 				lblMsgErrorFiltroCta.setValue("Debe Ingresar el valor para la subsidiaria");
