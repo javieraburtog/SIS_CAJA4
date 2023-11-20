@@ -59,6 +59,7 @@ import com.casapellas.controles.ArqueoCajaCtrl;
 import com.casapellas.controles.ArqueoControl;
 import com.casapellas.controles.ArqueofacCtrl;
 import com.casapellas.controles.ArqueorecCtrl;
+import com.casapellas.controles.ClsParametroCaja;
 import com.casapellas.controles.ConsolidadoDepositosBcoCtrl;
 import com.casapellas.controles.DonacionesCtrl;
 import com.casapellas.controles.PlanMantenimientoTotalCtrl;
@@ -292,6 +293,8 @@ public class ArqueoCajaDAO {
 	
 	private List<HistoricoReservasProformas> detalleContratoPmt ;
 	private HtmlGridView gvDetalleContratoPmt;
+	
+	private static ClsParametroCaja cajaparm = new ClsParametroCaja();
 	
 	public static boolean procesoContableCierreDonaciones(int noarqueo, int caid, String codcomp, String moneda, Date fecha,Vautoriz vaut,Session s ){
 		
@@ -673,8 +676,8 @@ public class ArqueoCajaDAO {
 			}
 			
 			MailHelper.SendHtmlEmail(
-					new CustomEmailAddress(PropertiesSystem.WEBMASTER_EMAIL_ADRESS, "Módulo de Caja"),
-					toList, null, new ArrayList<CustomEmailAddress>() { { add(new CustomEmailAddress(PropertiesSystem.MAIL_BOUNCEADDRESS)); } }, 
+					new CustomEmailAddress(cajaparm.getParametros("34", "0", "WEB_EMAIL_ADRESS").getValorAlfanumerico().toString(), "Módulo de Caja"),
+					toList, null, new ArrayList<CustomEmailAddress>() { { add(new CustomEmailAddress(cajaparm.getParametros("34", "0", "MAIL_BOUNCEADDRESS").getValorAlfanumerico().toString())); } }, 
 					subject, htlm.toString(), new String[] { terminal.getRutarealreporte() });
 			
 		} catch (Exception e) {
@@ -1133,8 +1136,8 @@ public class ArqueoCajaDAO {
 					+ a.getMoneda();
 			
 			MailHelper.SendHtmlEmail(
-					new CustomEmailAddress(PropertiesSystem.WEBMASTER_EMAIL_ADRESS, "Módulo de Caja: Notificación de Traslado de Factura"),
-					toList, null, new ArrayList<CustomEmailAddress>() { { add(new CustomEmailAddress(PropertiesSystem.MAIL_BOUNCEADDRESS)); } }, 
+					new CustomEmailAddress(cajaparm.getParametros("34", "0", "WEB_EMAIL_ADRESS").getValorAlfanumerico().toString(), "Módulo de Caja: Notificación de Traslado de Factura"),
+					toList, null, new ArrayList<CustomEmailAddress>() { { add(new CustomEmailAddress(cajaparm.getParametros("34", "0", "MAIL_BOUNCEADDRESS").getValorAlfanumerico().toString())); } }, 
 					sSubject, "", new String[] { minuta.getAbsolutePath() });
 			
 			
@@ -1326,8 +1329,8 @@ public class ArqueoCajaDAO {
 					.format(new Date());
 			
 			MailHelper.SendHtmlEmail(
-					new CustomEmailAddress(PropertiesSystem.WEBMASTER_EMAIL_ADRESS, "Módulo de Caja"),
-					toList, null, new ArrayList<CustomEmailAddress>() { { add(new CustomEmailAddress(PropertiesSystem.MAIL_BOUNCEADDRESS)); } }, 
+					new CustomEmailAddress(cajaparm.getParametros("34", "0", "WEB_EMAIL_ADRESS").getValorAlfanumerico().toString(), "Módulo de Caja"),
+					toList, null, new ArrayList<CustomEmailAddress>() { { add(new CustomEmailAddress(cajaparm.getParametros("34", "0", "MAIL_BOUNCEADDRESS").getValorAlfanumerico().toString())); } }, 
 					sSubject, htlm, attachList.toArray(new String[0]));
 			
 		} catch (Exception e) {
@@ -2528,7 +2531,7 @@ public class ArqueoCajaDAO {
 			String strHoraIni = horaIni != null?  "00:00:00" : new SimpleDateFormat("HH:mm:ss").format(horaIni);
 			String strHoraFin = new SimpleDateFormat("HH:mm:ss").format( (HoraFin  == null ? new Date() : HoraFin ) );
 			
-			String rutaf = PropertiesSystem.RUTA_DOCUMENTOS_EXPORTAR ;
+			String rutaf = cajaparm.getParametros("34", "0", "RUTA_DOC_EXPORTAR").getValorAlfanumerico().toString();//PropertiesSystem.RUTA_DOCUMENTOS_EXPORTAR ;
 			String nombrereporte = "RecibosCaja_"+caid+"_Arqueo_" + noarqueo+"_"+new SimpleDateFormat("ddMMyyyyHHmmss").format(fecha)+".xlsx";
 			
 			rutaReporte = rutaf + nombrereporte;
@@ -3399,8 +3402,8 @@ public class ArqueoCajaDAO {
 			String sSubject = "Donaciones Procesadas en arqueo de caja a la fecha:"	+new SimpleDateFormat("dd MMMM yyyy",new Locale("es","ES")).format(new Date());
 			
 			MailHelper.SendHtmlEmail(
-					new CustomEmailAddress(PropertiesSystem.WEBMASTER_EMAIL_ADRESS, "Módulo de Caja"),
-					toList, null, new CustomEmailAddress(PropertiesSystem.MAIL_BOUNCEADDRESS), 
+					new CustomEmailAddress(cajaparm.getParametros("34", "0", "WEB_EMAIL_ADRESS").getValorAlfanumerico().toString(), "Módulo de Caja"),
+					toList, null, new CustomEmailAddress(cajaparm.getParametros("34", "0", "MAIL_BOUNCEADDRESS").getValorAlfanumerico().toString()), 
 					sSubject, sbTablaCorreo.toString());
 			
 		} catch (Exception e) {

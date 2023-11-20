@@ -53,6 +53,7 @@ import com.casapellas.controles.AprobacionCierreCtrl;
 import com.casapellas.controles.ArqueoCajaCtrl;
 import com.casapellas.controles.ArqueoCtrl;
 import com.casapellas.controles.BancoCtrl;
+import com.casapellas.controles.ClsParametroCaja;
 import com.casapellas.controles.CompaniaCtrl;
 import com.casapellas.controles.ConfirmaDepositosCtrl;
 import com.casapellas.controles.ConsolidadoDepositosBcoCtrl;
@@ -142,10 +143,12 @@ import com.infragistics.faces.window.component.html.HtmlDialogWindowHeader;
 
 public class RevisionArqueoDAO {
 	
-	private String sObjRetencion = "18800";
-	private String sSubRetencion = "1018";
-	private String sObjIVAcomision = "18800";
-	private String sSubIVAcomision = "1013";
+	ClsParametroCaja cajaparm = new ClsParametroCaja();
+	
+	private String sObjRetencion = "";
+	private String sSubRetencion = "";
+	private String sObjIVAcomision = "";
+	private String sSubIVAcomision = "";
 	/** Pantalla Principal **/
 	private HtmlGridView gvArqueosPendRev;
 	
@@ -954,7 +957,7 @@ public class RevisionArqueoDAO {
 				return sMensajeError;
 			}
 			
-			iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			iNoDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 			if(iNoDocumento == -1){
 				sMensajeError = "No se ha podido obtener el Número de Documento para el registro de reintegro de fondo minimo ";
 				return sMensajeError;
@@ -1378,12 +1381,12 @@ public class RevisionArqueoDAO {
 		 
 		int iNoBatch = 0;
 		int iNoDocumento = 0;
-		
+		ClsParametroCaja cajaparm = new ClsParametroCaja();
 		long iMontoTotalBanco ;
 		
 		Divisas dv = new Divisas();
 		ReciboCtrl recCtrl = new ReciboCtrl();
-		String sTipoDoc = PropertiesSystem.TIPODOC_REFER_ZX;
+		String sTipoDoc = "";
 		String sDescrip = "";
 		
 		List<Ctaxdeposito> lstCtasxDeps = null;
@@ -1393,8 +1396,9 @@ public class RevisionArqueoDAO {
 		String tipoAuxiliarCtaTrans = "";
 		
 		
+		
 		try {
-			
+			sTipoDoc = cajaparm.getParametros("34", "0", "CIERRE_DOCTYPE_ZX").getValorAlfanumerico().toString();
 			Vautoriz vaut = ((Vautoriz[]) CodeUtil.getFromSessionMap( "sevAut"))[0];
 			 
 			sConcepto = "Arqueo "+iNoarqueo+" Caja "+lstLiquidaCheque.get(0).getCaid()+ " "+   FechasUtil.formatDatetoString(dtFecha, "dd/MM/yyyy");
@@ -1429,9 +1433,10 @@ public class RevisionArqueoDAO {
 					}
 					
 					sDescrip = "REF:"+ar.getId().getReferencenumber()+" MP:5 C:"+ar.getId().getCaid();
-					sTipoDoc = PropertiesSystem.TIPODOC_REFER_P9;
+					sTipoDoc = cajaparm.getParametros("34", "0", "CIERRE_DOCTYPE_P9").getValorAlfanumerico().toString();
 					sCtaBco = sCtaBcoTransitoria;
-					iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+					iNoDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+					
 					
 					tipoAuxiliarCtaTrans = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT;
 					strSubLibroCuenta = ConfirmaDepositosCtrl.constructSubLibroCtaTbanco(0, lc.getIcodigobanco(), lc.getCaid(), lc.getMoneda(), lc.getCodcomp());
@@ -2457,7 +2462,7 @@ public class RevisionArqueoDAO {
 					
 					// && ====================== Asientos de diario por comisiones.
 					int numerobatch = Divisas.numeroSiguienteJdeE1(   );
-					int numeroDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+					int numeroDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );//Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
 					int[] iNobatchNodoc = new int[]{numerobatch, numeroDocumento};
 					
 					int montoentero = Integer.parseInt( String.format("%1$.2f", comisiondnc).replace(".", "")  ); 
@@ -2468,7 +2473,7 @@ public class RevisionArqueoDAO {
 					String monedaAA = posDnc.getMoneda();
 					String monedaCA = posDnc.getMoneda();
 					String tipoDocxMon = "D" ;
-					tipodocjde = PropertiesSystem.TipoDocJdeComisionDonacion;
+					tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_COMIDONACION").getValorAlfanumerico().toString();
 					
 					BigDecimal tasacambio = BigDecimal.ONE;
 					
@@ -2563,7 +2568,7 @@ public class RevisionArqueoDAO {
 					lineadoc = 0;
 					
 					numerobatch = Divisas.numeroSiguienteJdeE1(   );
-					numeroDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+					numeroDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 					iNobatchNodoc = new int[]{numerobatch, numeroDocumento};
 					
 					montoentero = Integer.parseInt( String.format("%1$.2f", retenciondnc).replace(".", "")  ); 
@@ -2572,7 +2577,7 @@ public class RevisionArqueoDAO {
 					montoAA = montoentero;
 					montoCA = montoentero;
 					tasacambio = BigDecimal.ONE;
-					tipodocjde = PropertiesSystem.TipoDocJdeRetencionDonacion;
+					tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_RETEDONACION").getValorAlfanumerico().toString();
 					observacion = "Retención Donación C:"+caid +" A:"+noarqueo;
 					logs = observacion;
 					
@@ -2697,6 +2702,11 @@ public class RevisionArqueoDAO {
 		String strDscripL2  = "";
 		
 		try {
+			sObjRetencion = cajaparm.getParametros("34", "0", "CIERRE_RETE_OBJ").getCodigoCuentaObjeto().toString();
+			sSubRetencion = cajaparm.getParametros("34", "0", "CIERRE_RETE_SUB").getCodigoSubCuenta().toString();
+			sObjIVAcomision = cajaparm.getParametros("34", "0", "CIERRE_RETE_OBJ").getCodigoCuentaObjeto().toString();
+			sSubIVAcomision = cajaparm.getParametros("34", "0", "CIERRE_RETE_SUBIVA").getCodigoSubCuenta().toString();
+			
 			//--- Datos de la caja.
 			f55ca01 = (Vf55ca01)((List)CodeUtil.getFromSessionMap( "lstCajas")).get(0);
 			vaut = ((Vautoriz[]) CodeUtil.getFromSessionMap( "sevAut"))[0];
@@ -2737,8 +2747,8 @@ public class RevisionArqueoDAO {
 					/*
 					 * La empresa E12 funciona con cuentas diferentes hay que cambiarlas antes de hacer la validacion
 					 * */
-					if (sCodcomp.trim().toUpperCase().equals("E12")) {
-						sObjRetencion = "190103";
+					if (sCodcomp.trim().toUpperCase().equals("31")) {
+						sObjRetencion = cajaparm.getParametros("34", "0", "CIERRE_RETE_OBJ2").getCodigoCuentaObjeto().toString() ;
 						sSubRetencion = "";
 					}
 					
@@ -2782,7 +2792,7 @@ public class RevisionArqueoDAO {
 				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 				
 				if(bHecho){
-					iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+					iNoDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );							
 					if(iNoDocumento == -1){
 						sMensaje = "Error al generar número de documento para retención de afiliado "
 								+ra.getCodigo()+" intente nuevamente";
@@ -2948,6 +2958,7 @@ public class RevisionArqueoDAO {
 		ReciboCtrl recCtrl = new ReciboCtrl();
 		List<Ctaxdeposito> lstCtasxDeps = null;
 		Ctaxdeposito ctaxDeps = null;
+		ClsParametroCaja cajaparm = new ClsParametroCaja();
 		
 		long iMontoH = 0 ;
 		long iMontoCorH = 0 ;
@@ -2965,21 +2976,21 @@ public class RevisionArqueoDAO {
 			//--- Obtener la cuenta de funcionarios y empleados, crear el objeto Cuenta[];
 			String sUN="10";
 			if( sCodcomp.trim().toUpperCase().compareTo("E02") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE02 ;
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE02").getValorAlfanumerico().toString();//PropertiesSystem.CTA_DEUDORES_VARIOS_UNE02 ;
 			if( sCodcomp.trim().toUpperCase().compareTo("E03") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE03 ;
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE03").getValorAlfanumerico().toString();//PropertiesSystem.CTA_DEUDORES_VARIOS_UNE03 ;
 			if( sCodcomp.trim().trim().toUpperCase().compareTo("E08") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE08 ;
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE08").getValorAlfanumerico().toString();//PropertiesSystem.CTA_DEUDORES_VARIOS_UNE08 ;
 			if( sCodcomp.trim().trim().toUpperCase().compareTo("E10") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE01 ;
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();//PropertiesSystem.CTA_DEUDORES_VARIOS_UNE01 ;
 			
-			Vf0901 vCtaFE  = dv.validarCuentaF0901(sUN, PropertiesSystem.CTA_DEUDORES_VARIOS_OB,"");
+			Vf0901 vCtaFE  = dv.validarCuentaF0901(sUN, cajaparm.getParametros("34", "0", "CTA_DEUDO_VAR_OB").getValorAlfanumerico().toString(),"");
 			
 			if(vCtaFE==null){
 				sCuentaT = null;
 			}else{
 				sCuentaT = new String[6];
-				sCuentaT[0] = sUN + "." + PropertiesSystem.CTA_DEUDORES_VARIOS_OB;
+				sCuentaT[0] = sUN + "." + cajaparm.getParametros("34", "0", "CTA_DEUDO_VAR_OB").getValorAlfanumerico().toString();
 				sCuentaT[1] = vCtaFE.getId().getGmaid();
 				sCuentaT[2] = sUN;
 				sCuentaT[3] = vCtaFE.getId().getGmmcu().trim();
@@ -3069,7 +3080,7 @@ public class RevisionArqueoDAO {
 						sTipoAuxiliar = "A";
 						sTipodoc = "XG";
 						iNorefer   = Integer.parseInt( ra.getReferencia() );
-						iNorefer   = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+						iNorefer   =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 						ra.setDepositoctatransitoria(0);
 						
 					}
@@ -3100,18 +3111,17 @@ public class RevisionArqueoDAO {
 						 });
 						
 						sCuentaBco = sCtaBcoTransitoria;
-						iNorefer   = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
-						
-						sTipodoc = PropertiesSystem.TIPODOC_REFER_P9;
+						iNorefer   =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+						sTipodoc = cajaparm.getParametros("34", "0", "CIERRE_DOCTYPE_P9").getValorAlfanumerico().toString();
 						sDescripcion = "POS:"+ra.getCodigo()+" REF:"+ra.getReferencia();
 
-						sTipoAuxiliar = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ; 
+						sTipoAuxiliar = cajaparm.getParametros("34", "0", "CIERRE_AUXTYPE").getValorAlfanumerico().toString() ; 
 						sCodigoAuxiliar = ConfirmaDepositosCtrl.constructSubLibroCtaTbanco	(0, iCodigoBanco, iCaid, sMoneda, sCodcomp );
 						
 					}else{
 						
 						iNorefer   = Integer.parseInt(ra.getReferencia());
-						sTipodoc = PropertiesSystem.TIPODOC_JDE_DEP_H;
+						sTipodoc = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_H").getValorAlfanumerico().toString() ;  
 						sDescripcion = "POS:"+ra.getCodigo()+" REF:"+ra.getReferencia();
 						sCuentaBco = dv.obtenerCuentaBanco(sCodcomp, sMoneda,iCodigoBanco, session, null, null, null);
 						
@@ -6435,7 +6445,7 @@ public class RevisionArqueoDAO {
 		 
 		Divisas dv = new Divisas();
 		ReciboCtrl recCtrl = new ReciboCtrl();
-	 
+		ClsParametroCaja cajaparm = new ClsParametroCaja();
 	 
 		int iCodigoBanco=0;
 		F55ca022 f22 = null;
@@ -6501,15 +6511,14 @@ public class RevisionArqueoDAO {
 						}
 						sCuenta = sCtaBcoTransitoria;
 						
-						sTipoDoc = PropertiesSystem.TIPODOC_REFER_P9 ;
+						sTipoDoc = cajaparm.getParametros("34", "0", "CIERRE_DOCTYPE_P9").getValorAlfanumerico().toString();
 						
 						sDetLineaBco = "REF:"+ar.getId().getReferencenumber()+" MP:Q5 C:"+ar.getId().getCaid();
 						
 						//iNoDocumento = dv.leerActualizarNoDocJDE();
-						iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
-						
+						iNoDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 						strSubLibroCuenta = ConfirmaDepositosCtrl.constructSubLibroCtaTbanco (0, iCodigoBanco, iCaid, sMoneda, sCodcomp );
-						strTipoAuxiliarCtB = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
+						strTipoAuxiliarCtB =cajaparm.getParametros("34", "0", "CODIGO_TIPO_AUX_CT").getValorAlfanumerico().toString();  //PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
 					}	
 					else{
 						
@@ -6519,7 +6528,7 @@ public class RevisionArqueoDAO {
 							ar.getId().setReferencenumber(iNoDocumento);
 						}
 							
-						sTipoDoc = PropertiesSystem.TIPODOC_JDE_DEP_5;
+						sTipoDoc = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_5").getValorAlfanumerico().toString(); //PropertiesSystem.TIPODOC_JDE_DEP_5;
 						sDetLineaBco = "REF:"+ar.getId().getReferencenumber()+" MP:Q5 C:"+ar.getId().getCaid();
 							
 						sCuenta = dv.obtenerCuentaBanco(sCodcomp, sMoneda,iCodigoBanco, session, null, null, null);
@@ -6820,16 +6829,17 @@ public class RevisionArqueoDAO {
 								}
 								
 								//iNoDocumento = dv.leerActualizarNoDocJDE();
-								iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+								iNoDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+								
 								sCuenta = sCtaBcoTransitoria;
 								
-								sTipoDoc = PropertiesSystem.TIPODOC_REFER_P9 ;
+								sTipoDoc = cajaparm.getParametros("34", "0", "CIERRE_DOCTYPE_P9").getValorAlfanumerico().toString();
 								 
 								sDetLineaBco = "REF:"+ v.getId().getReferencenumber() + " MP:" + v.getId().getMpago().trim()+" RC:" + v.getId().getNumrec();
 								
 								strSubLibroCuenta = ConfirmaDepositosCtrl.constructSubLibroCtaTbanco(0, f22.getId().getCodb(), iCaid, sMoneda, sCodcomp);
 								
-								strTipoAuxiliarCtB = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
+								strTipoAuxiliarCtB = cajaparm.getParametros("34", "0", "CODIGO_TIPO_AUX_CT").getValorAlfanumerico().toString();//PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
 								
 							}else{
 								
@@ -6838,8 +6848,8 @@ public class RevisionArqueoDAO {
 								sCuenta = dv.obtenerCuentaBanco(sCodcomp, sMoneda, iCodigoBanco , session, null, null, null);
 								
 								sTipoDoc =  v.getId().getMpago().trim().compareTo(MetodosPagoCtrl.DEPOSITO) == 0 ?
-										PropertiesSystem.TIPODOC_JDE_DEP_N: 
-										PropertiesSystem.TIPODOC_JDE_DEP_8 ;
+										cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_N").getValorAlfanumerico().toString()://PropertiesSystem.TIPODOC_JDE_DEP_N: 
+								        cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_8").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_8 ;
 								
 								sDetLineaBco = "REF:"+v.getId().getReferencenumber()+" MP:"+v.getId().getMpago().trim()+" RC:" + v.getId().getNumrec();
 								
@@ -7086,7 +7096,7 @@ public class RevisionArqueoDAO {
 								bHecho = false;
 								
 								int numerobatch = Divisas.numeroSiguienteJdeE1(   );
-								int numeroDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+								int numeroDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 								
 								iNobatchNodoc = new int[]{numerobatch, numeroDocumento};
 
@@ -7348,7 +7358,8 @@ public class RevisionArqueoDAO {
 			Divisas dv = new Divisas();
 			ReciboCtrl recCtrl = new ReciboCtrl();
 		 
-		 
+			ClsParametroCaja cajaparm = new ClsParametroCaja();
+			
 			int iCodigoBanco=0;
 			F55ca022 f22 = null;
 			String sTipoDoc = "ZX";
@@ -7413,15 +7424,15 @@ public class RevisionArqueoDAO {
 							}
 							sCuenta = sCtaBcoTransitoria;
 							
-							sTipoDoc = PropertiesSystem.TIPODOC_REFER_P9 ;
+							sTipoDoc = cajaparm.getParametros("34", "0", "CIERRE_DOCTYPE_P9").getValorAlfanumerico().toString();
 							
 							sDetLineaBco = "REF:"+ar.getId().getReferencenumber()+" MP:Q5 C:"+ar.getId().getCaid();
 							
-							//iNoDocumento = dv.leerActualizarNoDocJDE();
-							iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+							
+							iNoDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 							
 							strSubLibroCuenta = ConfirmaDepositosCtrl.constructSubLibroCtaTbanco (0, iCodigoBanco, iCaid, sMoneda, sCodcomp );
-							strTipoAuxiliarCtB = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
+							strTipoAuxiliarCtB = cajaparm.getParametros("34", "0", "CODIGO_TIPO_AUX_CT").getValorAlfanumerico().toString(); //PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
 						}	
 						else{
 							
@@ -7431,7 +7442,7 @@ public class RevisionArqueoDAO {
 								ar.getId().setReferencenumber(iNoDocumento);
 							}
 								
-							sTipoDoc = PropertiesSystem.TIPODOC_JDE_DEP_5;
+							sTipoDoc =cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_5").getValorAlfanumerico().toString(); //PropertiesSystem.TIPODOC_JDE_DEP_5;
 							sDetLineaBco = "REF:"+ar.getId().getReferencenumber()+" MP:Q5 C:"+ar.getId().getCaid();
 								
 							sCuenta = dv.obtenerCuentaBanco(sCodcomp, sMoneda,iCodigoBanco, session, null, null, null);
@@ -7731,17 +7742,17 @@ public class RevisionArqueoDAO {
 										return bHecho = false;
 									}
 									
-									//iNoDocumento = dv.leerActualizarNoDocJDE();
-									iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+							
+									iNoDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 									sCuenta = sCtaBcoTransitoria;
 									
-									sTipoDoc = PropertiesSystem.TIPODOC_REFER_P9 ;
+									sTipoDoc =cajaparm.getParametros("34", "0", "CIERRE_DOCTYPE_P9").getValorAlfanumerico().toString();
 									 
 									sDetLineaBco = "REF:"+ v.getId().getReferencenumber() + " MP:" + v.getId().getMpago().trim()+" RC:" + v.getId().getNumrec();
 									
 									strSubLibroCuenta = ConfirmaDepositosCtrl.constructSubLibroCtaTbanco(0, f22.getId().getCodb(), iCaid, sMoneda, sCodcomp);
 									
-									strTipoAuxiliarCtB = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
+									strTipoAuxiliarCtB = cajaparm.getParametros("34", "0", "CODIGO_TIPO_AUX_CT").getValorAlfanumerico().toString(); //PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
 									
 								}else{
 									
@@ -7750,8 +7761,8 @@ public class RevisionArqueoDAO {
 									sCuenta = dv.obtenerCuentaBanco(sCodcomp, sMoneda, iCodigoBanco , session, null, null, null);
 									
 									sTipoDoc =  v.getId().getMpago().trim().compareTo(MetodosPagoCtrl.DEPOSITO) == 0 ?
-											PropertiesSystem.TIPODOC_JDE_DEP_N: 
-											PropertiesSystem.TIPODOC_JDE_DEP_8 ;
+											cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_N").getValorAlfanumerico().toString()://PropertiesSystem.TIPODOC_JDE_DEP_N: 
+											cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_8").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_8 ;
 									
 									sDetLineaBco = "REF:"+v.getId().getReferencenumber()+" MP:"+v.getId().getMpago().trim()+" RC:" + v.getId().getNumrec();
 									
@@ -7998,7 +8009,7 @@ public class RevisionArqueoDAO {
 									bHecho = false;
 									
 									int numerobatch = Divisas.numeroSiguienteJdeE1(   );
-									int numeroDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+									int numeroDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 									
 									iNobatchNodoc = new int[]{numerobatch, numeroDocumento};
 
@@ -8571,8 +8582,8 @@ public class RevisionArqueoDAO {
 			
 			Vautoriz[] vAut = (Vautoriz[])CodeUtil.getFromSessionMap( "sevAut");
 			
-			if (vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_CONCILIADOR_PRINCIPAL)  == 0 || 
-				vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_CONCILIADOR_SUPERVISOR) == 0 ){
+			if (vAut[0].getId().getCodper().compareTo(cajaparm.getParametros("34", "0", "ENS_CONCILI_PRIN").getValorAlfanumerico().toString())  == 0 || 
+				vAut[0].getId().getCodper().compareTo(cajaparm.getParametros("34", "0", "ENS_CONCIL_SUPER").getValorAlfanumerico().toString()) == 0 ){
 				
 				String sqlOrCtaConc = ConfirmaDepositosCtrl.constructSqlOrCtaxCon( Arrays.asList(new String[][]{ {"drky","2"} }) );
 				
@@ -9636,8 +9647,8 @@ public class RevisionArqueoDAO {
 				
 				Vautoriz[] vAut = (Vautoriz[])CodeUtil.getFromSessionMap( "sevAut");
 				
-				if (vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_CONCILIADOR_PRINCIPAL)  == 0 || 
-					vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_CONCILIADOR_SUPERVISOR) == 0 ){
+				if (vAut[0].getId().getCodper().compareTo(cajaparm.getParametros("33", "0", "ENS_CONCILI_PRIN").getValorAlfanumerico().toString())  == 0 || 
+					vAut[0].getId().getCodper().compareTo(cajaparm.getParametros("33", "0", "ENS_CONCIL_SUPER").getValorAlfanumerico().toString()) == 0 ){
 					
 					String sql = "select * from " + PropertiesSystem.ESQUEMA +".Vf55ca01 where castat = 'A' " ; 
 					List<Vf55ca01> cajas = (ArrayList<Vf55ca01>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, true, Vf55ca01.class);
