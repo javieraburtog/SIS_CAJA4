@@ -204,27 +204,27 @@ public class RevisionArqueoCtrl {
 			int evalua = 0;
 			
 			//&& ======== Determinar el tipo de documento asociado al metodo de pago del deposito.
-			CodigosJDE1 codigoJDE = null;
+			String codigoJDE = "";
 			
 			if (tipopago.compareTo(MetodosPagoCtrl.EFECTIVO ) == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_JDE_DEP_5;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_5;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_5").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_5;
+				codigoJDE = cajaparm.getParametros("34", "0", "TIPODOC_JDE_5").getValorAlfanumerico().toString();
 			}
 			if (tipopago.compareTo(MetodosPagoCtrl.TRANSFERENCIA) == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_JDE_DEP_8;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_8;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_8").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_8;
+				codigoJDE =  cajaparm.getParametros("34", "0", "TIPODOC_JDE_8").getValorAlfanumerico().toString();
 			}
 			if (tipopago.compareTo(MetodosPagoCtrl.TARJETA) == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_JDE_DEP_H;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_H;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_H").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_H;
+				codigoJDE = cajaparm.getParametros("34", "0", "TIPODOC_JDE_H").getValorAlfanumerico().toString();
 			}
 			if (tipopago.compareTo(MetodosPagoCtrl.DEPOSITO) == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_JDE_DEP_N;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_N;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_N").getValorAlfanumerico().toString(); //PropertiesSystem.TIPODOC_JDE_DEP_N;
+				codigoJDE = cajaparm.getParametros("34", "0", "TIPODOC_JDE_N").getValorAlfanumerico().toString();
 			}
 			if (tipopago.compareTo("ZX") == 0){
 				tipodocjde = cajaparm.getParametros("37", "0", "ARQ_TDOCREFER").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_REFER_ZX;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_5;
+				codigoJDE =  cajaparm.getParametros("34", "0", "TIPODOC_JDE_5").getValorAlfanumerico().toString();;
 				
 			}
 			
@@ -256,7 +256,7 @@ public class RevisionArqueoCtrl {
 			//&& ======== Generar el numero de documento para el deposito (cambio de referencias).
 			if(!valido){
 				
-				reference =  Divisas.numeroSiguienteJde( codigoJDE, codcomp );
+				reference =  Divisas.numeroSiguienteJdeE1Custom(codigoJDE, codcomp );//Divisas.numeroSiguienteJde( codigoJDE, codcomp );
 				
 				if( reference == 0 ){
 					reference = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
@@ -291,27 +291,27 @@ public class RevisionArqueoCtrl {
 			int evalua = 0;
 			
 			//&& ======== Determinar el tipo de documento asociado al metodo de pago del deposito.
-			CodigosJDE1 codigoJDE = null;
+			String codigoJDE ="";
 			
 			if (tipopago.compareTo(MetodosPagoCtrl.EFECTIVO ) == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_JDE_DEP_5;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_5;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_5").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_5;
+				codigoJDE = cajaparm.getParametros("34", "0", "TIPODOC_JDE_5").getValorAlfanumerico().toString();
 			}
 			if (tipopago.compareTo(MetodosPagoCtrl.TRANSFERENCIA) == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_JDE_DEP_8;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_8;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_8").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_8;
+				codigoJDE =  cajaparm.getParametros("34", "0", "TIPODOC_JDE_8").getValorAlfanumerico().toString();
 			}
 			if (tipopago.compareTo(MetodosPagoCtrl.TARJETA) == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_JDE_DEP_H;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_H;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_H").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_H;
+				codigoJDE = cajaparm.getParametros("34", "0", "TIPODOC_JDE_H").getValorAlfanumerico().toString();;
 			}
 			if (tipopago.compareTo(MetodosPagoCtrl.DEPOSITO) == 0){
-				tipodocjde = PropertiesSystem.TIPODOC_JDE_DEP_N;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_N;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_N").getValorAlfanumerico().toString(); //PropertiesSystem.TIPODOC_JDE_DEP_N;
+				codigoJDE = cajaparm.getParametros("34", "0", "TIPODOC_JDE_N").getValorAlfanumerico().toString();
 			}
 			if (tipopago.compareTo("ZX") == 0){
 				tipodocjde = cajaparm.getParametros("37", "0", "ARQ_TDOCREFER").getValorAlfanumerico().toString();//opertiesSystem.TIPODOC_REFER_ZX;
-				codigoJDE = CodigosJDE1.NUM_TIPODOC_JDE_DEP_5;
+				codigoJDE =  cajaparm.getParametros("34", "0", "TIPODOC_JDE_5").getValorAlfanumerico().toString();;
 			}
 			
 			
@@ -345,7 +345,7 @@ public class RevisionArqueoCtrl {
 			if(!valido){
 //				LogCrtl.sendLogDebgs("Numero aleatorio de referencia: "+strReference+", "+tipopago);
 				
-				reference =  Divisas.numeroSiguienteJde( codigoJDE, codcomp );
+				reference =  Divisas.numeroSiguienteJdeDocumentoE1Custom( codigoJDE, codcomp );
 				
 				if( reference == 0 ){
 					reference = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );

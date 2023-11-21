@@ -174,7 +174,7 @@ public class PlanMantenimientoTotalCtrl {
 			msgLog = concepto;
 			
 			int numero_batch = Divisas.numeroSiguienteJdeE1( );
-			//int numero_documento = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			
 			int numero_documento = Divisas.numeroSiguienteJdeE1Custom( cajaCfgFCV.getContDocJdeIdx(), cajaCfgFCV.getContDocJdeKey() );
 			
 			if(numero_batch == 0) {

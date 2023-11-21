@@ -1438,12 +1438,12 @@ public class RevisionArqueoDAO {
 					iNoDocumento =  Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
 					
 					
-					tipoAuxiliarCtaTrans = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT;
+					tipoAuxiliarCtaTrans = cajaparm.getParametros("34", "0", "CODIGO_TIPO_AUX_CT").getValorAlfanumerico().toString(); 
 					strSubLibroCuenta = ConfirmaDepositosCtrl.constructSubLibroCtaTbanco(0, lc.getIcodigobanco(), lc.getCaid(), lc.getMoneda(), lc.getCodcomp());
 					
 				}else{
 					sDescrip =  "REF:"+ar.getId().getReferencenumber()+" MP:5 C:"+ar.getId().getCaid() ;
-					sTipoDoc = PropertiesSystem.TIPODOC_JDE_DEP_5 ;
+					sTipoDoc = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_5").getValorAlfanumerico().toString() ;
 					sCtaBco = dv.obtenerCuentaBanco(lc.getCodcomp(), lc.getMoneda(), lc.getIcodigobanco(), session, null, null, null);
 					iNoDocumento = Integer.parseInt(lc.getReferenciaBanco());
 					strSubLibroCuenta = "";
