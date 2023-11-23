@@ -4888,7 +4888,7 @@ ArqueoControl acCtrl1 = new ArqueoControl();
 	        lblTotalOtrosIngresos.setValue("0.00");
 	        if(!lstTmp1.isEmpty()){
 				lblTotalOtrosIngresos.setValue(SqlUtil.roundDouble(bdTotal, 2));
-				m.put("ac_RecibosxIngresosEx", lstRecibos);	
+				m.put("ac_RecibosxIngresosEx", lstTmp1);	
 	        }
 	       
 	        // (5) Cargar recibos por anticipos PMT 

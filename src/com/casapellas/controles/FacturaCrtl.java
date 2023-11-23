@@ -270,23 +270,17 @@ public class FacturaCrtl {
 /*************************************************************************************************************************/	
 	/**********************************************************************************************************************************/
 	public static List<Dfactura> formatDetalle(Hfactura hFac){
-		Session sesion = null;
-		Transaction trans = null;
-		boolean newCn = false;
 		List<Dfactura> detfactura = null;
 		
 		try{
 			String sql = "from A03factco as df where df.id.nofactura = " 
 						+ hFac.getNofactura() +  " and df.id.tipofactura = '"
 						+hFac.getTipofactura() +"' and trim(df.id.codunineg) = '" 
-						+ hFac.getCodunineg().trim() + "' ";/* +"and df.id.fecha = "
-						+hFac.getFechajulian() + " and df.id.codcli = "
-						+hFac.getCodcli();*/
+						+ hFac.getCodunineg().trim() + "' ";			
 			
+			Session  sesion = HibernateUtilPruebaCn.currentSession();
 			
-			sesion = HibernateUtilPruebaCn.currentSession();
-			trans = (newCn = !(sesion.getTransaction().isActive())) ? sesion
-					.beginTransaction() : sesion.getTransaction();
+			LogCajaService.CreateLog("formatDetalle", "QRY", sql);
 			
 			@SuppressWarnings("unchecked")
 			List<A03factco>detalles = (ArrayList<A03factco>)sesion.createQuery(sql).list();
@@ -312,18 +306,9 @@ public class FacturaCrtl {
 			}
 			
 		}catch(Exception ex){
-			System.out.println("Se capturo una excepcion en FacContadoDAO.formatDetalle: ");
-			ex.printStackTrace(); 
-		}finally{
-			if(newCn){
-				try {  trans.commit(); } 
-				catch (Exception e2) { }
-				try {  HibernateUtilPruebaCn.closeSession(sesion); }
-				catch (Exception e2) { }
-			}
-			sesion = null;
-			trans = null;
+			LogCajaService.CreateLog("formatDetalle", "ERR", ex.getMessage());
 		}
+		
 		return detfactura;
 	}
 /**************************************************************************************************************************************/	
