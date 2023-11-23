@@ -1,17 +1,15 @@
 package com.casapellas.controles;
 
 import java.math.BigDecimal;
-import java.text.Normalizer;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import org.apache.commons.collections.Closure;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -45,7 +43,7 @@ public class AprobacionCierreCtrl {
 		
 		Session sesion = null;
 		
-		boolean bNuevaSesionCaja = false;
+
 		
 		try{
 
@@ -60,7 +58,7 @@ public class AprobacionCierreCtrl {
 				mixto = true;
 			
 		}catch(Exception ex){
-			ex.printStackTrace();
+			LogCajaService.CreateLog("isPagoOriginalMixto", "ERR", ex.getMessage());
 		}
 		return mixto;
 	}
@@ -130,8 +128,7 @@ public class AprobacionCierreCtrl {
 			}
 
 		} catch (Exception error) {
-			System.out .println("Error en ArqueoCajaCtrl.obtenerRecibosxcambiomixto ");
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerRecibosxcambiomixto", "ERR", error.getMessage());
 		}
 		return lstRecibos;
 	}
@@ -175,7 +172,8 @@ public class AprobacionCierreCtrl {
 			lstDev = cr.list();
 			
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerRecxDevmonex3", "ERR", error.getMessage());
+			
 		}
 		
 		return lstDev;
@@ -219,7 +217,8 @@ public class AprobacionCierreCtrl {
 			lstDev = cr.list();
 
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerRecxDevmonex2", "ERR", error.getMessage());
+			
 		} 
 		return lstDev;
 	}
@@ -252,9 +251,7 @@ public class AprobacionCierreCtrl {
 			lstRec = sesion.createQuery(sConsulta).list();
 
 		} catch (Exception error) {
-			System.out
-					.println("Error en ArqueoCajaCtrl.obtenerRecibosxCambios "
-							+ error);
+			LogCajaService.CreateLog("obtenerRecibosxcambios", "ERR", error.getMessage());
 		}
 		return lstRec;
 	}
@@ -283,24 +280,15 @@ public class AprobacionCierreCtrl {
 					+ "' and v.id.tiporec <> 'FCV' ";
 			sConsulta += " and v.id.numrec in "
 					+ sLstnumrec
-					+ "and lower(v.id.tiporec) not like 'd%' order by v.id.numrec";
-
+					+ " order by v.id.numrec";
+					//+ "and lower(v.id.tiporec) not like 'd%' order by v.id.numrec";
+			
 			recibos = (ArrayList<Vrecibosxtipompago>)sesion.createQuery(sConsulta).list();
 			
-			/*if(recibos != null && !recibos.isEmpty()){
-				CollectionUtils.forAllDo(recibos, new Closure(){
-					public void execute(Object o) {
-						Vrecibosxtipompago v= (Vrecibosxtipompago)o;
-						 String normalized = Normalizer.normalize(v.getId().getCliente().trim(), Normalizer.Form.NFD);
-						 Pattern pattern = Pattern.compile("\\P{ASCII}+");
-						 v.getId().setCliente( pattern.matcher(normalized).replaceAll("") );
-					}
-				}) ;
-			}
-			*/
+		
 			
 		} catch (Exception error) {
-			 error.printStackTrace();
+			LogCajaService.CreateLog("cargarRecibosxMetodoPago", "ERR", error.getMessage());
 		}
 		return recibos;
 	}
@@ -340,7 +328,7 @@ public class AprobacionCierreCtrl {
 			lstRec = sesion.createQuery(sConsulta).list();
 
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerRecibosxcambiomixto", "ERR", error.getMessage());
 		}
 		return lstRec;
 	}
@@ -380,8 +368,7 @@ public class AprobacionCierreCtrl {
 			if (bIngreso)				
 				sConsulta += " and v.id.moneda = '"+ sMoneda 
 							+ "' and v.id.monfac <> '" + sMoneda + "'";	
-//				sConsulta += " and v.id.mpago = '"+MetodosPagoCtrl.EFECTIVO+"' and v.id.moneda = '"
-//						+ sMoneda + "' and v.id.monfac <> '" + sMoneda + "'";
+
 			else
 				sConsulta += " and v.id.moneda <> '" + sMoneda
 						+ "' and v.id.monfac = '" + sMoneda + "'";
@@ -389,7 +376,7 @@ public class AprobacionCierreCtrl {
 			lstDev = sesion.createQuery(sConsulta).list();
 
 		} catch (Exception error) { 
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerRecxDevmonex", "ERR", error.getMessage());
 		}
 		return lstDev;
 	}
@@ -436,7 +423,7 @@ public class AprobacionCierreCtrl {
 			lstRecibos = sesion.createQuery(sConsulta).list();
 
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerIngEgrRecMonEx", "ERR", error.getMessage());
 		}
 		return lstRecibos;
 	}
@@ -466,7 +453,7 @@ public class AprobacionCierreCtrl {
 
 
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("cargarDetCambio", "ERR", error.getMessage());
 		}
 		return lstCambios;
 	}
@@ -477,7 +464,7 @@ public class AprobacionCierreCtrl {
 		List lstDev = new ArrayList();
 		String sConsulta = "", sFecha = "", sHora = "";
 		int iFechajul = 0;
-		Calendar cal;
+		
 		SimpleDateFormat format;
 
 		Session sesion = null;
@@ -485,7 +472,7 @@ public class AprobacionCierreCtrl {
 
 		try {
 
-			/*sesion = HibernateUtil.getSessionFactoryMCAJAR().openSession();*/   sesion = HibernateUtilPruebaCn.currentSession();
+			sesion = HibernateUtilPruebaCn.currentSession();
 			
 			
 			format = new SimpleDateFormat("HH.mm.ss");
@@ -512,9 +499,7 @@ public class AprobacionCierreCtrl {
 			lstDev = sesion.createQuery(sConsulta).list();
 
 		} catch (Exception error) {
-			System.out
-					.println("Error en arqueoCajaCtrl.obtenerRecibosxdevolucion "
-							+ error);
+			LogCajaService.CreateLog("obtenerRecibosxdevolucion", "ERR", error.getMessage());
 		}
 		return lstDev;
 	}
@@ -524,8 +509,7 @@ public class AprobacionCierreCtrl {
 				String moneda, Date fechaarqueo, String num_recibos){
 		List<Vrecibosxtipoegreso> recibospago = null;
 		Session sesion = null;
-		Transaction trans = null;
-		boolean newCn = false;
+		
 		
 		try {
 			
@@ -552,44 +536,10 @@ public class AprobacionCierreCtrl {
 			if(recibospago == null || recibospago.isEmpty() )
 				return null ;		
 			
-			/*
-			String sql_Devoluciones = " select nodoco, tipodoco, mpago, monto from " +
-				PropertiesSystem.ESQUEMA+".recibo r inner join " +
-				PropertiesSystem.ESQUEMA+".recibodet rd " +
-				" on (r.numrec = rd.numrec and r.caid = rd.caid and " +
-				" r.codcomp = rd.codcomp and r.tiporec = rd.tiporec)" +
-				" where nodoco <> 0 and tipodoco <> '' and r.caid = " +caid +
-				" and r.codcomp = '"+codcomp+ "' and r.estado = ''" +
-				" and rd.moneda = '"+moneda+ "' and fecha = '" +
-				FechasUtil.formatDatetoString(fechaarqueo, "yyy-MM-dd")+"'";
 			
-			List<Object[]> rec_devs = (ArrayList<Object[]>)	sesion.createSQLQuery(sql_Devoluciones).list();			
-			
-			if(rec_devs != null && !rec_devs.isEmpty()) {
-				
-				for (final Vrecibosxtipoegreso vr : recibospago) {
-				 
-					Object[] rdv = (Object[])
-					CollectionUtils.find(rec_devs, new Predicate(){
-						public boolean evaluate(Object o) {
-							Object[] rdv = (Object[])o;
-							return
-								vr.getId().getNumrec() == Integer.parseInt(String.valueOf(rdv[0])) && 	
-								vr.getId().getTiporec().compareTo(String.valueOf(rdv[1])) == 0 &&
-								vr.getId().getMpago().compareTo(String.valueOf(rdv[2])) == 0;
-						}}) ;
-					
-					if(rdv == null)
-						continue;
-					
-					vr.getId().setMonto( Divisas.roundBigDecimal( vr.getId().getMonto().subtract(new BigDecimal(String.valueOf(rdv[3])  ) ) ) );
-				
-				}
-			}
-			*/
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerRecibosCierre", "ERR", e.getMessage());
 		}
 		return recibospago;
 	}
@@ -671,7 +621,7 @@ public class AprobacionCierreCtrl {
 				}
 			}
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerRecpagBanco", "ERR", error.getMessage());
 		}
 		return lstRecibos;
 	}
@@ -750,7 +700,7 @@ public class AprobacionCierreCtrl {
 	public List<Vhfactura> cargarFacturasArqueo(int noarqueo,int caid,String codcomp,String codsuc ){
 		List<Arqueofact> lstArqueofact = new ArrayList<Arqueofact>();
 		List<Vhfactura> lstVhfact = new ArrayList<Vhfactura>();
-		String consulta = "";
+		
 		Session sesion = null;
 		
 		
@@ -770,7 +720,7 @@ public class AprobacionCierreCtrl {
 			
 			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("cargarFacturasArqueo", "ERR", error.getMessage());
 		}finally{
 		
 			for(int i=0; i<lstArqueofact.size();i++){
@@ -808,7 +758,7 @@ public class AprobacionCierreCtrl {
 			if(ob!=null) factura = (Vhfactura)ob;
 			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("cargarFacturasArqueo", "ERR", error.getMessage());
 		}
 		return factura;
 	}

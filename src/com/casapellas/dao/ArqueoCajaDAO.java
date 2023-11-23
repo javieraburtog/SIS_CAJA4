@@ -102,6 +102,7 @@ import com.casapellas.entidades.Vdetallecambiorecibo;
 import com.casapellas.entidades.Vf0101;
 import com.casapellas.entidades.Vf0901;
 import com.casapellas.entidades.Vf55ca01;
+import com.casapellas.entidades.Vhfactura;
 import com.casapellas.entidades.Vmonedafactrec;
 import com.casapellas.entidades.Vrecibosxtipoegreso;
 import com.casapellas.entidades.Vrecibosxtipoingreso;
@@ -152,7 +153,11 @@ import com.crystaldecisions.sdk.occa.report.exportoptions.ReportExportFormat;
 @SuppressWarnings({"unchecked"})
 public class ArqueoCajaDAO {
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-
+	//Valores reimplentacion JDE
+		
+		String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+		String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
+		String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
 	
 	private boolean renderCierrePOS = false;
 	
@@ -1143,7 +1148,7 @@ public class ArqueoCajaDAO {
 			
 		} catch (Exception e) {
 			enviado = false;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("envioCorreoMinutaDeposito", "ERR", e.getMessage());
 		}
 		return enviado;
 	}
@@ -1366,7 +1371,7 @@ public class ArqueoCajaDAO {
 			
 //			int iNoBatch = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMEROBATCH );
 			int iNoBatch = Divisas.numeroSiguienteJdeE1(  );
-			int iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int iNoDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] ); 
 			
 			String[] sCuentaCaja = dv.obtenerCuentaCaja( caid, sCodcomp, MetodosPagoCtrl.EFECTIVO , sMoneda, session , null,null,null);
 			if(sCuentaCaja == null){
@@ -1692,7 +1697,7 @@ public class ArqueoCajaDAO {
 														sUrl,sCaja, sUbicacion, sCajero, sFecha);
 			}
 		} catch (Exception error) { 
-			error.printStackTrace();
+			LogCajaService.CreateLog("envioCorreoMinutaDeposito", "ERR", error.getMessage());
 		}
 		return bValido;
 	}
@@ -2126,6 +2131,7 @@ public class ArqueoCajaDAO {
 	}
 
 /******** 18. Procesar y guardar los datos del arqueo de Caja ******************************************/
+	@SuppressWarnings({ "static-access", "rawtypes" })
 	public void ProcesarArqueoCaja(ActionEvent ev){
 		
 		int codcajero= 0,caid = 0;
@@ -2151,11 +2157,6 @@ public class ArqueoCajaDAO {
 		List<Arqueo> lstArqueos = null;
 		String sMensajeError="";
 
-		//Connection cn  = null;
-		//ReciboCtrl rCtrl = new ReciboCtrl();
-		//List<Object[]> recibosEncierre = null;
-		
-		
 		Session sesion = null;
 		Transaction trans = null;
 		
@@ -2168,8 +2169,8 @@ public class ArqueoCajaDAO {
 		
 		try{
 			
+			LogCajaService.CreateLog("ProcesarArqueoCaja", "INFO", "ProcesarArqueoCaja - INICIO");
 			HttpServletRequest r = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-			String navegador = r.getParameter("webbrowsername");
 			
 			dwConfirmarProcesarArqueo.setWindowState("hidden");
 			m.remove("ac_Lstrptmcaja002");
@@ -2187,9 +2188,7 @@ public class ArqueoCajaDAO {
 			
 			moneda = ddlFiltroMoneda.getValue().toString();
 			fecha = (Date)m.get("ac_HoraArqueo");
-			
-//			LogCrtl.sendLogInfo("Cierre de caja "+caid+" Compania: "+codcomp+" Fecha: "+ new Date()+" Bajo navegador: "+ navegador.toUpperCase()) ;
-			
+						
 			//&& =========================== El numero de minuta ya fue asignado al cargar los datos del arqueo.
 			sReferDep = txtCDC_ReferDeposito.getValue().toString().trim().toUpperCase(); 
 			
@@ -2224,7 +2223,7 @@ public class ArqueoCajaDAO {
 			tpagos    =	BigDecimal.valueOf(dtpagos);
 			
 			//--------- Consultar la lista de arqueos del día.
-			List lstFact = (ArrayList)m.get("arqueoFacturasDia");
+			List<Hfactura> lstFact = (ArrayList)m.get("arqueoFacturasDia");
 			lstArqueos  = acCtrl.obtenerArqueosCaja(caid, fecha);
 			Numcaja numcaja = null; 
 			ArqueorecCtrl arCtrl = new ArqueorecCtrl();
@@ -2240,7 +2239,7 @@ public class ArqueoCajaDAO {
 			List<Object[]>lstRecibosCierre = arCtrl.obtenerRecibosEnCierre(
 												caid, codcomp, fecha, 
 												dtHoraArprevio, moneda);
-			//recibosEncierre = lstRecibosCierre;
+			
 			
 			//&& ============= Validar que no se haya grabado ya el cierre.
 			bHecho = acCtrl.verificarExisteCierre(lstRecibosCierre, caid, 
@@ -2385,9 +2384,9 @@ public class ArqueoCajaDAO {
 			}
 		
 		}catch(Exception error){
+			LogCajaService.CreateLog("ProcesarArqueoCaja", "ERR", error.getMessage());
 			bHecho = false; 
 			sMensajeError = "Cierre de Caja no puede aplicarse"; 
-			error.printStackTrace();
 		}finally{
 			
 			try{
@@ -2403,53 +2402,20 @@ public class ArqueoCajaDAO {
 					}catch(Exception ex){
 						bCommit = false;
 						bHecho = false;
-						ex.printStackTrace();
+						LogCajaService.CreateLog("ProcesarArqueoCaja", "ERR", ex.getMessage());
 					}
 				}else{
 					try{ trans.rollback(); }
-					catch(Exception e){e.printStackTrace();}
+					catch(Exception e){LogCajaService.CreateLog("ProcesarArqueoCaja", "ERR", e.getMessage());}
 				}
 				
 				try {
 					HibernateUtilPruebaCn.closeSession(sesion);
 				} catch (Exception e) {
-					e.printStackTrace();
+					LogCajaService.CreateLog("ProcesarArqueoCaja", "ERR", e.getMessage());
 				}
 				
-				/*
-				if(bHecho){
-					try{
-						trans.commit();
-						if( cn != null && !cn.isClosed() )
-							cn.commit();
-					}catch(Exception ex){
-						bCommit = false;
-						bHecho = false;
-						ex.printStackTrace();
-					}
-				}
-				if(!bHecho || !bCommit){
-					try{ trans.rollback(); }
-					catch(Exception e){e.printStackTrace();}
-					
-					try{ 
-						if(cn != null && !cn.isClosed())
-							cn.rollback(); 
-					}catch(Exception e){e.printStackTrace();}
-				}
 				
-				try {
-					HibernateUtilPruebaCn.closeSession();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				try {
-					if (cn != null && !cn.isClosed())
-						cn.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				*/
 				
 				
 				//&& =========== Continuar con el envio de correos y notificacion.
@@ -2566,7 +2532,7 @@ public class ArqueoCajaDAO {
 			LogCajaService.CreateLog("generarReporteRecibosArqueo", "ERR", e.getMessage());
 			rutaReporte = "" ;
 		}
-		return rutaReporte;//= "C:\\workspace\\Preconciliacion\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp1\\GCPMCAJA\\ConfirmacionRecibosCaja_8_Arqueo_3717_15072016230000.xlsx"; 
+		return rutaReporte; 
 	}
 	
 	//&& ========= Armar el reporte en pdf que se muestra al final.
@@ -2726,7 +2692,7 @@ public class ArqueoCajaDAO {
 			lblMsgProcArqueo.setValue( estilo );	
 				
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("generarReporteArqueo", "ERR", error.getMessage());
 		}
 	}
 /******* 17. Mostrar la ventana de confirmación de procesar el arqueo de caja **************************/
@@ -3035,11 +3001,11 @@ public class ArqueoCajaDAO {
 	}
 	
 	/**------------------------	 recibos por métodos de pago  --------------------------------------**/	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "static-access" })
 	public void cargarRecxMetodoPago(String sCodcomp,String sCodsuc,int iCaid,String sMoneda,
 										Date dtFechaArqueo,Date dtHoraInicio, Date dtHoraFin,Session sesion1){
 		
-		ArqueoControl acCtrl1 = new ArqueoControl();
+ArqueoControl acCtrl1 = new ArqueoControl();
 		
 		Divisas dv = new Divisas();
 		List lstRecibosmpago = new ArrayList(), lstRecibos = new ArrayList();
@@ -3052,13 +3018,18 @@ public class ArqueoCajaDAO {
 		
 		try{			
 			//-----------------------Recibos pagados con efectivo.
-			//lstRecibosmpago = acCtrl.cargarRecibosxMetodoPago(iCaid, sCodsuc, sCodcomp, sMoneda,dtFechaArqueo,dtHoraInicio);
+
 			lstRecibosmpago = acCtrl1.cargarRecibosxMetodoPago(iCaid, sCodsuc, sCodcomp, sMoneda,
 														dtFechaArqueo,dtHoraInicio,dtHoraFin);
 			if(lstRecibosmpago != null && lstRecibosmpago.size()>0){
 				for(int i=0; i<lstRecibosmpago.size(); i++){
 					Vrecibosxtipompago v = (Vrecibosxtipompago)lstRecibosmpago.get(i);
-					v.setMonto(v.getId().getMonto());
+					if (v.getId().getTiporec().trim().toUpperCase().equals("DCO")) {
+						v.setMonto(v.getId().getMonto().multiply(BigDecimal.valueOf(-1)));
+					} else {
+						v.setMonto(v.getId().getMonto());
+					}
+					
 					lstRecibosmpago.remove(i);
 					lstRecibosmpago.add(i,v);
 					
@@ -3066,32 +3037,36 @@ public class ArqueoCajaDAO {
 					sMpago = v.getId().getMpago().trim();
 					
 					if(sMpago.equals(MetodosPagoCtrl.EFECTIVO )){
-						dRec5 += dTotalmp;
+						dRec5 += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 						lstRe5.add(v);	
-					}else
+					}
+
 					if(sMpago.equals(MetodosPagoCtrl.CHEQUE)){
-						dRecq += dTotalmp;
+						dRecq += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 						lstReq.add(v);
 						
-					}else
+					}
+
 					if(sMpago.equals(MetodosPagoCtrl.TARJETA)){
 						if(v.getId().getVmanual().equals("0") && v.getId().getRefer6().trim().equals("") && v.getId().getRefer7().trim().equals("")){
-							dRech += dTotalmp;
+							dRech += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 							lstRehe.add(v);
 						}else if(v.getId().getVmanual().equals("2") && !v.getId().getRefer6().trim().equals("") && !v.getId().getRefer7().trim().equals("")){
-							dRechs += dTotalmp;
+							dRechs += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 							lstRehs.add(v);
 						}else{
-							dRechm += dTotalmp;
+							dRechm += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 							lstRehm.add(v);
 						}
-					}else
+					}
+
 					if(sMpago.equals(MetodosPagoCtrl.TRANSFERENCIA)){
-						dRec8 += dTotalmp;
+						dRec8 += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 						lstRe8.add(v);
-					}else
+					}
+
 					if(sMpago.equals(MetodosPagoCtrl.DEPOSITO)){
-						dRecn += dTotalmp;
+						dRecn += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 						lstRen.add(v);
 					}					
 				}
@@ -3407,7 +3382,7 @@ public class ArqueoCajaDAO {
 					sSubject, sbTablaCorreo.toString());
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("enviarCorreoNotificacionDonaciones", "ERR", e.getMessage());
 		}
 	}
 	

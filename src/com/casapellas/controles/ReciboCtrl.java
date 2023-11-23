@@ -3741,7 +3741,7 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 		List lstRecibos = null;
 		String sql = "";
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+	
 		Vrecfac vrecfac = null;
 		Recibo recibo = null;
 		ReciboId reciboId = null;
@@ -3789,14 +3789,13 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 			if(!sTipoRecibo.equals("01")){
 				sql = sql + " and r.id.tiporec = '"+sTipoRecibo+"'";
 			}
-			//
-			tx = session.beginTransaction();	
+				
 			
 			lstRecibos = session.createQuery(sql)
 						.setFirstResult(0)
 						.list();
 			
-			tx.commit();
+			
 			if(iTipousqueda == 4){
 				for(int i = 0; i < lstRecibos.size();i++){
 					vrecfac = (Vrecfac)lstRecibos.get(i);
@@ -3840,7 +3839,7 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 				}
 			}
 		}catch(Exception ex){
-			System.out.println("Se capturo una excepcion en ReciboCtrl.getRecibosxParametros: " + ex);
+			LogCajaService.CreateLog("getRecibosxParametros", "ERR", ex.getMessage());
 		}finally{
 			session.close();
 		}
@@ -3849,16 +3848,16 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 /*****OBTIENE EL NUMERO DE BATCH EN EL QUE FUE PROCESADO EL RECIBO POR CAJA,SUCURSAL,COMPANIA Y NUMERO DE RECIBO****************************************************************************************************************************************/
 	public int leerNoBatchRecibo(int iCaid,String sCodSuc,String sCodComp,int iNumrec,String sTipodoc, String sTipoRec){
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 		String sql = "select distinct r.id.nobatch from Recibojde as r where r.id.caid = "+iCaid+" and r.id.codsuc = '" +sCodSuc+"'" +
 						" and r.id.codcomp = '"+sCodComp+"' and r.id.numrec = " + iNumrec + " and r.id.tipodoc = '"+sTipodoc+"' and r.id.tiporec = '" +sTipoRec+ "'";
 		int iNoBatch = 0;
 		try{
-			tx = session.beginTransaction();
+			
 			iNoBatch = Integer.parseInt(session.createQuery(sql).uniqueResult().toString());
-			tx.commit();
+		
 		}catch(Exception ex){
-			System.out.println("Se cpaturo una excepcion en ReciboCtrl.leerNoBatchRecibo: " + ex);
+			LogCajaService.CreateLog("leerNoBatchRecibo", "ERR", ex.getMessage());
 		}finally{
 			session.close();
 		}
@@ -3931,7 +3930,7 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 		Hfactjdecon hfac = null;
 		Recibofac recFac = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 		
 		String sql = "from Recibofac as r where r.id.caid = " + iCaid
 				+ " and r.id.codcomp = '" + sCodComp.trim()
@@ -3939,9 +3938,8 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 				+ sTiporec + "' and r.id.codcli = "+iCodcli +" and r.id.fecha = "+iFecha;
 		
 		try{
-			tx = session.beginTransaction();
+			
 			lstRecibofac = session.createQuery(sql).list();
-			tx.commit();
 			
 			for(int i = 0; i < lstRecibofac.size();i++){
 				recFac = (Recibofac)lstRecibofac.get(i);
@@ -3960,7 +3958,7 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 			}
 			
 		}catch(Exception ex){
-			System.out.println("Se capturo una excepcion en ReciboCtrl.leerFacturasRecibo: " + ex);
+			LogCajaService.CreateLog("leerFacturasRecibo", "ERR", ex.getMessage());
 		}finally{
 			session.close();
 		}
@@ -3971,7 +3969,7 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 		Hfactjdecon factura = null;
 		FacturaxRecibo facturaRec = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 	
 		String sql = "from Hfactjdecon as hf where hf.id.nofactura = "
 				+ iNumfac + " and hf.id.codcomp = '" + sCodComp.trim()
@@ -3981,12 +3979,12 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 		
 		try{
 			
-			tx = session.beginTransaction();
+			
 			factura = (Hfactjdecon)session.createQuery(sql).uniqueResult();
-			tx.commit();
+		
 			
 		}catch(Exception ex){
-			System.out.println("Se capturo una excepcion en ReciboCtrl.getInfoFactura: " + ex);
+			LogCajaService.CreateLog("leerFacturasRecibo", "ERR", ex.getMessage());
 		}finally{
 			session.close();
 		}
@@ -4002,7 +4000,7 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 		Hfacturajde hfac = null;
 		Recibofac recFac = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 		String sql = "";
 		try{
 			sql = "from Recibofac as r where r.id.caid = " + iCaid
@@ -4011,9 +4009,9 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 					+ " and r.id.tiporec = '" + sTiporec + "'" 
 					+" and r.id.codcli = " +iCodcli;
 			
-			tx = session.beginTransaction();
+			
 			lstRecibofac = session.createQuery(sql).list();
-			tx.commit();
+			
 			
 			for(int i = 0; i < lstRecibofac.size();i++){
 				recFac = (Recibofac)lstRecibofac.get(i);
@@ -4029,7 +4027,7 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 				lstFacturasRecibo.add(facturaRec);
 			}
 		}catch(Exception ex){
-			System.out.println("Se capturo una excepcion en ReciboCtrl.leerFacturasReciboCredito: " + ex);
+			LogCajaService.CreateLog("leerFacturasReciboCredito", "ERR", ex.getMessage());
 		}finally{
 			session.close();
 		}
@@ -4069,7 +4067,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				lstFacturasRecibo.add(hfac);
 			}
 		}catch(Exception ex){
-			System.out.println("Se capturo una excepcion en ReciboCtrl.leerFacturasReciboCredito2: " + ex);
+			LogCajaService.CreateLog("leerFacturasReciboCredito2", "ERR", ex.getMessage());
 		}finally{
 			session.close();
 		}
@@ -4080,18 +4078,18 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 		Hfactjdecon factura = null;
 		FacturaxRecibo facturaRec = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 		String sql = "from Hfactjdecon as hf where hf.id.nofactura = "
 				+ iNumfac + " and hf.id.codcomp = '" + sCodComp.trim()
 				+ "' and hf.id.tipofactura = '" + sTipoDocumento + "' and "
 				+ "trim(hf.id.codunineg) = '" + sCodunineg + "'" 
 				+" and hf.id.codcli = "+iCodcli ;
 		try{
-			tx = session.beginTransaction();
+			
 			factura = (Hfactjdecon)session.createQuery(sql).uniqueResult();
-			tx.commit();
+		
 		}catch(Exception ex){
-			System.out.println("Se capturo una excepcion en ReciboCtrl.getInfoFactura: " + ex);
+			LogCajaService.CreateLog("getInfoFactura", "ERR", ex.getMessage());
 		}finally{
 			session.close();
 		}
@@ -4104,7 +4102,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 		Hfacturajde factura = null;
 		FacturaxRecibo facturaRec = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 		
 		String sql = "from Hfacturajde as hf where hf.id.nofactura = "
 				+ iNumfac + " and hf.id.codcomp = '" + sCodComp.trim()
@@ -4113,11 +4111,11 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				+ "' and hf.id.ctotal > 0 and trim(codunineg) = '" + sCodunineg.trim()
 				+ "' and hf.id.codcli = "+iCodcli;
 		try{
-			tx = session.beginTransaction();
+			
 			factura = (Hfacturajde)(session.createQuery(sql).list()).get(0);
-			tx.commit();
+			
 		}catch(Exception ex){
-			System.out.println("Se capturo una excepcion en ReciboCtrl.getInfoFacturaCredito: " + ex);
+			LogCajaService.CreateLog("getInfoFacturaCredito", "ERR", ex.getMessage());
 		}finally{
 			session.close();
 		}
@@ -4125,10 +4123,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 	}
 /******ACTUALIZA EL ESTADO DEL RECIBO A ANULADO********************************************************************************************************/
 	 public boolean actualizarEstadoRecibo(Session session,Transaction tx,int iNumrec,int iCaid,String sCodsuc, String sCodcomp,String sCodUsera,String sMotivo, String sTipoRec){
-		 boolean bActualizado = true;
-		// Session session = HibernateUtil.getSessionFactoryMCAJA().openSession();
-		 //Transaction tx = null;
-		 
+		 boolean bActualizado = true; 
 		 boolean bUnico = false;
 		 
 		 try{
@@ -4163,8 +4158,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 		     
 		 }catch(Exception ex){
 			 bActualizado = false;
-			 System.out.println("Se capturo una excepcion en ReciboCtrl.actualizarEstadoRecibo: " + ex);
-			 ex.printStackTrace();
+			 LogCajaService.CreateLog("actualizarEstadoRecibo", "ERR", ex.getMessage());
 		 }finally{
 			 try{if(bUnico) session.close();}catch(Exception ex2){ex2.printStackTrace();};
 		 }
@@ -4172,8 +4166,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 	 }
 	/******BORRA EL REGISTRO CORRESPONDIENTE AL ENLACE RECIBO-FACTURA*********************************************************************************************************/
 	 public boolean actualizarEnlaceReciboFac(Session session, Transaction tx,Recibofac recibofac){
-		 //Session session = HibernateUtil.getSessionFactoryMCAJA().openSession();
-		 //Transaction tx = null;
+	
 		 boolean bBorrado = true,activo = false;
 		 try{
 			 if(session == null){
@@ -4185,7 +4178,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 			 session.update(recibofac);
 			 if(activo)tx.commit();	 
 		 }catch(Exception ex){
-			 System.out.println("Se capturo una excepcion en ReciboCtrl.borrarEnlaceReciboFac: " + ex);
+			 LogCajaService.CreateLog("actualizarEnlaceReciboFac", "ERR", ex.getMessage());
 			 bBorrado = false;
 		 }finally{
 			 if(activo)
@@ -4215,7 +4208,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 					bBorrado = false;
 				}
 		 }catch(Exception ex){
-			 System.out.println("Se capturo una excepcion en ReciboCtrl.borrarEnlaceReciboFac: " + ex);
+			 LogCajaService.CreateLog("actualizarEnlaceReciboFac", "ERR", ex.getMessage());
 			 bBorrado = false;
 		 }
 		 return bBorrado;
@@ -4242,7 +4235,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 					bBorrado = false;
 				}
 		 }catch(Exception ex){
-			 System.out.println("Se capturo una excepcion en ReciboCtrl.borrarEnlaceReciboFac: " + ex);
+			 LogCajaService.CreateLog("actualizarEnlaceReciboFac", "ERR", ex.getMessage());
 			 bBorrado = false;
 		 }
 		 return bBorrado;
@@ -4262,7 +4255,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 			 lstRecibojde = session3.createQuery(sql).list();
 			 tx3.commit();
 		 }catch(Exception ex){
-			 System.out.println("Se capturo una excepcion en ReciboCtrl.getEnlaceReciboJDE: " + ex);
+			 LogCajaService.CreateLog("getEnlaceReciboJDE", "ERR", ex.getMessage());
 		 }finally{
 			 try{session3.close();}catch(Exception ex2){ex2.printStackTrace();};
 		 }

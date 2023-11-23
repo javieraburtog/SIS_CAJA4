@@ -16,6 +16,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.casapellas.controles.ArqueoCajaCtrl;
+import com.casapellas.controles.ClsParametroCaja;
 import com.casapellas.controles.CompaniaCtrl;
 import com.casapellas.controles.CtrlCajas;
 import com.casapellas.controles.EmpleadoCtrl;
@@ -38,6 +39,10 @@ import com.infragistics.faces.window.component.html.HtmlDialogWindow;
 
 public class ReintegroDAO {
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
+	
+	
 	private List lstCajasCombo;
 	private HtmlDropDownList cmbCajasConsulta;
 	
@@ -57,12 +62,12 @@ public class ReintegroDAO {
 	private HtmlDialogWindow dwValidaReintegro;
 	private String lblMensaje;
 
-	private String sObjCtaPuente = "19800";
-	private String sSubCtaPuente = "03";
+	private String sObjCtaPuente = "";
+	private String sSubCtaPuente = "";
 	
 	//Valores reimplentacion JDE
 	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
-
+	private static ClsParametroCaja cajaparm = new ClsParametroCaja();
 /********************************************************************************/		
 	public void	BuscarReintegros(ActionEvent ev){
 		int caja = 0;
@@ -98,22 +103,25 @@ public class ReintegroDAO {
 			
 			codcomp = r.getId().getCodcomp().trim();
 			
-			sCuenta1 = "10";
+			sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_10").getCodigoUnidadNegocio().toString();
 			
-			if (codcomp.equals("E01"))
-				sCuenta1 = "10";
+			if (codcomp.equals("10"))
+				sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_10").getCodigoUnidadNegocio().toString();
 			
-			if (codcomp.equals("E02"))
-				sCuenta1 = "75";
 			
-			if (codcomp.equals("E03"))
-				sCuenta1 = "80";
+			if (codcomp.equals("11"))
+				sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_11").getCodigoUnidadNegocio().toString();
 			
-			if (codcomp.equals("E10"))
-				sCuenta1 = "11035";
 			
-			if (codcomp.equals("E12"))
-				sCuenta1 = "11224";
+			if (codcomp.equals("20"))
+				sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_20").getCodigoUnidadNegocio().toString();
+			
+			
+			if (codcomp.equals("12"))
+				sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_12").getCodigoUnidadNegocio().toString();
+			
+			if (codcomp.equals("31"))
+			    sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_31").getCodigoUnidadNegocio().toString();
 			
 			Date dtFecha =  new Date();
 			ReciboCtrl rCtrl = new ReciboCtrl();
@@ -131,7 +139,7 @@ public class ReintegroDAO {
 			
 			 
 			//iNoDocumento = dv.leerActualizarNoDocJDE();
-			iNoDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			iNoDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] ); //Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
 			if(iNoDocumento == 0){
 				lblMensaje = "No se ha podido obtener el Número de Documento para el registro de reintegro de fondo minimo ";
 				return false;
@@ -155,7 +163,7 @@ public class ReintegroDAO {
 			}
 			
 			vf0901 = dv.validarCuentaF0901(sCuenta1, sObjCtaPuente, sSubCtaPuente);
-			String tipoDocumento = CodigosJDE1.BATCH_CONTADO.codigo();
+			String tipoDocumento = cajaparm.getParametros("34", "0", "REINTEGRO_BATCH_COD").getValorAlfanumerico().toString();
 			
 			hecho = rCtrl.registrarAsientoDiarioLogs(session, msgLogs, dtFecha, sCuenta1, tipoDocumento, iNoBatch, 1.0,
 						iNoBatch, sCuentaMinimo[0],	sCuentaMinimo[1], 

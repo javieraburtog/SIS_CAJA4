@@ -4251,7 +4251,9 @@ public class RevisionArqueoDAO {
 							lstCo8.add(v);
 							dCo8 +=dMonto;
 						}						
-					}else //-------------- pago de abonos.
+					}
+					
+					//-------------- pago de abonos.
 					if(sTiporec.equals("CR")){
 						RecibosCredito.add(v);
 						totalrecr += dMonto;
@@ -4267,7 +4269,9 @@ public class RevisionArqueoDAO {
 							lstCr8.add(v);
 							dCr8 +=dMonto;
 						}					
-					}else //-------------- pago de primas y reservas.
+					}
+					
+					//-------------- pago de primas y reservas.
 					if(sTiporec.equals("PR")){
 						RecibosPrimas.add(v);
 						totalrepr += dMonto;
@@ -4283,7 +4287,9 @@ public class RevisionArqueoDAO {
 							lstPr8.add(v);
 							dPr8 +=dMonto;
 						}					
-					}else //----------- Recibos por ingresos extraordinarios.
+					}
+					
+					//----------- Recibos por ingresos extraordinarios.
 					if(sTiporec.equals("EX")){
 						RecibosIngEx.add(v);
 						totalreex += dMonto;
@@ -4299,7 +4305,9 @@ public class RevisionArqueoDAO {
 							lstEx8.add(v);
 							dEx8 +=dMonto;
 						}
-					}else //----------- Recibos por pagos a financimiento.
+					}
+
+					//----------- Recibos por pagos a financimiento.
 					if(sTiporec.equals("FN")){
 						RecibosFinan.add(v);
 						totalrefn += dMonto;
@@ -4316,7 +4324,7 @@ public class RevisionArqueoDAO {
 							dFn8 +=dMonto;
 						}
 					}
-					else
+					
 						//----------- Recibos por anticipos PMT
 						if(sTiporec.equals("PM")){
 							 
@@ -4676,39 +4684,50 @@ public class RevisionArqueoDAO {
 				if(lstRecibosmpago != null && lstRecibosmpago.size()>0){
 					for(int i=0; i<lstRecibosmpago.size(); i++){
 						Vrecibosxtipompago v = (Vrecibosxtipompago)lstRecibosmpago.get(i);
-						v.setMonto(v.getId().getMonto());
+						
+						if (v.getId().getTiporec().trim().toUpperCase().equals("DCO")) {
+							v.setMonto(v.getId().getMonto().multiply(BigDecimal.valueOf(-1)));
+							v.getId().setMonto(v.getId().getMonto().multiply(BigDecimal.valueOf(-1)));
+						} else {
+							v.setMonto(v.getId().getMonto());
+						}
+						
 						lstRecibosmpago.remove(i);
 						lstRecibosmpago.add(i,v);
 						dTotalmp = dv.roundDouble(v.getId().getMonto().doubleValue());
 						sMpago = v.getId().getMpago().trim();
 						
 						if(sMpago.equals(MetodosPagoCtrl.EFECTIVO )){
-							dRec5 += dTotalmp;
+							dRec5 += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 							lstRe5.add(v);	
-						}else
+						}
+
 						if(sMpago.equals(MetodosPagoCtrl.CHEQUE)){
-							dRecq += dTotalmp;
+							dRecq += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 							lstReq.add(v);
-						}else
-							if(sMpago.equals(MetodosPagoCtrl.TARJETA)){
-								if(v.getId().getVmanual().equals("0") && v.getId().getRefer6().trim().equals("") && v.getId().getRefer7().trim().equals("")){
-									dRech += dTotalmp;
-									lstRehe.add(v);
-								}else if(v.getId().getVmanual().equals("2") && !v.getId().getRefer6().trim().equals("") && !v.getId().getRefer7().trim().equals("")){
-									dRechs += dTotalmp;
-									lstRehs.add(v);
-								}
-								else{
-									dRechm += dTotalmp;
-									lstRehm.add(v);
-								}
-							}else
+						}
+
+						if(sMpago.equals(MetodosPagoCtrl.TARJETA)){
+							if(v.getId().getVmanual().equals("0") && v.getId().getRefer6().trim().equals("") && v.getId().getRefer7().trim().equals("")){
+								dRech += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
+								lstRehe.add(v);
+							}else if(v.getId().getVmanual().equals("2") && !v.getId().getRefer6().trim().equals("") && !v.getId().getRefer7().trim().equals("")){
+								dRechs += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
+								lstRehs.add(v);
+							}
+							else{
+								dRechm += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
+								lstRehm.add(v);
+							}
+						}
+
 						if(sMpago.equals(MetodosPagoCtrl.TRANSFERENCIA)){
-							dRec8 += dTotalmp;
+							dRec8 += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 							lstRe8.add(v);
-						}else
+						}
+
 						if(sMpago.equals(MetodosPagoCtrl.DEPOSITO)){
-							dRecn += dTotalmp;
+							dRecn += v.getId().getTiporec().trim().toUpperCase().equals("DCO") ? 0 : dTotalmp;
 							lstRen.add(v);
 						}					
 					}
@@ -4763,13 +4782,7 @@ public class RevisionArqueoDAO {
 				//---------------------------------------------------------------------------------------//
 				//------------- calcular los totales  para las salidas de caja	-------------------------//
 				//---------------------------------------------------------------------------------------//
-//				String sqlSalida = "";
-//				sqlSalida =  " from Vsalida v where v.id.caid = "+caid;
-//				sqlSalida += " and trim(v.id.codcomp) = '"+sCodcomp.trim()+"' and trim(v.id.codsuc)= '"+sCodsuc.trim()+"'";
-//				sqlSalida += " and v.id.moneda = '"+sArqueoMon+"' and  v.id.estado = 'P'";
-//				sqlSalida += " and cast(v.id.faproba as date) = '"+fechaAr+"' and cast(v.id.faproba as time) <= '"+horaAr+"'";
-// 				sqlSalida += " and v.id.numsal in " + recibos;				
- 				
+
 			String sqlSalidaCaja = "from Salida s where s.id.caid =" + caid
 					+ " and trim(s.id.codcomp) = '" + sCodcomp.trim() + "' "
 					+ " and moneda = '" + sArqueoMon + "' and estado = 'P' "
@@ -4952,7 +4965,7 @@ public class RevisionArqueoDAO {
 								
 		}catch(Exception error){
 			dac = null;
-			error.printStackTrace();
+			LogCajaService.CreateLog("clasificarRecibos", "ERR", error.getMessage());
 //			LogCrtl.imprimirError(error);
 		}finally{
 			rvCtrl = null;
@@ -5040,7 +5053,7 @@ public class RevisionArqueoDAO {
 			rv_dwFacturas.setWindowState("normal");
 						
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("mostrarFacturasArqueo", "ERR", error.getMessage());
 		}
 	}
 /********* 8. Mostrar los recibos p. en banco por métodos de pago ***************************/
@@ -5205,7 +5218,7 @@ public class RevisionArqueoDAO {
 		}
 			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("cargarRecibos", "ERR", error.getMessage());
 		}
 	}
 /********* Mostrar la ventana de totales por recibos pagados en banco y por método de pago ***/
@@ -5259,7 +5272,7 @@ public class RevisionArqueoDAO {
 			dwEgresosxMetPago.setWindowState("normal");			
 			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("mostrarTotalEgBancoxMetPago", "ERR", error.getMessage());
 		}
 	}
 
@@ -5271,7 +5284,7 @@ public class RevisionArqueoDAO {
 			lblOEcambios.setValue(dac.getTotalcambio());		
 			dwDetOtrosEgresos.setWindowState("normal");
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("mostrarOtrosEgresos", "ERR", error.getMessage());
 		}
 	}
 /************** mostrar la ventana de detalle de cambios realizados ****************/
@@ -5283,7 +5296,7 @@ public class RevisionArqueoDAO {
 			gvDetalleCambios.dataBind();
 			dwDetalleCambios.setWindowState("normal");
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("mostrarDetalleCambios", "ERR", error.getMessage());
 		}
 	}
 /**************** 9. mostrar los recibos método de pago *****************************/
@@ -5373,7 +5386,7 @@ public class RevisionArqueoDAO {
 				rv_dwReciboxtipoMetPago.setWindowState("normal");
 			}			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("cargarRecibosmpago", "ERR", error.getMessage());
 		}
 	}
 /**************** 10. mostrar el detalle de la factura *****************************/
@@ -5448,7 +5461,7 @@ public class RevisionArqueoDAO {
 			}
 			rv_dwDetalleFactura.setWindowState("normal");
 		}catch(Exception ex){
-			ex.printStackTrace();
+			LogCajaService.CreateLog("mostrarDetalleFactura", "ERR", ex.getMessage());
 		}
 	}
 /************* 11. Cambiar los valores por tasa de cambio de moneda *****************/
@@ -5487,7 +5500,7 @@ public class RevisionArqueoDAO {
 			CodeUtil.putInSessionMap("rv_lstCierreCajaDetfactura",lstNewDetalle);			
 			gvDfacturasDiario.dataBind();
 		}catch(Exception ex){
-			ex.printStackTrace();
+			LogCajaService.CreateLog("cambiarMonedaDetalle", "ERR", ex.getMessage());
 		}
 	}
 /************* 12. Mostrar los recibos por tipo de ingreso **************************/
@@ -5541,7 +5554,7 @@ public class RevisionArqueoDAO {
 			}
 				
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("mostrarRecibos", "ERR", error.getMessage());
 //			LogCrtl.imprimirError(error);
 		}
 	}
@@ -5559,22 +5572,9 @@ public class RevisionArqueoDAO {
 			
 			
 			mostrarDetalleRecibo(rc.getId().getCaid(), rc.getId().getCodcomp(), rc.getId().getCodsuc(), rc.getId().getNumrec(), rc.getId().getTiporec() );		
-			
-			
-/*			RowItem riRecibo = (RowItem)ev.getComponent().getParent().getParent();
-			List lstFilaRec = riRecibo.getCells();
-			Cell celdaCodrec = (Cell)lstFilaRec.get(1);
-			HtmlOutputText hoCodrec = (HtmlOutputText)celdaCodrec.getChildren().get(0);
-			iNumrec = Integer.parseInt(hoCodrec.getValue().toString());
-			
-			dac = (DetalleArqueoCaja)CodeUtil.getFromSessionMap( "rv_DAC");
-			iCaid = dac.getCaid();
-			sCodcomp = dac.getCodcom */
-			
-//			mostrarDetalleRecibo(iCaid, sCodcomp, sCodsuc, iNumrec);		
-			
+				
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("mostrarDetalleRecibo", "ERR", error.getMessage());
 		}		
 	}
 /********** 13.1 Mostrar el detalle del recibo seleccionado **************************/
@@ -5610,9 +5610,7 @@ public class RevisionArqueoDAO {
 				
 				txtNoBatch.setValue( sNumbatchs );
 				
-			/*	//-------- leer numero de batch del recibo---------//
-				int iNoBatch = recCtrl.leerNoBatchRecibo(iCaid, sCodsuc, sCodcomp, iNumrec,"R",recibo.getId().getTiporec());
-				txtNoBatch.setValue(iNoBatch);*/
+
 				
 				//---------  leer detalle de recibo -------------- //
 				List lstDetalleRecibo = recCtrl.leerDetalleRecibo(iCaid, sCodsuc, sCodcomp, iNumrec,recibo.getId().getTiporec());				
@@ -5715,7 +5713,7 @@ public class RevisionArqueoDAO {
 			
 			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("mostrarDetalleRecibo", "ERR", error.getMessage());
 //			LogCrtl.imprimirError(error);
 		}
 	}
@@ -5731,7 +5729,7 @@ public class RevisionArqueoDAO {
 			dwDetalleOtrosIngresos.setWindowState("normal");
 			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("mostrarDetalleOtrosIngresos", "ERR", error.getMessage());
 		}
 	}
 	
@@ -5761,7 +5759,7 @@ public class RevisionArqueoDAO {
 				dwDetallerecpagmonEx.setWindowState("normal");
 			}			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("cargarRecpagOtrasMonedas", "ERR", error.getMessage());
 		}
 	}
 /********** 14. mostrar la ventana de confirmación de proceso de arqueo *******************/
@@ -5806,8 +5804,7 @@ public class RevisionArqueoDAO {
 			}
 			
 		}catch(Exception error){
-			error.printStackTrace();
-//			LogCrtl.imprimirError(error);
+			LogCajaService.CreateLog("confAprobarArqueo", "ERR", error.getMessage());
 		}finally{
 			
 			if(msg.isEmpty()){
@@ -5825,7 +5822,7 @@ public class RevisionArqueoDAO {
 		try{
 			rv_dwCancelarAprArqueo.setWindowState("normal");
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("confirmarCancelarAprobArq", "ERR", error.getMessage());
 		}
 	}
 	public String[] obtenerCuentasTransitorias(String sCodcomp, String sMoneda, int iIdBanco){
@@ -5838,9 +5835,7 @@ public class RevisionArqueoDAO {
 				errorApr = dv.getError();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("confirmarCancelarAprobArq", "ERR", e.getMessage());
 		}
 		return sCtaBcoTransitoria;
 	}

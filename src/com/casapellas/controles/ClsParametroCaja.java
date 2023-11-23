@@ -170,6 +170,82 @@ public class ClsParametroCaja {
 	}
 	
 	/**
+	 * @author Milton Pomares
+	 * @param strTipoParametro
+	 * @param strCodigoEmpresa
+	 * @param strCodigoParm
+	 * @return
+	 * @throws Exception
+	 */
+	public CajaParametro getParametrosPorCompania(String strTipoParametro, String strCodigoEmpresa, String strCodigoParm) throws Exception
+	{
+		DB2Connection dbC = new DB2Connection();
+		Connection conn = null;
+		CajaParametro cp = new CajaParametro();
+		try
+		{
+			
+			conn =  dbC.openConnection(PropertiesSystem.IPSERVERDB2, 
+									   PropertiesSystem.ESQUEMA,
+									   PropertiesSystem.CN_USRNAME,
+									   PropertiesSystem.CN_USRPWD);
+			
+			String strQuery = "select  tparm codParametro," + 
+									  "caid noCaja," + 
+									  "tcod codigo," + 
+									  "tdesc descripcion," + 
+									  "tvalnum valorNumerico," + 
+									  "tvalalf valorAlfanumerico, " +
+									  "IFNULL(COD_COMPANIA, '') AS codigoCompania, " +
+									  "IFNULL(COD_UNIDAD_NEGOCIO, '') AS codigoUnidadNegocio, " +
+									  "IFNULL(COD_CUENTA_OBJETO, '') AS codigoCuentaObjeto, " +
+									  "IFNULL(COD_SUBCUENTA, '') AS codigoSubCuenta " +
+							  "from cajaparm where tparm = '" + strTipoParametro + "' and " +
+							  					  "COD_COMPANIA = " + strCodigoEmpresa + " and "
+							  					+ "tcod = '" + strCodigoParm + "' ";
+			
+		
+			ResultSet rs = dbC.executeQuery(conn, strQuery);
+			
+			if(rs==null) throw new Exception("No esta configurado los parametros solicitados");
+			
+			while (rs.next()) {
+				cp.setCodigo(rs.getString("codigo"));
+				cp.setCodParametro(rs.getString("codParametro"));
+				cp.setDescripcion(rs.getString("descripcion"));
+				cp.setNoCaja(rs.getInt("noCaja"));
+				cp.setValorNumerico(rs.getDouble("valorNumerico"));
+				cp.setValorAlfanumerico(rs.getString("valorAlfanumerico"));
+				cp.setCodigoCompania(rs.getString("codigoCompania"));
+				cp.setCodigoUnidadNegocio(rs.getString("codigoUnidadNegocio"));
+				cp.setCodigoCuentaObjeto(rs.getString("codigoCuentaObjeto"));
+				cp.setCodigoSubCuenta(rs.getString("codigoSubCuenta"));				
+				break;
+			}
+			
+			
+		}
+		catch(Exception e)
+		{
+			LogCajaService.CreateLog("getParametros", "ERR", e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+		finally
+		{
+			try
+			{
+			dbC.closedConnection(conn);
+			}
+			catch (Exception e) {
+				LogCajaService.CreateLog("getParametros", "ERR", e.getMessage());
+			}
+		}
+		
+		return cp;
+	}
+	
+	
+	/**
 	 * @author luisfonseca
 	 * @param strTipoParametro
 	 * @param strNumeroCaja

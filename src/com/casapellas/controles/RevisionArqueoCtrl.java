@@ -229,15 +229,6 @@ public class RevisionArqueoCtrl {
 			}
 			
 		
-
-
-
-
-
-
-
-			
-			
 			while( evalua <= 4 && !valido){
 				
 				valido = validarNumeroReferencia( Integer.parseInt( strReference ), tipodocjde, codcomp, moneda);
@@ -314,17 +305,6 @@ public class RevisionArqueoCtrl {
 				codigoJDE =  cajaparm.getParametros("34", "0", "TIPODOC_JDE_5").getValorAlfanumerico().toString();;
 			}
 			
-			
-
-
-
-
-
-
-
-
-
-			
 			while( evalua <= 4 && !valido){
 				
 				valido = validarNumeroReferencia( Integer.parseInt( strReference ), tipodocjde, codcomp, moneda, session);
@@ -337,13 +317,12 @@ public class RevisionArqueoCtrl {
 				evalua++;
 				
 				if(Integer.parseInt(strReference) != reference ){
-//					LogCrtl.sendLogDebgs("Cambio de referencia : "+ strReference +" ||| "+reference);
+
 				}
 			}
 			
 			//&& ======== Generar el numero de documento para el deposito (cambio de referencias).
 			if(!valido){
-//				LogCrtl.sendLogDebgs("Numero aleatorio de referencia: "+strReference+", "+tipopago);
 				
 				reference =  Divisas.numeroSiguienteJdeDocumentoE1Custom( codigoJDE, codcomp );
 				
@@ -428,7 +407,7 @@ public class RevisionArqueoCtrl {
 				lstRecibosConsulta.add(vrmpago.getId().getNumrec());
 			
 			Session sesion = HibernateUtilPruebaCn.currentSession();
-			Transaction trans = sesion.beginTransaction();
+			
 			Criteria cr = sesion.createCriteria(Vrecibosxtipompago.class);
 			
 			cr.add(Restrictions.eq("id.caid", iCaid));
@@ -441,7 +420,6 @@ public class RevisionArqueoCtrl {
 			
 			lstRecibostmp = cr.list();
 			
-			trans.commit();
 			sesion.close();
 			
 			if(lstRecibostmp != null && lstRecibos.size()>0){
@@ -456,13 +434,18 @@ public class RevisionArqueoCtrl {
 						vrmp.getId().setRefer3(sReferencia);
 					}
 					
-					vrmp.setMonto(vrmp.getId().getMonto());					
+					if (vrmp.getId().getTiporec().trim().toUpperCase().equals("DCO")) {
+						vrmp.setMonto(vrmp.getId().getMonto().multiply(BigDecimal.valueOf(-1)));
+					} else {
+						vrmp.setMonto(vrmp.getId().getMonto());
+					}
+					
 					lstRecibostmp.set(i, vrmp);
 				}
 			}
 			
 		}catch(Exception error){
-			System.out.println(": Error en RevisionArqueoCtrl.obtenerRecibostmp "+error);
+			LogCajaService.CreateLog("obtenerRecibosMpago8N", "ERR", error.getMessage());
 		}		
 		return lstRecibostmp;
 	}
@@ -1696,7 +1679,13 @@ public class RevisionArqueoCtrl {
 			if(lstRecibostmp != null && lstRecibos.size()>0){
 				for(int i=0; i<lstRecibostmp.size();i++){
 					Vrecibosxtipompago v = (Vrecibosxtipompago)lstRecibostmp.get(i);
-					v.setMonto(v.getId().getMonto());
+					
+					if (v.getId().getTiporec().trim().toUpperCase().equals("DCO")) {
+						v.setMonto(v.getId().getMonto().multiply(BigDecimal.valueOf(-1)));
+					} else {
+						v.setMonto(v.getId().getMonto());
+					}
+					
 					lstRecibostmp.remove(i);
 					lstRecibostmp.add(i,v);
 				}

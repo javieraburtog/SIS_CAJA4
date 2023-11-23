@@ -169,14 +169,22 @@ public class ArqueoControl {
 				lstTrsldosRcibdos = selectProperty(trasladosrec, "nofactura");
 				lstSucsxTrlsRec   = selectProperty(trasladosrec, "codsuc");
 				
+				//Reformatear el arreglo
+				ArrayList<String> lstSucsxTrlsRec2 = new ArrayList<String>();
+				for (int i = 0; i < lstSucsxTrlsRec.size(); i++) {
+					lstSucsxTrlsRec2.add(String.format("%05d", Integer.parseInt(lstSucsxTrlsRec.get(i))));
+				}
+				
+				
 				Criteria crFctsTrls = sesion.createCriteria(Vhfactura.class)
-				.add(Restrictions.in("id.nofactura", lstTrsldosRcibdos))
-				.add(Restrictions.in("id.codsuc", lstSucsxTrlsRec))
-				.add(Restrictions.eq("id.estado", ""))
-				.add(Restrictions.eq("id.codcomp", sCodcomp))
-				.add(Restrictions.eq("id.moneda", sMoneda))
-				.add(Restrictions.eq("id.fecha", iFechaActual))
-				.add(Restrictions.between("id.hora", iHoraini, iHoraFin ));
+						.add(Restrictions.in("id.nofactura", lstTrsldosRcibdos))
+						.add(Restrictions.in("id.codsuc", lstSucsxTrlsRec2))
+						.add(Restrictions.eq("id.estado", ""))
+						.add(Restrictions.eq("id.codcomp", sCodcomp))
+						.add(Restrictions.eq("id.moneda", sMoneda))
+						.add(Restrictions.eq("id.fecha", iFechaActual))
+						.add(Restrictions.in("id.tipofactura", sTiposDoc))
+						.add(Restrictions.between("id.hora", iHoraini, iHoraFin ));
 				
 				LogCajaService.CreateLog("obtenerFacturas", "HQRY", LogCajaService.toSql(crFctsTrls));
 				lstFctsTrlsIn = crFctsTrls.list();
@@ -184,14 +192,14 @@ public class ArqueoControl {
 			
 			//&& ======== Crear la factura Numero 2, para las unidades de negocio con localizacion.
 			DetachedCriteria cr2 = DetachedCriteria.forClass(Vhfactura.class)
-			.add(Restrictions.eq("id.fecha", iFechaActual))
-			.add(Restrictions.in("id.tipofactura", sTiposDoc))
-			.add(Restrictions.eq("id.estado", ""))
-			.add(Restrictions.eq("id.codcomp", sCodcomp))
-			.add(Restrictions.eq("id.moneda", sMoneda))
-			.add(Restrictions.eq("id.fecha", iFechaActual)) ///ELIMINAR
-			.add(Restrictions.between("id.hora", iHoraini, iHoraFin ))
-			.add(Restrictions.sqlRestriction( " ( " +sConditionLocs +" )" ));
+					.add(Restrictions.eq("id.fecha", iFechaActual))
+					.add(Restrictions.in("id.tipofactura", sTiposDoc))
+					.add(Restrictions.eq("id.estado", ""))
+					.add(Restrictions.eq("id.codcomp", sCodcomp))
+					.add(Restrictions.eq("id.moneda", sMoneda))
+					.add(Restrictions.eq("id.fecha", iFechaActual)) ///ELIMINAR
+					.add(Restrictions.between("id.hora", iHoraini, iHoraFin ))
+					.add(Restrictions.sqlRestriction( " ( " +sConditionLocs +" )" ));
 
 			if(lstTrasladosSend != null && !lstTrasladosSend.isEmpty())
 				cr2.add(Restrictions.not((Restrictions.in("id.nofactura", lstTrasladosSend)))); 
@@ -306,7 +314,7 @@ public class ArqueoControl {
 			String sCodcomp, String sMoneda, Date dtFechaArqueo,
 			Date dtHoraInicio, Date dtHoraFin) {
 		List<Vrecibosxtipompago> recibos = new ArrayList<Vrecibosxtipompago>();
-		String sNotIN[] = new String[] { "DCO", "FCV" };
+		String sNotIN[] = new String[] { "FCV" }; // "DCO", "FCV"
 
 		Session sesion = null;
 		
