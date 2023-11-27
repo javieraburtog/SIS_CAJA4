@@ -40,6 +40,7 @@ import com.casapellas.entidades.ens.Vautoriz;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
 import com.casapellas.util.FechasUtil;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
 import com.infragistics.faces.grid.component.Cell;
 import com.infragistics.faces.grid.component.RowItem;
@@ -148,7 +149,7 @@ public class ConsultaDepositos {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("cambiarFechaDepositoBanco", "ERR", e.getMessage());
 		}finally{
 			
 			if(msg.isEmpty()){
@@ -206,7 +207,7 @@ public class ConsultaDepositos {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("mostrarCambiarFechaDepositoBanco", "ERR", e.getMessage());
 		}finally{
 			if(msg.isEmpty()){
 				
@@ -266,7 +267,7 @@ public class ConsultaDepositos {
 			
 		} catch (Exception e) {
 			strMensaje = "El registro no ha podido ser actualizado" ;
-			e.printStackTrace();
+			LogCajaService.CreateLog("actualizarReferenciaDepositoBanco", "ERR", e.getMessage());
 		}finally{
 			
 			lblMensajesConsultaDepositos.setValue(strMensaje);
@@ -317,7 +318,7 @@ public class ConsultaDepositos {
 		    
 		} catch (Exception e) {
 			strMensaje = "El registro no ha podido ser actualizado" ;
-			e.printStackTrace();
+			LogCajaService.CreateLog("actualizarReferenciaDeposito", "ERR", e.getMessage());
 		}finally{
 			
 			lblMensajesConsultaDepositos.setValue(strMensaje);
@@ -395,7 +396,7 @@ public class ConsultaDepositos {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("procesarDepositoExcepcion", "ERR", e.getMessage());
 		}finally{
 			dwSometerDepositoExcepcion.setWindowState("hidden");
 			dwMensajeConsultaDepositos.setWindowState("normal");
@@ -458,7 +459,7 @@ public class ConsultaDepositos {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("confirmarMarcarExcepcionDeposito", "ERR", e.getMessage());
 		}finally{
 			
 			if(valido){
@@ -549,7 +550,7 @@ public class ConsultaDepositos {
 			gvcdbDepositosBco.dataBind();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("filtrarDepositosBco", "ERR", e.getMessage());
 		}
 	}
 /******************************************************************************************/
@@ -587,7 +588,7 @@ public class ConsultaDepositos {
 				ddlFtrBcoCuenta.dataBind();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("buscarCuentaxBco", "ERR", e.getMessage());
 		}
 	}
 /******************************************************************************************/
@@ -661,7 +662,7 @@ public class ConsultaDepositos {
 				});
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("filtrarDepositosCaja", "ERR", e.getMessage());
 		}finally{
 			if(lstDepositosCaja == null)
 				lstDepositosCaja = new ArrayList<Vdeposito>();
@@ -688,7 +689,8 @@ public class ConsultaDepositos {
 										comp.getId().getC4rp01().trim()+" "+comp.getId().getC4rp01d1().trim()));
 				}
 			}else{
-				List<Vcompania>lstCompanias = new CompaniaCtrl().obtenerCompaniasCajaJDE();
+				new CompaniaCtrl();
+				List<Vcompania>lstCompanias = CompaniaCtrl.obtenerCompaniasCajaJDE();
 				if(lstCompanias!=null){
 					for (Vcompania vc : lstCompanias) {
 						lstfcCompania.add(new SelectItem(vc.getId().getDrky().trim(),
@@ -702,7 +704,7 @@ public class ConsultaDepositos {
 		} catch (Exception e) {
 			lstfcCompania = new ArrayList<SelectItem>();
 			lstfcCompania.add(new SelectItem("NCODC","Compañías","Seleccione para no filtrar por la compañía"));
-			e.printStackTrace();
+			LogCajaService.CreateLog("cargarCompaniasxCaja", "ERR", e.getMessage());
 		}
 	}
 	
@@ -746,7 +748,8 @@ public class ConsultaDepositos {
 			if(m.get("cdep_lstfcCompania") == null ){
 				lstfcCompania = new ArrayList<SelectItem>();
 				lstfcCompania.add(new SelectItem("NCODC","Compañías","Seleccione para no filtrar por la compañía"));
-				List<Vcompania>lstCompanias = new CompaniaCtrl().obtenerCompaniasCajaJDE();
+				new CompaniaCtrl();
+				List<Vcompania>lstCompanias = CompaniaCtrl.obtenerCompaniasCajaJDE();
 				if(lstCompanias!=null){
 					for (Vcompania vc : lstCompanias) {
 						lstfcCompania.add(new SelectItem(vc.getId().getDrky().trim(),
@@ -762,7 +765,7 @@ public class ConsultaDepositos {
 		} catch (Exception e) {
 			lstfcCompania = new ArrayList<SelectItem>();
 			lstfcCompania.add(new SelectItem("NCODC","Compañías","Seleccione para no filtrar por la compañía"));
-			e.printStackTrace();
+			LogCajaService.CreateLog("getLstfcCompania", "ERR", e.getMessage());
 		}
 		return lstfcCompania;
 	}
@@ -780,7 +783,8 @@ public class ConsultaDepositos {
 			if(m.get("cdep_lstfcMoneda") == null){
 				lstfcMoneda = new ArrayList<SelectItem>();
 				lstfcMoneda.add(new SelectItem("SMDC","Moneda", "Seleccione no filtrar por moneda!"));
-				List<String[]>lstMonedas = new MonedaCtrl().obtenerMonedasJDE();
+				new MonedaCtrl();
+				List<String[]>lstMonedas = MonedaCtrl.obtenerMonedasJDE();
 				if(lstMonedas!=null)
 					for (String[] moneda : lstMonedas) 
 						lstfcMoneda.add(new SelectItem(moneda[0],moneda[0],moneda[0]+" "+moneda[1]));
@@ -791,7 +795,7 @@ public class ConsultaDepositos {
 		} catch (Exception e) {
 			lstfcMoneda = new ArrayList<SelectItem>();
 			lstfcMoneda.add(new SelectItem("SMDC","Moneda","Seleccione no filtrar por moneda!"));
-			e.printStackTrace();
+			LogCajaService.CreateLog("getLstfcMoneda", "ERR", e.getMessage());
 		}
 		return lstfcMoneda;
 	}
@@ -844,7 +848,7 @@ public class ConsultaDepositos {
 		try {
 			if(m.get("cdep_lstfcEstadoDep")==null){
 				List<Valorcatalogo> lstEstados = new SalidasCtrl().leerValorCatalogo(13);
-				lstfcEstadoDep = new ArrayList();
+				lstfcEstadoDep = new ArrayList<SelectItem>();
 				lstfcEstadoDep.add(new SelectItem("SEDC","Estado","Seleccione el estado de los depósitos"));
 				if(lstEstados !=null && lstEstados.size()>0)
 					for (Valorcatalogo v : lstEstados)
@@ -852,12 +856,12 @@ public class ConsultaDepositos {
 											v.getDescripcion(),v.getDescripcion()));
 				m.put("cdep_lstfcEstadoDep", lstfcEstadoDep);
 			}else{
-				lstfcEstadoDep = (ArrayList)m.get("cdep_lstfcEstadoDep");
+				lstfcEstadoDep = (ArrayList<SelectItem>)m.get("cdep_lstfcEstadoDep");
 			}
 		} catch (Exception error) {
-			lstfcEstadoDep = new ArrayList();
+			lstfcEstadoDep = new ArrayList<SelectItem>();
 			lstfcEstadoDep.add(new SelectItem("SEDC","Estado","Seleccione el estado de los depósitos"));
-			error.printStackTrace();
+			LogCajaService.CreateLog("getLstfcEstadoDep", "ERR", error.getMessage());
 		}	
 		return lstfcEstadoDep;
 	}
@@ -916,7 +920,7 @@ public class ConsultaDepositos {
 				lstDepositosCaja = (ArrayList<Vdeposito>)m.get("cdep_lstDepositosCaja");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("getLstDepositosCaja", "ERR", e.getMessage());
 			lstDepositosCaja = new ArrayList<Vdeposito>();
 			m.put("cdep_lstDepositosCaja", lstDepositosCaja);
 		} 
@@ -955,7 +959,7 @@ public class ConsultaDepositos {
 			}
 		} catch (Exception e) {
 			lstcdbDepositosBco = new ArrayList<Depbancodet>();
-			e.printStackTrace();
+			LogCajaService.CreateLog("getLstcdbDepositosBco", "ERR", e.getMessage());
 		}
 		return lstcdbDepositosBco;
 	}
@@ -1011,7 +1015,8 @@ public class ConsultaDepositos {
 			if(m.get("cdep_lstFtrBcoBanco") == null){
 				lstFtrBcoBanco = new ArrayList<SelectItem>();
 				lstFtrBcoBanco.add(new SelectItem("DBSB","Banco","Selección de banco"));
-				F55ca022[] banco = new BancoCtrl().obtenerBancosConciliar();
+				new BancoCtrl();
+				F55ca022[] banco = BancoCtrl.obtenerBancosConciliar();
 				if(banco!=null){
 					for (F55ca022 bco : banco) 
 						lstFtrBcoBanco.add(new SelectItem(String.valueOf(bco.getId().getCodb()),
@@ -1023,7 +1028,7 @@ public class ConsultaDepositos {
 			}
 		} catch (Exception e) {
 			lstFtrBcoBanco = new ArrayList<SelectItem>();
-			e.printStackTrace();
+			LogCajaService.CreateLog("getLstFtrBcoBanco", "ERR", e.getMessage());
 		}
 		return lstFtrBcoBanco;
 	}

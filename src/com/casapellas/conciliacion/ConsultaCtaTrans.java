@@ -21,6 +21,7 @@ import com.casapellas.reportes.Rptmcaja013XlsCuentaTransitoria;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
 import com.casapellas.util.FechasUtil;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
 import com.ibm.icu.util.Calendar;
 import com.infragistics.faces.grid.component.RowItem;
@@ -113,7 +114,7 @@ public class ConsultaCtaTrans {
 			
 		} catch (Exception e) {	
 			dwDetalleDeposito.setWindowState("hidden");
-			e.printStackTrace();
+			LogCajaService.CreateLog("mostrarDetalleDeps", "ERR", e.getMessage());
 		}
 	}
 	/******************************************************************************************/
@@ -198,6 +199,7 @@ public class ConsultaCtaTrans {
 		}
 	}
 	//&&  =================== GETTERS Y SETTERS 
+	@SuppressWarnings("unchecked")
 	public List<Vdeposito> getLstDepositosCaja() {
 		
 		if(m.get("cct_lstVdeposito") == null){
@@ -222,11 +224,12 @@ public class ConsultaCtaTrans {
 	public void setGvDepositosCaja(HtmlGridView gvDepositosCaja) {
 		this.gvDepositosCaja = gvDepositosCaja;
 	}
+	
+	@SuppressWarnings("unchecked")
 	public List<SelectItem> getLstfcMoneda() {
 		try {
 			if(m.get("cdep_lstfcMoneda") == null){
 				lstfcMoneda = new ArrayList<SelectItem>();
-//				lstfcMoneda.add(new SelectItem("SMDC","Moneda", "Seleccione no filtrar por moneda!"));
 				List<String[]>lstMonedas = MonedaCtrl.leerMonedasJde();
 				if(lstMonedas!=null)
 					for (String[] moneda : lstMonedas) 
@@ -238,7 +241,7 @@ public class ConsultaCtaTrans {
 		} catch (Exception e) {
 			lstfcMoneda = new ArrayList<SelectItem>();
 			lstfcMoneda.add(new SelectItem("SMDC","Moneda","Seleccione no filtrar por moneda!"));
-			e.printStackTrace();
+			LogCajaService.CreateLog("getLstfcMoneda", "ERR", e.getMessage());
 		}
 		return lstfcMoneda;
 	}
@@ -413,6 +416,7 @@ public class ConsultaCtaTrans {
 	public void setGvCtaxdeposito(HtmlGridView gvCtaxdeposito) {
 		this.gvCtaxdeposito = gvCtaxdeposito;
 	}
+	@SuppressWarnings("unchecked")
 	public List<Vf0911> getLstTransaccionesF0911() {
 		
 		if(CodeUtil.getFromSessionMap("cct_lstTransaccionesF0911") == null){
