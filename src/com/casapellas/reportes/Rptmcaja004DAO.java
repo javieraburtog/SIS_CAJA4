@@ -103,7 +103,6 @@ public class Rptmcaja004DAO {
 
 			 
 			 if(!sListaRecibos.equals("")){
-				 System.out.println("Recibos " + sListaRecibos);
 				 lstRecibosArq = RevisionArqueoCtrl.obtenerVrecibos( a.getId().getCaid(), a.getId().getCodsuc(),a.getId().getCodcomp(),
 						 								  a.getId().getMoneda(),sListaRecibos,  a.getId().getFecha());
 				 if(lstRecibosArq!=null && lstRecibosArq.size()>0){
@@ -224,8 +223,6 @@ public class Rptmcaja004DAO {
 
 			//------- Navegación hacia la página del reporte.
 			FacesContext.getCurrentInstance().getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME+"/reportes/rptmcaja004.faces");
-			System.out.println("?..");
-			
 		} catch (Exception error) {
 			error.printStackTrace();
 		}finally{
