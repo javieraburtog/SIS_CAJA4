@@ -69,7 +69,7 @@ public class CompaniaCtrl {
 			String sql = "SELECT mcmcu "
 					+ " FROM "+ PropertiesSystem.JDEDTA	+ ".F0006 "
 					+ " WHERE TRIM(CAST(mcco AS VARCHAR(5))) = '"+ codsuc.trim()+"'"
-					+ " AND TRIM(CAST(mcrp07 AS VARCHAR(3))) = '" +  linea.trim()+"'";
+					+ " AND TRIM(CAST(mcrp10 AS VARCHAR(3))) = '" +  linea.trim()+"'";
 			
 
 			List<String> lstUnineg = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, null, true);
