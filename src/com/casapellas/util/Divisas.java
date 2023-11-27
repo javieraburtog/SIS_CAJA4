@@ -910,8 +910,8 @@ public class Divisas {
 		String sql;
 		
 		try {
-			sql  = " from Vf0901 v where trim(v.id.gmmcu) = '"+sUN.trim()+"' ";
-			sql += " and  trim(v.id.gmobj) = '"+sCobj+"' and trim(v.id.gmsub) = '"+sCsub+"'";
+			sql  = " from Vf0901 v where ";
+			sql += "   trim(v.id.gmobj) = '"+sCobj+"' and trim(v.id.gmsub) = '"+sCsub+"'";
 			sql += " and trim(v.id.gmpec) not in ('N') ";
 			
 		
