@@ -1,6 +1,5 @@
 package com.casapellas.controles;
 
-//import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,14 +14,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
-//import javax.mail.internet.InternetAddress;
-//import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-//import org.apache.commons.mail.EmailAttachment;
-//import org.apache.commons.mail.MultiPartEmail;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -54,8 +49,11 @@ import com.casapellas.util.CodeUtil;
 import com.casapellas.util.CustomEmailAddress;
 import com.casapellas.util.Divisas;
 import com.casapellas.util.FechasUtil;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.util.MailHelper;
 import com.casapellas.util.PropertiesSystem;
+
+import ni.com.casapellas.client.config.ConfigConnection;
 /**
  * CASA PELLAS S.A.
  * Creado por.........: Carlos Manuel Hernández Morrison
@@ -116,7 +114,7 @@ public class ConfirmaDepositosCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("e obtenerPeriodoContableActual", "ERR", e.getMessage());
 		}finally{
 			try {
 				if(nuevacn){
@@ -125,7 +123,7 @@ public class ConfirmaDepositosCtrl {
 					cn = null;
 				}
 			} catch (Exception e2) {
-				e2.printStackTrace();
+				LogCajaService.CreateLog("e2 obtenerPeriodoContableActual", "ERR", e2.getMessage());
 			}
 		}
 		return periodo;
@@ -153,7 +151,7 @@ public class ConfirmaDepositosCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("generarFechaComprobante", "ERR", e.getMessage());
 			return fecha = fechadeposito;
 		}
 		return fecha;
@@ -193,10 +191,10 @@ public class ConfirmaDepositosCtrl {
 				strSubLibroCuenta = strSubLibroCuenta.substring(
 					strSubLibroCuenta.length()-8, strSubLibroCuenta.length());
 			}
-			strSubLibroCuenta = CodeUtil.pad(strSubLibroCuenta, 8 , "0");   // Divisas.rellenarCadena(strSubLibroCuenta, "0", 8);
+			strSubLibroCuenta = CodeUtil.pad(strSubLibroCuenta, 8 , "0");
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("constructSubLibroCtaTbanco", "ERR", e.getMessage());
 		}
 		return strSubLibroCuenta;
 	}
@@ -234,17 +232,17 @@ public class ConfirmaDepositosCtrl {
 				sqlOr = "( "+ sqlOr+" )";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("constructSqlOrCtaxCon", "ERR", e.getMessage());
 		}
 		
 		try {
+			@SuppressWarnings("unused")
 			String origen = PropertiesSystem.CONTEXT_NAME+": "
 					+ new Exception().getStackTrace()[1].getClassName() +":"
 					+ new Exception().getStackTrace()[1].getMethodName() ;
 			
-//			System.out.println(origen+":: > "+ sqlOr);
 		} catch (Exception e) {
-			// TODO: handle exception
+			LogCajaService.CreateLog("constructSqlOrCtaxCon", "ERR", e.getMessage());
 		}
 		
 		return sqlOr;
@@ -273,17 +271,18 @@ public class ConfirmaDepositosCtrl {
 			sqlOr = "( "+ sqlOr+" )";
 			 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("constructSqlOrCtaxCon", "ERR", e.getMessage());
 		}
 		
 		try {
+			@SuppressWarnings("unused")
 			String origen = PropertiesSystem.CONTEXT_NAME+": "
 					+ new Exception().getStackTrace()[1].getClassName() +":"
 					+ new Exception().getStackTrace()[1].getMethodName() ;
 			
-//			System.out.println(origen+":: > "+ sqlOr);
+
 		} catch (Exception e) {
-			// TODO: handle exception
+			LogCajaService.CreateLog("constructSqlOrCtaxCon", "ERR", e.getMessage());
 		}
 		
 		return sqlOr;
@@ -306,7 +305,7 @@ public class ConfirmaDepositosCtrl {
 			}		
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("addConditionToWhere", "ERR", e.getMessage());
 		}
 		return originalQueryWhere;
 		
@@ -324,7 +323,7 @@ public class ConfirmaDepositosCtrl {
 		List<String[]> ctaxconciliador = null;
 		List<String[]> cajasxconciliador = null;
 		Session sesion = null; 		
-		boolean newCn = false;
+	
 		String sql = "";
 		
 		try{
@@ -372,7 +371,7 @@ public class ConfirmaDepositosCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("cargarConfiguracionConciliador", "ERR", e.getMessage());
 		}
 	}
 	/**************************************************
@@ -497,7 +496,7 @@ public class ConfirmaDepositosCtrl {
 					sTblDatos.toString());
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("notificaCambioReferencia", "ERR", e.getMessage());
 		}
 		return bHecho;
 	}
@@ -514,7 +513,7 @@ public class ConfirmaDepositosCtrl {
 			
 		} catch (Exception e) {
 			lstCtas = null;
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerCuentasDeps", "ERR", e.getMessage());
 
 		}
 		return lstCtas;
@@ -547,11 +546,11 @@ public class ConfirmaDepositosCtrl {
 		"	CAST(GLDCT AS VARCHAR(3) CCSID 37) GLDCT ,"+ 
 		"	CAST(GLPOST AS VARCHAR(1) CCSID 37) GLPOST,"+
 		"	(CASE WHEN GLAA < 0 THEN 'Debito' ELSE 'Credito' END ) TIPO_CARGO,"+
-		"	(SELECT CAST(DRDL01 AS VARCHAR(30) CCSID 37) FROM GCPPRDCOM.F0005D F5 WHERE F5.DRSY = '98' AND F5.DRRT = 'IC' AND TRIM(F5.DRKY) = F.GLPOST) ESTADO,"+
+		"	(SELECT CAST(DRDL01 AS VARCHAR(30) CCSID 37) FROM " + ConfigConnection.SChemaJDECTL + ".F0005D F5 WHERE F5.DRSY = '98' AND F5.DRRT = 'IC' AND TRIM(F5.DRKY) = F.GLPOST) ESTADO,"+
 		"	CAST (DATE(CHAR(1900000 + GLDGJ) ) AS DATE ) FECHABATCH,"+ 
 		"	CAST (DATE(CHAR(1900000 + GLUPMJ) ) AS DATE ) FECHAMODBATCH, "+
-		"	(SELECT LOWER( CAST(GMDL01 AS VARCHAR(50) CCSID 37) ) FROM GCPPRDDTA.F0901 F3 WHERE F3.GMAID = F.GLAID FETCH FIRST ROWS ONLY ) NOMBRECUENTA,"+ 
-		"	(SELECT CAST(ICJOBN AS VARCHAR(15) CCSID 37) ICJOBN FROM GCPPRDDTA.F0011 F4 WHERE F4.ICICU = F.GLICU FETCH FIRST ROWS ONLY ) AS PROGRAMAORIGEN "+
+		"	(SELECT LOWER( CAST(GMDL01 AS VARCHAR(50) CCSID 37) ) FROM " + ConfigConnection.SchemaJDEDTA + ".F0901 F3 WHERE F3.GMAID = F.GLAID FETCH FIRST ROWS ONLY ) NOMBRECUENTA,"+ 
+		"	(SELECT CAST(ICJOBN AS VARCHAR(15) CCSID 37) ICJOBN FROM " + ConfigConnection.SchemaJDEDTA + ".F0011 F4 WHERE F4.ICICU = F.GLICU FETCH FIRST ROWS ONLY ) AS PROGRAMAORIGEN "+
 		 
 		"FROM @JDEDTA.F0911 F "+
 		"where f.gldgj between @FECHAINI and @FECHAFIN AND  f.glaid = '@GLAID' and GLLT = (case when GLCRCD <> 'COR' then 'CA' else 'AA' END) and gldct <> 'AE' "  ;
@@ -579,7 +578,10 @@ public class ConfirmaDepositosCtrl {
 				.replace("@GMOBJ", sCtaobj.trim() )
 				.replace("@GMSUB", sCtasub.trim() );
 			
-			String str_gmaid = (String) ConsolidadoDepositosBcoCtrl.executeSqlQuery(str_sqlQuerySelect, true, null).get(0); 
+			List<?> lstCtas = ConsolidadoDepositosBcoCtrl.executeSqlQuery(str_sqlQuerySelect, true, null);
+			String str_gmaid="";
+			if (lstCtas.size()>0) 
+				str_gmaid = (String) lstCtas.get(0); 
 			
 			int fecha_ini_jul = FechasUtil.dateToJulian(dtFechaIni);
 			int fecha_fin_jul = FechasUtil.dateToJulian(dtFechaFin);
@@ -605,12 +607,11 @@ public class ConfirmaDepositosCtrl {
 					.replace("@FECHAINI", Integer.toString( fecha_ini_jul ) )
 					.replace("@FECHAFIN", Integer.toString( fecha_fin_jul ) ) ;
 				
-//			System.out.println("consulta " + str_sqlQuerySelect );
 			
 			cuenta  = (ArrayList<Vf0911>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(str_sqlQuerySelect, true, Vf0911.class);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("buscarTransaccionesDeCuenta", "ERR", e.getMessage());
 		} 
 		return cuenta; 
 	}
@@ -633,7 +634,6 @@ public class ConfirmaDepositosCtrl {
 			
 			if(iMaxResult > 0 )
 				cr.setMaxResults(300);
-//			System.out.println("MaxResult "+iMaxResult);
 			
 			cr.createAlias("deposito", "dpCj");
 			cr.setProjection(Projections.distinct(Projections.property("dpCj.consecutivo")));
@@ -746,8 +746,7 @@ public class ConfirmaDepositosCtrl {
 			
 		} catch (Exception e) {	
 			lstVdeposito =  null;
-//			System.out.println(": Excepción capturada en :buscarDepositoCtaTrans Mensaje:\n "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("buscarDepositoCtaTrans", "ERR", e.getMessage());
 		}
 		return lstVdeposito;
 	}
@@ -761,9 +760,8 @@ public class ConfirmaDepositosCtrl {
 												BigDecimal bdMontomin, BigDecimal bdMontomax,
 												int iReferenc, Date dtFechaIni, Date dtFechaFin){
 		List<Depbancodet>lstDepositosBco = null;
-		List<Integer>lstNoDepbsBco = null; 
+		
 		Session sesion = null; 		
-		boolean newCn = false;
 		
 		try {
 			
@@ -799,7 +797,7 @@ public class ConfirmaDepositosCtrl {
 			lstDepositosBco = cr.list();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("filtrarDepositosBanco", "ERR", e.getMessage());
 			errorDetalle = e; 
 			error = new Exception("@DEPBANCODET: Error de sistema al obtener la lista de depositos de banco.");
 			
@@ -851,8 +849,7 @@ public class ConfirmaDepositosCtrl {
 			lstDepositosBco= null;
 			errorDetalle = e; 
 			error = new Exception("@DEPBANCODET: Error de sistema al obtener la lista de depositos de banco.");
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en obtenerDepositosBcoxFecha(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerDepositosBcoxFecha", "ERR", e.getMessage());
 		}
 		return lstDepositosBco;
 	}
@@ -916,7 +913,7 @@ public class ConfirmaDepositosCtrl {
  
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerVDepositosCaja", "ERR", e.getMessage());
 			errorDetalle = e; 
 			error = new Exception("@VDEPOSITO: Error de sistema al obtener la lista de depositos de caja.");
 		}
@@ -975,17 +972,10 @@ public class ConfirmaDepositosCtrl {
 					htlm.toString(), new String[] { rutaFisicaArchivo });
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("notificacionBatchConfirmados", "ERR", e.getMessage());
 		}finally{
 			
-			try {
-			/*	File f = new File( rutaFisicaArchivo  ) ;
-				if(f.exists() )
-					f.delete();*/
-				
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
+			
 				
 		}
 	}
@@ -1000,10 +990,6 @@ public class ConfirmaDepositosCtrl {
 			boolean bHecho = true;
 			try {
 				
-				
-				//HttpServletRequest sHttpRqst  = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-				//String sRutaCntx = sHttpRqst.getContextPath() + "/"+PropertiesSystem.CARPETA_DOCUMENTOS_EXPORTAR+"/" ;
-				//String sRutaFisica = sHttpRqst.getServletContext().getRealPath("/"+PropertiesSystem.CARPETA_DOCUMENTOS_EXPORTAR+"/");
 				
 				String sRutaFisica = PropertiesSystem.RUTA_DOCUMENTOS_EXPORTAR ;
 				String sufijo =  new SimpleDateFormat("ddMMyyyHHmmss").format(new Date()); 
@@ -1224,7 +1210,7 @@ public class ConfirmaDepositosCtrl {
 						"Confirmación de depósitos: Notificación de Generación de Batch's", sHtml);
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				LogCajaService.CreateLog("enviarCorreoPorConsolidadosProcesados", "ERR", e.getMessage());
 				bHecho = false;
 			}
 			return bHecho;
@@ -1428,7 +1414,7 @@ public class ConfirmaDepositosCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("bEnviaCorreoBatch", "ERR", e.getMessage());
 			bHecho = false;
 			errorDetalle = e;
 			error = new Exception("@CONCILIACION: El correo del contador contiene valores incorrectos! ");
@@ -1446,7 +1432,6 @@ public class ConfirmaDepositosCtrl {
 		List<Object[]>lstCodContador = null;
 		
 		Session sesion = null;		
-		boolean newCn = false;
 		
 		
 		try {
@@ -1493,7 +1478,7 @@ public class ConfirmaDepositosCtrl {
 		
   
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("enviarNotificacionBatch", "ERR", e.getMessage());
 			bHecho = false;
 			errorDetalle = e; 
 			error = new Exception("@CONCILIACION: Error de sistema al enviar notificaciones de correo a contador. ");
@@ -1527,8 +1512,7 @@ public class ConfirmaDepositosCtrl {
 			bHecho = false;
 			errorDetalle = e; 
 			error = new Exception("@AJUSTECONC: Error de sistema al actualizar el estado para el ajuste asociado ");
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en actualizarEstadoAjuste(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("actualizarEstadoAjuste", "ERR", e.getMessage());
 		}
 		return bHecho;
 	}
@@ -1566,8 +1550,7 @@ public class ConfirmaDepositosCtrl {
 			bHecho = false;
 			errorDetalle = e; 
 			error = new Exception("@Conciliacion: Error de sistema al actualizar el estado de la confirmacion de deposito "+conciliacion.getNoreferencia());
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en anularConciliacionDepositos(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("anularConciliacionDepositos", "ERR", e.getMessage());
 		}
 		return bHecho;
 	}
@@ -1582,14 +1565,13 @@ public class ConfirmaDepositosCtrl {
 		try {
 			
 			String sql = "select * from "+PropertiesSystem.ESQUEMA +".conciliacion where idconciliacion = "  + iIdConciliacion ; 
-			
-//			List<Conciliacion>results = (ArrayList<Conciliacion>)ConsolidadoDepositosBcoCtrl.executeQuery(sql, true, Conciliacion.class) ;
+
 			List<Conciliacion>results = (ArrayList<Conciliacion>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, true, Conciliacion.class) ;
 			concilia = results.get(0);
 			
  
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerConciliacionxId", "ERR", e.getMessage());
 			concilia = null;
 			errorDetalle = e; 
 			error = new Exception("@Error de sistema al intentar obtener datos de conciliacion  "+iIdConciliacion);
@@ -1642,8 +1624,7 @@ public class ConfirmaDepositosCtrl {
 			lstResulF0911 = null;
 			errorDetalle = e; 
 			error = new Exception("@Error de sistema al intentar obtener el detalle de asiento de dario de la confirmacion ");
-//			System.out.println(":ConfirmepositosCtrl:  Excepción capturada en obtenerLineasF0911(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerLineasF0911", "ERR", e.getMessage());
 		}
 		return lstResulF0911;
 	}  
@@ -1660,7 +1641,6 @@ public class ConfirmaDepositosCtrl {
 		List<Vwconciliacion>lstVwonciliacion = null;
 		List<Object[]>lstResultado = null;
 		Session sesion = null;		
-		boolean newCn = false;
 		
 		try {
 			
@@ -1736,18 +1716,11 @@ public class ConfirmaDepositosCtrl {
 			dta.add(new String[]{"{alias}.idcuenta","1"});
 			dta.add(new String[]{"{alias}.moneda","3"});
 			dta.add(new String[]{"{alias}.usrcrea","4"});
-		
-			
-			/*String sqlOrCtaConc = constructSqlOrCtaxCon(dta);
-			if( !sqlOrCtaConc.isEmpty() ){
-				cr.add( Restrictions.sqlRestriction(sqlOrCtaConc) );
-			}*/
 			
 			lstResultado = cr.list();
 			
 			//&& ==== Convertir el resultado de la consulta a objetos de tipo Vwconcilacion.
 			if(lstResultado != null && lstResultado.size()>0){
-//				System.out.println("registros encontrados "+lstResultado.size());
 				Integer[] iIdsConcilia = new Integer[lstResultado.size()];
 				for (int i = 0; i < lstResultado.size(); i++) 
 					iIdsConcilia[i] = Integer.parseInt(String.valueOf(lstResultado.get(i)));
@@ -1757,12 +1730,11 @@ public class ConfirmaDepositosCtrl {
 				lstVwonciliacion = cr.list();
 			}
 			
-		} catch (Exception e) {e.printStackTrace();
+		} catch (Exception e) {
 			lstVwonciliacion = null;
 			errorDetalle = e; 
 			error = new Exception("@Error de sistema al intentar obtener los registros de confirmaciones ");
-//			System.out.println(":ConfirmepositosCtrl:  Excepción capturada en obtenerConciliadet(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("buscarConfirmacionDepositos", "ERR", e.getMessage());
 		}
 		return lstVwonciliacion;
 	}
@@ -1790,8 +1762,7 @@ public class ConfirmaDepositosCtrl {
 			ajuste = null;
 			errorDetalle = e; 
 			error = new Exception("@Error de sistema al intentar obtener los registros de confirmaciones ");
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en obtenerConciliadet(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerDetalleAjusteConfirma", "ERR", e.getMessage());
 		}
 		return ajuste;
 	}
@@ -1827,11 +1798,9 @@ public class ConfirmaDepositosCtrl {
 							.in("id.consecutivo", lstIdDepsCaja)).list();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			errorDetalle = e; 
 			error = new Exception("@Error de sistema al intentar obtener los registros de confirmaciones ");
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en obtenerConciliadet(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerDepositosCajaConfirmacion", "ERR", e.getMessage());
 		}
 		return lstDepositosCaja;
 	}
@@ -1843,7 +1812,6 @@ public class ConfirmaDepositosCtrl {
 	public static List<Vwconciliacion> obtenerConfirmaciones(int iMaxresult){
 		List<Vwconciliacion> lstConfirma = new ArrayList<Vwconciliacion>();
 		Session sesion = null;		
-		boolean newCn = false;
 		
 		try {
 			
@@ -1870,7 +1838,7 @@ public class ConfirmaDepositosCtrl {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerConfirmaciones", "ERR", e.getMessage());
 		}
 		return lstConfirma;
 	}
@@ -1896,11 +1864,10 @@ public class ConfirmaDepositosCtrl {
 				+tipodoc+"', "+usrcrea+", "+usrcrea+", '"
 				+FechasUtil.formatDatetoString(new Date(), "yyyy-MM-dd HH:mm:ss.ssss")+"', '"
 				+FechasUtil.formatDatetoString(new Date(), "yyyy-MM-dd HH:mm:ss.ssss")+"', "+46+")";
-//			System.out.println("Ajusteconc: "+insert);
 			ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(sesion, insert);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("guardarDetalleAjuste", "ERR", e.getMessage());
 			errorDetalle = e; 
 			error = new Exception("@Error de sistema al tratar de registrar detalle de ajustes en confirmacion depósito "+conciliacion.getNoreferencia());
 		}
@@ -1951,8 +1918,7 @@ public class ConfirmaDepositosCtrl {
 			cd = null;
 			errorDetalle = e; 
 			error = new Exception("@Error de sistema al obtener el detalle de confirmacion para el deposito ");
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en obtenerConciliadet(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerConciliadet", "ERR", e.getMessage());
 		}
 		return cd;
 	}
@@ -1968,8 +1934,6 @@ public class ConfirmaDepositosCtrl {
 											int iCompararComo, String sNoreferencia){
 		List<Deposito>lstDepositosCaja = new ArrayList<Deposito>();
 		Session sesion = null; 
-		
-		boolean newCn = false;
 		
 		try {
 			
@@ -2039,7 +2003,7 @@ public class ConfirmaDepositosCtrl {
 
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			LogCajaService.CreateLog("filtrarDepositosCaja", "ERR", e.getMessage());
 			errorDetalle = e; 
 			error = new Exception("@Error de sistema al filtrar los depositos de caja para confirmacion manual ");
 			 
@@ -2081,7 +2045,7 @@ public class ConfirmaDepositosCtrl {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerCtaTransitoriaxBanco", "ERR", e.getMessage());
 			error = new Exception("@Error de sistemas al obtener la moneda base por banco y # de cuenta.");
 			errorDetalle = e; 
 			
@@ -2097,8 +2061,6 @@ public class ConfirmaDepositosCtrl {
 		Archivo archivo = null;
 		Session sesion = null; 
 		
-		boolean newCn = false;
-		
 		try {
 
 			sesion = HibernateUtilPruebaCn.currentSession();
@@ -2109,7 +2071,7 @@ public class ConfirmaDepositosCtrl {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerArchivoxId", "ERR", e.getMessage());
 			error = new Exception("@Error de sistemas al obtener archivo por su identificador.");
 			errorDetalle = e; 
 			
@@ -2154,8 +2116,7 @@ public class ConfirmaDepositosCtrl {
 			lstDeps = null;
 			error = new Exception("@Error de sistemas al obtener el detalle de los depositos de archivos en banco.");
 			errorDetalle = e; 
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en obtenerDepositosxArchivos(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerDepositosxArchivos", "ERR", e.getMessage());
 		}
 		return lstDeps;
 	}
@@ -2182,7 +2143,6 @@ public class ConfirmaDepositosCtrl {
 		
 			bHecho = ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(sesionCajaW, insert1);
 					
-//			System.out.println("sql: "+insert1+ " >>" + ps.executeUpdate() ); 	
 			
 			//&& ==== Obtener el objeto de Base de datos creado para la conciliacion.
 			Criteria cr = sesionCajaW.createCriteria(Conciliacion.class);
@@ -2199,7 +2159,6 @@ public class ConfirmaDepositosCtrl {
 			}
 			m.put("cdb_RegistroConciliacion", conciliacion);
 			
-//			System.out.println("----------------- Depositos -----------------");
 			for (Deposito dp : lstDepsCaja) {
 				
 				insert1 = "insert into " + PropertiesSystem.ESQUEMA+".CONCILIADET "+
@@ -2221,8 +2180,7 @@ public class ConfirmaDepositosCtrl {
 			bHecho = false;
 			error = new Exception("@Error de sistema al crear Registro de Conciliación, Detalle conciliación, para confirmación de depósitos");
 			errorDetalle = e; 
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en registrarConciliacion(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("registrarConciliacion", "ERR", e.getMessage());
 		}
 		return bHecho;
 	}
@@ -2276,7 +2234,7 @@ public class ConfirmaDepositosCtrl {
 			error = new Exception("@ARCHIVO: Error al actualizar el archivo de  depositos en banco  "
 								+ar.getNombre()+", "+ar.getIdbanco()+" Monto: "+ar.getMoneda());
 			errorDetalle = e; 
-			e.printStackTrace();
+			LogCajaService.CreateLog("actualizarEstadoArchivo", "ERR", e.getMessage());
 		}
 		return bHecho;
 	}
@@ -2318,13 +2276,9 @@ public class ConfirmaDepositosCtrl {
 			PreparedStatement ps = cn.prepareStatement(update);
 			ps.executeUpdate();
 			
-			
-			// sesionCajaW.createCriteria(Depbancodet.class).setMaxResults(1).list();
-			//cr = null;
-			
 		} catch (Exception e) {
 			bHecho = false;
-			e.printStackTrace();
+			LogCajaService.CreateLog("confirmarDepositoBanco", "ERR", e.getMessage());
 			error = new Exception("@DEPBANCODET: Error al actualizar el deposito de  banco en marcar Confirmado "
 								+dpBco.getIddepbcodet()+", "+dpBco.getReferencia()+", Monto: "+dpBco.getMtocredito());
 			errorDetalle = e; 
@@ -2357,11 +2311,8 @@ public class ConfirmaDepositosCtrl {
 				//Se envia la session como parte del parametros en este caso es null
 				bHecho = ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null,  update) ;
 				
-//				PreparedStatement ps = cn.prepareStatement(update);
-//				ps.executeUpdate();
-				
 			} catch (Exception e) {
-				e.printStackTrace();
+				LogCajaService.CreateLog("actualizarEstadoDeposito", "ERR", e.getMessage());
 				bHecho = false;
 				error = new Exception("@DEPOSITO: Error al actualizar el deposito de caja en marcar Confirmado " +depCaja.getNodeposito()+", "+depCaja.getReferencia()+", Monto: "+depCaja.getMonto());
 				errorDetalle = e; 
@@ -2395,11 +2346,8 @@ public class ConfirmaDepositosCtrl {
 			//Se envia la session como parte del parametros en este caso es null
 			bHecho = ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null,  update) ;
 			
-//			PreparedStatement ps = cn.prepareStatement(update);
-//			ps.executeUpdate();
-			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("actualizarEstadoDeposito", "ERR", e.getMessage());
 			bHecho = false;
 			error = new Exception("@DEPOSITO: Error al actualizar el deposito de caja en marcar Confirmado " +depCaja.getNodeposito()+", "+depCaja.getReferencia()+", Monto: "+depCaja.getMonto());
 			errorDetalle = e; 
@@ -2411,6 +2359,7 @@ public class ConfirmaDepositosCtrl {
  *	Fecha:  25/08/2011
  *  Nombre: Carlos Manuel Hernández Morrison.
  */
+	@SuppressWarnings("static-access")
 	public List<CoincidenciaDeposito> compararDepositosBancoCaja(int iCaid, Archivo arConfirmar,List<Integer>lstReferenciasExcluidas){
 		List<CoincidenciaDeposito>lstAsociacion = new ArrayList<CoincidenciaDeposito>();
 		Criteria crDetBco = null;
@@ -2449,7 +2398,6 @@ public class ConfirmaDepositosCtrl {
 			List<Depbancodet>lstDepositosBco = (ArrayList<Depbancodet>)crDetBco.list();
 			
 			if(lstDepositosBco== null || lstDepositosBco.size()== 0){
-//				System.out.println(" no se encontro resultado ");
 				error = new Exception("@No se pudo obtener el detalle del archivo: "+arConfirmar.getIdarchivo()+", los depositos notificados por banco ");
 				return new ArrayList<CoincidenciaDeposito>();
 			}
@@ -2486,9 +2434,7 @@ public class ConfirmaDepositosCtrl {
 			String sFactor = "";
 			int i=0;
 			lstReferYaUsadas.addAll(lstReferenciasExcluidas);
-			for (Depbancodet db : lstDepositosBco) {
-//				System.out.println("===== siguiente "+ (i++) +"=======");
-			
+			for (Depbancodet db : lstDepositosBco) {			
 				if(i%60==0){
 					sesion.flush();
 					sesion.clear();
@@ -2498,7 +2444,6 @@ public class ConfirmaDepositosCtrl {
 				sReferencia	= (sReferencia.length()>8)?
 									sReferencia.substring(sReferencia.length()-8,sReferencia.length()):
 									sReferencia;
-//				System.out.println(db.getReferencia()+" vs "+sReferencia);	
 				
 				crCja = null;
 				crCja = sesion.createCriteria(Deposito.class)
@@ -2523,8 +2468,6 @@ public class ConfirmaDepositosCtrl {
 				List<Deposito> lstDcCoinciden = crCja.list();
 				if(lstDcCoinciden != null && lstDcCoinciden.size()==1){
 					
-//					System.out.println("Coincidencias: "+lstReferYaUsadas.size()+" Encontro la coincidencia en Banco: "+db.getIddepbcodet() 
-//								+" con Caja "+lstDcCoinciden.get(0).getCaid() + " "+lstDcCoinciden.get(0).getConsecutivo());
 					
 					CoincidenciaDeposito cdep = new CoincidenciaDeposito(); 
 					cdep.setArchivo(arConfirmar);
@@ -2555,12 +2498,11 @@ public class ConfirmaDepositosCtrl {
  
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+
 			
 			error = new Exception("@Error al realizar la comparación de depósitos caja vs banco.");
 			errorDetalle = e;
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en compararDepositosBancoCaja(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("compararDepositosBancoCaja", "ERR", e.getMessage());
 		}finally{
 			
 			try {
@@ -2576,7 +2518,7 @@ public class ConfirmaDepositosCtrl {
 				crDetBco = null;
 				
 			} catch (Exception e2) {
-				e2.printStackTrace();
+				LogCajaService.CreateLog("compararDepositosBancoCaja", "ERR", e2.getMessage());
 			}
 		}
 		return lstAsociacion;
@@ -2594,7 +2536,6 @@ public class ConfirmaDepositosCtrl {
 		List<Deposito> lstDepositosCaja = null;
 		Session sesion = null; 
 		
-		boolean newCn = false;
 		
 		try {
 
@@ -2651,7 +2592,7 @@ public class ConfirmaDepositosCtrl {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("filtrarDepositosCaja", "ERR", e.getMessage());
 			lstDepositosCaja = null;
 			error = e;
 		}
@@ -2685,8 +2626,7 @@ public class ConfirmaDepositosCtrl {
 		} catch (Exception e) {
 			vdDetalleDepCaja = null;
 			error = e;
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en obtenerDetalleDeposito(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerDetalleDepositoCaja", "ERR", e.getMessage());
 		}
 		return vdDetalleDepCaja;
 	}
@@ -2742,7 +2682,7 @@ public class ConfirmaDepositosCtrl {
 		} catch (Exception e) {
 			lstarchivos = null;
 			error = e;
-			e.printStackTrace();
+			LogCajaService.CreateLog("filtrarArchivosBanco", "ERR", e.getMessage());
 		}
 		return lstarchivos;
 	}
@@ -2774,7 +2714,7 @@ public class ConfirmaDepositosCtrl {
 			lstCuentasxBanco = cr.list();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerF55ca023xBanco", "ERR", e.getMessage());
 		}
 		return lstCuentasxBanco;
 	}
@@ -2798,8 +2738,7 @@ public class ConfirmaDepositosCtrl {
 		} catch (Exception e) {
 			lstDepsxArchivo = null;
 			error = e;
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en obtenerDepositosxArchivo(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerDepositosxArchivo", "ERR", e.getMessage());
 		}
 		return lstDepsxArchivo;
 	} 
@@ -2840,8 +2779,7 @@ public class ConfirmaDepositosCtrl {
 		} catch (Exception e) {
 			lstDepositosCaja = null;
 			error = e;
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en obtenerDepositosCaja(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerDepositosCaja", "ERR", e.getMessage());
 		}
 		return lstDepositosCaja;
 	}
@@ -2854,8 +2792,6 @@ public class ConfirmaDepositosCtrl {
 		List<Archivo>lstArchivos = null;
 		Session sesion = null;
 		
-		boolean newCn = false;
-
 		try {
 			sesion = HibernateUtilPruebaCn.currentSession();
 					
@@ -2876,7 +2812,7 @@ public class ConfirmaDepositosCtrl {
 			lstArchivos = (ArrayList<Archivo>)cr.list();
  
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerArchivosBanco", "ERR", e.getMessage());
 		}
 		return lstArchivos;
 	}
@@ -2930,7 +2866,7 @@ public class ConfirmaDepositosCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("cargarConfiguracionConciliadorh", "ERR", e.getMessage());
 		}
 	}
 	public boolean bEnviaCorreoBatchExcepcion(List<Object[]>lstObj,int strCode){
@@ -3068,7 +3004,7 @@ public class ConfirmaDepositosCtrl {
 			String sHtml = sbTablaCorreo.toString();
 			
 			// MultiPartEmail email = new MultiPartEmail();
-			String sFrom="", sNombreFrom="", sNombreTo = "", sTo="";
+			String sNombreTo = "", sTo="";
 			
 			new EmpleadoCtrl();
 			Vf0101 vf01 = EmpleadoCtrl.buscarEmpleadoxCodigo2(strCode);
@@ -3096,8 +3032,7 @@ public class ConfirmaDepositosCtrl {
 			bHecho = false;
 			errorDetalle = e;
 			error = new Exception("@CONCILIACION: El correo del contador contiene valores incorrectos! ");
-//			System.out.println(":ConfirmaDepositosCtrl:  Excepción capturada en bEnviaCorreoBatch(): "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("bEnviaCorreoBatchExcepcion", "ERR", e.getMessage());
 		}
 		return bHecho;    
 	}	
