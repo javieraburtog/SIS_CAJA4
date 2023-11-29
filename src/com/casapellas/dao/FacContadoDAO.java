@@ -4137,7 +4137,7 @@ public class FacContadoDAO {
 																sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
 												if (bContabilizado) {
 													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],hFac.getMoneda(),d.pasarAenteroLong(dMonto1),
+																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],hFac.getMoneda(),d.pasarAenteroLong(dMonto1),
 																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
 																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
 													if (bContabilizado) {
@@ -4274,7 +4274,7 @@ public class FacContadoDAO {
 //												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) partir el monto en pago neto y dif cambiario" );
 												
 												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],hFac.getMoneda(),d.pasarAenteroLong(dMonto2),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																sCuentaCaja[4],sCuentaCaja[2],valoresJdeIns[2],hFac.getMoneda(),d.pasarAenteroLong(dMonto2),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
 																hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
 																sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
 												if (bContabilizado) {
@@ -4388,7 +4388,7 @@ public class FacContadoDAO {
 //												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) asiento de diario para cuenta de venta de contado Factura Dolares pago dolares" );
 												
 												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
+																	sCuentaCaja[4],sCuentaCaja[2],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
 																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
 																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
 												if (bContabilizado) {
@@ -4533,7 +4533,7 @@ public class FacContadoDAO {
 //												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) asiento de diario para cuenta de venta de contado el pago es menor al monto de la factura" );
 												
 												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
+																	sCuentaCaja[4],sCuentaCaja[2],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
 																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
 																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
 												if (bContabilizado) {
