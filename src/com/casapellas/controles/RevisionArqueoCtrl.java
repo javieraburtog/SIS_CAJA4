@@ -482,7 +482,7 @@ public class RevisionArqueoCtrl {
 			 
 			//&& =========================== Verificar que exista la cuenta de Funcionarios y Empleados.
 			String sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE_DEF").getValorAlfanumerico().toString();
-			String sCtaOb = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE_DEF").getValorAlfanumerico().toString(); 
+			String sCtaOb = cajaparm.getParametros("34", "0", "CTA_DEUDO_VAR_OB").getValorAlfanumerico().toString(); 
 
 			if(sCodcomp.trim().toUpperCase().compareTo("10") == 0 )
 				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();
