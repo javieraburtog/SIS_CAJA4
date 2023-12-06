@@ -460,6 +460,7 @@ public class RevisionArqueoCtrl {
 		int  iTotalTransaccion=0, iMontoDom=0;
 		String sMsjErrorjde="",sCodEmpleado ;
 		String sCuenta5[] = null, sCuentaFE = "", sCompCtaFE="", sConcepto="",sFecha="",sTasa="1.0";
+		ClsParametroCaja cajaparm = new ClsParametroCaja();
 		
 		Vf0901 vCtaFE = null;
 		Divisas dv = new Divisas();
@@ -480,20 +481,20 @@ public class RevisionArqueoCtrl {
 			String monedaBaseCompania = f14.getId().getC4bcrcd() ;
 			 
 			//&& =========================== Verificar que exista la cuenta de Funcionarios y Empleados.
-			String sUN = "24";
-			String sCtaOb = PropertiesSystem.CTA_DEUDORES_VARIOS_OB ;
+			String sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE_DEF").getValorAlfanumerico().toString();
+			String sCtaOb = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE_DEF").getValorAlfanumerico().toString(); 
 
-			if(sCodcomp.trim().toUpperCase().compareTo("E01") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE01 ;
-			if( sCodcomp.trim().toUpperCase().compareTo("E02") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE02 ;
-			if(sCodcomp.trim().toUpperCase().compareTo("E03") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE03 ;
-			if( sCodcomp.trim().toUpperCase().compareTo("E08") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE08 ;
-			if( sCodcomp.trim().toUpperCase().compareTo("E10") == 0 )
-				sUN = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE11 ;
-			
+			if(sCodcomp.trim().toUpperCase().compareTo("10") == 0 )
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();
+			if( sCodcomp.trim().toUpperCase().compareTo("11") == 0 )
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE02").getValorAlfanumerico().toString();
+			if(sCodcomp.trim().toUpperCase().compareTo("20") == 0 )
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE03").getValorAlfanumerico().toString();
+			if( sCodcomp.trim().toUpperCase().compareTo("90") == 0 )
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE08").getValorAlfanumerico().toString();
+			if( sCodcomp.trim().toUpperCase().compareTo("12") == 0 )
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();
+	
 			vCtaFE  = dv.validarCuentaF0901(sUN,sCtaOb,"");
 			
 			if(vCtaFE!=null){
