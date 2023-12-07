@@ -144,9 +144,10 @@ import com.infragistics.faces.window.component.html.HtmlDialogWindowHeader;
 public class RevisionArqueoDAO {
 	
 	ClsParametroCaja cajaparm = new ClsParametroCaja();
-	
+	private String sMcuRetencion = "";
 	private String sObjRetencion = "";
 	private String sSubRetencion = "";
+	private String sMcuIVAcomision = "";
 	private String sObjIVAcomision = "";
 	private String sSubIVAcomision = "";
 	/** Pantalla Principal **/
@@ -1218,7 +1219,7 @@ public class RevisionArqueoDAO {
 						sSubIVAcomision = "101301";
 					}
 					
-					vf0901 = dv.validarCuentaF0901(sCuentaC[3], sObjIVAcomision, sSubIVAcomision);
+					vf0901 = dv.validarCuentaF0901(sMcuIVAcomision, sObjIVAcomision, sSubIVAcomision);
 					if(vf0901==null){
 						bHecho = false;
 						sMensaje = "No se ha podido leer la cuenta de Comision "+sObjIVAcomision+"."+sSubIVAcomision+" para la unidad de negocios: "+ sCuentaC[3] + " Revisar la configuracion de cuentas de JDE";
@@ -2702,10 +2703,13 @@ public class RevisionArqueoDAO {
 		String strDscripL2  = "";
 		
 		try {
-			sObjRetencion = cajaparm.getParametros("34", "0", "CIERRE_RETE_OBJ").getCodigoCuentaObjeto().toString();
-			sSubRetencion = cajaparm.getParametros("34", "0", "CIERRE_RETE_SUB").getCodigoSubCuenta().toString();
-			sObjIVAcomision = cajaparm.getParametros("34", "0", "CIERRE_RETE_OBJ").getCodigoCuentaObjeto().toString();
-			sSubIVAcomision = cajaparm.getParametros("34", "0", "CIERRE_RETE_SUBIVA").getCodigoSubCuenta().toString();
+			sMcuRetencion = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_RETENCION_"+sCodcomp.toString().trim()).getCodigoUnidadNegocio().toString();
+			sObjRetencion = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_RETENCION_"+sCodcomp.toString().trim()).getCodigoCuentaObjeto().toString();
+			sSubRetencion = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_RETENCION_"+sCodcomp.toString().trim()).getCodigoSubCuenta().toString();
+			 
+			sMcuIVAcomision = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_IVACOMI_"+sCodcomp.toString().trim()).getCodigoUnidadNegocio().toString();
+			sObjIVAcomision = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_IVACOMI_"+sCodcomp.toString().trim()).getCodigoCuentaObjeto().toString();
+			sSubIVAcomision = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_IVACOMI_"+sCodcomp.toString().trim()).getCodigoSubCuenta().toString();
 			
 			//--- Datos de la caja.
 			f55ca01 = (Vf55ca01)((List)CodeUtil.getFromSessionMap( "lstCajas")).get(0);
@@ -2744,20 +2748,12 @@ public class RevisionArqueoDAO {
 					
 					sConcepto = "RtncionTC ARQ: "+iNoarqueo+", C:" + iCajaUso ;
 					
-					/*
-					 * La empresa E12 funciona con cuentas diferentes hay que cambiarlas antes de hacer la validacion
-					 * */
-					if (sCodcomp.trim().toUpperCase().equals("31")) {
-						sObjRetencion = cajaparm.getParametros("34", "0", "CIERRE_RETE_OBJ2").getCodigoCuentaObjeto().toString() ;
-						sSubRetencion = "";
-					}
-					
-					vf0901 = dv.validarCuentaF0901(sCuentaC[3], sObjRetencion, sSubRetencion);
+					vf0901 = dv.validarCuentaF0901(sMcuRetencion, sObjRetencion, sSubRetencion);
 					if(vf0901==null){
 						bHecho = false;
 						sMensaje = "No se ha podido leer la cuenta de Retencion "
 									+ sObjRetencion+"."+sSubRetencion +" para la unidad de negocios: "
-									+ sCuentaC[3] + " Revisar la configuracion de cuentas de JDE";
+									+ sMcuRetencion + " Revisar la configuracion de cuentas de JDE";
 						CodeUtil.putInSessionMap("sMensajeError", sMensaje);
 						return false;
 					}else{	
@@ -3141,7 +3137,7 @@ public class RevisionArqueoDAO {
 					}
 				}
 				
-				sSucursalDeposito = sCuentaB[2];
+				sSucursalDeposito = sCodsuc;
 				
 				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 				
@@ -3153,7 +3149,7 @@ public class RevisionArqueoDAO {
 												sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],sCuentaB[5],
 												"AA", sMoneda, iMontoH,  sConcepto, vaut.getId().getLogin(),
 												vaut.getId().getCodapp(), BigDecimal.ZERO, tipoCliente,
-												sDescripcion,sCuentaB[2], sCodigoAuxiliar, sTipoAuxiliar, monedaBaseCompania,
+												sDescripcion,sCodsuc, sCodigoAuxiliar, sTipoAuxiliar, monedaBaseCompania,
 												sCuentaB[2], "D", 0);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
@@ -3166,7 +3162,7 @@ public class RevisionArqueoDAO {
 											 sCuentaC[0],sCuentaC[1],sCuentaC[3],sCuentaC[4],sCuentaC[5],
 											 "AA", sMoneda, iMontoH*(-1),sConcepto, vaut.getId().getLogin(),
 											 vaut.getId().getCodapp(),BigDecimal.ZERO, tipoCliente,
-											 "LIQ:" + ra.getReferencia()+" T:"+ ra.getMontototal(), sCuentaC[2],"","", monedaBaseCompania,
+											 "LIQ:" + ra.getReferencia()+" T:"+ ra.getMontototal(), sCodsuc,"","", monedaBaseCompania,
 											 sCuentaC[2],"D", 0);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
@@ -3184,7 +3180,7 @@ public class RevisionArqueoDAO {
 											sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],sCuentaB[5],
 											"AA", sMoneda, iMontoCorH, sConcepto, vaut.getId().getLogin(),
 											vaut.getId().getCodapp(), tasaCambioOficial, tipoCliente,
-											sDescripcion,sCuentaB[2], sCodigoAuxiliar,sTipoAuxiliar,
+											sDescripcion,sCodsuc, sCodigoAuxiliar,sTipoAuxiliar,
 											monedaBaseCompania, sCuentaB[2], "F", iMontoH);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
@@ -3197,7 +3193,7 @@ public class RevisionArqueoDAO {
 													sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],sCuentaB[5],
 													"CA", sMoneda, iMontoH,  sConcepto, vaut.getId().getLogin(),
 													vaut.getId().getCodapp(), tasaCambioOficial, tipoCliente,
-													sDescripcion,sCuentaB[2], sCodigoAuxiliar,sTipoAuxiliar,
+													sDescripcion,sCodsuc, sCodigoAuxiliar,sTipoAuxiliar,
 													monedaBaseCompania,sCuentaB[2],"F", 0);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
@@ -3211,7 +3207,7 @@ public class RevisionArqueoDAO {
 													 "AA", sMoneda, iMontoCorH*(-1),sConcepto, vaut.getId().getLogin(),
 													 vaut.getId().getCodapp(), tasaCambioOficial, tipoCliente,
 													 "LIQ:" + ra.getReferencia()+" T:"+ ra.getMontototal(), sCuentaC[2],"","",
-													 monedaBaseCompania,sCuentaC[2],"F", (iMontoH*(-1)) );
+													 monedaBaseCompania,sCodsuc,"F", (iMontoH*(-1)) );
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
 									+ra.getCodigo() + " "+recCtrl.getError()
@@ -3224,7 +3220,7 @@ public class RevisionArqueoDAO {
 													"CA", sMoneda, iMontoH*(-1),sConcepto, vaut.getId().getLogin(),
 													vaut.getId().getCodapp(), tasaCambioOficial, tipoCliente,
 													"LIQ:" + ra.getReferencia()+" T:"+ ra.getMontototal(), sCuentaC[2],"","",
-													monedaBaseCompania ,sCuentaC[2],"F", 0);
+													monedaBaseCompania ,sCodsuc,"F", 0);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
 									+ra.getCodigo() + " "+recCtrl.getError()

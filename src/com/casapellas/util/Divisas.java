@@ -910,10 +910,9 @@ public class Divisas {
 		String sql;
 		
 		try {
-			sql  = " from Vf0901 v where ";
-			sql += "   trim(v.id.gmobj) = '"+sCobj+"' and trim(v.id.gmsub) = '"+sCsub+"'";
+			sql  = " from Vf0901 v where trim(v.id.gmmcu) = '"+sUN.trim()+"' ";
+			sql += " and  trim(v.id.gmobj) = '"+sCobj+"' and trim(v.id.gmsub) = '"+sCsub+"'";
 			sql += " and trim(v.id.gmpec) not in ('N') ";
-			
 		
 			
 			LogCajaService.CreateLog("validarCuentaF0901", "QRY", sql);
@@ -935,7 +934,7 @@ public class Divisas {
 		} catch (Exception error) {
 			LogCajaService.CreateLog("validarCuentaF0901", "ERR", error.getMessage());
 			v = null;
-			System.out.println("Error en Divisas.validarCuentaF0901 " + error);
+			
 		} 
 		return v;
 	}
@@ -1645,11 +1644,10 @@ public class Divisas {
 				
 		try {
 			
-			
-			
 			sConsulta =  " from F55ca011 as f where f.id.c1id = "+iCaid;
 			sConsulta += " and trim(f.id.c1rp01) = '"+sCodcomp.trim()+"' and f.id.c1crcd = '"+sMoneda+"'";
 			sConsulta += " and f.id.c1ryin  ='"+sMpago+"' and f.id.c1stat = 'A' ";			
+	
 			
 //			System.out.println(sConsulta);
 			LogCajaService.CreateLog("obtenerCuentaCaja", "QRY", sConsulta);

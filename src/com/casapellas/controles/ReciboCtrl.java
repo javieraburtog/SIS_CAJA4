@@ -5171,7 +5171,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 				}
 
 				sCodSuc = CodeUtil.pad( sCodSuc.trim(), 5, "0"); 
-				sCodSucCuenta = CodeUtil.pad( sCodSucCuenta.trim(), 5, "0"); 
+				sCodSucCuenta = CodeUtil.pad( sCodSuc.trim(), 5, "0"); 
 				sGlhco = CodeUtil.pad( sGlhco.trim(), 5, "0");
 				
 				
