@@ -29,6 +29,7 @@ import com.casapellas.entidades.Vf0901;
 import com.casapellas.entidades.ens.Vautoriz;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.PropertiesSystem;
 
 /**
@@ -318,37 +319,37 @@ public class ProcesoConfirmacion {
 		Divisas dv = new Divisas();
 		int iNoBatch=0;
 		int iNoDocum=0;
-		String sTipoDoc = PropertiesSystem.TIPODOC_REFER_ZX;
+		String sTipoDoc = DocumuentosTransaccionales.TIPODOCREFERZX();
 		String sConcepto = "";
 		String sCodSucAsiento = "";
 		double dLineaDocs = 1.0;
 		int iMontoTotal=0;
 		int iMontoDeps=0;
-		String sMonedaBase= PropertiesSystem.MONEDA_BASE ;
+		String sMonedaBase= DocumuentosTransaccionales.MONEDABASE() ;
 		String sLogin="";
 		String sEstadoDeposito="";
 		String sTipoConfirma = "";
 		ConfirmaDepositosCtrl cdc = new ConfirmaDepositosCtrl();
 		BigDecimal bdTasaJDE = null;
-		String sUninegCaja = PropertiesSystem.UNIDAD_NEGOCIO_BASE  ;
+		String sUninegCaja = DocumuentosTransaccionales.UNIDADNEGOCIOBASE()  ;
 		boolean bHayCambioRefer = false;
 		
 		try {
 			//&& ====== Establecer el tipo de confirmacion y estado del deposito de caja y deposito de banco
 			switch (iTipoConfirma) {
 			case 32:
-				sTipoConfirma = PropertiesSystem.CFR_AUTO  ;
+				sTipoConfirma = DocumuentosTransaccionales.CFRAUTO()  ;
 				break;
 			case 34:
-				sTipoConfirma = PropertiesSystem.CFR_MANUAL  ;
+				sTipoConfirma = DocumuentosTransaccionales.CFRMANUAL()  ;
 				break;
 			}
 			switch (iEstadoDeposito) {
 			case 35:
-				sEstadoDeposito = PropertiesSystem.DP_CONFIRMADO  ;
+				sEstadoDeposito = DocumuentosTransaccionales.DPCONFIRMADO()  ;
 				break;
 			case 36:
-				sEstadoDeposito = PropertiesSystem.DP_NOCONFIRMADO;
+				sEstadoDeposito = DocumuentosTransaccionales.DPNOCONFIRMADO();
 				break;
 			}
 			
@@ -367,7 +368,7 @@ public class ProcesoConfirmacion {
 			}
 			sUninegCaja =  f14DtCaja.getId().getC4cjmcu().trim();
 			if( sUninegCaja.matches("^[0]{1,4}$"))
-				sUninegCaja = PropertiesSystem.UNIDAD_NEGOCIO_BASE  ;
+				sUninegCaja = DocumuentosTransaccionales.UNIDADNEGOCIOBASE()  ;
 			
 			iNoBatch = dv.leerActualizarNoBatch();
 			if(iNoBatch==0){
@@ -411,7 +412,7 @@ public class ProcesoConfirmacion {
 				bExiste = CtrlCajas.validarReferenciaJDE(iNoDocum, sTipoDoc, sCodSucAsiento, sesionCajaR);
 				if(bExiste){
 					bHayCambioRefer = true;
-					sTipoDoc = PropertiesSystem.TIPODOC_REFER_ZZ;
+					sTipoDoc = DocumuentosTransaccionales.TIPODOCREFERZZ();
 					iNoDocum = dv.leerActualizarNoDocJDE();
 				}
 			}
@@ -457,7 +458,7 @@ public class ProcesoConfirmacion {
 			}
 			
 			//&& ===== crear el numero que se va aplicar como sublibro a la cuenta subsidiara.
-			String tipoAuxiliarCtaTrans = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT;
+			String tipoAuxiliarCtaTrans = DocumuentosTransaccionales.CODIGOTIPOAUXILIARCT();
 			String strSubLibroCuenta =  ConfirmaDepositosCtrl.constructSubLibroCtaTbanco
 					(depBanco.getNocuenta(),0, lstDepsCaja.get(0).getCaid(), "", "");
 			
@@ -524,23 +525,17 @@ public class ProcesoConfirmacion {
 				String sObj = "", sSub = "";
 			
 				if (dAjuste > 0) {
-					
-					sObj = PropertiesSystem.CTA_OTROS_INGRESOS_OB ;
-					sSub = PropertiesSystem.CTA_OTROS_INGRESOS_SB ;
+					String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",");
+					sObj = cuentaOtrosingresos[1] ;
+					sSub = cuentaOtrosingresos[2] ;
 				
 				} else{
 					
-					if( lstDepsCaja.get(0).getCodcomp().trim().toUpperCase().compareTo("E01") == 0 )
-						sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE01 ;
-					if( lstDepsCaja.get(0).getCodcomp().trim().toUpperCase().compareTo("E02") == 0 )
-						sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE02 ;
-					if( lstDepsCaja.get(0).getCodcomp().trim().toUpperCase().compareTo("E03") == 0 )
-						sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE03 ;
-					if( lstDepsCaja.get(0).getCodcomp().trim().toUpperCase().compareTo("E08") == 0 )
-						sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE08 ;
 					
-					sObj= PropertiesSystem.CTA_DEUDORES_VARIOS_OB ;
-					sSub = "";
+						sUninegCaja = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(lstDepsCaja.get(0).getCodcomp().trim());
+					
+					sObj= DocumuentosTransaccionales.CTADEUDORESVARIOSOB()  ;
+					sSub = DocumuentosTransaccionales.CTADEUDORESVARIOSSB() ;
 					sTipoAuxiliar = "A";
 					sCodEmpleado = CodeUtil.pad(String.valueOf( lstDepsCaja.get(0).getCodcajero() ),  8,"0") ; // Divisas.rellenarCadena((lstDepsCaja.get(0).getCodcajero() + "").trim(), "0", 8);
 					if (sCodEmpleado.compareToIgnoreCase("") == 0)

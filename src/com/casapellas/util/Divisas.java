@@ -2393,12 +2393,12 @@ public class Divisas {
 			deposito.setMpagodep(sTipoPago);
 			deposito.setReferdep(sRefer); // Referencia asignada en JdEdward's GLDOC
 			deposito.setCodcajero(iCodcajero);
-			deposito.setTipoconfr(PropertiesSystem.CFR_AUTO);
+			deposito.setTipoconfr(DocumuentosTransaccionales.CFRAUTO());
 			
 			if(sTipodep.compareTo("D") == 0 ){
-				deposito.setEstadocnfr(PropertiesSystem.DP_NOCONFIRMADO );
+				deposito.setEstadocnfr(DocumuentosTransaccionales.DPNOCONFIRMADO() );
 			}else{
-				deposito.setEstadocnfr(PropertiesSystem.DP_CONFIRMADO);
+				deposito.setEstadocnfr(DocumuentosTransaccionales.DPCONFIRMADO());
 			}
 			
 			deposito.setUsrconfr(iCoduser);

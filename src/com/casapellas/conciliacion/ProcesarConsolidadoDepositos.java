@@ -27,6 +27,7 @@ import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.jde.creditos.CodigosJDE1;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.PropertiesSystem;
 import com.ibm.icu.util.Calendar;
@@ -103,19 +104,19 @@ public class ProcesarConsolidadoDepositos {
 		String[] sCtaCredAjuste = null;
 
 		int iNoDocumento=0;
-		String sTipoDoc = PropertiesSystem.TIPODOC_REFER_ZX;
+		String sTipoDoc = DocumuentosTransaccionales.TIPODOCREFERZX();
 		String sConcepto = "";
 		String sCodSucAsiento = "";
 		double dLineaDocs = 1.0;
 		long iMontoTotal=0;
 		long iMontoDeps=0;
-		String sMonedaBase = PropertiesSystem.MONEDA_BASE ;
+		String sMonedaBase = DocumuentosTransaccionales.MONEDABASE();
 		String contadorUsuario ="";
 		String sEstadoDeposito="";
 		String usuarioPreconcilacion ="";
 		String sTipoConfirma = "";
 		BigDecimal bdTasaJDE;
-		String sUninegCaja = PropertiesSystem.UNIDAD_NEGOCIO_BASE  ;
+		String sUninegCaja = DocumuentosTransaccionales.UNIDADNEGOCIOBASE()  ;
 		int codigousr = 0;
 		int contadorCodigo = 0;
 		
@@ -138,14 +139,14 @@ public class ProcesarConsolidadoDepositos {
 			//&& ====== Establecer el tipo de confirmacion y estado del deposito de caja y deposito de banco
 			switch (iTipoConfirma) {
 			case 32:
-				sTipoConfirma = PropertiesSystem.CFR_AUTO  ;
+				sTipoConfirma = DocumuentosTransaccionales.CFRAUTO() ;
 				break;
 			case 34:
-				sTipoConfirma = PropertiesSystem.CFR_MANUAL  ;
+				sTipoConfirma = DocumuentosTransaccionales.CFRMANUAL()  ;
 				break;
 			}
 
-			sEstadoDeposito = PropertiesSystem.DP_CONFIRMADO  ;
+			sEstadoDeposito = DocumuentosTransaccionales.DPCONFIRMADO()  ;
 			
 			
 			//&& ===================== Determinar las fechas de confirmacion en base a los dias permitidos
@@ -154,38 +155,6 @@ public class ProcesarConsolidadoDepositos {
 			dtFechaConfirma = validarFechaBatch(dtFechaConfirma, diasPermitidos) ;
 			
 			
-			/*
-			Calendar calDeposito = Calendar.getInstance();
-			Calendar calFechaActual = Calendar.getInstance();
-			
-			calDeposito.setTime(dtFechaConfirma);
-			
-			if ( calFechaActual.get(Calendar.MONTH) > calDeposito.get(Calendar.MONTH) ) {
-			
-				int diasTranscurridos = FechasUtil.obtenerDiferenciaDias(dtFechaConfirma, calFechaActual.getTime() ) ;
-				
-				int diasPermitidos = Integer.parseInt( String.valueOf(CodeUtil.getFromSessionMap("pcd_diasPermitidosMes"))) ;
-				
-				if( diasTranscurridos > diasPermitidos ){
-					dtFechaConfirma = new Date();
-				}
-			} 
-			*/
-			
-			/*
-			//&& ===================== validaciones del periodo fiscal
-			int mesPeriodoDeposito = Integer.parseInt( new SimpleDateFormat("MM").format(dtFechaConfirma) ) ;
-			int anioPeriodoActual = Integer.parseInt( new SimpleDateFormat("yy").format(dtFechaConfirma) ) ;
-			
-			if( mesPeriodoDeposito < periodofiscal[0]  || anioPeriodoActual < periodofiscal[1] ){
-				dtFechaConfirma = new Date();
-			}
-			*/
-			 
-			//&& ===================== conexiones
-//			cn = As400Connection.getJNDIConnection("");
-//			cn.setAutoCommit(false);
-//			getConnection();
 			
 			session = HibernateUtilPruebaCn.currentSession();
 			transaction = session.beginTransaction();
@@ -206,7 +175,7 @@ public class ProcesarConsolidadoDepositos {
 			sConcepto = "Confirmacion Deps No: " + coincidencia.getReferenciabanco();
 			contadorUsuario = dpCaja.getCoduser();
 			contadorCodigo =  dpCaja.getUsrcreate() ;
-			usuarioPreconcilacion = PropertiesSystem.USUARIO_PRECONCILIACION;
+			usuarioPreconcilacion = DocumuentosTransaccionales.USUARIOPRECONCILIACION();
 			
 			F55ca014 dtaF14CompaniaCaja = (F55ca014)CollectionUtils.find(lstCompaniasPorCaja, new Predicate(){
 				public boolean evaluate(Object o) {
@@ -221,7 +190,7 @@ public class ProcesarConsolidadoDepositos {
 			
 			sUninegCaja =  dtaF14CompaniaCaja.getId().getC4cjmcu().trim();
 			if( sUninegCaja.matches("^[0]{1,4}$"))
-				sUninegCaja = PropertiesSystem.UNIDAD_NEGOCIO_BASE  ;
+				sUninegCaja = DocumuentosTransaccionales.UNIDADNEGOCIOBASE()  ;
 			
 			NobatchToUse = Divisas.numeroSiguienteJdeE1( );
 			if(NobatchToUse == 0){
@@ -297,7 +266,7 @@ public class ProcesarConsolidadoDepositos {
 				});
 			
 			if(sTipoDoc == null){
-				sTipoDoc = PropertiesSystem.TIPODOC_REFER_ZX;
+				sTipoDoc = DocumuentosTransaccionales.TIPODOCREFERZX();
 			}else{
 				sTipoDoc = sTipoDoc.split(PropertiesSystem.SPLIT_CHAR)[1];
 			}
@@ -305,7 +274,7 @@ public class ProcesarConsolidadoDepositos {
 			coincidencia.setTipodocumentojde(sTipoDoc);
 			
 			//&& ============== crear el numero que se va aplicar como sublibro a la cuenta subsidiara.
-			String tipoAuxiliarCtaTrans = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT;
+			String tipoAuxiliarCtaTrans = DocumuentosTransaccionales.CODIGOTIPOAUXILIARCT();
 			
 			String strSubLibroCuenta  = String.valueOf( numerodecuenta );
 			if(strSubLibroCuenta.length() >= 5){
@@ -464,9 +433,10 @@ public class ProcesarConsolidadoDepositos {
 				//&& ====== Si el ajuste es positivo es sobrante, buscar cuenta de otros ingresos
 				
 				if (coincidencia.getMontorporajuste().compareTo(BigDecimal.ZERO) == 1) {
+					String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",");
 					
-					sObj = PropertiesSystem.CTA_OTROS_INGRESOS_OB ;
-					sSub = PropertiesSystem.CTA_OTROS_INGRESOS_SB ;
+					sObj = cuentaOtrosingresos[1] ;
+					sSub = cuentaOtrosingresos[2] ;
 					
 					// && ============= Buscar la cuenta sobrantes
 					final String gmmcu = sUninegCaja.trim();
@@ -503,27 +473,22 @@ public class ProcesarConsolidadoDepositos {
 					
 					if (cargarFaltanteCajero) {
 						
-						if (codcomp.toUpperCase().compareTo("E01") == 0)
-							sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE01;
-						if (codcomp.toUpperCase().compareTo("E02") == 0)
-							sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE02;
-						if (codcomp.toUpperCase().compareTo("E03") == 0)
-							sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE03;
-						if (codcomp.toUpperCase().compareTo("E08") == 0)
-							sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE08;
+					
+							sUninegCaja = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(codcomp.trim());
+						
 	
-						sObj = PropertiesSystem.CTA_DEUDORES_VARIOS_OB;
-						sSub = "";
-						sTipoAuxiliar = PropertiesSystem.CODIGO_TIPO_AUXILIAR_FE;
+						sObj = DocumuentosTransaccionales.CTADEUDORESVARIOSOB() ;
+						sSub = DocumuentosTransaccionales.CTADEUDORESVARIOSSB() ;
+						sTipoAuxiliar = DocumuentosTransaccionales.CODIGOTIPOAUXILIARFE();
 	
 						sCodEmpleado = CodeUtil.pad( String.valueOf( dpCaja.getCodcajero() ),	8, "0");
 						
 						cuentaContableFaltante  = dtaCuentaFaltantePorUnidadNegocio;
 							
 					} else {
-							
-						sObj = PropertiesSystem.CTA_GASTOS_DIVERSOS_OB;
-						sSub = PropertiesSystem.CTA_GASTOS_DIVERSOS_SB;
+						String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",");
+						sObj = cuentaOtrosGastos[1];
+						sSub = cuentaOtrosGastos[2];
 						sCodEmpleado = "";
 						sTipoAuxiliar = "";
 
@@ -921,20 +886,20 @@ public class ProcesarConsolidadoDepositos {
 			String[] sCtaCredAjuste = null;
 
 			int iNoDocumento=0;
-			String sTipoDoc = PropertiesSystem.TIPODOC_REFER_ZX;
+			String sTipoDoc = DocumuentosTransaccionales.TIPODOCREFERZX();
 			String sConcepto = "";
 			String sCodSucAsiento = "";
 			double dLineaDocs = 1.0;
 			long iMontoTotal=0;
 			long iMontoDeps=0;
-			String sMonedaBase = PropertiesSystem.MONEDA_BASE ;
+			String sMonedaBase = DocumuentosTransaccionales.MONEDABASE() ;
 			String contadorUsuario ="";
 			String sEstadoDeposito="";
 			String usuarioPreconcilacion ="";
 			String sTipoConfirma = "";
 			ConfirmaDepositosCtrl cdc = new ConfirmaDepositosCtrl();
 			BigDecimal bdTasaJDE = null;
-			String sUninegCaja = PropertiesSystem.UNIDAD_NEGOCIO_BASE  ;
+			String sUninegCaja = DocumuentosTransaccionales.UNIDADNEGOCIOBASE()  ;
 			int codigousr = 0;
 			int contadorCodigo = 0;
 			 
@@ -956,14 +921,14 @@ public class ProcesarConsolidadoDepositos {
 				//&& ====== Establecer el tipo de confirmacion y estado del deposito de caja y deposito de banco
 				switch (iTipoConfirma) {
 				case 32:
-					sTipoConfirma = PropertiesSystem.CFR_AUTO  ;
+					sTipoConfirma = DocumuentosTransaccionales.CFRAUTO()  ;
 					break;
 				case 34:
-					sTipoConfirma = PropertiesSystem.CFR_MANUAL  ;
+					sTipoConfirma = DocumuentosTransaccionales.CFRMANUAL()  ;
 					break;
 				}
 
-				sEstadoDeposito = PropertiesSystem.DP_CONFIRMADO  ;
+				sEstadoDeposito = DocumuentosTransaccionales.DPCONFIRMADO()  ;
 				
 				//&& ===================== Determinar las fechas de confirmacion en base a los dias permitidos
 				
@@ -984,7 +949,7 @@ public class ProcesarConsolidadoDepositos {
 				sConcepto = "Confirmacion Deps No: " + coincidencia.getReferenciabanco();
 				contadorUsuario = lstDepsCaja.get(0).getCoduser();
 				contadorCodigo =  lstDepsCaja.get(0).getUsrcreate() ;
-				usuarioPreconcilacion = PropertiesSystem.USUARIO_PRECONCILIACION;
+				usuarioPreconcilacion = DocumuentosTransaccionales.USUARIOPRECONCILIACION();
 				String msgLogs = sConcepto;
 				
 				F55ca014 dtaF14CompaniaCaja = (F55ca014)CollectionUtils.find(lstCompaniasPorCaja, new Predicate(){
@@ -1000,7 +965,7 @@ public class ProcesarConsolidadoDepositos {
 				
 				sUninegCaja =  dtaF14CompaniaCaja.getId().getC4cjmcu().trim();
 				if( sUninegCaja.matches("^[0]{1,4}$"))
-					sUninegCaja = PropertiesSystem.UNIDAD_NEGOCIO_BASE  ;
+					sUninegCaja = DocumuentosTransaccionales.UNIDADNEGOCIOBASE()  ;
 				
 //				NobatchToUse = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMEROBATCH );
 				NobatchToUse = Divisas.numeroSiguienteJdeE1( );
@@ -1055,7 +1020,7 @@ public class ProcesarConsolidadoDepositos {
 					}
 				});
 				if(sTipoDoc == null){
-					sTipoDoc = PropertiesSystem.TIPODOC_REFER_ZX;
+					sTipoDoc = DocumuentosTransaccionales.TIPODOCREFERZX();
 				}else{
 					sTipoDoc = sTipoDoc.split(PropertiesSystem.SPLIT_CHAR)[1];
 				}
@@ -1128,7 +1093,7 @@ public class ProcesarConsolidadoDepositos {
 				}
 				
 				//&& ===== crear el numero que se va aplicar como sublibro a la cuenta subsidiara.
-				String tipoAuxiliarCtaTrans = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT;
+				String tipoAuxiliarCtaTrans = DocumuentosTransaccionales.CODIGOTIPOAUXILIARCT();
 				
 				String strSubLibroCuenta  = String.valueOf( numerodecuenta );
 				if(strSubLibroCuenta.length() >= 5){
@@ -1229,9 +1194,10 @@ public class ProcesarConsolidadoDepositos {
 					String sObj = "", sSub = "";
 				
 					if (coincidencia.getMontorporajuste().compareTo(BigDecimal.ZERO) == 1) {
+						String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",");
 						
-						sObj = PropertiesSystem.CTA_OTROS_INGRESOS_OB ;
-						sSub = PropertiesSystem.CTA_OTROS_INGRESOS_SB ;
+						sObj = cuentaOtrosingresos[1] ;
+						sSub = cuentaOtrosingresos[2] ;
 						
 						// && ============= Buscar la cuenta sobrantes
 						final String gmmcu = sUninegCaja.trim();
@@ -1267,28 +1233,21 @@ public class ProcesarConsolidadoDepositos {
 						}
 						
 						if (cargarFaltanteCajero) {
-								
-							if (codcomp.toUpperCase().compareTo("E01") == 0)
-								sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE01;
-							if (codcomp.toUpperCase().compareTo("E02") == 0)
-								sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE02;
-							if (codcomp.toUpperCase().compareTo("E03") == 0)
-								sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE03;
-							if (codcomp.toUpperCase().compareTo("E08") == 0)
-								sUninegCaja = PropertiesSystem.CTA_DEUDORES_VARIOS_UNE08;
-		
-							sObj = PropertiesSystem.CTA_DEUDORES_VARIOS_OB;
-							sSub = "";
-							sTipoAuxiliar = PropertiesSystem.CODIGO_TIPO_AUXILIAR_FE;
+							
+							sUninegCaja = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(codcomp.trim());
+				
+							sObj =DocumuentosTransaccionales.CTADEUDORESVARIOSOB() ;
+							sSub = DocumuentosTransaccionales.CTADEUDORESVARIOSSB() ;
+							sTipoAuxiliar = DocumuentosTransaccionales.CODIGOTIPOAUXILIARFE();
 		
 							sCodEmpleado = CodeUtil.pad( String.valueOf(lstDepsCaja.get(0).getCodcajero()),	8, "0");
 							
 							cuentaContableFaltante  = dtaCuentaFaltantePorUnidadNegocio;
 								
 						} else {
-								
-							sObj = PropertiesSystem.CTA_GASTOS_DIVERSOS_OB;
-							sSub = PropertiesSystem.CTA_GASTOS_DIVERSOS_SB;
+							String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",");
+							sObj = cuentaOtrosGastos[1];
+							sSub = cuentaOtrosGastos[2];
 							sCodEmpleado = "";
 							sTipoAuxiliar = "";
 	

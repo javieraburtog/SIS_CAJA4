@@ -55,6 +55,7 @@ import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.navegacion.As400Connection;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.PropertiesSystem;
 import com.infragistics.faces.grid.component.Cell;
@@ -476,14 +477,11 @@ public class ConfirmacionDepositosDao {
 			dMontoAjuste = new Divisas().formatStringToDouble(lblCmRsmCaDifer.getValue().toString());
 			
 			
-			/*if(m.get("cdb_UsarFechaUsuarioConfirm") != null &&  dcCnfManualFConfirma.getValue() != null)
-					dtFechaConfirma = (Date)dcCnfManualFConfirma.getValue();*/
-			
-			//&& ======= Conexiones para guardar los datos en bd
-			Session session = HibernateUtilPruebaCn.currentSession();
+		
+			Session session =  HibernateUtilPruebaCn.currentSession();
 			//Session sesionCajaW = HibernateUtil.getSessionFactoryMCAJA();
 			
-			Transaction transCaja = session.beginTransaction();
+			Transaction transCaja = session.isOpen()?session.getTransaction():session.beginTransaction();
 			
 			Connection cn = As400Connection.getJNDIConnection("DSMCAJA2");
 			cn.setAutoCommit(false);
@@ -1700,8 +1698,8 @@ public class ConfirmacionDepositosDao {
 			
 			cr.add(Restrictions.in("id.idbanco",lstBcos ));
 			cr.add(Restrictions.in("id.moneda", lstMonedasAr.split("@")));
-			cr.add(Restrictions.eq("id.estadocnfr",PropertiesSystem.DP_NOCONFIRMADO /*"SCR"*/));
-			cr.add(Restrictions.eq("id.tipoconfr", PropertiesSystem.CFR_AUTO /*"CAM"*/));
+			cr.add(Restrictions.eq("id.estadocnfr",DocumuentosTransaccionales.DPNOCONFIRMADO() /*"SCR"*/));
+			cr.add(Restrictions.eq("id.tipoconfr", DocumuentosTransaccionales.CFRAUTO() /*"CAM"*/));
 			cr.add(Restrictions.eq("id.tipodep", "D"));
 			cr.add(Restrictions.not(Restrictions.in("id.mpagodep", new String[]{"X"," "})));
 			cr.addOrder(Order.asc("id.caid"));
@@ -1722,8 +1720,8 @@ public class ConfirmacionDepositosDao {
 			
 			cr = sesion.createCriteria(Depbancodet.class).setMaxResults(1000);
 			cr.add(Restrictions.in("archivo.idarchivo",lstBcos ));
-			cr.add(Restrictions.eq("idestadocnfr",  PropertiesSystem.ID_DP_NO_CONFIRMADO /*36*/));
-			cr.add(Restrictions.eq("idtipoconfirm", PropertiesSystem.ID_CRF_AUTOMATICA /*32*/));
+			cr.add(Restrictions.eq("idestadocnfr",  DocumuentosTransaccionales.IDDPNOCONFIRMADO() /*36*/));
+			cr.add(Restrictions.eq("idtipoconfirm", DocumuentosTransaccionales.IDCRFAUTOMATICA() /*32*/));
 			cr.add(Restrictions.gt("mtocredito", BigDecimal.ZERO));
 			cr.add(Restrictions.ne("codtransaccion", "FA"));
 			
@@ -2359,12 +2357,13 @@ public class ConfirmacionDepositosDao {
 				return;
 			}
 			
+			int idConfirmado= Integer.parseInt(DocumuentosTransaccionales.IDDPCONFIRMADO());
 			List<Depbancodet> confirmado = (ArrayList<Depbancodet>) CollectionUtils
 				.select(lstDetalleArchivoBanco, new Predicate(){
 				
 					public boolean evaluate(Object o) {
 						return ((Depbancodet)o ).getIdestadocnfr() 
-							 == PropertiesSystem.ID_DP_CONFIRMADO;
+							 == idConfirmado;
 					}
 			}) ;
 			if(confirmado == null )confirmado = new ArrayList<Depbancodet>();

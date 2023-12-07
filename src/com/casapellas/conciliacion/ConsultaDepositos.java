@@ -39,6 +39,7 @@ import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.entidades.ens.Vautoriz;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
@@ -945,9 +946,10 @@ public class ConsultaDepositos {
 		try {
 			if(m.get("cdep_lstcdbDepositosBco") == null ){
 			 
+				int idnoconfirmado=Integer.parseInt(DocumuentosTransaccionales.IDDPNOCONFIRMADO());
 				lstcdbDepositosBco = new ConfirmaDepositosCtrl()
 						.obtenerDepositosBcoxFecha( FechasUtil.quitarAgregarDiasFecha(-2, new Date()),
-						new Date(),"",PropertiesSystem.ID_DP_NO_CONFIRMADO,100001,400);
+						new Date(),"",idnoconfirmado,100001,400);
 				
 				if(lstcdbDepositosBco == null)
 					lstcdbDepositosBco = new ArrayList<Depbancodet>();

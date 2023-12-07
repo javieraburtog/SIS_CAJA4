@@ -45,6 +45,7 @@ import com.casapellas.entidades.F55ca023;
 import com.casapellas.entidades.ens.Vautoriz;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.util.CodeUtil;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.PropertiesSystem;
 import com.infragistics.faces.grid.component.RowItem;
@@ -60,6 +61,8 @@ import com.infragistics.faces.window.component.html.HtmlDialogWindowHeader;
 import com.prueba.ws.P5509800Input;
 import com.prueba.ws.P5509800PortType;
 import com.prueba.ws.P5509800_Service;
+
+import ni.com.casapellas.gcpfinanciamiento.pojo.DOCUMENTOSREQUERIDOSINFO;
 
 public class ConsolidadoDepositosBanco {
 	
@@ -1646,6 +1649,8 @@ public class ConsolidadoDepositosBanco {
 			}
 			CodeUtil.putInSessionMap("pcd_dtaCuentaTransitoriaxBanco", dtaCuentaFromQuery);
 			
+			String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",");
+			
 			// && ========================== cuentas para ajustes por sobrantes en los depositos. 
 			strSqlQueryExecute =
 				"select trim(gmmcu) ||'.'|| trim(gmobj) ||'.'|| trim(gmsub)   ||'@@@'|| "+
@@ -1657,8 +1662,8 @@ public class ConsolidadoDepositosBanco {
 					"'"+codcomp.trim()+"' ||'@@@'|| " +
 					"trim(gmco)" +
 				"from "+PropertiesSystem.ESQUEMA+".vf0901  " +
-				"where trim(gmobj) = '" + PropertiesSystem.CTA_OTROS_INGRESOS_OB +"' " + 
-				 " and trim(gmsub) = '" + PropertiesSystem.CTA_OTROS_INGRESOS_SB +"' " + 
+				"where trim(gmobj) = '" + cuentaOtrosingresos[1] +"' " + 
+				 " and trim(gmsub) = '" + cuentaOtrosingresos[2] +"' " + 
 				 " and trim(gmmcu) in ( "+
 						" select trim(c4cjmcu) from "+PropertiesSystem.ESQUEMA+".f55ca014 where trim(c4rp01) = '"+codcomp.trim() +"' " +
 						" and c4stat = 'A' and c4id in ( "+ idsCajaConDatos.toString().replace("[", "").replace("]", "") + " )  "+
@@ -1681,13 +1686,10 @@ public class ConsolidadoDepositosBanco {
 					"trim(gmobj) ||'@@@'|| "+
 					"  (case when trim(gmsub) = '' then '    @@@' else  trim(gmsub) end ) " +
 				"from "+PropertiesSystem.ESQUEMA+".vf0901  " +
-				"where trim(gmobj) = '"+ PropertiesSystem.CTA_DEUDORES_VARIOS_OB  +"' " + 
-				 " and trim(gmsub) = '"+ PropertiesSystem.CTA_DEUDORES_VARIOS_SB +"' " + 
+				"where trim(gmobj) = '"+ DocumuentosTransaccionales.CTADEUDORESVARIOSOB()  +"' " + 
+				 " and trim(gmsub) = '"+ DocumuentosTransaccionales.CTADEUDORESVARIOSSB()+"' " + 
 				 " and trim(gmmcu) in ( " +
-						 "'" + PropertiesSystem.CTA_DEUDORES_VARIOS_UNE01 + "', " + 
-						 "'" + PropertiesSystem.CTA_DEUDORES_VARIOS_UNE02 + "', " + 
-						 "'" + PropertiesSystem.CTA_DEUDORES_VARIOS_UNE03 + "', " + 
-						 "'" + PropertiesSystem.CTA_DEUDORES_VARIOS_UNE08 + "'" +
+						 "'" + DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEGTODAS() +"'"+ 
 			 		" ) " ;
 			
 			dtaQueryExecuted = (ArrayList<String>) ConsolidadoDepositosBcoCtrl.executeSqlQuery(strSqlQueryExecute, true, null)  ; 
@@ -1698,7 +1700,7 @@ public class ConsolidadoDepositosBanco {
 			}
 			CodeUtil.putInSessionMap("pcd_dtaCuentaFaltantePorUnidadNegocio", dtaCuentaFromQuery);
 		
-			
+			String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",");
 			// && ========================== cuentas para ajustes por sobrantes en los depositos. 
 			strSqlQueryExecute =
 				"select trim(gmmcu) ||'.'|| trim(gmobj) ||'.'|| trim(gmsub)   ||'@@@'|| "+
@@ -1710,8 +1712,8 @@ public class ConsolidadoDepositosBanco {
 					"'"+codcomp.trim()+"' ||'@@@'|| " +
 					"trim(gmco)" +
 				"from "+PropertiesSystem.ESQUEMA+".vf0901  " +
-				"where trim(gmobj) = '" + PropertiesSystem.CTA_GASTOS_DIVERSOS_OB  +"' " + 
-				 " and trim(gmsub) = '" + PropertiesSystem.CTA_GASTOS_DIVERSOS_SB +"' " + 
+				"where trim(gmobj) = '" + cuentaOtrosGastos[1]  +"' " + 
+				 " and trim(gmsub) = '" + cuentaOtrosGastos[2] +"' " + 
 				 " and trim(gmmcu) in ( "+
 						" select trim(c4cjmcu) from "+PropertiesSystem.ESQUEMA+".f55ca014 where trim(c4rp01) = '"+codcomp.trim() +"' " +
 						" and c4stat = 'A' and c4id in ( "+ idsCajaConDatos.toString().replace("[", "").replace("]", "") + " )  "+

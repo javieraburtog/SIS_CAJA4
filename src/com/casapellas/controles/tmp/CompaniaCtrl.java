@@ -82,7 +82,7 @@ public class CompaniaCtrl {
 		
 		try {
 			sCodunineg = sCodunineg.trim();
-			sql =" select  cast(mcrp07 as varchar(6) ccsid 37 )" +
+			sql =" select  cast(mcrp10 as varchar(6) ccsid 37 )" +
 					" from "+PropertiesSystem.JDEDTA+".f0006 where trim( cast(mcmcu " +
 					" as varchar(12) ccsid 37) ) =:CODUNINEG";
 			

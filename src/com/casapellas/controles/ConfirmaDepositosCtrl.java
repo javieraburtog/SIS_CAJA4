@@ -48,6 +48,7 @@ import com.casapellas.reportes.Rptmcaja011Xls;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.CustomEmailAddress;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LogCajaService;
 import com.casapellas.util.MailHelper;
@@ -651,10 +652,10 @@ public class ConfirmaDepositosCtrl {
 			//&& ======== Validaciones para ingresos o egresos a la cuenta.
 			if(sTipo.compareTo("01") == 0){
 				cr.add(Restrictions.eq("tipomov", "C"));
-				cr.add(Restrictions.eq("dpCj.estadocnfr", PropertiesSystem.DP_NOCONFIRMADO /*"SCR"*/));
+				cr.add(Restrictions.eq("dpCj.estadocnfr", DocumuentosTransaccionales.DPNOCONFIRMADO() /*"SCR"*/));
 			}
 			else{
-				cr.add(Restrictions.eq("dpCj.estadocnfr", PropertiesSystem.DP_CONFIRMADO/*"CFR"*/));
+				cr.add(Restrictions.eq("dpCj.estadocnfr", DocumuentosTransaccionales.DPCONFIRMADO()/*"CFR"*/));
 				cr.createAlias("dpCj.conciliadets", "fk_consdet");
 				cr.createAlias("fk_consdet.conciliacion", "fk_concs");
 				cr.add(Restrictions.eq("fk_concs.estado",46));
@@ -1012,7 +1013,7 @@ public class ConfirmaDepositosCtrl {
 							"lfonseca@casapellas.com.ni"+"<>"+vfUsuarioCrea.getId().getAbalph()
 							};
 					
-					notificacionBatchConfirmados(PropertiesSystem.USUARIO_PRECONCILIACION, coincidencias.size(), strResumenConcilia,  ( sRutaFisica + nombreDocumento )  , Arrays.asList(cuentas)) ;
+					notificacionBatchConfirmados(DocumuentosTransaccionales.USUARIOPRECONCILIACION(), coincidencias.size(), strResumenConcilia,  ( sRutaFisica + nombreDocumento )  , Arrays.asList(cuentas)) ;
 					
 					return bHecho;
 				}
@@ -1958,8 +1959,8 @@ public class ConfirmaDepositosCtrl {
 			Criteria crCja = sesion.createCriteria(Deposito.class)
 			.setMaxResults(60)
 			.add(Restrictions.eq("idbanco", arConfirmar.getIdbanco()))
-			.add(Restrictions.eq("estadocnfr",PropertiesSystem.DP_NOCONFIRMADO/*"SCR"*/))
-			.add(Restrictions.eq("tipoconfr", PropertiesSystem.CFR_AUTO/*"CAM"*/))
+			.add(Restrictions.eq("estadocnfr",DocumuentosTransaccionales.DPNOCONFIRMADO()/*"SCR"*/))
+			.add(Restrictions.eq("tipoconfr", DocumuentosTransaccionales.CFRAUTO()/*"CAM"*/))
 			.add(Restrictions.eq("tipodep", "D"))
 			.add(Restrictions.eq("codcomp", f23.getId().getD3rp01()))
 			.add(Restrictions.not(Restrictions.in("mpagodep", new String[]{"X"," "})));
@@ -2094,8 +2095,8 @@ public class ConfirmaDepositosCtrl {
 			for (Archivo archivo : lstArchivos) {
 				cr = sesion.createCriteria(Depbancodet.class);
 				cr.add(Restrictions.eq("archivo.idarchivo", archivo.getIdarchivo()));
-				cr.add(Restrictions.eq("idestadocnfr",  PropertiesSystem.ID_DP_NO_CONFIRMADO/*36*/));
-				cr.add(Restrictions.eq("idtipoconfirm", PropertiesSystem.ID_CRF_AUTOMATICA/*32*/));
+				cr.add(Restrictions.eq("idestadocnfr",  DocumuentosTransaccionales.IDDPNOCONFIRMADO()/*36*/));
+				cr.add(Restrictions.eq("idtipoconfirm", DocumuentosTransaccionales.IDCRFAUTOMATICA()/*32*/));
 				cr.add(Restrictions.gt("mtocredito", BigDecimal.ZERO));
 				cr.add(Restrictions.ne("codtransaccion", "FA"));
 				
@@ -2386,8 +2387,8 @@ public class ConfirmaDepositosCtrl {
 			//&& ===== Consultar el detalle del archivo.
 			crDetBco = sesion.createCriteria(Depbancodet.class);
 			crDetBco.add(Restrictions.eq("archivo.idarchivo", arConfirmar.getIdarchivo()));
-			crDetBco.add(Restrictions.eq("idestadocnfr",  PropertiesSystem.ID_DP_NO_CONFIRMADO));
-			crDetBco.add(Restrictions.eq("idtipoconfirm", PropertiesSystem.ID_CRF_AUTOMATICA));
+			crDetBco.add(Restrictions.eq("idestadocnfr",  DocumuentosTransaccionales.IDDPNOCONFIRMADO()));
+			crDetBco.add(Restrictions.eq("idtipoconfirm", DocumuentosTransaccionales.IDCRFAUTOMATICA()));
 			crDetBco.add(Restrictions.ge("mtocredito", BigDecimal.ZERO));
 			crDetBco.add(Restrictions.ne("codtransaccion", "FA"));
 			
@@ -2454,8 +2455,8 @@ public class ConfirmaDepositosCtrl {
 				.add(Restrictions.between("monto",
 						db.getMtocredito().subtract(f33.getId().getAjustemin()), 
 						db.getMtocredito().add(f33.getId().getAjustemax()))) 
-				.add(Restrictions.eq("estadocnfr",PropertiesSystem.DP_NOCONFIRMADO )) 
-				.add(Restrictions.eq("tipoconfr", PropertiesSystem.CFR_AUTO )) 
+				.add(Restrictions.eq("estadocnfr",DocumuentosTransaccionales.DPNOCONFIRMADO() )) 
+				.add(Restrictions.eq("tipoconfr", DocumuentosTransaccionales.CFRAUTO())) 
 				.add(Restrictions.eq("tipodep", "D"))
 				.add(Restrictions.not(Restrictions.in("tipodep", new String[]{"X"," "})));
 
@@ -2762,7 +2763,7 @@ public class ConfirmaDepositosCtrl {
 			if(dtFechaFin != null)
 				cr.add(Restrictions.le("fecha", dtFechaFin));
 			
-			cr.add(Restrictions.eq("estadocnfr", PropertiesSystem.DP_NOCONFIRMADO/*"SCR"*/));
+			cr.add(Restrictions.eq("estadocnfr", DocumuentosTransaccionales.DPNOCONFIRMADO()/*"SCR"*/));
 			cr.addOrder(Order.desc("fecha"));
 			
 			List<String[]>dta = new ArrayList<String[]>();

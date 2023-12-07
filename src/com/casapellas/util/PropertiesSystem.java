@@ -55,7 +55,11 @@ public class PropertiesSystem {
 		public final static String parametroFCVPerdida="10";
 		public final static String parametroNumeracionRU="36";
 		public final static String parametroCuentaSalida="38";
-		//-Contado
+		public final static String parametroConciliacion="39";
+		public final static String parametroCierre="34";
+		public final static String parametroCtaDeudores="40";
+		
+		//-Facturacion
 		public final static String tipoTrxContado="CO";
 		public final static String valuesJDEContado="CONTADO_JDE_INS";
 		public final static String valuesJDENumeracion="NUM_JDE_CONF";
@@ -65,7 +69,37 @@ public class PropertiesSystem {
 		public final static String valuesJDEFinanciamiento="FINAN_JDE_INS";
 		public final static String valuesJDEPMT="PMT_JDE_INS";
 		public final static String valuesJDEFCV="FCV_JDE_INS";
-				
+		
+		//Conciliacion
+		public final static String IDDPCONFIRMADO="ID_DP_CONFIRMADO";
+		public final static String IDDPNOCONFIRMADO="ID_DP_NO_CONFIRMADO";
+		public final static String IDCRFAUTOMATICA="ID_CRF_AUTOMATICA";
+		public final static String CFRAUTO="CFR_AUTO";
+		public final static String CFRMANUAL="CFR_MANUAL";
+		public final static String DPCONFIRMADO="DP_CONFIRMADO";
+		public final static String DPNOCONFIRMADO="DP_NOCONFIRMADO";
+		public final static String TIPODOCREFERP9="TIPODOC_REFER_P9";//not working
+		public final static String TIPODOCREFERZX="TIPODOC_REFER_ZX";
+		public final static String TIPODOCREFERZZ="TIPODOC_REFER_ZZ";
+		public final static String TIPODOCREFERXG="TIPODOC_REFER_XG";//Not Working
+		public final static String MONEDABASE="MONEDA_BASE";
+		public final static String UNIDADNEGOCIOBASE="UNIDAD_NEGOCIO_BASE";
+		public final static String CODIGOTIPOAUXILIARCT="CODIGO_TIPO_AUX_CT";
+		public final static String CODIGOTIPOAUXILIARFE="CODIGO_TIPO_AUX_FE";
+		public final static String CODIGOCREDOMATIC="CODIGO_CREDOMATIC";
+		public final static String USUARIOPRECONCILIACION="USUARIO_PRECON";
+		public final static String CTAOTROSINGRESOS="CTA_OTROS_INGR_OB";
+		public final static String CTAGASTOSDIVERSOS="CTA_GTOS_DIV_OB";
+		
+		
+		public final static String CTADEUDORESVARIOSOB="CTA_DEUDO_VAR_OB";
+		public final static String CTADEUDORESVARIOSSB="CTA_DEUDO_VAR_SB";
+		
+		//Login
+		public final static String ENSADMINISTRADORCAJA ="ENS_ADM_CAJA";
+		public final static String ENSCONCILIADORPRINCIPAL="ENS_CON_PRIN";
+		public final static String ENSCONCILIADORSUPERVISOR="ENS_CON_SUP";
+		
    // Datos de Servidor de Base de Datos.
 	public final static String IPSERVERDB2 = "192.168.1.3";
 
@@ -120,24 +154,11 @@ public class PropertiesSystem {
 	public String WEBBROWSER = webbrowser();
 	public String IPADRESS_WBCLIENT = getIpRemoteClient();
 
-	public final static String TipoDocJdeRetencionDonacion = "P8";
-	public final static String TipoDocJdeComisionDonacion = "P9";
-	
 	public final static String TIPODOC_JDE_DEP_8 = "ZX";
 	public final static String TIPODOC_JDE_DEP_N = "ZX";
 	public final static String TIPODOC_JDE_DEP_H = "ZX";
 	public final static String TIPODOC_JDE_DEP_5 = "ZX";
-	
-	public final static String CTA_DEUDORES_VARIOS_UNE01 = "24";  
-	public final static String CTA_DEUDORES_VARIOS_UNE02=  "75"; 
-	public final static String CTA_DEUDORES_VARIOS_UNE03 = "80"; 
-	public final static String CTA_DEUDORES_VARIOS_UNE08 = "60"; 
-	public final static String CTA_DEUDORES_VARIOS_UNE11 = "11024";
-	public final static String CTA_DEUDORES_VARIOS_OB = "13600"; 
-	public final static String CTA_DEUDORES_VARIOS_SB = "";
-	
-	
-	
+
 	//**************************** ServicioByte **************************/
 	public final static String GCP_API_KEY = "NTAsNTIsMTAyLDU1LDUwLDEwMiwxMDEsMTAyLDUxLDQ4LDUxLDU3LDU2LDUwLDk5LDk4LDUzLDQ5LDEwMiw1NCw1Niw1MSwxMDIsNDgsNDksNDksOTcsNTcsNTAsNTIsNDgsNTM=";
 	public final static String APP_MOD_CODE = "1";
@@ -158,7 +179,7 @@ public class PropertiesSystem {
 	
 	//**************************** Nuevos por preconciliacion **************************/ 
 	public final static String[] MAILBCCSCON = new String[]{
-		"lfonseca@casapellas.com.ni"+SPLIT_CHAR+"Luis Fonseca",
+		"byron.canales@ahinko.com"+SPLIT_CHAR+"Byron Canales",
 	};
 	public final static String[] TipodocJdeTipoDocCaja = {
 		MetodosPagoCtrl.EFECTIVO  + SPLIT_CHAR + TIPODOC_JDE_DEP_5,
@@ -167,47 +188,11 @@ public class PropertiesSystem {
 		MetodosPagoCtrl.DEPOSITO + SPLIT_CHAR + TIPODOC_JDE_DEP_N,
 	};
 	
-	public final static int ID_DP_CONFIRMADO     =  35; 
-	public final static int ID_DP_NO_CONFIRMADO  =  36; 
-	public final static int ID_CRF_AUTOMATICA 	 =  32; 
-	public final static String CFR_AUTO          =  "CAM"; 
-	public final static String CFR_MANUAL        =  "CMN"; 
-	public final static String DP_CONFIRMADO     =  "CFR"; 
-	public final static String DP_NOCONFIRMADO   =  "SCR"; 
-	
-	public final static String TIPODOC_REFER_P9   =  "P9"; 
-	public final static String TIPODOC_REFER_ZX   =  "ZX"; 
-	public final static String TIPODOC_REFER_ZZ   =  "ZZ"; 
-	public final static String TIPODOC_REFER_XG   =  "XG"; 
-	
-	public final static String MONEDA_BASE 		  =  "COR";  
-	public final static String UNIDAD_NEGOCIO_BASE =  "2499" ;
-	
-	public final static String CODIGO_TIPO_AUXILIAR_CT  = "Z" ;
-	public final static String CODIGO_TIPO_AUXILIAR_FE  = "A" ; 
-	public final static String CODIGO_CREDOMATIC  = "00062651";
-	
-	public final static String CTA_OTROS_INGRESOS_OB = "65100"; 
-	public final static String CTA_OTROS_INGRESOS_SB = "10";
-	
-	public final static String CTA_GASTOS_DIVERSOS_OB = "65200"; 
-	public final static String CTA_GASTOS_DIVERSOS_SB = "08";
-	
-	public final static String ENS_ADMINISTRADOR_CAJA = "P000000004"; 
-	public final static String ENS_CONCILIADOR_PRINCIPAL = "P000000042";
-	public final static String ENS_CONCILIADOR_SUPERVISOR = "P000000041";
-	
-	public final static String USUARIO_PRECONCILIACION = "PRE_CONCIL";
-	public final static String CTA_PRECONCILIA_AJUSTE_UN = "24"; 
-	public final static String CTA_PRECONCILIA_AJUSTE_OB = "11101"; 
-	public final static String CTA_PRECONCILIA_AJUSTE_SB = "95";
-	
-	public final static String CTA_PRECONCILIA_AJUSTE_ID = "( 20105318 )";  
-	public final static String CONTABLIZA_PROGRAMA_ID = "P09800";
-	public final static String CONTABILIZA_PROGRAMA_VERSION = "PRE_CONCIL";
-	
 	public final static String CARPETA_DOCUMENTOS_EXPORTAR = "DocumentsExport";
+	//Produccion
 	public final static String RUTA_DOCUMENTOS_EXPORTAR = "E:\\GCPMCAJA\\filestoexport\\";
+	//Para Prueba
+	//public final static String RUTA_DOCUMENTOS_EXPORTAR = "C:\\GCPMCAJA\\filestoexport\\";
 	
 	public final static BigDecimal FALTANTE_PERMITIDO_COR = BigDecimal.ONE;
 	public final static BigDecimal FALTANTE_PERMITIDO_USD = BigDecimal.ONE;

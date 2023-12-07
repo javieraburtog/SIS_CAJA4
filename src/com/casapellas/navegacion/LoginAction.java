@@ -37,6 +37,7 @@ import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.entidades.ens.Vautoriz;
 import com.casapellas.util.AllConectionMngt;
 import com.casapellas.util.CodeUtil;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.PropertiesSystem;
 import com.casapellas.util.ens.ConnectionDb2;
 import com.casapellas.util.ens.ENSUtilValidation;
@@ -186,16 +187,16 @@ public class LoginAction {
 			
 			 //&& ================ configuraciones para preconciliacion, perfiles y cuentas por usuario
 			if (
-				vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_CONCILIADOR_SUPERVISOR) == 0  ||
-				vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_CONCILIADOR_PRINCIPAL) == 0  ||
-				vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_ADMINISTRADOR_CAJA) == 0 ){
+				vAut[0].getId().getCodper().compareTo(DocumuentosTransaccionales.ENSCONCILIADORSUPERVISOR()) == 0  ||
+				vAut[0].getId().getCodper().compareTo(DocumuentosTransaccionales.ENSCONCILIADORPRINCIPAL()) == 0  ||
+				vAut[0].getId().getCodper().compareTo(DocumuentosTransaccionales.ENSADMINISTRADORCAJA()) == 0 ){
 				
 						ConfirmaDepositosCtrl.cargarConfiguracionConciliador(vAut[0].getId().getCodreg());
 						
 				}
 				
-			if (    vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_CONCILIADOR_PRINCIPAL) == 0  ||
-					vAut[0].getId().getCodper().compareTo(PropertiesSystem.ENS_CONCILIADOR_SUPERVISOR) == 0
+			if (    vAut[0].getId().getCodper().compareTo(DocumuentosTransaccionales.ENSCONCILIADORPRINCIPAL()) == 0  ||
+					vAut[0].getId().getCodper().compareTo(DocumuentosTransaccionales.ENSCONCILIADORSUPERVISOR()) == 0
 				){
 				
 				String sql = "select * from " + PropertiesSystem.ESQUEMA +".Vf55ca01 where castat = 'A' fetch first rows only " ; 
@@ -222,7 +223,7 @@ public class LoginAction {
 			
 			
 			//&& ========= CAJERO ROTATIVO O ADMINISTRADOR
-			if ( vAut[0].getId().getCodper().equals( PropertiesSystem.ENS_ADMINISTRADOR_CAJA ) || vAut[0].getId().getCodper().equals("P000000005")){
+			if ( vAut[0].getId().getCodper().equals( DocumuentosTransaccionales.ENSADMINISTRADORCAJA() ) || vAut[0].getId().getCodper().equals("P000000005")){
 				
 				lstCajas = cajasCtrl.getAllCajas();
 				

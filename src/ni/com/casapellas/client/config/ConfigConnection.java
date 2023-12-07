@@ -23,7 +23,7 @@ public class ConfigConnection {
     public static String PROTOCOL_WS_CAJA_N = "http";
     public static String SERVER_WS_CAJA_N = "172.17.17.20";
 	public static String PORT_WS_CAJA_N = "9083";
-    public static String CONTEXT_NAME_WS_CAJA_N = "GCPCAJAWSREST";
+    public static String CONTEXT_NAME_WS_CAJA_N = "GCPCAJAWSRESTV2";
     public static String CONTEXT_NAME_CAJA_N = "gcpcajarest";
     
    // Ambiente de Desarrollo/Pruebas, ESQUEMAS de Base de Datos  

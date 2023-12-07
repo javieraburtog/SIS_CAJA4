@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import com.casapellas.conciliacion.consultasSql.QueryConfirmacion;
 import com.casapellas.entidades.ens.Vautoriz;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.PropertiesSystem;
 
 
@@ -66,7 +67,7 @@ public class svltConfiguracionAjuste extends HttpServlet {
 				}
 				*/
 				//&& ============= restringir al conciliador principal para que solo vea los grabados con su usuario
-				if(vaut.getId().getCodper().compareToIgnoreCase( PropertiesSystem.ENS_CONCILIADOR_PRINCIPAL ) == 0 ){
+				if(vaut.getId().getCodper().compareToIgnoreCase( DocumuentosTransaccionales.ENSCONCILIADORPRINCIPAL() ) == 0 ){
 					strRestriction = " USUARIO = '"+vaut.getId().getLogin()+"' AND ";
 				}
 				

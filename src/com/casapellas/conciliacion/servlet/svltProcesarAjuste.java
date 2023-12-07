@@ -699,9 +699,9 @@ public class svltProcesarAjuste extends HttpServlet {
 			String codcomp = String.valueOf( dtaAjusteMaestro[5] );
 			String idajuste = String.valueOf(dtaAjusteMaestro[6]) ;
 			String usuariobatch = vaut.getId().getLogin();
-			tipodocumento = PropertiesSystem.TIPODOC_REFER_ZX ;
+			tipodocumento = DocumuentosTransaccionales.TIPODOCREFERZX() ;
 			
-			usuariobatch = PropertiesSystem.USUARIO_PRECONCILIACION;
+			usuariobatch = DocumuentosTransaccionales.USUARIOPRECONCILIACION();
 			 
 			
 			//&& ========== crear encabezado del batch F0011
@@ -765,7 +765,7 @@ public class svltProcesarAjuste extends HttpServlet {
 					caidDepsCaja = Integer.parseInt(String.valueOf( lineaDetalleAjuste[10] ) ) ;
 					cuenta_bancaria =  Integer.parseInt( String.valueOf( lineaDetalleAjuste[8] ) ) ;
 					strSubLibroCuenta = ConfirmaDepositosCtrl.constructSubLibroCtaTbanco (cuenta_bancaria, 0, caidDepsCaja, "", "" );
-					strTipoAuxiliarCt = PropertiesSystem.CODIGO_TIPO_AUXILIAR_CT ;
+					strTipoAuxiliarCt = DocumuentosTransaccionales.CODIGOTIPOAUXILIARCT() ;
 					
 				}else{
 					caidDepsCaja = 0 ;

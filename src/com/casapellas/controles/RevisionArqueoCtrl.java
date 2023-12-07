@@ -60,6 +60,7 @@ import com.casapellas.reportes.Rptmcaja004Sumary;
 import com.casapellas.util.CalendarToJulian;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LiquidacionCheque;
 import com.casapellas.util.LogCajaService;
@@ -481,20 +482,11 @@ public class RevisionArqueoCtrl {
 			String monedaBaseCompania = f14.getId().getC4bcrcd() ;
 			 
 			//&& =========================== Verificar que exista la cuenta de Funcionarios y Empleados.
-			String sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE_DEF").getValorAlfanumerico().toString();
-			String sCtaOb = cajaparm.getParametros("34", "0", "CTA_DEUDO_VAR_OB").getValorAlfanumerico().toString(); 
+			String sUN = "";					
+			String sCtaOb = DocumuentosTransaccionales.CTADEUDORESVARIOSOB() ;
 
-			if(sCodcomp.trim().toUpperCase().compareTo("10") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();
-			if( sCodcomp.trim().toUpperCase().compareTo("11") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE02").getValorAlfanumerico().toString();
-			if(sCodcomp.trim().toUpperCase().compareTo("20") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE03").getValorAlfanumerico().toString();
-			if( sCodcomp.trim().toUpperCase().compareTo("90") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE08").getValorAlfanumerico().toString();
-			if( sCodcomp.trim().toUpperCase().compareTo("12") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();
-	
+			sUN =DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(sCodcomp.trim());
+			
 			vCtaFE  = dv.validarCuentaF0901(sUN,sCtaOb,"");
 			
 			if(vCtaFE!=null){

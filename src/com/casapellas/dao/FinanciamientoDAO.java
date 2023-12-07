@@ -345,6 +345,7 @@ public class FinanciamientoDAO {
 	//Nuevos valores para JDE
 	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
 	String[] valoresJDEInsFinanciamiento = (String[]) m.get("valoresJDEInsFinanciamiento");
+	String[] valoresJDEInsFCV = (String[]) m.get("valoresJDEInsFCV");
 	/*******************************************************************************************************/	
 	public void procesarDonacionesIngresadas(ActionEvent ev){
 		String msg = "";
@@ -2703,21 +2704,21 @@ public class FinanciamientoDAO {
 			sCodsuc =  hFac.getId().getCodsuc().substring(3, 5);
 			// Registrar Asientos de la ficha de compra venta
 			iContadorFor++;
-			bContabilizado = recCtrl.registrarAsientoDiarioWithSession(dtFecha, s, sSucursaldeAsiento,"P9", iNoDocForaneo, (iContadorFor) * 1.0,iNoBatch, 
+			bContabilizado = recCtrl.registrarAsientoDiarioWithSession(dtFecha, s, sSucursaldeAsiento,valoresJDEInsFCV[1], iNoDocForaneo, (iContadorFor) * 1.0,iNoBatch, 
 								sCuentaMetodo[0], sCuentaMetodo[1], sCuentaMetodo[3], sCuentaMetodo[4],sCuentaMetodo[5],"CA", mPago.getMoneda(), 
 								d.pasarAentero(d.roundDouble(mPago.getMonto())), sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), mPago.getTasa(), sTipoCliente, "Deb caja dolares "
 								+ d.roundDouble(mPago.getMonto()), sCuentaMetodo[2],"","","USD",sCuentaMetodo[2],"F");
 			if (bContabilizado) {
-				bContabilizado = recCtrl.registrarAsientoDiarioWithSession(dtFecha,s, sSucursaldeAsiento,"P9",iNoDocForaneo, (iContadorFor) * 1.0, iNoBatch,
+				bContabilizado = recCtrl.registrarAsientoDiarioWithSession(dtFecha,s, sSucursaldeAsiento,valoresJDEInsFCV[1],iNoDocForaneo, (iContadorFor) * 1.0, iNoBatch,
 								sCuentaMetodo[0], sCuentaMetodo[1], sCuentaMetodo[3], sCuentaMetodo[4], sCuentaMetodo[5], "AA", mPago.getMoneda(),
 								d.pasarAentero(d.roundDouble(mPago.getEquivalente())), sConcepto,vaut.getId().getLogin(), vaut.getId().getCodapp(), mPago.getTasa(),
 								sTipoCliente, "Deb caja dolares " + d.roundDouble(mPago.getMonto()), sCuentaMetodo[2],"","","COR",sCuentaMetodo[2],"F");
 				if (bContabilizado) {
-					bContabilizado = recCtrl.registrarAsientoDiarioWithSession(dtFecha,s, sSucursaldeAsiento,"P9", iNoDocForaneo,(iContadorFor + 1) * 1.0, iNoBatch, 
+					bContabilizado = recCtrl.registrarAsientoDiarioWithSession(dtFecha,s, sSucursaldeAsiento,valoresJDEInsFCV[1], iNoDocForaneo,(iContadorFor + 1) * 1.0, iNoBatch, 
 									sCtaMetodoDom[0],sCtaMetodoDom[1],sCtaMetodoDom[3],sCtaMetodoDom[4],sCtaMetodoDom[5], "CA", mPago.getMoneda(), (-1)* d.pasarAentero(d.roundDouble(mPago.getMonto())), sConcepto,vaut.getId().getLogin(), vaut.getId().getCodapp(),
 									mPago.getTasa(), sTipoCliente,"Cred caja cordobas " + d.roundDouble(mPago.getMonto()),sCtaMetodoDom[2],"","","USD",sCtaMetodoDom[2],"F");
 					if (bContabilizado) {
-						bContabilizado = recCtrl.registrarAsientoDiarioWithSession(dtFecha, s,sSucursaldeAsiento,"P9", iNoDocForaneo,(iContadorFor + 1) * 1.0, iNoBatch,sCtaMetodoDom[0], sCtaMetodoDom[1], sCtaMetodoDom[3], sCtaMetodoDom[4],sCtaMetodoDom[5],
+						bContabilizado = recCtrl.registrarAsientoDiarioWithSession(dtFecha, s,sSucursaldeAsiento,valoresJDEInsFCV[1], iNoDocForaneo,(iContadorFor + 1) * 1.0, iNoBatch,sCtaMetodoDom[0], sCtaMetodoDom[1], sCtaMetodoDom[3], sCtaMetodoDom[4],sCtaMetodoDom[5],
 										"AA", mPago.getMoneda(), (-1)* d.pasarAentero(d.roundDouble(mPago.getEquivalente())),sConcepto, vaut.getId().getLogin(), vaut
 										.getId().getCodapp(), mPago.getTasa(),sTipoCliente, "Cred caja cordobas "+ d.roundDouble(mPago.getMonto()), 
 										sCtaMetodoDom[2],"","","COR",sCtaMetodoDom[2],"F");
