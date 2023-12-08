@@ -15,6 +15,7 @@ import com.casapellas.entidades.MetodosPago;
 import com.casapellas.entidades.Vf0901;
 import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.entidades.ens.Vautoriz;
 
 public class AsientoDiferencial {
@@ -36,6 +37,7 @@ public class AsientoDiferencial {
 		Date dtFecha = new Date();
 		double dTasaJDE = 0;
 		String sTipo="DIF/CAMB";
+		ClsParametroCaja cajaparm = new ClsParametroCaja();
 		
 		try {
 			sCodunineg = sCodunineg.trim();
@@ -64,10 +66,6 @@ public class AsientoDiferencial {
 			}else{
 				
 				sCoCuentaDI = vCtaDI.getId().getGmco().trim();
-				
-//				sCoCuentaDI = (sCodunineg.length()==4)? 
-//								sCodunineg.substring(0,2):
-//								sCodunineg;
 								
 				sCuentaDI = sCodunineg+"."+sCtaOb+"."+sCtaSub;				
 			}
@@ -87,10 +85,12 @@ public class AsientoDiferencial {
 			bHecho = rcCtrl.registrarBatchA92(cn,"G", iNobatchNodoc[0],iMonto, vaut.getId().getLogin(), 1, MetodosPagoCtrl.DEPOSITO);
 			if(bHecho){
 				
+				String sTipoDoc = cajaparm.getParametros("34", "0", "ASIENSOBRA_TIPODOC").getValorAlfanumerico().toString();
+				
 				//---- Registro en córdobas.
 				if(mpago.getMoneda().equals(sMonedaBase)){
 				
-					bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 1.0,
+					bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, sTipoDoc, iNobatchNodoc[1], 1.0,
 								iNobatchNodoc[0], sCuentaCaja[0], sCuentaCaja[1], 
 								sCuentaCaja[3], sCuentaCaja[4], sCuentaCaja[5],
 								"AA", mpago.getMoneda(), iMonto, 
@@ -98,7 +98,7 @@ public class AsientoDiferencial {
 								BigDecimal.ZERO, sTipoCliente,"DBTO X "+sTipo+" PAGO CTA CA: "+mpago.getMetodo()+" ",
 								sCuentaCaja[2], "", "", mpago.getMoneda(),sCuentaCaja[2],"D");
 					if(bHecho){
-						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 2.0,
+						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, sTipoDoc, iNobatchNodoc[1], 2.0,
 									iNobatchNodoc[0], sCuentaDI,	vCtaDI.getId().getGmaid(), 
 									vCtaDI.getId().getGmmcu().trim(), vCtaDI.getId().getGmobj().trim(), 
 									vCtaDI.getId().getGmsub().trim(), "AA",	mpago.getMoneda(),  iMonto*-1,
@@ -134,10 +134,9 @@ public class AsientoDiferencial {
 			}
 			
 		} catch (Exception error) {
-//			bHecho = false;
-//			m.put("sMsgErrorSobrante", "Error de sistema al intentar registrar asiento por sobrantes de pago");
 			strResultado[1] = "Error de sistema al intentar registrar asiento por sobrantes de pago";
 			error.printStackTrace();
+			LogCajaService.CreateLog("registarAsientosxSobrantes", "ERR", error.getMessage());
 		} 
 		return strResultado; 
 	}

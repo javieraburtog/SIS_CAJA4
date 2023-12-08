@@ -2175,7 +2175,7 @@ public class ArqueoCajaDAO {
 			lstCajas = (List)m.get("lstCajas");
 			vf55ca01 = ((Vf55ca01)lstCajas.get(0));
 			caid = vf55ca01.getId().getCaid();
-			codsuc  = vf55ca01.getId().getCaco();
+			codsuc  = "000" + ddlFiltroCompania.getValue().toString().trim(); 
 			codcomp = ddlFiltroCompania.getValue().toString();
 			sReferDep = txtCDC_ReferDeposito.getValue().toString().trim().toUpperCase();
 											 
