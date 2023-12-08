@@ -1249,7 +1249,7 @@ public class RevisionArqueoCtrl {
 			sql += " from "+PropertiesSystem.ESQUEMA+".recibo r  inner join "+PropertiesSystem.ESQUEMA+".recibodet rd on r.caid = rd.caid and r.codcomp = rd.codcomp";
 			sql += " and r.codsuc = rd.codsuc and r.numrec = rd.numrec and r.tiporec = rd.tiporec";
 			sql += " inner join "+PropertiesSystem.JDEDTA+".F0006 on trim(MCMCU) = trim(codunineg) /*and MCSTYL  = 'IS'*/";
-			sql += " and r.caid = "+iCaid+" and r.codsuc = '"+sCodsuc+"' and r.codcomp = '"+sCodcomp+"'";
+			sql += " and r.caid = "+iCaid+" and /*r.codsuc = '"+sCodsuc+"' and */ r.codcomp = '"+sCodcomp+"'";
 			sql += " and r.fecha = '"+sFecha+"' and r.numrec in " + sListarec;
 			sql += " group by r.codunineg, MCDL01";
 			 
@@ -1287,8 +1287,8 @@ public class RevisionArqueoCtrl {
 		try {
 			
 			sFecha = FechasUtil.formatDatetoString(dtFechaAr, "yyyy-MM-dd");			
-			sql =  " from Vrecibo v where v.id.caid = "+iCaid+ " and v.id.codcomp = '"+sCodcomp+"'";
-			sql += " and trim(v.id.codsuc) = '"+sCodsuc.trim()+"' and v.id.fecha = '"+sFecha+"' ";
+			sql =  " from Vrecibo v where v.id.caid = "+iCaid+ " and v.id.codcomp = '"+sCodcomp+"'"; 
+			sql += " and v.id.fecha = '"+sFecha+"' ";
 			sql += " and v.id.moneda = '"+sMoneda+"' and v.id.numrec in "+sLstRecibos;
 			
 			lstRecibos =  ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Vrecibo.class, false); 
