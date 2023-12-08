@@ -62,7 +62,7 @@ import com.prueba.ws.P5509800Input;
 import com.prueba.ws.P5509800PortType;
 import com.prueba.ws.P5509800_Service;
 
-import ni.com.casapellas.gcpfinanciamiento.pojo.DOCUMENTOSREQUERIDOSINFO;
+//import ni.com.casapellas.gcpfinanciamiento.pojo.DOCUMENTOSREQUERIDOSINFO;
 
 public class ConsolidadoDepositosBanco {
 	

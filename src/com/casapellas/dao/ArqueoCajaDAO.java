@@ -858,14 +858,7 @@ public class ArqueoCajaDAO {
 				msg = "No se ha podido establecer conexión con Socket Pos Credomatic ";
 			}
 			
-			/*
-			List<String> pruebaConexion = PosCtrl.probarConexion();
-			if (pruebaConexion == null || pruebaConexion.isEmpty() || pruebaConexion.get(0).contains("EC") ) {
-				msg = "Comunicación con Servidor SocketPOS no válida, " +
-						"favor intente nuevamente";
-				return;
-			}
-			*/
+			
 			
 		} catch (Exception e) {
 			msg = "Cierre no puede ser procesado, datos de cierre no válidos";
@@ -1369,7 +1362,7 @@ public class ArqueoCajaDAO {
 			String concepto =  "ReintegroFondo C:" + caid + ", Comp:" + sCodcomp.trim();
 			String msgLogs = concepto;
 			
-//			int iNoBatch = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMEROBATCH );
+
 			int iNoBatch = Divisas.numeroSiguienteJdeE1(  );
 			int iNoDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] ); 
 			

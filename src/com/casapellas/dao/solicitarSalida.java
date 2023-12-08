@@ -73,6 +73,10 @@ import com.infragistics.faces.window.component.html.HtmlDialogWindow;
  */
 public class solicitarSalida {
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+	
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
+	
 	protected P55RECIBO p55recibo;
 	//-------- Búsqueda de cliente y encabezado del recibo.
 	private HtmlInputText txtParametro;
@@ -156,7 +160,8 @@ public class solicitarSalida {
 				transaction  = session.beginTransaction();
 			 
 				int iNoBatch = Divisas.numeroSiguienteJdeE1(  );
-				int iNoDocumentoFor = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+				int iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+						//Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
 				iNobatchNodoc = new int[]{iNoBatch, iNoDocumentoFor};
 				
 				String tipoDocumento = CodigosJDE1.BATCH_CONTADO.codigo();

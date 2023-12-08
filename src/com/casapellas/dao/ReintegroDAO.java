@@ -139,7 +139,8 @@ public class ReintegroDAO {
 			
 			 
 			//iNoDocumento = dv.leerActualizarNoDocJDE();
-			iNoDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] ); //Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			iNoDocumento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] ); 
+			//Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
 			if(iNoDocumento == 0){
 				lblMensaje = "No se ha podido obtener el Número de Documento para el registro de reintegro de fondo minimo ";
 				return false;

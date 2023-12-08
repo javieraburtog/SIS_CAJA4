@@ -86,7 +86,9 @@ public class RevisionArqueoCtrl {
 	
 	String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
 	String[] valoresJdeInsContado = (String[]) m.get("valoresJDEInsContado");
-			
+		
+	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
+	
 	public Exception errorArqueoCtlr;
 	public Exception getErrorArqueoCtlr() {
 		return errorArqueoCtlr;
@@ -131,13 +133,15 @@ public class RevisionArqueoCtrl {
 			ps.close();
 			
 		} catch (Exception e ) {
-			e.printStackTrace(); 
+			
+			LogCajaService.CreateLog("ObtenerNumeroDocumento", "ERR", e.getMessage());
 		} finally{
 			try {
 				if(cn != null && !cn.isClosed())
 					cn.commit();
 			} catch (Exception e2) {
-				e2.printStackTrace();
+				
+				LogCajaService.CreateLog("ObtenerNumeroDocumento", "ERR", e2.getMessage());
 			}
 
 		}
@@ -161,7 +165,8 @@ public class RevisionArqueoCtrl {
 
 		} catch (Exception e) {
 			valido = false;
-			e.printStackTrace(); 
+			
+			LogCajaService.CreateLog("validarNumeroReferencia", "ERR", e.getMessage());
 		}  
 		return valido;
 	}
@@ -183,7 +188,7 @@ public class RevisionArqueoCtrl {
 
 		} catch (Exception e) {
 			valido = false;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("validarNumeroReferencia", "ERR", e.getMessage());
 		}  
 		return valido;
 	}
@@ -262,7 +267,7 @@ public class RevisionArqueoCtrl {
 			
 		} catch (Exception e) {
 			referencia = reference  ;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("generarReferenciaDeposito", "ERR", e.getMessage());
 		}  
 		return referencia;
 	}
@@ -339,7 +344,8 @@ public class RevisionArqueoCtrl {
 			
 		} catch (Exception e) {
 			referencia = reference  ;
-			e.printStackTrace(); 
+		
+			LogCajaService.CreateLog("generarReferenciaDeposito", "ERR", e.getMessage());
 		}  
 		return referencia;
 	}
@@ -377,7 +383,7 @@ public class RevisionArqueoCtrl {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("getBase64StringFromFile", "ERR", e.getMessage());
 		}finally{
 			if(newCn){
 				try {  trans.commit(); } 
@@ -509,7 +515,8 @@ public class RevisionArqueoCtrl {
 			
 //			int numerobatch = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMEROBATCH );
 			int numerobatch = Divisas.numeroSiguienteJdeE1( );
-			int numeroDocumento = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
+			int numeroDocumento =Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] ); 
+					//Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
 			 
 			iTotalTransaccion =  Integer.parseInt( String.format("%1$.2f", dMonto ).replace(".", "")  ); 
 			bHecho = rcCtrl.registrarBatchA92( session, dtFecha, valoresJdeInsContado[8], numerobatch, iTotalTransaccion, vaut.getId().getLogin(), 1, "APBRARQUEO", valoresJdeInsContado[9] );
@@ -641,7 +648,7 @@ public class RevisionArqueoCtrl {
 		} catch (Exception error) {
 			errorArqueoCtlr = error;
 			sMsjErrorjde = "Nota de débito al cajero por faltante no pudo grabarse en JDE,  intente nuevamente ";
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("generarNotadeDebito", "ERR", error.getMessage());
 		}finally{
 			
 			if(!bHecho)
@@ -725,132 +732,11 @@ public class RevisionArqueoCtrl {
 		} catch (Exception e) {
 			lstTotalChk = null;
 			errorArqueoCtlr = e;
-			System.out.println(": Excepción capturada en: RevisionArqueoCtrl.obtenerTotalesChequexBanco() "+e);
+			LogCajaService.CreateLog("obtenerTotalesChquexBanco", "ERR", e.getMessage());
 		}
 		return lstTotalChk;
 	}
-/****************************************************************************************/
-/** Método: Registra los asientos de los depósitos generados en la aprobación del arqueo.
- *	Fecha:  02/08/2010
- *  Nombre: Carlos Manuel Hernández Morrison.
- **/
-	/*public boolean registrarDepositosAprobArqueo(List<Object[]> lstDepositos,String sLogin,int iCodreg,Session sesionCaja){
-		boolean bHecho = true;
-		Numcaja nc = null;
-		Deposito dp = null;
-		DepositoId dpId = null;
-		Divisas dv = new Divisas();
-		ReciboCtrl rcCtrl = new ReciboCtrl();
-		String sMensajeError = "";
-				
-		//---- Datos para los depósitos, guardados en la lista.
-		Date dtFecha,dtHora;
-		BigDecimal bdMonto,bdTasa;
-		int iCaid,iNobatch,iNodoco,iNoarqueo,iNodep;
-		String sCodsuc,sCodcomp,sMoneda,sCoduser,sRefer,sTipodep,sTipopago;
-		String sReferPago;
-		int iBanderaPasoMetodo=0;
-				
-		try {
-			iBanderaPasoMetodo=1;
-			
-			//--- Obtener los datos almacenados durante la generación de asientos.
-			for (Object[] oDeps : lstDepositos) {
-				
-				iCaid 		= Integer.parseInt(oDeps[0].toString());
-				sCodsuc		= oDeps[1].toString();
-				sCodcomp	= oDeps[2].toString();
-				iNobatch 	= Integer.parseInt(oDeps[3].toString());
-				iNodoco		= Integer.parseInt(oDeps[4].toString());
-				iNoarqueo	= Integer.parseInt(oDeps[5].toString());
-				sMoneda		= oDeps[6].toString();
-				bdMonto		= (BigDecimal)oDeps[7];
-				dtFecha		= (Date)oDeps[8];
-				dtHora		= (Date)oDeps[9];
-				sCoduser	= oDeps[10].toString();
-				sRefer		= oDeps[11].toString();
-				sTipodep	= oDeps[12].toString();
-				sTipopago   = oDeps[14].toString();
-				bdTasa   	= new BigDecimal(oDeps[15].toString());
-				sReferPago  = oDeps[16].toString();
-				
-				iBanderaPasoMetodo=2;
-				
-				//---Obtener la numeración para el depósito.
-				nc = dv.obtenerNumeracionCaja("NDEPOSITO", iCaid, sCodcomp, sCodsuc, true, sLogin);
-				if(nc!=null){
-					iNodep = nc.getNosiguiente();
-					
-					//---- Crear el objeto Deposito, DepositoId para insertarlo a la tabla.
-					dp = new Deposito();
-					dpId = new DepositoId();
-					
-					dpId.setCaid(iCaid);
-					dpId.setCodcomp(sCodcomp);
-					dpId.setCodsuc(sCodsuc);
-					dpId.setNodeposito(iNodep);
-					dp.setId(dpId);
-					
-					dp.setHora(dtHora);
-					dp.setFecha(dtFecha);
-					dp.setCoduser(sCoduser);
-					
-					dp.setMoneda(sMoneda);
-					dp.setMonto(bdMonto);
-					dp.setTipodep(sTipodep);
-					dp.setMpagodep(sTipopago);
-					dp.setReferencia(sRefer);    //--- Código del banco, o de afiliado. 
-					dp.setTasa(bdTasa);
-					
-					dp.setTipoconfr("");
-					dp.setEstadocnfr("SCR");
-					dp.setUsrconfr(iCodreg);
-					dp.setUsrcreate(iCodreg);
-					dp.setReferdep(sReferPago);  //--- Referencia del método de pago.
-					dp.setHoramod(dtHora);
-					dp.setFechamod(dtFecha);
-					
-					iBanderaPasoMetodo=3;
-					sesionCaja.save(dp);
-					
-					iBanderaPasoMetodo=4;
-					//--- Guardar el enlace con ReciboJde.
-					bHecho = rcCtrl.fillEnlaceMcajaJde(sesionCaja, null,iNodep, sCodcomp, iNodoco, iNobatch, iCaid, sCodsuc, "D",sTipopago);
-					
-					iBanderaPasoMetodo=5;
-					//--- guardar el registro en Arqueorec para conocer los depósitos de un arqueo
-					if(bHecho){
-						Arqueorec ar = new Arqueorec();
-						ArqueorecId arid = new ArqueorecId();
-						arid.setCaid(iCaid);
-						arid.setCodcomp(sCodcomp);
-						arid.setCodsuc(sCodsuc);
-						arid.setNoarqueo(iNoarqueo);
-						arid.setNumrec(iNodep);
-						arid.setTipodoc('D');
-						arid.setTiporec("D");
-						ar.setId(arid);
-						sesionCaja.save(ar);
-					}else{
-						sMensajeError = "No se ha podido guardar el registro en ReciboJde para depósitos de Caja";
-					}
-				}else{
-					bHecho = false;
-					sMensajeError = "No se ha podido obtener la numeración de Caja para depósitos.";
-				}
-			}
-			iBanderaPasoMetodo=6;
-			sesionCaja.flush();
-			
-		} catch (Exception error) {
-			bHecho = false;
-			sMensajeError = "No se ha podido guardar el registro de depósitos: Error de sistema: "+error;
-			System.out.println("\n\n\t=>> CÓDIGO DE ERROR:  "+ iBanderaPasoMetodo);
-			System.out.println("Error en  RevisionArqueoCtrl.registrarDepositosAprobArqueo" + error);
-		}
-		return bHecho;
-	}*/
-	
+
 	@SuppressWarnings("unchecked")
 	public List<ResumenAfiliado> consultaMontoPOSxMarca(int iCaid,String sCodcomp, String sMoneda, String sListaRec,
 											Date dtFecha, List<DncCierreDonacion> cierresDnc){
@@ -1294,7 +1180,7 @@ public class RevisionArqueoCtrl {
 			
 			
 		} catch (Exception error) {
-			System.out.println("Error en  RevisionArqueoCtrl.consultarMontosPOS" + error);
+			LogCajaService.CreateLog("consultarMontosPO1", "ERR", error.getMessage());
 		} finally {
 			sesion.close();
 		}
@@ -1387,7 +1273,7 @@ public class RevisionArqueoCtrl {
 			}
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("obtenerTotalxUnineg", "ERR", error.getMessage());
 		} 
 		return lstUnineg;
 	}
@@ -1408,7 +1294,7 @@ public class RevisionArqueoCtrl {
 			lstRecibos =  ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Vrecibo.class, false); 
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("obtenerVrecibos", "ERR", error.getMessage());
 		}  
 		return lstRecibos;
 	}
@@ -1423,7 +1309,7 @@ public class RevisionArqueoCtrl {
 			lstMonedas = ConsolidadoDepositosBcoCtrl.executeSqlQuery(consulta, Vmonedasxcontador.class, false);
  
 		}catch(Exception error){
-			 error.printStackTrace(); 
+			LogCajaService.CreateLog("cargarMonedasxContador", "ERR", error.getMessage());
 		} 
 		return lstMonedas;
 	}
@@ -1440,7 +1326,7 @@ public class RevisionArqueoCtrl {
 			lstMonedas = ConsolidadoDepositosBcoCtrl.executeSqlQuery(consulta, Vcompaniaxcontador.class, true);
 			 
 		}catch(Exception error){
-			 error.printStackTrace(); 
+			LogCajaService.CreateLog("cargarCompaniaxContador", "ERR", error.getMessage());
 		}
 		return lstMonedas;
 	}
@@ -1468,7 +1354,7 @@ public class RevisionArqueoCtrl {
 				}			
 			}
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.cargarFacturasArqueo "+error);
+			LogCajaService.CreateLog("cargarFacturasArqueo", "ERR", error.getMessage());
 		}
 		return lstVhfact;
 	}
@@ -1498,7 +1384,7 @@ public class RevisionArqueoCtrl {
 				factura = (Vhfactura)ob;
 			
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.obtenerVhfactura "+error);
+			LogCajaService.CreateLog("obtenerVhfactura", "ERR", error.getMessage());
 		}finally{
 			try{if(bUnico){trans = null; sesion.close();} }catch(Exception ex2){ex2.printStackTrace();};
 		}
@@ -1527,8 +1413,7 @@ public class RevisionArqueoCtrl {
 				}
 			}
 		}catch(Exception error){
-			lstRecibos = null;
-			System.out.println(": Excepcion generada en RevisionArqueoCtrl.cargarRecibosArqueo "+error);
+			LogCajaService.CreateLog("cargarRecibosArqueo", "ERR", error.getMessage());
 		}
 		return lstRecibos;
 	}
@@ -1555,16 +1440,10 @@ public class RevisionArqueoCtrl {
 				
 				sLstRecibos = lstArqueorec.toString().replace("[","(").replace("]",")") ;
 				
-//				sLstRecibos = "("; 
-//				for(int i=0; i<lstArqueorec.size(); i++){					
-//					sLstRecibos += lstArqueorec.get(i).toString();
-//					sLstRecibos += (i==lstArqueorec.size()-1)? ")" : ",";
-//				}
-				
 			}
 		}catch(Exception error){
 			sLstRecibos = "";
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("cargarRecibosArqueo", "ERR", error.getMessage());
 		}
 		return sLstRecibos;
 	}	
@@ -1600,9 +1479,9 @@ public class RevisionArqueoCtrl {
 				tx.commit();
 						
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.obtenerRecibo "+error);
+			LogCajaService.CreateLog("obtenerRecibo", "ERR", error.getMessage());
 		}finally{
-			try{sesion.close();}catch(Exception ex2){ex2.printStackTrace();};
+			try{sesion.close();}catch(Exception ex2){LogCajaService.CreateLog("obtenerRecibo", "ERR", ex2.getMessage());};
 		}
 		return re;
 	}
@@ -1639,7 +1518,7 @@ public class RevisionArqueoCtrl {
 				}
 			}	
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.obtenerRecibostmp "+error);
+			LogCajaService.CreateLog("obtenerRecibostmp", "ERR", error.getMessage());
 		}finally{
 			try{sesion.close();}catch(Exception ex2){ex2.printStackTrace();};
 		}		
@@ -1722,10 +1601,10 @@ public class RevisionArqueoCtrl {
 			}
 			
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.obtenerRecibostmp "+error);
+			LogCajaService.CreateLog("obtenerRecibosxTipo", "ERR", error.getMessage());
 		}	
 		finally{
-			try{sesion.close();}catch(Exception ex2){ex2.printStackTrace();};
+			try{sesion.close();}catch(Exception ex2){LogCajaService.CreateLog("obtenerRecibosxTipo", "ERR", ex2.getMessage());};
 		}	
 		return lstRecibostmp;
 	}
@@ -1751,7 +1630,7 @@ public class RevisionArqueoCtrl {
 				f55ca011 = (F55ca011)ob;
 			
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.obtenerCuetnaCajaxMoneda "+error);
+			LogCajaService.CreateLog("obtenerCuentaCajaxMoneda", "ERR", error.getMessage());
 		}finally{
 			if(trans == null){
 				tx.commit();
@@ -1781,7 +1660,7 @@ public class RevisionArqueoCtrl {
 				cuenta = (F55ca023)ob;
 			
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.obtenerCtaTranBanco "+ error);			
+			LogCajaService.CreateLog("obtenerCtaTranBanco", "ERR", error.getMessage());	
 		}finally{
 			if(trans == null){
 				tx.commit();
@@ -1805,7 +1684,7 @@ public class RevisionArqueoCtrl {
 				iLastBatch = Integer.parseInt(ob.toString());
 			
 		}catch(Exception ex){
-			System.out.print("=>Excepcion capturada en RevisionArqueoCtrl.obtenerBatchActual: " + ex);
+			LogCajaService.CreateLog("obtenerNoBatchActual", "ERR", ex.getMessage());	
 		}finally{
 			try{sesion.close();}catch(Exception ex2){ex2.printStackTrace();};
 		}
@@ -1825,7 +1704,7 @@ public class RevisionArqueoCtrl {
 				iNumDoc = Integer.parseInt(ob.toString());			
 			
 		}catch(Exception ex){			
-			System.out.println("Se capturo una Excepcion en RevisionArqueoCtrl.leerNumeroDocumento: " + ex);
+			LogCajaService.CreateLog("leerNumeroDocumento", "ERR", ex.getMessage());	
 		}finally{
 			sesion.close();
 		}
@@ -1866,7 +1745,7 @@ public class RevisionArqueoCtrl {
 			trans.commit();
 			
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.obtenerRecibosxdevolucion "+error);
+			LogCajaService.CreateLog("obtenerRecibosxdevolucion", "ERR", error.getMessage());	
 		}finally{
 			sesion.close();
 		}
@@ -1900,13 +1779,12 @@ public class RevisionArqueoCtrl {
 			sConsulta += " and v.id.codsuc = '"+sCodsuc+"' and v.id.rfecha = '"+sFecha+"' and v.id.hora <= '"+sHora+"'";
 			sConsulta += " and v.id.rmoneda = '"+sMoneda+"' and v.id.tiporec <> 'FCV'";
 			sConsulta += " and v.id.numrec in " +sLstNumrec;
-//			sconsulta += " and v.id.fmoneda = '"+sMoneda+"'";
 			
 			lstRecibos = sesion.createQuery(sConsulta).list();
 			
 		}catch(Exception error){
 			lstRecibos = null;
-			System.out.println("Error en ArqueoCajaCtrl.obtenerRecpagBanco "+error);
+			LogCajaService.CreateLog("obtenerRecpagBanco", "ERR", error.getMessage());
 		}		
 		return lstRecibos;
 	}
@@ -1943,7 +1821,7 @@ public class RevisionArqueoCtrl {
 			lstDev = sesion.createQuery(sConsulta).list();
 			
 		}catch(Exception error){
-			System.out.println("Error en arqueoCajaCtrl.obtenerRecibosxdevolucion "+error);
+			LogCajaService.CreateLog("obtenerRecibosxdevolucion", "ERR", error.getMessage());
 		}
 		return lstDev;
 	}
@@ -1973,7 +1851,7 @@ public class RevisionArqueoCtrl {
 			
 		}catch(Exception error){
 			lstCambios = null;
-			System.out.println("Error en RevisionArqueoCtrl.cargarDetCambio "+error);
+			LogCajaService.CreateLog("cargarDetCambio", "ERR", error.getMessage());
 		}	
 		return lstCambios;
 	}
@@ -2009,7 +1887,7 @@ public class RevisionArqueoCtrl {
 			lstRecibos = sesion.createQuery(sConsulta).list();
 			
 		}catch(Exception error){
-			System.out.println("Error en RevisionArqueoCtrl.obtenerIngEgrRecMonEx "+error);
+			LogCajaService.CreateLog("obtenerIngEgrRecMonEx", "ERR", error.getMessage());
 		}
 		return lstRecibos;
 	}
@@ -2039,7 +1917,7 @@ public class RevisionArqueoCtrl {
 						
 		}catch(Exception error){
 			lstRec = null;
-			System.out.println("Error en ArqueoCajaCtrl.obtenerRecibosxcambiomixto "+error);
+			LogCajaService.CreateLog("obtenerRecibosxcambiomixto", "ERR", error.getMessage());
 		}		
 		return lstRec;
 	}
@@ -2062,7 +1940,7 @@ public class RevisionArqueoCtrl {
 			
 		}catch(Exception error){
 			recibos = null;
-			System.out.println("Error en ArqueoCajaCtrl.cargarRecibosxMetodoPago "+error);
+			LogCajaService.CreateLog("cargarRecibosxMetodoPago", "ERR", error.getMessage());
 		}	
 		return recibos;
 	}
@@ -2083,7 +1961,7 @@ public class RevisionArqueoCtrl {
 			lstRec = sesion.createQuery(sConsulta).list();
 						
 		}catch(Exception error){
-			System.out.println("Error en ArqueoCajaCtrl.obtenerRecibosxCambios "+error);
+			LogCajaService.CreateLog("obtenerRecibosxcambios", "ERR", error.getMessage());
 		}		
 		return lstRec;
 	}
@@ -2117,7 +1995,7 @@ public class RevisionArqueoCtrl {
 			
 		}catch(Exception error){
 			lstDev  = null;
-			System.out.println("Error en obtenerRecxDevmonex.obtenerRecxDevmonex "+error);
+			LogCajaService.CreateLog("obtenerRecxDevmonex", "ERR", error.getMessage());
 		}
 		return lstDev;
 	}
@@ -2166,7 +2044,7 @@ public class RevisionArqueoCtrl {
 				
 			
 		}catch(Exception error){
-			System.out.println("Error en ArqueoCajaCtrl.obtenerTotalxdevdia ");
+			LogCajaService.CreateLog("obtenerTotalxdevdia", "ERR", error.getMessage());
 			error.printStackTrace();
 		}finally{
 			
@@ -2185,9 +2063,6 @@ public class RevisionArqueoCtrl {
 	public List<Vrecibodevrecibo> obtenerRecibosSinDev(int iCaid,String sCodcomp,String sCodsuc,String sMoneda,String sMpago,String sListaRec,Date dtFecha){
 		List<Vrecibodevrecibo> lstRecibos = null;
 		
-//		Session sesion = HibernateUtil.getSessionFactoryMCAJAR().openSession();
-//		Transaction trans = null;
-		
 		String sConsulta = "",sFecha;		
 		SimpleDateFormat format;
 		
@@ -2205,14 +2080,10 @@ public class RevisionArqueoCtrl {
 			lstRecibos = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sConsulta, Vrecibodevrecibo.class, false);
 			
 			
-//			trans = sesion.beginTransaction();
-//			lstRecibos = sesion.createQuery(sConsulta).list();
-//			trans.commit();
+
 			
 		} catch (Exception error) {
-			error.printStackTrace();
-		} finally {
-//			sesion.close();
+			LogCajaService.CreateLog("obtenerRecibosSinDev", "ERR", error.getMessage());
 		}
 		return lstRecibos;
 	}
@@ -2237,7 +2108,7 @@ public class RevisionArqueoCtrl {
 
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("obtenerRecibosSinDev", "ERR", error.getMessage());
 		} 
 		return lstRecibos;
 	}
@@ -2289,30 +2160,11 @@ public class RevisionArqueoCtrl {
 			lstRecibos = (ArrayList<Object[]>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(strQueryExecute, true, null ) ;
 			
 			
-/*			sFecha = FechasUtil.formatDatetoString(dtFecha, "yyyy-MM-dd");
-			
-			sql = sql.concat(" select sum(v.id.monto - v.id.totaldev),v.id.afcomision,");
-			sql = sql.concat(" v.id.afnombre, v.id.refer1, trim(v.id.codunineg), v.id.caidpos\n");;
-			sql = sql.concat(" from Vdetrecibodev as v where v.id.fecha = '").concat(sFecha);
-			sql = sql.concat("' and v.id.caid = ").concat(String.valueOf(iCaid));
-			sql = sql.concat(" \nand v.id.codsuc = '").concat(sCodsuc).concat("' and v.id.codcomp = '");
-			sql = sql.concat(sCodcomp).concat("' and tiporec not in ('FCV','DCO')");
-			sql = sql.concat(" \n and v.id.mpago  = '"+MetodosPagoCtrl.TARJETA+"' and v.id.moneda = '").concat(sMoneda).concat("'");
-			sql = sql.concat(" \n and v.id.numrec in ").concat(sListaRec);
-			sql = sql.concat(" \n group by v.id.refer1,v.id.afcomision,v.id.afnombre, v.id.codunineg, v.id.caidpos\n");;
-			
-			sesion = HibernateUtil.getSessionFactoryMCAJAR().openSession();
-			trans = sesion.beginTransaction();
-			
-			lstRecibos = (ArrayList<Object[]>)sesion.createQuery(sql).list();*/
-			 
+ 
 
 		} catch (Exception error) {
 			lstRecibos = new ArrayList<Object[]>();
-			error.printStackTrace(); 
-		} finally {
-/*			try{ trans.commit() ;}catch(Exception ex2 ){ex2.printStackTrace();} 
-			try{sesion.close();}catch(Exception ex2){ex2.printStackTrace();};*/
+			LogCajaService.CreateLog("obtenerMontoPOSxUN", "ERR", error.getMessage());
 		}
 		return lstRecibos;
 	}
@@ -2355,7 +2207,7 @@ public class RevisionArqueoCtrl {
 
 		} catch (Exception error) {
 			lstRecibos = new ArrayList<Object[]>();
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("obtenerMontoPOSxUN", "ERR", error.getMessage());
 		} 
 		return lstRecibos;
 	}
@@ -2388,7 +2240,7 @@ public class RevisionArqueoCtrl {
 			trans.commit();
 			
 		} catch (Exception error) {
-			System.out.println("Error en RevisionArqueoCtrl.obtenerMontosxAfiliados " + error);
+			LogCajaService.CreateLog("obtenerMontosxAfiliados", "ERR", error.getMessage());
 		} finally {
 			sesion.close();
 		}
@@ -2458,7 +2310,7 @@ public class RevisionArqueoCtrl {
 			sesion.save(ar);
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("guardarRegistroDeposito", "ERR", error.getMessage());
 			bHecho = false;
 		} 
 		return bHecho;
@@ -2509,11 +2361,6 @@ public class RevisionArqueoCtrl {
 				sTipoPago	= oDep[14].toString();
 				bdTasa      = new BigDecimal(oDep[15].toString());
 				
-				/*//guardar el registro en la tabla de depósito.
-				bHecho = dv.registrarDeposito(iNodep, iCaid, sCodsuc, sCodcomp, dtFecha, dtHora,
-												bdMonto, sMoneda, sRefer, sCoduser, sTipodep,bdTasa, 
-												iCodreg,sTipoPago,iCodigoBanco,sesion, trans,iCodreg, null);*/
-				
 				if(bHecho){
 					//guardar registro de ReciboJDE
 					bHecho = rcCtrl.fillEnlaceMcajaJde(sesion, trans,iNodep, sCodcomp, iNodoco, iNobatch, iCaid, sCodsuc, "D","D");
@@ -2538,17 +2385,22 @@ public class RevisionArqueoCtrl {
 						sesion.update(nc);
 						
 					}else{
-						System.out.println("Error: No se puede registrar el deposito "+iNodep+" en ReciboJDE ");
+						
+						LogCajaService.CreateLog("guardarListaDepositos1", "ERR", "Error: No se puede registrar el deposito "+iNodep+" en ReciboJDE ");
 						break;
 					}
 				}else
 				{
-					System.out.println("Error: No se puede registrar el deposito "+iNodep+" en Depósito");
+					
+					LogCajaService.CreateLog("guardarListaDepositos1", "ERR", "Error: No se puede registrar el deposito "+iNodep+" en Depósito");
+					
 					break;
 				}
 			}
 			}else{
-					System.out.println("Error: No se puede obtener el número siguiente de depósitos en Divisas.guardarRegistroDeposito");
+					
+					LogCajaService.CreateLog("guardarListaDepositos1", "ERR", "Error: No se puede obtener el número siguiente de depósitos en Divisas.guardarRegistroDeposito");
+					
 					bHecho = false;
 				}			
 			
@@ -2559,7 +2411,9 @@ public class RevisionArqueoCtrl {
 				trans.rollback();
 			
 		} catch (Exception error) {
-			System.out.println("Error en Divisas.guardarRegistroDeposito " + error);
+			
+			LogCajaService.CreateLog("guardarListaDepositos1", "ERR", error.getMessage());
+			
 			bHecho = false;
 			trans.rollback();
 		} finally {
