@@ -63,8 +63,7 @@ public class ArqueoCtrl {
 			}
 		} catch (Exception error) {
 			lstArqueos = null;
-
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerListaArqueos", "ERR", error.getMessage());
 		}
 		return lstArqueos;
 	}
@@ -188,8 +187,7 @@ public class ArqueoCtrl {
 			}
 			
 		}catch(Exception error){
-			error.printStackTrace();
-//			System.out.println("Error en ArqueoCtrl.obtenerArqueosPendientes "+error);
+			LogCajaService.CreateLog("obtenerArqueosPendientes", "ERR", error.getMessage());
 		}		
 		return lstArqueos;	
 	}
@@ -215,8 +213,7 @@ public class ArqueoCtrl {
 			
 			
 		}catch(Exception error){
-			error.printStackTrace();
-//			System.out.println("Error en ArqueoCtrl.obtenerNombreCajero "+error);
+			LogCajaService.CreateLog("obtenerNombreEmpleado", "ERR", error.getMessage());
 		}
 		return nombre;
 	}
@@ -240,8 +237,7 @@ public class ArqueoCtrl {
 			
 			
 		}catch(Exception error){
-			error.printStackTrace();
-//			System.out.println("Error en ArqueoCtrl.obtenerNombreSucursal "+error);
+			LogCajaService.CreateLog("obtenerNombreSucursales", "ERR", error.getMessage());
 		}	
 		return nombre;
 	}
@@ -265,8 +261,7 @@ public class ArqueoCtrl {
 			
 			
 		}catch(Exception error){
-			error.printStackTrace();
-//			System.out.println("Error en ArqueoCtrl.obtenerNombreCaja "+error);
+			LogCajaService.CreateLog("obtenerNombreCaja", "ERR", error.getMessage());
 		}	
 		return nombre;
 	}	

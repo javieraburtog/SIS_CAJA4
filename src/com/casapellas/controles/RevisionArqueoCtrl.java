@@ -1022,7 +1022,7 @@ public class RevisionArqueoCtrl {
 				}
 				 
 				//&& =============== Calcular comision segun compania 
-				if(sCodcomp.trim().equals("E08")){
+				if(sCodcomp.trim().equals("90")){
 					
 					//calcular el monto comisionable
 					bdmontoComisionable =  new BigDecimal(dv.roundDouble(bdTotal.doubleValue()/bdivaTrader.doubleValue()));				

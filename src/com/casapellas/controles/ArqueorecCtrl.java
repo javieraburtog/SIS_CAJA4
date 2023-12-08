@@ -242,10 +242,7 @@ public class ArqueorecCtrl {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-//			System.out.println(" com.casapellas.controles " + new Date());
-//			System.out
-//					.println("GCPMCAJA: Excepción capturada en : obtenerResumenBanco Mensaje:\n "
-//							+ e);
+			LogCajaService.CreateLog("obtenerResumenBanco", "ERR", e.getMessage());
 		}finally{
 			if( bNuevaSessionCaja ){
 				try{trans.commit();}catch(Exception e){e.printStackTrace();}
@@ -302,7 +299,7 @@ public class ArqueorecCtrl {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
- 
+			LogCajaService.CreateLog("obtenerRecibosEnCierre", "ERR", e.getMessage());
 		}finally{
 			ConsolidadoDepositosBcoCtrl.closeSessionForQuery(true, dtaCn);
 		}
@@ -395,7 +392,7 @@ public class ArqueorecCtrl {
 			}
 		}catch(Exception error){
 			agregados = false;
-//			System.out.println("Error en ArqueorecCtrl.guardarSalidasArc "+error);
+			LogCajaService.CreateLog("guardarSalidasArc", "ERR", error.getMessage());
 			error.printStackTrace();
 		}		
 		return agregados;

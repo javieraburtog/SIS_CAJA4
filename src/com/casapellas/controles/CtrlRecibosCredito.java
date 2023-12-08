@@ -56,6 +56,7 @@ import com.casapellas.entidades.RecibofacId;
 import com.casapellas.entidades.Tcambio;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
 import com.infragistics.faces.input.component.html.HtmlDateChooser;
 import com.infragistics.faces.shared.smartrefresh.SmartRefreshManager;
@@ -153,8 +154,8 @@ public class CtrlRecibosCredito {
 					//Muestra Recibo
 					dwRecibo.setWindowState("normal");
 					
-				}catch(Exception ex){
-					System.out.println("Exception -> mostrarRecibo: " + ex);
+				}catch(Exception ex){					
+					LogCajaService.CreateLog("Exception -> mostrarRecibo:", "ERR", ex.getMessage());
 				}
 				
 			} else {
@@ -262,7 +263,8 @@ public class CtrlRecibosCredito {
 				}
 			}
 		}catch(Exception ex){					
-			System.out.println("Exepcion en validaFacturas. " + ex);
+			
+			LogCajaService.CreateLog("Exepcion en validaFacturas", "ERR", ex.getMessage());
 		} 
 		return valf;
 	}
@@ -487,8 +489,7 @@ public class CtrlRecibosCredito {
 		}
 	
 		}catch(Exception ex){
-			System.out.println("Exception -> procesarRecibo: " + ex);
-			
+			LogCajaService.CreateLog("Exception -> procesarRecibo:", "ERR", ex.getMessage());
 		}finally{
 			try{session.close();}catch(Exception ex2){ex2.printStackTrace();};
 		}		
@@ -626,158 +627,10 @@ public class CtrlRecibosCredito {
 				//f0311[a] = obtenerFacturaF0311(hFac[a].getNofactura(),hFac[a].getPartida(), hFac[a].getTipofactura(), hFac[a].getCodcli());
 			//}
 		}catch(Exception ex){
-			System.out.print("=>Excepcion capturada en contabilizarCredito: " + ex);
+			LogCajaService.CreateLog("=>Excepcion capturada en contabilizarCredito:", "ERR", ex.getMessage());
 		}
 	}
 	
-/****************************************************************************************************/
-/******************************GENERAR RC PARA FACTURA***********************************************/
-	/*public void generarRC(F0311JDBC f0311){
-		
-		String sql = "insert into "+PropertiesSystem.JDECOM+".f0311 values ("+
-						"'" + f0311.getRpkco() +"'," +//1
-						f0311.getRpan8() +"," +//2
-						"'" + f0311.getRpdct() +"'," +//3
-						f0311.getRpdoc() +"," +//4
-						"'" + f0311.getRpsfx() +"'," +//5
-						f0311.getRpdivj() +"," +//6
-						"'" + f0311.getRpdctm() +"'," +//7
-						f0311.getRpdocm() +"," +//8
-						"'" + f0311.getRpsfxm() +"'," +//9
-						f0311.getRpdmtj() +"," +//10
-						f0311.getRpdgj() +"," +//11
-						f0311.getRpfy() +"," +//12
-						f0311.getRpctry() +"," +//13
-						f0311.getRppn() +"," +//14
-						"'" + f0311.getRpco() +"'," +//15
-						"'" + f0311.getRpicut() +"'," +//16
-						f0311.getRpicu() +"," +//17
-						f0311.getRpdicj() +"," +//18
-						f0311.getRppa8() +"," +//19
-						f0311.getRpan8j() +"," +//20
-						"'" + f0311.getRppost() +"'," +//21
-						"'" + f0311.getRpbalj() +"'," +//22
-						"'" + f0311.getRppst() +"'," +//23
-						f0311.getRpag() +"," +//24
-						f0311.getRpaap() +"," +//25
-						f0311.getRpadsc() +"," +//26
-						f0311.getRpadsa() +"," +//27
-						f0311.getRpatxa() +"," +//28
-						f0311.getRpatxn() +"," +//29
-						f0311.getRpstam() +"," +//30
-						"'" + f0311.getRpcrrm() +"'," +//31
-						"'" + f0311.getRpcrcd() +"'," +//32
-						f0311.getRpcrr() +"," +//33
-						f0311.getRpacr() +"," +//34
-						f0311.getRpfap() +"," +//35
-						f0311.getRpcds() +"," +//36
-						f0311.getRpcdsa() +"," +//37
-						f0311.getRpctxa() +"," +//38
-						f0311.getRpctxn() +"," +//39
-						f0311.getRpctam() +"," +//40
-						"'" + f0311.getRptxa1() +"'," +//41
-						"'" + f0311.getRpexr1() +"'," +//42
-						f0311.getRpdsvj() +"," +//43
-						"'" + f0311.getRpglc() +"'," +//44
-						"'" + f0311.getRpglba() +"'," +//45
-						"'" + f0311.getRpam() +"'," +//46
-						"'" + f0311.getRpaid2() +"'," +//47
-						"'" + f0311.getRpam2() +"'," +//48
-						"'" + f0311.getRpmcu() +"'," +//49
-						"'" + f0311.getRpobj() +"'," +//50
-						"'" + f0311.getRpsub() +"'," +//51
-						"'" + f0311.getRpsblt() +"'," +//52
-						"'" + f0311.getRpsbl() +"'," +//53
-						"'" + f0311.getRpbaid() +"'," +//54
-						"'" + f0311.getRpcm() +"'," +//55
-						"'" + f0311.getRpptc() +"'," +//56
-						f0311.getRpddj() +"," +//57
-						f0311.getRpddnj() +"," +//58
-						f0311.getRpdprj() +"," +//59
-						f0311.getRpsmtj() +"," +//60
-						f0311.getRpcldj() +"," +//61
-						f0311.getRpitij() +"," +//62
-						f0311.getRpddj() +"," +//63
-						f0311.getRprdsj() +"," +//64
-						"'" + f0311.getRpnbrr() +"'," +//65
-						"'" + f0311.getRprdrl() +"'," +//66
-						f0311.getRprmds() +"," +//67
-						"'" + f0311.getRpcoll() +"'," +//68
-						"'" + f0311.getRpclrc() +"'," +//69
-						"'" + f0311.getRpafc() +"'," +//70
-						"'" + f0311.getRpnsf() +"'," +//71
-						"'" + f0311.getRpar() +"'," +//72
-						"'" + f0311.getRptrtc() +"'," +//73
-						"'" + f0311.getRpprt1() +"'," +//74
-						f0311.getRpodoc() +"," +//75
-						"'" + f0311.getRpodct() +"'," +//76
-						"'" + f0311.getRposfx() +"'," +//77
-						"'" + f0311.getRpcrc() +"'," +//78
-						f0311.getRpvldt() +"," +//79
-						"'" + f0311.getRpvinv() +"'," +//80
-						"'" + f0311.getRppo() +"'," +//81
-						"'" + f0311.getRpdcto() +"'," +//82
-						f0311.getRplnid() +"," +//83
-						"'" + f0311.getRpsfxo() +"'," +//84
-						"'" + f0311.getRpsdct() +"'," +//85
-						f0311.getRpsdoc() +"," +//86
-						f0311.getRpopsq() +"," +//87
-						f0311.getRpcmc1() +"," +//88
-						"'" + f0311.getRpvr01() +"'," +//89
-						f0311.getRpnumb() +"," +//90
-						"'" + f0311.getRpunit() +"'," +//91
-						"'" + f0311.getRpmcu2() +"'," +//92
-						"'" + f0311.getRprmk() +"'," +//93
-						"'" + f0311.getRprf() +"'," +//94
-						f0311.getRpdrf() +"," +//95
-						"'" + f0311.getRpctl() +"'," +//96
-						"'" + f0311.getRpfnlp() +"'," +//97
-						f0311.getRpu() +"," +//98
-						"'" + f0311.getRpum() +"'," +//99
-						"'" + f0311.getRpalt6() +"'," +//100
-						"'" + f0311.getRppyin() +"'," +//101
-						"'" + f0311.getRprp1() +"'," +//102
-						"'" + f0311.getRprp2() +"'," +//103
-						"'" + f0311.getRprp3() +"'," +//104
-						"'" + f0311.getRpalph() +"'," +//105
-						"'" + f0311.getRpac01() +"'," +//106
-						"'" + f0311.getRpac02() +"'," +//107
-						"'" + f0311.getRpac03() +"'," +//108
-						"'" + f0311.getRpac04() +"'," +//109
-						"'" + f0311.getRpac05() +"'," +//110
-						"'" + f0311.getRpac06() +"'," +//111
-						"'" + f0311.getRpac07() +"'," +//112
-						"'" + f0311.getRpac08() +"'," +//113
-						"'" + f0311.getRpac09() +"'," +//114
-						"'" + f0311.getRpac10() +"'," +//115
-						"'" + f0311.getRpate() +"'," +//116
-						"'" + f0311.getRpatr() +"'," +//117
-						"'" + f0311.getRpatp() +"'," +//118
-						"'" + f0311.getRpato() +"'," +//119
-						"'" + f0311.getRpatpr() +"'," +//120
-						"'" + f0311.getRpat1() +"'," +//121
-						"'" + f0311.getRpat2() +"'," +//122
-						"'" + f0311.getRpat3() +"'," +//123
-						"'" + f0311.getRpat4() +"'," +//124
-						"'" + f0311.getRpat5() +"'," +//125
-						"'" + f0311.getRptorg() +"'," +//126
-						"'" + f0311.getRpuser() +"'," +//127
-						"'" + f0311.getRppid() +"'," +//128
-						f0311.getRpupmj() +"," +//129
-						f0311.getRpupmt() +"," +//130
-						"'" + f0311.getRpjobn() +"'," +//131
-						"'" + f0311.getRpdmcd() +"'," +//132
-						"'" + f0311.getRpskco() +"'," +//133
-						"'" + f0311.getRppdct() +"'," +//134
-						"'" + f0311.getRppkco() +"'," +//135
-						"'" + f0311.getRpokco() +"'," +//136
-						f0311.getRpitm() +"," +//137
-						"'" + f0311.getRpbktr() +"'," +//138
-						f0311.getRphcrr() +"," +//139
-						f0311.getRphdgj()//140
-						;
-	}
-/****************************************************************************************************/
 /****************OBTENER NUMERO DE RECIBO DE JDE******************/
 	public int obtenerNumeroReciboJDE(){
 		int iLastNumRec = 0;
@@ -1003,7 +856,8 @@ public class CtrlRecibosCredito {
 				.uniqueResult();
 			
 		}catch(Exception ex){
-			System.out.print("=>Excepcion capturada en obtenerBatchActual: " + ex);
+			LogCajaService.CreateLog("=>Excepcion capturada en obtenerBatchActual: ", "ERR", ex.getMessage());
+			
 		}finally{
 			try{session.close();}catch(Exception ex2){ex2.printStackTrace();};
 		}
@@ -1036,7 +890,9 @@ public class CtrlRecibosCredito {
 					.uniqueResult();
 				tx.commit();*/	
 			}catch(Exception ex){
-				System.out.print("=>Excepcion capturada en obtenerIdCuenta: " + ex);
+				
+				LogCajaService.CreateLog("=>Excepcion capturada en obtenerIdCuenta: ", "ERR", ex.getMessage());
+
 			}/*finally{
 	        	session.close();        
 			}*/	
@@ -1071,7 +927,7 @@ public class CtrlRecibosCredito {
 				tx.commit();	
 
 		}catch(Exception ex){
-			System.out.print("=>Excepcion capturada en obtenerBatchActual: " + ex);
+			LogCajaService.CreateLog("=>Excepcion capturada en obtenerBatchActual: ", "ERR", ex.getMessage());
 		}finally{
 			try {
 				if (bNuevaSesionENS)
@@ -1083,31 +939,7 @@ public class CtrlRecibosCredito {
 		return iLastBatch;
 	}
 	
-/****************************************************************************************************/
-/************************ACTUALIZAR NUMERO DE BATCH*********************************************/
-	/*public boolean actualizarBatch(int iNumeroBatch){
-		boolean bActualizado = false;
-		Session session = HibernateUtil.getSessionFactory"+PropertiesSystem.JDECOM+"().openSession();
-		Transaction tx = session.beginTransaction();		
-		
-		try{
-			F0002 f0002 = (F0002) session
-			.createQuery("from F0002 f where f.id.nnsy = '00'")
-			.uniqueResult();		
-			F0002Id f0002Id = f0002.getId();
-			f0002Id.setNnn001(iNumeroBatch + 1);
-			f0002.setId(f0002Id);					
-			session.update(f0002);			
-			tx.commit();	
-			bActualizado = true;			
-		}catch(Exception ex){
-			System.out.print("=>Excepcion capturada en actualizarBatch: " + ex);
-		}finally{
-        	session.close();        
-		}
-		
-		return bActualizado;
-	}*/
+
 	
 /****************************************************************************************************/
 	//---------------------------------------------------------------------------------------
@@ -1154,7 +986,8 @@ public class CtrlRecibosCredito {
 			
 		}catch(Exception ex){
 			tx.rollback();
-			System.out.print("No se pudo registrar Cambio a Cliente -> registrarCambio: " + ex);
+			LogCajaService.CreateLog("No se pudo registrar Cambio a Cliente -> registrarCambio: ", "ERR", ex.getMessage());
+
 		}finally{
 			try{session.close();}catch(Exception ex2){ex2.printStackTrace();};   
 		}
@@ -1180,8 +1013,8 @@ public class CtrlRecibosCredito {
 			lastnum = result.intValue();
 			
 		}catch(Exception ex){
-			System.out.print("No se pudo obtener ultimo cambio -> getUltimoCambio: " + ex);
-			
+			LogCajaService.CreateLog("No se pudo obtener ultimo cambio -> getUltimoCambio:  ", "ERR", ex.getMessage());
+
 		}finally{
 			try{session.close();}catch(Exception ex2){ex2.printStackTrace();};
 		}
@@ -1208,7 +1041,9 @@ public class CtrlRecibosCredito {
 			ultimo = result.intValue();
 			
 		}catch(Exception ex){
-			System.out.print("Se capturo una excepcion en obtenerUltimoRecibo: " + ex);
+		
+			LogCajaService.CreateLog("Se capturo una excepcion en obtenerUltimoRecibo:", "ERR", ex.getMessage());
+
 		}finally{
 			try{session.close();}catch(Exception ex2){ex2.printStackTrace();};
 		}
@@ -1266,7 +1101,9 @@ public class CtrlRecibosCredito {
 			
 		}catch(Exception ex){
 			tx.rollback();
-			System.out.println("Excepcion capturada en llenarMetodosPago2 : " + ex);
+		
+			LogCajaService.CreateLog("Excepcion capturada en llenarMetodosPago2 : ", "ERR", ex.getMessage());
+
 		}finally{
 			try{session.close();}catch(Exception ex2){ex2.printStackTrace();};
 		}

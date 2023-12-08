@@ -1493,7 +1493,7 @@ public class CtrlCajas {
 			}
 			sql = sql + ")";
 			
-			System.out.println(sql);
+			
 			lstDocs = session
 			.createQuery(sql)			
 			.list();

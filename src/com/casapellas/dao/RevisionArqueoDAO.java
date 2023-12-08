@@ -1183,7 +1183,6 @@ public class RevisionArqueoDAO {
 		Divisas dv = new Divisas();
 		ReciboCtrl recCtrl = new ReciboCtrl();
 		Vf0901 vf0901 = null;
-		 
 		
 		try {
 			 
@@ -1193,6 +1192,12 @@ public class RevisionArqueoDAO {
 			
 			sCuentaC = null;
 			sCuentaTemp = null;
+		
+			sMcuIVAcomision = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_IVACOMI_"+sCodcomp.toString().trim()).getCodigoUnidadNegocio().toString();
+			sObjIVAcomision = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_IVACOMI_"+sCodcomp.toString().trim()).getCodigoCuentaObjeto().toString();
+			sSubIVAcomision = cajaparm.getParametrosPorCompania("34", sCodcomp.trim(), "CIERRE_IVACOMI_"+sCodcomp.toString().trim()).getCodigoSubCuenta().toString();
+			
+			
 			for (int i = 0; i < lstResumenPos.size(); i++) {
 				ResumenAfiliado ra = (ResumenAfiliado)lstResumenPos.get(i);
 				
@@ -1215,9 +1220,10 @@ public class RevisionArqueoDAO {
 					return false;
 				}else{
 					sConcepto = "Arqueo "+iNoarqueo+", Caja "+iCajaUso+ " "+ sFecha;
-					if (sCodcomp.trim().equals("E08")) {
+					
+					/*if (sCodcomp.trim().equals("90")) {
 						sSubIVAcomision = "101301";
-					}
+					}*/
 					
 					vf0901 = dv.validarCuentaF0901(sMcuIVAcomision, sObjIVAcomision, sSubIVAcomision);
 					if(vf0901==null){
@@ -5791,7 +5797,7 @@ public class RevisionArqueoDAO {
 				msg = "Debe de verificar la opción de Asignar referencias de depósitos de afiliados" ;
 				return;
 			}
-			if( v.getId().getCodcomp().trim().compareTo("E03") == 0 && (   
+			if( v.getId().getCodcomp().trim().compareTo("20") == 0 && (   
 				 CodeUtil.getFromSessionMap ("rv_bvalidoCheques") == null ||  
 				 CodeUtil.getFromSessionMap ("rv_bvalidoCheques").toString().compareTo("false") == 0 )) {
 				 
@@ -5988,7 +5994,7 @@ public class RevisionArqueoDAO {
 							iCaidPOS[i]   = Integer.parseInt(obPos[5].toString());
 							marcaTarjeta[i] = ((String)obPos[6]).trim();
 							
-							if(sCodcomp.trim().equals("E08")){	
+							if(sCodcomp.trim().equals("90")){	
 								bdMontoComisionable = new BigDecimal(dv.roundDouble(bdMtoPos[i].doubleValue()/(1.13)));		
 								bdMtoComis[i] = dv.roundBigDecimal(bdMontoComisionable.multiply(bdComis.divide(new BigDecimal("100"))));
 								bMonto 		  = dv.roundBigDecimal(bdMtoPos[i].subtract(bdMtoComis[i]));
@@ -6020,7 +6026,7 @@ public class RevisionArqueoDAO {
 				
 				if(bHecho){
 				//===== Liquidacion para transacciones cheque efectivo de ALPESA ======= // 
-					if(dac.getCodcomp().trim().equals("E03")){
+					if(dac.getCodcomp().trim().equals("20")){
 						boolean bChequeEfectivo = false;
 						LiquidacionCheque lqEfectivo = null;
 						List<LiquidacionCheque>lstLiquidacionChks = new ArrayList<LiquidacionCheque>();
@@ -6136,7 +6142,7 @@ public class RevisionArqueoDAO {
 						}
 						
 						//&& ====================== impuesto sobre comision para Trader
-						if(bHecho &&  sCodcomp.trim().compareTo("E08") == 0 ){
+						if(bHecho &&  sCodcomp.trim().compareTo("90") == 0 ){
 							bHecho = registrarIVAcomisionAfiliado(dac.getNoarqueo(), lstResumenAfiliado, iCaid, sCodcomp, sCodsuc, 
 	 			                   			dac.getFechaarqueo(), dac.getHoraarqueo(), dac.getMoneda(), f14, sessionAprArqueo, tipoEmpleado, tasaOficial);
 						}

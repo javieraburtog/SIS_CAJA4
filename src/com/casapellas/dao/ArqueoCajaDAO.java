@@ -1985,17 +1985,20 @@ public class ArqueoCajaDAO {
 			 *  Cuenta Inicial: 10.15000.15 => cuenta Actual: 24.13600
 			 */
 			//------------- Verificar que exista la cuenta de Funcionarios y Empleados.
-			String sUN = "24";
-			String sCtaOb="13600";
-			if(sCodcomp.trim().equals("E02")){
-				sUN = "75";
+			String sUN =  cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();
+			String sCtaOb=sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getCodigoCuentaObjeto().toString();
+			
+			if(sCodcomp.trim().equals("11")){
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE11").getValorAlfanumerico().toString();;
 			}else
-			if(sCodcomp.trim().equals("E08")){
-				sUN = "60";
+			if(sCodcomp.trim().equals("90")){
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE08").getValorAlfanumerico().toString();
 			}else
-			if(sCodcomp.trim().equals("E03")){
-				sUN = "80";
+			if(sCodcomp.trim().equals("20")){
+				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE03").getValorAlfanumerico().toString();
 			}	
+	
+			
 			vCtaFE  = dv.validarCuentaF0901(sUN,sCtaOb,"");
 			if(vCtaFE!=null){
 				sCuentaFE = sUN+"."+sCtaOb;
