@@ -1497,7 +1497,9 @@ public class ArqueoCajaDAO {
 				
 				scodsuc2 = sCodsuc.trim();
 				
-				hecho = rCtrl.registrarAsientoDiario(dtFecha, cn, scodsuc2, "P9",iNoBatch, 1.0,
+				String TipoDoc = cajaparm.getParametros("34", "0", "AJUSTEMINIMO_TIPODOC").getValorAlfanumerico().toString();
+				
+				hecho = rCtrl.registrarAsientoDiario(dtFecha, cn, scodsuc2, TipoDoc,iNoBatch, 1.0,
 						iNoBatch, sCuentaCaja[0], sCuentaCaja[1], 
 						sCuentaCaja[3], sCuentaCaja[4], sCuentaCaja[5],
 						"AA", sMoneda, iMonto, 
@@ -1505,7 +1507,7 @@ public class ArqueoCajaDAO {
 						BigDecimal.ZERO, sTipoCliente,"Ajuste de minimo CTA CA: "+5+" ",
 						sCuentaCaja[2], "", "",sMoneda,sCuentaCaja[2],"D");
 				if(hecho){
-					hecho = rCtrl.registrarAsientoDiario(dtFecha, cn, scodsuc2, "P9", iNoBatch, 2.0,
+					hecho = rCtrl.registrarAsientoDiario(dtFecha, cn, scodsuc2, TipoDoc, iNoBatch, 2.0,
 								iNoBatch, sCuentaMinimo[0],	sCuentaMinimo[1], 
 								sCuentaMinimo[3], sCuentaMinimo[4], 
 								sCuentaMinimo[5], "AA", sMoneda,  iMonto*-1,
@@ -2014,18 +2016,20 @@ public class ArqueoCajaDAO {
 					if(iNobatchNodoc != null){
 						iMonto = (int)(dv.roundDouble(dMonto * 100));
 						
+						String TipoDoc = cajaparm.getParametros("34", "0", "GENENOTADEB_TIPODOC").getValorAlfanumerico().toString();
+						String TipoBatch = cajaparm.getParametros("34", "0", "GENENOTADEB_TIPBATCH").getValorAlfanumerico().toString();
 						
 						//---- Guardar el batch.
-						bHecho = rcCtrl.registrarBatchA92(cn, "G", iNobatchNodoc[0], iMonto, vaut[0].getId().getLogin(), 1, "");
+						bHecho = rcCtrl.registrarBatchA92(cn, TipoBatch, iNobatchNodoc[0], iMonto, vaut[0].getId().getLogin(), 1, "");
 						if(bHecho){
 							if(sMoneda.equals(f14.getId().getC4bcrcd())){
-								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9", iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCuentaFE,
+								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, TipoDoc, iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCuentaFE,
 											vCtaFE.getId().getGmaid(), vCtaFE.getId().getGmmcu().trim(), vCtaFE.getId().getGmobj().trim(), 
 											vCtaFE.getId().getGmsub().trim(), "AA",	sMoneda, iMonto, sConcepto, vaut[0].getId().getLogin(),
 											vaut[0].getId().getCodapp(), BigDecimal.ZERO, sTipoCliente,"Débito Cajero Efectivo "+sMoneda,
 											sCompCtaFE, sCodEmpleado, "A",sMoneda,sCompCtaFE,"D");
 								if(bHecho){
-									bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn,sAsientoSuc, "P9", iNobatchNodoc[1], 2.0, iNobatchNodoc[0], 
+									bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn,sAsientoSuc, TipoDoc, iNobatchNodoc[1], 2.0, iNobatchNodoc[0], 
 												sCuenta5[0], sCuenta5[1], sCuenta5[3], sCuenta5[4], sCuenta5[5], "AA", sMoneda,
 												iMonto*-1, sConcepto, vaut[0].getId().getLogin(), vaut[0].getId().getCodapp(),
 												BigDecimal.ZERO, sTipoCliente,"Crédito Caja, Efectivo "+sMoneda, sCuenta5[2], 
@@ -2040,24 +2044,24 @@ public class ArqueoCajaDAO {
 							else{ //if(sMoneda.equals("USD")){
 								iMontoDom = (int)dv.roundDouble(dMonto*dTasaOf*100);
 								bdTasa = new BigDecimal(dTasaOf);
-								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc,"P9", iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCuentaFE,
+								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc,TipoDoc, iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCuentaFE,
 															vCtaFE.getId().getGmaid(), vCtaFE.getId().getGmmcu().trim(), vCtaFE.getId().getGmobj().trim(), 
 															vCtaFE.getId().getGmsub().trim(), "AA", sMoneda, iMontoDom, sConcepto, vaut[0].getId().getLogin(), 
 															vaut[0].getId().getCodapp(), new BigDecimal(dTasaOf), sTipoCliente,
 															"Débito Cajero Efectivo "+sMoneda,sCompCtaFE, sCodEmpleado, "A",f14.getId().getC4bcrcd(),sCompCtaFE,"F");
 							if(bHecho){
-									bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, "P9",iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCuentaFE,
+									bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn, sAsientoSuc, TipoDoc,iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCuentaFE,
 																vCtaFE.getId().getGmaid(), vCtaFE.getId().getGmmcu().trim(), vCtaFE.getId().getGmobj().trim(),
 																vCtaFE.getId().getGmsub().trim(),"CA", sMoneda, iMonto, sConcepto, vaut[0].getId().getLogin(),
 																vaut[0].getId().getCodapp(), BigDecimal.ZERO, sTipoCliente,"Débito Cajero Efectivo "+sMoneda,
 																sCompCtaFE, sCodEmpleado, "A",sMoneda,sCompCtaFE,"F");
 									if(bHecho){
-										bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn,sAsientoSuc, "P9", iNobatchNodoc[1], 2.0, iNobatchNodoc[0], sCuenta5[0],
+										bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn,sAsientoSuc, TipoDoc, iNobatchNodoc[1], 2.0, iNobatchNodoc[0], sCuenta5[0],
 																	sCuenta5[1], sCuenta5[3], sCuenta5[4], sCuenta5[5], "AA", sMoneda, iMontoDom*-1,
 																	sConcepto, vaut[0].getId().getLogin(), vaut[0].getId().getCodapp(), new BigDecimal(dTasaOf),
 																	sTipoCliente,"Crédito Caja,Efectivo "+sMoneda, sCuenta5[2],sCodEmpleado, "A",f14.getId().getC4bcrcd(), sCompCtaFE, "F");
 										if(bHecho){
-											bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn,sAsientoSuc, "P9", iNobatchNodoc[1], 2.0, iNobatchNodoc[0], sCuenta5[0],
+											bHecho = rcCtrl.registrarAsientoDiario(dtFecha, cn,sAsientoSuc, TipoDoc, iNobatchNodoc[1], 2.0, iNobatchNodoc[0], sCuenta5[0],
 																		sCuenta5[1], sCuenta5[3], sCuenta5[4], sCuenta5[5], "CA", sMoneda, iMonto*-1, 
 																		sConcepto, vaut[0].getId().getLogin(), vaut[0].getId().getCodapp(), BigDecimal.ZERO, 
 																		sTipoCliente,"Crédito Salida,Efectivo "+sMoneda, sCuenta5[2], sCodEmpleado, "A",sMoneda, sCompCtaFE, "F");
@@ -2098,10 +2102,7 @@ public class ArqueoCajaDAO {
 					 */
 					Numcaja n = dv.obtenerNumeracionCaja("NDEPOSITO", iCaid, sCodcomp, sCodsuc, true, vaut[0].getId().getLogin(),sesCaja);
 					if(n!=null){
-					/*	bHecho = dv.registrarDeposito(n.getNosiguiente(), iCaid, sCodsuc, sCodcomp, dtFecha, dtFecha, new BigDecimal(dMonto),
-								 						sMoneda, iNoarqueo+"", vaut[0].getId().getLogin(), "D",
-								 						bdTasa, vaut[0].getId().getCodreg().intValue(),"X",f14.getId().getC4bnc(),
-								 						sesCaja, transCaja, vaut[0].getId().getCodreg(), null);*/
+					
 						if(!bHecho){
 							sMsjErrorjde = "Error al guardar enlace "+PropertiesSystem.CONTEXT_NAME+" - Depósito para registro de nota de Débito con batch"+iNobatchNodoc[0]+" NoDoc. "+iNobatchNodoc[1]+", Caja: "+iCaid+ ", Suc: " + sCodsuc+", Comp: "+sCodcomp;
 						}

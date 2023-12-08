@@ -1266,8 +1266,9 @@ public class RevisionArqueoDAO {
 					}
 					
 					String logs = sConcepto;
+					String TipoDoc = cajaparm.getParametros("34", "0", "IVACOMIAFI_TIPODOC").getValorAlfanumerico().toString();
 					
-					bHecho  =  recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sSucursalDeposito,"P9",
+					bHecho  =  recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sSucursalDeposito,TipoDoc,
 										iNoDocumento,1.0,iNoBatch,vf0901.getCuenta(),
 										vf0901.getId().getGmaid(),vf0901.getId().getGmmcu().trim(),
 										vf0901.getId().getGmobj(), vf0901.getId().getGmsub(),"AA", 
@@ -1278,7 +1279,7 @@ public class RevisionArqueoDAO {
 										vf0901.getId().getGmco().trim(), "D", 0);
 													
 					if(bHecho){
-						bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sSucursalDeposito,"P9", 
+						bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sSucursalDeposito,TipoDoc, 
 											iNoDocumento,2.0,iNoBatch,sCuentaC[0],
 											sCuentaC[1],sCuentaC[3],sCuentaC[4],sCuentaC[5],"AA", f14.getId().getC4bcrcd(), 
 											iMontoH*(-1),sConcepto, vaut.getId().getLogin(),vaut.getId().getCodapp(),
@@ -2806,8 +2807,9 @@ public class RevisionArqueoDAO {
 					strDscripL1  = "POS: "+ ra.getCodigo() +" Rtnción: " + String.format("%1$,.2f", f14.getId().getC4trir() )+ "%" ;
 					strDscripL2  = "LIQ: " + ra.getReferencia() + " " + ra.getMarcatarjeta().trim();
 					
+					String TipoDoc = cajaparm.getParametros("34", "0", "RETENAFI_TIPODOC").getValorAlfanumerico().toString();
 				
-					bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sSucursalDeposito,"P9", iNoDocumento,1.0, iNoBatch,vf0901.getCuenta(),
+					bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sSucursalDeposito,TipoDoc, iNoDocumento,1.0, iNoBatch,vf0901.getCuenta(),
 												vf0901.getId().getGmaid(),vf0901.getId().getGmmcu().trim(),
 												vf0901.getId().getGmobj(), vf0901.getId().getGmsub(),"AA", 
 												f14.getId().getC4bcrcd(), iMontoH,  sConcepto, vaut.getId().getLogin(),
@@ -2816,7 +2818,7 @@ public class RevisionArqueoDAO {
 												vf0901.getId().getGmco().trim(), "","", monedaBaseCompania,
 												vf0901.getId().getGmco().trim(), "D", 0);
 					if(bHecho){
-						bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sSucursalDeposito,"P9",iNoDocumento,2.0,iNoBatch,sCuentaC[0],
+						bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sSucursalDeposito,TipoDoc,iNoDocumento,2.0,iNoBatch,sCuentaC[0],
 																sCuentaC[1],sCuentaC[3],sCuentaC[4],sCuentaC[5],"AA", f14.getId().getC4bcrcd(), 
 																iMontoH*(-1), sConcepto, vaut.getId().getLogin(),vaut.getId().getCodapp(),
 																BigDecimal.ZERO, tipoEmpleado, strDscripL2, sCuentaC[2],
@@ -7110,13 +7112,16 @@ public class RevisionArqueoDAO {
 
 										iMontocom = (int)dv.roundDouble(bdMtoComis[i].multiply(new BigDecimal("100")).doubleValue());
 										
-										bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 1.0, iNoBatch, sCtaPos,
+										String TipoDoc = cajaparm.getParametros("34", "0", "TRASBANCO_TIPODOC").getValorAlfanumerico().toString();
+										
+										
+										bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 1.0, iNoBatch, sCtaPos,
 												  sIdCtaPos, sCp1mcu, sCpob, sCpsub, "AA", sMoneda, iMontocom, conceptoComis, vaut[0].getId().getLogin(),
 												  vaut[0].getId().getCodapp(),BigDecimal.ZERO, sTipoCliente, descripLinea1 ,
 												  sCompCtaPos,sD7sbl,sD7sblt, monedaBaseCompania, sCompCtaPos,"D", 0);
 										if(bHecho){
 											
-											bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
+											bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
 													  sIdCuentaCaja, sCc1mcu, sCcobj, sCcsub, "AA", sMoneda, iMontocom*(-1), conceptoComis, vaut[0].getId().getLogin(),
 													  vaut[0].getId().getCodapp(), BigDecimal.ZERO, sTipoCliente, descripLinea2,
 													  sCompCuentaCaja,"","", monedaBaseCompania, sCompCuentaCaja,"D", 0);
@@ -7206,23 +7211,24 @@ public class RevisionArqueoDAO {
 										descripLinea1 = "POS: " + iNoReferPos[i]+ " UN:"+ sCp1mcu  +" C: "+iCajaUso;
 										descripLinea2 = "Liq: " + marcaTarjeta[i] ;
 										
+										String TipoDoc = cajaparm.getParametros("34", "0", "TRASBANCO_TIPODOC").getValorAlfanumerico().toString();
 										
-										bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 1.0, iNoBatch, sCtaPos,
+										bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 1.0, iNoBatch, sCtaPos,
 												  sIdCtaPos, sCp1mcu, sCpob, sCpsub, "AA", sMoneda, iMtoCoDo, conceptoComis, vaut[0].getId().getLogin(),
 												  vaut[0].getId().getCodapp(), tasaCambioOficial , sTipoCliente, descripLinea1,
 												  sCompCtaPos,sD7sbl,sD7sblt, monedaBaseCompania, sCompCtaPos,"F", iMontocom);
 										if(bHecho){
-											bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 1.0, iNoBatch, sCtaPos,
+											bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 1.0, iNoBatch, sCtaPos,
 													  sIdCtaPos, sCp1mcu, sCpob, sCpsub, "CA", sMoneda, iMontocom, conceptoComis, vaut[0].getId().getLogin(),
 													  vaut[0].getId().getCodapp(), tasaCambioOficial, sTipoCliente, descripLinea1, 
 													  sCompCtaPos,sD7sbl,sD7sblt, monedaBaseCompania, sCompCtaPos,"F", 0);
 											if(bHecho){
-												bHecho = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
+												bHecho = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal,TipoDoc, iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
 														 sIdCuentaCaja, sCc1mcu, sCcobj, sCcsub, "AA", sMoneda, iMtoCoDo*(-1), conceptoComis, vaut[0].getId().getLogin(), 
 														 vaut[0].getId().getCodapp(),tasaCambioOficial, sTipoCliente, descripLinea2 ,sCompCuentaCaja, 
 														 "", "", monedaBaseCompania, sCompCuentaCaja,"F", (iMontocom*(-1)) );
 												if(bHecho){
-													bHecho = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
+													bHecho = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
 															 sIdCuentaCaja, sCc1mcu, sCcobj, sCcsub, "CA", sMoneda, iMontocom*(-1), conceptoComis, vaut[0].getId().getLogin(), 
 															 vaut[0].getId().getCodapp(), tasaCambioOficial, sTipoCliente, descripLinea2,
 															 sCompCuentaCaja, "", "", monedaBaseCompania, sCompCuentaCaja,"F", 0);
@@ -8023,13 +8029,15 @@ public class RevisionArqueoDAO {
 
 											iMontocom = (int)dv.roundDouble(bdMtoComis[i].multiply(new BigDecimal("100")).doubleValue());
 											
-											bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 1.0, iNoBatch, sCtaPos,
+											String TipoDoc = cajaparm.getParametros("34", "0", "TRASBANCO_TIPODOC").getValorAlfanumerico().toString();
+											
+											bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 1.0, iNoBatch, sCtaPos,
 													  sIdCtaPos, sCp1mcu, sCpob, sCpsub, "AA", sMoneda, iMontocom, conceptoComis, vaut[0].getId().getLogin(),
 													  vaut[0].getId().getCodapp(),BigDecimal.ZERO, sTipoCliente, descripLinea1 ,
 													  sCompCtaPos,sD7sbl,sD7sblt, monedaBaseCompania, sCompCtaPos,"D", 0);
 											if(bHecho){
 												
-												bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
+												bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
 														  sIdCuentaCaja, sCc1mcu, sCcobj, sCcsub, "AA", sMoneda, iMontocom*(-1), conceptoComis, vaut[0].getId().getLogin(),
 														  vaut[0].getId().getCodapp(), BigDecimal.ZERO, sTipoCliente, descripLinea2,
 														  sCompCuentaCaja,"","", monedaBaseCompania, sCompCuentaCaja,"D", 0);
@@ -8119,23 +8127,24 @@ public class RevisionArqueoDAO {
 											descripLinea1 = "POS: " + iNoReferPos[i]+ " UN:"+ sCp1mcu  +" C: "+iCajaUso;
 											descripLinea2 = "Liq: " + marcaTarjeta[i] ;
 											
+											String TipoDoc = cajaparm.getParametros("34", "0", "TRASBANCO_TIPODOC").getValorAlfanumerico().toString();
 											
-											bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 1.0, iNoBatch, sCtaPos,
+											bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 1.0, iNoBatch, sCtaPos,
 													  sIdCtaPos, sCp1mcu, sCpob, sCpsub, "AA", sMoneda, iMtoCoDo, conceptoComis, vaut[0].getId().getLogin(),
 													  vaut[0].getId().getCodapp(), tasaCambioOficial , sTipoCliente, descripLinea1,
 													  sCompCtaPos,sD7sbl,sD7sblt, monedaBaseCompania, sCompCtaPos,"F", iMontocom);
 											if(bHecho){
-												bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 1.0, iNoBatch, sCtaPos,
+												bHecho  = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 1.0, iNoBatch, sCtaPos,
 														  sIdCtaPos, sCp1mcu, sCpob, sCpsub, "CA", sMoneda, iMontocom, conceptoComis, vaut[0].getId().getLogin(),
 														  vaut[0].getId().getCodapp(), tasaCambioOficial, sTipoCliente, descripLinea1, 
 														  sCompCtaPos,sD7sbl,sD7sblt, monedaBaseCompania, sCompCtaPos,"F", 0);
 												if(bHecho){
-													bHecho = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
+													bHecho = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal,TipoDoc, iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
 															 sIdCuentaCaja, sCc1mcu, sCcobj, sCcsub, "AA", sMoneda, iMtoCoDo*(-1), conceptoComis, vaut[0].getId().getLogin(), 
 															 vaut[0].getId().getCodapp(),tasaCambioOficial, sTipoCliente, descripLinea2 ,sCompCuentaCaja, 
 															 "", "", monedaBaseCompania, sCompCuentaCaja,"F", (iMontocom*(-1)) );
 													if(bHecho){
-														bHecho = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, "P9", iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
+														bHecho = recCtrl.registrarAsientoDiarioLogsSession(session, logs, dtFecha, sAsientoSucursal, TipoDoc, iNoDocumento, 2.0, iNoBatch, sCuentaCaja,
 																 sIdCuentaCaja, sCc1mcu, sCcobj, sCcsub, "CA", sMoneda, iMontocom*(-1), conceptoComis, vaut[0].getId().getLogin(), 
 																 vaut[0].getId().getCodapp(), tasaCambioOficial, sTipoCliente, descripLinea2,
 																 sCompCuentaCaja, "", "", monedaBaseCompania, sCompCuentaCaja,"F", 0);
