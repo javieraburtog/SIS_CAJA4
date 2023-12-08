@@ -103,7 +103,7 @@ public class Rptmcaja004DAO {
 
 			 
 			 if(!sListaRecibos.equals("")){
-				 lstRecibosArq = RevisionArqueoCtrl.obtenerVrecibos( a.getId().getCaid(), a.getId().getCodsuc(),a.getId().getCodcomp(),
+				 lstRecibosArq = RevisionArqueoCtrl.obtenerVrecibos( a.getId().getCaid(), a.getId().getCasucur(),a.getId().getCodcomp(),
 						 								  a.getId().getMoneda(),sListaRecibos,  a.getId().getFecha());
 				 if(lstRecibosArq!=null && lstRecibosArq.size()>0){
 					 
