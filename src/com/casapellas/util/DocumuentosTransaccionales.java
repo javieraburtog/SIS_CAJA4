@@ -502,4 +502,48 @@ public static String CTADEUDORESVARIOSUNINEGTODAS() {
 		else
 		return null;
 	}
+public static String companiaCASAPELLAS() {
+	
+	String query="SELECT COD_COMPANIA FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCompania + "' AND TCOD = '"+ PropertiesSystem.companiaCASAPELLAS +"' ";     
+		
+		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0).toString();
+		else
+		return null;
+	}
+public static String companiaALPESA() {
+	
+	String query="SELECT COD_COMPANIA FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCompania + "' AND TCOD = '"+ PropertiesSystem.companiaALPESA +"' ";     
+		
+		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0).toString();
+		else
+		return null;
+	}
+public static String companiaKIPESA() {
+	
+	String query="SELECT COD_COMPANIA FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCompania + "' AND TCOD = '"+ PropertiesSystem.companiaKIPESA +"' ";     
+		
+		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0).toString();
+		else
+		return null;
+	}
+public static String companiaCAPESA() {
+	
+	String query="SELECT COD_COMPANIA FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCompania + "' AND TCOD = '"+ PropertiesSystem.companiaCAPESA +"' ";     
+		
+		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0).toString();
+		else
+		return null;
+	}
 }

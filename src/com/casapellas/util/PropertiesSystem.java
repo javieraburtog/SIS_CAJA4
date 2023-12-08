@@ -49,7 +49,7 @@ public class PropertiesSystem {
 		public final static Boolean Is_Debug_Mode = true;
 	
 		
-   // Configuraciones para obtener cuentas
+		// Configuraciones para obtener cuentas
 		public final static String parametroCaja="30";
 		public final static String parametroFCVGanancia="11";
 		public final static String parametroFCVPerdida="10";
@@ -58,6 +58,7 @@ public class PropertiesSystem {
 		public final static String parametroConciliacion="39";
 		public final static String parametroCierre="34";
 		public final static String parametroCtaDeudores="40";
+		public final static String parametroCompania="41";
 		
 		//-Facturacion
 		public final static String tipoTrxContado="CO";
@@ -99,6 +100,12 @@ public class PropertiesSystem {
 		public final static String ENSADMINISTRADORCAJA ="ENS_ADM_CAJA";
 		public final static String ENSCONCILIADORPRINCIPAL="ENS_CON_PRIN";
 		public final static String ENSCONCILIADORSUPERVISOR="ENS_CON_SUP";
+		
+		//Compania
+		public final static String companiaCASAPELLAS ="CASAPELLAS";
+		public final static String companiaALPESA ="ALPESA";
+		public final static String companiaKIPESA ="KIPESA";
+		public final static String companiaCAPESA ="CAPESA";
 		
    // Datos de Servidor de Base de Datos.
 	public final static String IPSERVERDB2 = "192.168.1.3";

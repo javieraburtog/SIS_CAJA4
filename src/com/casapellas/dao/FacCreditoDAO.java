@@ -1461,7 +1461,7 @@ public class FacCreditoDAO {
 			sCtaSub= fcvCuentaPerdia[1];
 			
 			//&& === Condicion de seleccion tipo sobrante/diferencia para casos TRADER.
-			if(Factura.getId().getCodcomp().trim().equals("E03") ){
+			if(Factura.getId().getCodcomp().trim().equals(DocumuentosTransaccionales.companiaALPESA()) ){
 				if( m.get("scr_SbrDfr")!=null && chkSobranteDifrl.isChecked()){
 					sTipo = "SBRTE";
 					sConcepto = "Sobrante en Rc:" +iNumrec+ " Ca:"+f55.getId().getCaid();
@@ -5317,7 +5317,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 				determinarCambio(selectedMet, hFac, montoRecibido,sMonedaBase);
 			}else{
 				if(m.get("scr_SobrantePago") != null){
-					if(hFac.getId().getCodcomp().trim().equals("E03") && m.get("scr_SbrDfr")!=null){
+					if(hFac.getId().getCodcomp().trim().equals(DocumuentosTransaccionales.companiaALPESA()) && m.get("scr_SbrDfr")!=null){
 						lblMarcaSobrDifer.setStyle("display: inline");
 						chkSobranteDifrl.setStyle("display: inline");
 					}
@@ -6787,7 +6787,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 				determinarCambio(selectedMet, hFac, montoRecibido, sMonedaBase);
 			}else{
 				if(m.get("scr_SobrantePago") != null){
-					if(hFac.getId().getCodcomp().trim().equals("E03") && m.get("scr_SbrDfr")!=null){
+					if(hFac.getId().getCodcomp().trim().equals(DocumuentosTransaccionales.companiaALPESA()) && m.get("scr_SbrDfr")!=null){
 						lblMarcaSobrDifer.setStyle("display: inline");
 						chkSobranteDifrl.setStyle("display: inline");
 						chkSobranteDifrl.setChecked(false);
@@ -8673,7 +8673,7 @@ public void cancelarSolicitud(ActionEvent e) {
 				BigDecimal monto = new BigDecimal(String.valueOf(CodeUtil.getFromSessionMap("scr_SobrantePago")));
 
 				boolean diferencialCambiario = 
-						hFac.getId().getCodcomp().compareTo("E03") == 0 &&
+						hFac.getId().getCodcomp().compareTo(DocumuentosTransaccionales.companiaALPESA()) == 0 &&
 						CodeUtil.getFromSessionMap("scr_SbrDfr") != null && 
 						chkSobranteDifrl.isChecked() ;
 						
