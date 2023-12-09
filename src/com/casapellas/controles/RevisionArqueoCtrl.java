@@ -488,16 +488,20 @@ public class RevisionArqueoCtrl {
 			String monedaBaseCompania = f14.getId().getC4bcrcd() ;
 			 
 			//&& =========================== Verificar que exista la cuenta de Funcionarios y Empleados.
-			String sUN = "";					
-			String sCtaOb = DocumuentosTransaccionales.CTADEUDORESVARIOSOB() ;
-
-			sUN =DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(sCodcomp.trim());
 			
-			vCtaFE  = dv.validarCuentaF0901(sUN,sCtaOb,"");
+			String sUN = ""; String sCtaOb; String sSubCta;					
+			String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(sCodcomp.trim());
+			String[] CtaCfg = deudorCfg.split(",");
+			
+			sUN = CtaCfg[0].trim();
+			sCtaOb = CtaCfg[1].trim();
+			sSubCta = CtaCfg.length == 3 && CtaCfg[2] != null ? CtaCfg[2].trim() : "";
+			
+			vCtaFE  = dv.validarCuentaF0901(sUN,sCtaOb,sSubCta);
 			
 			if(vCtaFE!=null){
-				sCuentaFE = sUN+"."+sCtaOb;
-				sCompCtaFE = sUN;
+				sCuentaFE = sUN + "." + sCtaOb + (sSubCta.length() > 0 ? "." + sSubCta : "");
+				sCompCtaFE = vCtaFE.getId().getGmco().trim();
 			}else{
 				sMsjErrorjde = "No se ha podido obtener la cuenta de Deudores Varios: '"+sUN+"."+sCtaOb+"'";
 				return bHecho = false; 
@@ -510,14 +514,11 @@ public class RevisionArqueoCtrl {
 			}
 			
 			String sAsientoSuc = sCompCtaFE;
-			String tipoDocJde = CodigosJDE1.BATCH_CONTADO.codigo();
-					
-			
-//			int numerobatch = Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMEROBATCH );
+			String tipoDocJde = DocumuentosTransaccionales.CIERREFALTANTETIPODOC(); //CodigosJDE1.BATCH_CONTADO.codigo();
+
 			int numerobatch = Divisas.numeroSiguienteJdeE1( );
-			int numeroDocumento =Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] ); 
-					//Divisas.numeroSiguienteJdeE1(CodigosJDE1.NUMERO_DOC_CONTAB_GENERAL );
-			 
+			int numeroDocumento =Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+
 			iTotalTransaccion =  Integer.parseInt( String.format("%1$.2f", dMonto ).replace(".", "")  ); 
 			bHecho = rcCtrl.registrarBatchA92( session, dtFecha, valoresJdeInsContado[8], numerobatch, iTotalTransaccion, vaut.getId().getLogin(), 1, "APBRARQUEO", valoresJdeInsContado[9] );
 			

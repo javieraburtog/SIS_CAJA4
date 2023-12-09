@@ -482,7 +482,7 @@ public static String CTADEUDORESVARIOSSB() {
 	}
 public static String CTADEUDORESVARIOSUNINEG(String codCompania) {
 		
-		String query="SELECT COD_UNIDAD_NEGOCIO FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCierre + "' AND COD_COMPANIA = '"+ codCompania +"' ";     
+		String query="SELECT COD_UNIDAD_NEGOCIO CONCAT ',' CONCAT COD_CUENTA_OBJETO CONCAT ',' CONCAT IFNULL(COD_SUBCUENTA, '') FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCtaDeudores + "' AND COD_COMPANIA = '"+ codCompania +"' ";     
 			
 			List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 			
@@ -538,6 +538,18 @@ public static String companiaKIPESA() {
 public static String companiaCAPESA() {
 	
 	String query="SELECT COD_COMPANIA FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCompania + "' AND TCOD = '"+ PropertiesSystem.companiaCAPESA +"' ";     
+		
+		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0).toString();
+		else
+		return null;
+	}
+
+public static String CIERREFALTANTETIPODOC() {
+	
+	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCierre + "' AND TCOD = '"+ PropertiesSystem.CIERRE_FALTANTE_TIPODOC +"' ";     
 		
 		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		

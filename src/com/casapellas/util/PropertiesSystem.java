@@ -60,6 +60,9 @@ public class PropertiesSystem {
 		public final static String parametroCtaDeudores="40";
 		public final static String parametroCompania="41";
 		
+		//Cierre
+		public final static String CIERRE_FALTANTE_TIPODOC = "GENENOTADEB_TIPODOC";
+		
 		//-Facturacion
 		public final static String tipoTrxContado="CO";
 		public final static String valuesJDEContado="CONTADO_JDE_INS";
