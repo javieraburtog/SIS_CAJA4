@@ -103,25 +103,9 @@ public class ReintegroDAO {
 			
 			codcomp = r.getId().getCodcomp().trim();
 			
-			sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_10").getCodigoUnidadNegocio().toString();
-			
-			if (codcomp.equals("10"))
-				sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_10").getCodigoUnidadNegocio().toString();
-			
-			
-			if (codcomp.equals("11"))
-				sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_11").getCodigoUnidadNegocio().toString();
-			
-			
-			if (codcomp.equals("20"))
-				sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_20").getCodigoUnidadNegocio().toString();
-			
-			
-			if (codcomp.equals("12"))
-				sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_12").getCodigoUnidadNegocio().toString();
-			
-			if (codcomp.equals("31"))
-			    sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_31").getCodigoUnidadNegocio().toString();
+			sCuenta1 = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_"+codcomp.toString().trim()).getCodigoUnidadNegocio().toString();
+			sObjCtaPuente = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_"+codcomp.toString().trim()).getCodigoCuentaObjeto().toString();
+			sSubCtaPuente = cajaparm.getParametrosPorCompania("34", codcomp.trim(), "REINTEGRO_CUENTA_"+codcomp.toString().trim()).getCodigoSubCuenta().toString();
 			
 			Date dtFecha =  new Date();
 			ReciboCtrl rCtrl = new ReciboCtrl();
@@ -166,15 +150,15 @@ public class ReintegroDAO {
 			vf0901 = dv.validarCuentaF0901(sCuenta1, sObjCtaPuente, sSubCtaPuente);
 			String tipoDocumento = cajaparm.getParametros("34", "0", "REINTEGRO_BATCH_COD").getValorAlfanumerico().toString();
 			
-			hecho = rCtrl.registrarAsientoDiarioLogs(session, msgLogs, dtFecha, sCuenta1, tipoDocumento, iNoBatch, 1.0,
+			hecho = rCtrl.registrarAsientoDiarioLogs(session, msgLogs, dtFecha, vf0901.getId().getGmco().trim(), tipoDocumento, iNoBatch, 1.0,
 						iNoBatch, sCuentaMinimo[0],	sCuentaMinimo[1], 
 						sCuentaMinimo[3], sCuentaMinimo[4], 
 						sCuentaMinimo[5], "AA",  r.getMoneda(), iMonto,
 						sConcepto, vaut[0].getId().getLogin(), vaut[0].getId().getCodapp(), 
 						BigDecimal.ZERO, sTipoCliente,"Reintegro de minimo CTA CA",
-						sCuentaMinimo[2], "", "", r.getMoneda(),sCuentaMinimo[2],"D", 0);
+						vf0901.getId().getGmco().trim(), "", "", r.getMoneda(),sCuentaMinimo[2],"D", 0);
 			if(hecho){
-				hecho = rCtrl.registrarAsientoDiarioLogs(session, msgLogs, dtFecha, sCuenta1, tipoDocumento, iNoBatch, 2.0,
+				hecho = rCtrl.registrarAsientoDiarioLogs(session, msgLogs, dtFecha, vf0901.getId().getGmco().trim(), tipoDocumento, iNoBatch, 2.0,
 						iNoBatch,vf0901.getCuenta(), vf0901.getId().getGmaid(), 
 						vf0901.getId().getGmmcu().trim(), vf0901.getId().getGmobj(), vf0901.getId().getGmsub(),
 						"AA", r.getMoneda(), iMonto*-1, 
