@@ -2544,8 +2544,15 @@ public class ArqueoCajaDAO {
 			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
 			String sCajero = vf01.getId().getAbalph().trim(); 
 			String sCaja = vf55ca01.getId().getCaname();
-			String sUbicacion = vf55ca01.getId().getCaco().trim() + " " 
-								+vf55ca01.getId().getCaconom().trim();
+			String sUbicacion = "";
+			String  querySucursal = "select CONCAT(CASUCUR,CONCAT(  ' ', IFNULL ( (SELECT DRDL01 FROM PRODCTL920.F0005 SUC WHERE DRSY = '00' AND DRRT = '11' AND TRIM(DRKY) = TRIM(a.CASUCUR) LIMIT 1), '' )))   from "+PropertiesSystem.ESQUEMA+".vf55ca01 a " + 
+					"where caid="+vf55ca01.getId().getCaid();
+			List<Object> sucursalObj= ConsolidadoDepositosBcoCtrl.executeSqlQuery(querySucursal, null, true);
+			
+			if(sucursalObj != null  && sucursalObj.size()>0) {
+				sUbicacion= sucursalObj.get(0).toString();
+			}
+			
 				
 				
 			sCaja   = Divisas.ponerCadenaenMayuscula(sCaja); 

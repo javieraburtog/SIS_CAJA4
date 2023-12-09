@@ -3744,7 +3744,7 @@ public class FinanciamientoDAO {
 			f = lstCreditosFinan.get(0);
 			caid = caja.getId().getCaid();
 			codcomp = f.getId().getCodcomp();
-			codsuc =f.getId().getCodsuc();
+			codsuc =caja.getId().getCaco();
 			
 			dtComp = com.casapellas.controles.tmp.CompaniaCtrl
 							.filtrarCompania((F55ca014[])m.get
@@ -5073,7 +5073,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 						hFac.getId().getCodcomp(), dMontoAplicar, dMontoRec,
 						dCambio, sConcepto, dFecha, dFecha, hFac.getId()
 								.getCodcli(), hFac.getNomcli(), sCajero,
-						f55ca01.getId().getCaid(), hFac.getId().getCodsuc(),
+						f55ca01.getId().getCaid(), f55ca01.getId().getCaco(),
 						vAut.getId().getCoduser(), valoresJDEInsFinanciamiento[0], 0, "", 0, new Date(),
 						sCodunineg, "", hFac.getId().getMoneda());
 				
@@ -5086,7 +5086,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 					com.casapellas.controles.BancoCtrl.datosPreconciliacion(lstMetodosPago, f55ca01.getId().getCaid(), hFac.getId().getCodcomp()) ;
 					
 					insertado = recCtrl.registrarDetalleRecibo(s, tx, iNumrec, iNumrecm,  hFac.getId().getCodcomp(), lstMetodosPago, 
-								f55ca01.getId().getCaid(), hFac.getId().getCodsuc(), valoresJDEInsFinanciamiento[0]);
+								f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), valoresJDEInsFinanciamiento[0]);
  
 					if (insertado) {
 						//leer facturas seleccionadas
