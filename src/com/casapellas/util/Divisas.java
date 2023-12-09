@@ -270,8 +270,9 @@ public class Divisas {
 			
 			sCtaTransBanco[0] = sCuenta;
 			sCtaTransBanco[1] = vf.getId().getGmaid().trim();
-			sCtaTransBanco[2] = (vf.getId().getGmmcu().trim().length()==4)?
-								vf.getId().getGmmcu().trim().substring(0,2):vf.getId().getGmmcu().trim();
+			sCtaTransBanco[2] = vf.getId().getGmco();
+//			sCtaTransBanco[2] = (vf.getId().getGmmcu().trim().length()==4)?
+//								vf.getId().getGmmcu().trim().substring(0,2):vf.getId().getGmmcu().trim();
 			sCtaTransBanco[3] = vf.getId().getGmmcu().trim();
 			sCtaTransBanco[4] = vf.getId().getGmobj().trim();
 			sCtaTransBanco[5] = vf.getId().getGmsub().trim();
