@@ -2136,7 +2136,7 @@ public class ArqueoCajaDAO {
 		String moneda = new String();
 		String coduser = new String();
 		String codsuc = new String();
-		String codsucJDE = new String();
+		//String codsucJDE = new String();
 		String codcomp = new String();
 		String sReferDep = new String();
 		Date fecha = new Date();
@@ -2176,8 +2176,7 @@ public class ArqueoCajaDAO {
 			lstCajas = (List)m.get("lstCajas");
 			vf55ca01 = ((Vf55ca01)lstCajas.get(0));
 			caid = vf55ca01.getId().getCaid();
-			codsuc= vf55ca01.getId().getCaco();
-			codsucJDE  = CodeUtil.pad(ddlFiltroCompania.getValue().toString().trim(), 5 , "0"); 
+			codsuc  = vf55ca01.getId().getCaco();
 			codcomp = ddlFiltroCompania.getValue().toString();
 			sReferDep = txtCDC_ReferDeposito.getValue().toString().trim().toUpperCase();
 											 
@@ -2263,7 +2262,7 @@ public class ArqueoCajaDAO {
 			
 			noarqueo = numcaja.getNosiguiente();
 			bHecho   = acCtrl.guardarArqueoCaja(noarqueo, codcajero, caid, 
-						3, moneda, coduser,sReferDep, codcomp, codsucJDE,fecha, 
+						3, moneda, coduser,sReferDep, codcomp, codsuc,fecha, 
 						fecha, fecha, fecha, tingreso, tegresos, netorec, 
 						minimo, dsugerido, efectcaja, sf, dfinal,
 						 tpagos,sesion,trans);

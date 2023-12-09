@@ -1530,7 +1530,7 @@ public class Divisas {
 			if(cuenta == null || cuenta.isEmpty() )
 				return null;
 			
-			return CodeUtil.pad( cuenta.get(0).getId().getGmco().trim(), 5, "0" );
+			return  cuenta.get(0).getId().getGmco().trim();
 			
 		}catch(Exception e) {
 			LogCajaService.CreateLog("getCompanyFromAccountId", "ERR", e.getMessage());
@@ -1748,10 +1748,7 @@ public class Divisas {
 					
 					//&& =================== consultar la compania para la cuenta .
 					sCompCuenta = getCompanyFromAccountId(sIdCuenta, sesCaja); 
-					if(sCompCuenta == null || sCompCuenta.compareTo("00000") == 0 || sCompCuenta.isEmpty() ) {
-						sCompCuenta = ( sCcmcu.length() >= 4) ? sCcmcu.substring(0,2) : sCcmcu ;
-					}
-					
+										
 					sCuentaBanco[0] = sCuenta;
 					sCuentaBanco[1] = sIdCuenta;
 					sCuentaBanco[2] = sCompCuenta;

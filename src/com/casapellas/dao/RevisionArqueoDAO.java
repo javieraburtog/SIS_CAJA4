@@ -3137,7 +3137,7 @@ public class RevisionArqueoDAO {
 					 
 					sCuentaB = sCuentaBco;
 					
-					if(sCuentaBco == null){
+					if(sCuentaBco == null || sCuentaBco[2].length()==0){
 						CodeUtil.putInSessionMap("sMensajeError", "No se ha podido obtener " +
 								"la cuenta de banco "+iCodigoBanco
 								+" para afiliado: "+ra.getCodigo());
@@ -3145,7 +3145,7 @@ public class RevisionArqueoDAO {
 					}
 				}
 				
-				sSucursalDeposito = sCodsuc;
+				sSucursalDeposito = sCuentaB[2];
 				
 				bHecho = recCtrl.registrarBatchA92Session( session, dtFecha,  valoresJdeInsContado[8], iNoBatch, iMontoH, vaut.getId().getLogin(), 1, "APRARQUEO",  valoresJdeInsContado[9]);
 				
@@ -3157,7 +3157,7 @@ public class RevisionArqueoDAO {
 												sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],sCuentaB[5],
 												"AA", sMoneda, iMontoH,  sConcepto, vaut.getId().getLogin(),
 												vaut.getId().getCodapp(), BigDecimal.ZERO, tipoCliente,
-												sDescripcion,sCodsuc, sCodigoAuxiliar, sTipoAuxiliar, monedaBaseCompania,
+												sDescripcion,sSucursalDeposito, sCodigoAuxiliar, sTipoAuxiliar, monedaBaseCompania,
 												sCuentaB[2], "D", 0);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
@@ -3170,7 +3170,7 @@ public class RevisionArqueoDAO {
 											 sCuentaC[0],sCuentaC[1],sCuentaC[3],sCuentaC[4],sCuentaC[5],
 											 "AA", sMoneda, iMontoH*(-1),sConcepto, vaut.getId().getLogin(),
 											 vaut.getId().getCodapp(),BigDecimal.ZERO, tipoCliente,
-											 "LIQ:" + ra.getReferencia()+" T:"+ ra.getMontototal(), sCodsuc,"","", monedaBaseCompania,
+											 "LIQ:" + ra.getReferencia()+" T:"+ ra.getMontototal(), sSucursalDeposito,"","", monedaBaseCompania,
 											 sCuentaC[2],"D", 0);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
@@ -3188,7 +3188,7 @@ public class RevisionArqueoDAO {
 											sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],sCuentaB[5],
 											"AA", sMoneda, iMontoCorH, sConcepto, vaut.getId().getLogin(),
 											vaut.getId().getCodapp(), tasaCambioOficial, tipoCliente,
-											sDescripcion,sCodsuc, sCodigoAuxiliar,sTipoAuxiliar,
+											sDescripcion,sSucursalDeposito, sCodigoAuxiliar,sTipoAuxiliar,
 											monedaBaseCompania, sCuentaB[2], "F", iMontoH);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
@@ -3201,7 +3201,7 @@ public class RevisionArqueoDAO {
 													sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],sCuentaB[5],
 													"CA", sMoneda, iMontoH,  sConcepto, vaut.getId().getLogin(),
 													vaut.getId().getCodapp(), tasaCambioOficial, tipoCliente,
-													sDescripcion,sCodsuc, sCodigoAuxiliar,sTipoAuxiliar,
+													sDescripcion,sSucursalDeposito, sCodigoAuxiliar,sTipoAuxiliar,
 													monedaBaseCompania,sCuentaB[2],"F", 0);
 						if(!bHecho){
 							sMensaje = "Batch no registrado por liquidacion de afiliado: "
@@ -5539,7 +5539,7 @@ public class RevisionArqueoDAO {
 			}else
 			if(sLinkid.equals("lnkDetalleFinanciamiento")){				
 				sTitulo = "Recibos por pagos a financimientos";
-				lstRecibos = dac.getRecibosIngEx();
+				lstRecibos = dac.getRecibosFinan();
 				lstRecibos = rvc.obtenerRecibosxTipo(lstRecibos, "FN", iCaid, sCodcomp, sCodsuc);				
 			}else
 				
