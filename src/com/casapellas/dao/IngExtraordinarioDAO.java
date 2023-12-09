@@ -2964,10 +2964,10 @@ public class IngExtraordinarioDAO {
 				lblMsgErrorFiltroCta.setStyle("color: red; text-align: center; visibility: visible");
 				lblMsgErrorFiltroCta.setValue("Debe Ingresar el valor para la Cuenta Objeto");
 			}*/
-			if(sUN.equals("") || sCob.equals("") || sCsub.equals("")){
+			if(sUN.equals("") && sCob.equals("") && sCsub.equals("")){
 				txtFiltroUN.setStyleClass("frmInput2Error");
 				lblMsgErrorFiltroCta.setStyle("color: red; text-align: center; visibility: visible");
-				lblMsgErrorFiltroCta.setValue("Debe Ingresar el valor para la subsidiaria");
+				lblMsgErrorFiltroCta.setValue("Debe de Digitar uno de los 3 componentes de la cuenta, favor revisar");
 			}
 			else{
 				
@@ -3003,7 +3003,8 @@ public class IngExtraordinarioDAO {
 			gvCuentasTo.dataBind();
 			
 		} catch (Exception error) {
-			error.printStackTrace();
+			
+			LogCajaService.CreateLog("filtrarCuentas", "ERR", error.getMessage());
 		} 
 	}
 	
@@ -3014,9 +3015,9 @@ public class IngExtraordinarioDAO {
 		IngextraCtrl iexCtrl = new IngextraCtrl();
 		
 		try {
-			lstCuentas = iexCtrl.filtrarCuentasF0901("","","");
+			//lstCuentas = iexCtrl.filtrarCuentasF0901("","","");
 			
-			if(lstCuentas != null && lstCuentas.size()>0){
+			//if(lstCuentas != null && lstCuentas.size()>0){
 				for(int i=0; i<lstCuentas.size();i++){
 					Vf0901 v = (Vf0901)lstCuentas.get(i);
 					v.setCuenta(v.getId().getGmmcu().trim()+"."+v.getId().getGmobj().trim()+"."+v.getId().getGmsub().trim());
@@ -3034,14 +3035,15 @@ public class IngExtraordinarioDAO {
 				txtFiltroCobjeto.setValue("");
 				txtFiltroCsub.setValue("");
 				dwCuentasOperacion.setWindowState("normal");
-			}else{
+			/*}else{
 				lstCuentas = new ArrayList();
 				lblMensajeValidacion.setValue("No se ha podido obtener información desde el maestro de cuentas.");
 				dwProcesa.setStyle("width:320px;height: 150px");
 				dwProcesa.setWindowState("normal");
-			}
+			}*/
 		} catch (Exception error) {
-			error.printStackTrace();
+			
+			LogCajaService.CreateLog("mostrarCtsOperacion", "ERR", error.getMessage());
 		}
 	}
 /****************************************************************************************/
@@ -3061,7 +3063,8 @@ public class IngExtraordinarioDAO {
 				lblDescrCuentaOperacion.setValue(sDescCta);
 			}
 		} catch (Exception error) {
-			error.printStackTrace();
+			
+			LogCajaService.CreateLog("seleccionarCtaTo", "ERR", error.getMessage());
 		}
 	}
 /****************************************************************************************/
@@ -3128,7 +3131,8 @@ public class IngExtraordinarioDAO {
 				}
 			}
 		} catch (Exception error) {
-			error.printStackTrace();
+		
+			LogCajaService.CreateLog("setCuentasxTipoOperacion", "ERR", error.getMessage());
 		}
 	}
 	
@@ -3207,7 +3211,8 @@ public class IngExtraordinarioDAO {
 				lblCambioDom.setValue(dv.formatDouble(dCambiodom));
 			}
 		} catch (Exception error) {
-			error.printStackTrace();
+			
+			LogCajaService.CreateLog("aplicarCambio", "ERR", error.getMessage());
 		}
 	}
 /****************************************************************************************/
@@ -3216,7 +3221,7 @@ public class IngExtraordinarioDAO {
 		try {
 			limpiarPantalla();
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("limpiarPantalla", "ERR", error.getMessage());
 		}
 	}
 /****************************************************************************************/
@@ -3244,7 +3249,8 @@ public class IngExtraordinarioDAO {
 			txtConcepto.setStyleClass("frmInput2");
 			
 		} catch (Exception error) {
-			error.printStackTrace();
+			
+			LogCajaService.CreateLog("restablecerEstilosPantalla", "ERR", error.getMessage());
 		}
 	}
 	
@@ -3313,7 +3319,8 @@ public class IngExtraordinarioDAO {
 		
 			
 		} catch (Exception error) {
-			error.printStackTrace();
+			
+			LogCajaService.CreateLog("limpiarPantalla", "ERR", error.getMessage());
 		}
 	}
 /*******    VALIDAR DATOS DEL DIALOGO DE LA SOLICITUD DE AUTORIZACION      **************/
@@ -3404,7 +3411,8 @@ public boolean validarSolicitud() {
 				validado = false;
 			}
 	}catch(Exception ex){
-		ex.printStackTrace();
+		
+		LogCajaService.CreateLog("validarSolicitud", "ERR", ex.getMessage());
 	}
 	return validado;
 }
@@ -3731,7 +3739,7 @@ public boolean validarSolicitud() {
 			metodosGrid.dataBind();
 			
 	  	}catch(Exception ex){
-			ex.printStackTrace();
+	  		LogCajaService.CreateLog("procesarSolicitud", "ERR", ex.getMessage());
 		}finally{
 			dwSolicitud.setWindowState("hidden");
 
@@ -3798,7 +3806,8 @@ public boolean validarSolicitud() {
 										FacesContext.getCurrentInstance()));
 			
 		}catch(Exception ex){
-			ex.printStackTrace();
+			
+			LogCajaService.CreateLog("borrarPago", "ERR", ex.getMessage());
 		}finally{
 			
 			dwBorrarPago.setWindowState("hidden");
@@ -3859,7 +3868,7 @@ public boolean validarSolicitud() {
 			}		
 			
 		}catch(Exception ex){
-			ex.printStackTrace(); 
+			LogCajaService.CreateLog("setMoneda", "ERR", ex.getMessage());
 		}		
 	}
 
@@ -3964,7 +3973,7 @@ public boolean validarSolicitud() {
 			srm.addSmartRefreshId(lnkCambio.getClientId(FacesContext.getCurrentInstance()));
 			
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("determinarCambio", "ERR", error.getMessage());
 		}
 	}	
 /**********************************************************************************************************/
@@ -4380,7 +4389,8 @@ public boolean validarSolicitud() {
 							.getCurrentInstance()));
 		
 		}catch(Exception ex){
-			ex.printStackTrace();
+			
+			LogCajaService.CreateLog("registrarPago", "ERR", ex.getMessage());
 		}
 	}
 	
@@ -4410,7 +4420,7 @@ public boolean validarSolicitud() {
 			tasa = (tof == null) ? BigDecimal.ONE : tof.getId().getCxcrrd();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("tasaOficial", "ERR", e.getMessage());
 		}
 		return tasa ;
 	}
@@ -4436,7 +4446,7 @@ public boolean validarSolicitud() {
 			tasa = (tp == null) ? BigDecimal.ONE : tp.getId().getTcambiom();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("tasaParalela", "ERR", e.getMessage());
 		}
 		return tasa ;
 	}
@@ -4749,7 +4759,7 @@ public boolean validarSolicitud() {
 			lblMensajeValidacion.setValue("No se puede registrar el pago: Error de sistema: "+error);
 			dwProcesa.setStyle("width:320px;height: 180px");
 			dwProcesa.setWindowState("normal");
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("validarMpagos", "ERR", error.getMessage());
 		}
 		return validado;
 	}
@@ -4826,7 +4836,7 @@ public boolean validarSolicitud() {
 				}
 			}
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("fijarMontoAplicado", "ERR", error.getMessage());
 		}
 	}
 /*******************************************************************************/
@@ -4840,7 +4850,7 @@ public boolean validarSolicitud() {
 			txtReferencia2.setStyleClass("frmInput2");
 			txtReferencia3.setStyleClass("frmInput2");
 		}catch(Exception ex){
-			ex.printStackTrace();
+			LogCajaService.CreateLog("restablecerEstilosPago", "ERR", ex.getMessage());
 		}
 	}
 /*******************************************************************************/
@@ -4871,7 +4881,7 @@ public boolean validarSolicitud() {
 			cambiarVistaMetodos(codmetodo,vf01);
 
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("setMetodosPago", "ERR", error.getMessage());
 		}
 	}
 	
@@ -5107,7 +5117,7 @@ public boolean validarSolicitud() {
 			};
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("cambiarVistaMetodos", "ERR", error.getMessage());
 		}
 	}
 /*******************************************************************************/
@@ -5173,7 +5183,7 @@ public boolean validarSolicitud() {
 			
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("cambiarCompania", "ERR", error.getMessage());
 		}
 	}
 	
@@ -5227,7 +5237,7 @@ public boolean validarSolicitud() {
 			srm.addSmartRefreshId(lnkCambio.getClientId(FacesContext.getCurrentInstance()));
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("resetResumenPago", "ERR", e.getMessage());
 		}
 	}	
 /*******************************************************************************/
@@ -5254,7 +5264,7 @@ public boolean validarSolicitud() {
 			cambiarVistaMetodos("MP",vf01);
 			
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("selecionarMonedaAplicar", "ERR", error.getMessage());
 		}
 	}
 /*******************************************************************************/
@@ -5287,7 +5297,7 @@ public boolean validarSolicitud() {
 				obj[2] = tcambio;  		//objeto de Tcambios
 			}
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerTasaCambioJDE", "ERR", error.getMessage());
 		}
 		return obj;
 	}
@@ -5300,7 +5310,7 @@ public boolean validarSolicitud() {
 			lblCodigoSearch.setValue("");
 			lblNombreSearch.setValue("");
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("settipoBusquedaCliente", "ERR", error.getMessage());
 		}
 	}
 /*******************************************************************************/
@@ -5334,7 +5344,7 @@ public boolean validarSolicitud() {
  
 
 		} catch (Exception error) { 
-			error.printStackTrace();
+			LogCajaService.CreateLog("actualizarInfoCliente", "ERR", error.getMessage());
 		}
 	}
 /**********************************************************************************/
@@ -5367,7 +5377,7 @@ public boolean validarSolicitud() {
 			m.put("iex_idNumericPago", idNumericPago);
  
 		} catch (Exception error) { 
-			error.printStackTrace();
+			LogCajaService.CreateLog("actualizarInfoCliente", "ERR", error.getMessage());
 		}
 	}
 /***************************************************************************************/
@@ -5386,7 +5396,7 @@ public boolean validarSolicitud() {
 			txtObs.setValue("");
 			dwSolicitud.setWindowState("hidden");	
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("cerrarProcesa", "ERR", error.getMessage());
 		}
 	}	
 	public void cancelarGuardarecibo(ActionEvent e){
@@ -5410,7 +5420,7 @@ public boolean validarSolicitud() {
 				lstTipoBusquedaCliente.add(new SelectItem("2","Código Cliente","Búsqueda por código de cliente"));
 			}
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("getDdlTipoBusqueda", "ERR", error.getMessage());
 		}
 		return lstTipoBusquedaCliente;
 	}
@@ -5460,7 +5470,7 @@ public boolean validarSolicitud() {
 			lblfechaRecibo = "";
 			lblfechaRecibo = formatter.format(fecharecibo);
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("getDdlTipoBusqueda", "ERR", error.getMessage());
 		}
 		return lblfechaRecibo;
 	}
@@ -5501,7 +5511,7 @@ public boolean validarSolicitud() {
 				lstFiltroCompanias = (List)m.get("iex_lstFiltroCompanias");
 			}
 		}catch(Exception ex){
-			ex.printStackTrace();
+			LogCajaService.CreateLog("getDdlTipoBusqueda", "ERR", ex.getMessage());
 		}
 		return lstFiltroCompanias;
 	}
@@ -5551,7 +5561,7 @@ public boolean validarSolicitud() {
 				lstFiltroMonapl = (ArrayList)m.get("iex_lstFiltroMonapl");
   			
 		}catch(Exception error){
-			error.printStackTrace();
+			LogCajaService.CreateLog("getLstFiltroMonapl", "ERR", error.getMessage());
 		}
 		return lstFiltroMonapl;
 	}

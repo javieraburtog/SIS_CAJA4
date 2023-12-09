@@ -8,6 +8,7 @@ import java.util.List;
 import com.casapellas.entidades.Vcuentaoperacion;
 import com.casapellas.entidades.Vf0901;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
+import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
 
 /**
@@ -41,7 +42,8 @@ public class IngextraCtrl {
 			
 		} catch (Exception error) {
 			v = null;
-			System.out.println("Error en IngextraCtrl.validarCuentaF0901 " + error);
+			
+			LogCajaService.CreateLog("Error en IngextraCtrl.validarCuentaF0901 ", "ERR", error.getMessage());
 		}
 		return v;
 	}
@@ -69,12 +71,14 @@ public class IngextraCtrl {
 		
 			
 		} catch (Exception error) {
-			System.out.println("Error en IngextraCtrl.filtrarCuentasF0901 " + error);
+		
+			LogCajaService.CreateLog("Error en IngextraCtrl.filtrarCuentasF0901 ", "ERR", error.getMessage());
 		} finally {
 			try {
 				sesion.close();
 			} catch (Exception e) {
-				System.out.println("Error al cerrar sesion en IngextraCtrl.filtrarCuentasF0901 " + e);
+				
+				LogCajaService.CreateLog("Error al cerrar sesion en IngextraCtrl.filtrarCuentasF0901", "ERR", e.getMessage());
 			}
 		}
 		return lstCuentas;		
@@ -94,7 +98,7 @@ public class IngextraCtrl {
 			lstCuentas = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Vcuentaoperacion.class, false);
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("obtenerCuentasF0901", "ERR", error.getMessage());
 		}  
 		return lstCuentas;
 	}
@@ -113,12 +117,14 @@ public class IngextraCtrl {
 			lstCto = sesion.createQuery(sql).list();
 						
 		} catch (Exception error) {
-			System.out.println("Error en IngextraCtrl.obtenerCuentasxOperacion  " + error);
+			
+			LogCajaService.CreateLog("Error en IngextraCtrl.obtenerCuentasxOperacion", "ERR", error.getMessage());
 		} finally {
 			try {
 				sesion.close();
 			} catch (Exception e) {
-				System.out.println("Error al cerrar sesion en IngextraCtrl.obtenerCuentasxOperacion  " + e);
+			
+				LogCajaService.CreateLog("Error al cerrar sesion en IngextraCtrl.obtenerCuentasxOperacion  ", "ERR", e.getMessage());
 			}
 		}
 		return lstCto;
@@ -137,7 +143,7 @@ public class IngextraCtrl {
 			
 			
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			LogCajaService.CreateLog("obtenerTipoOperaciones", "ERR", error.getMessage());
 		}  
 		return lstTiposOperacion;
 	}

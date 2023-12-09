@@ -849,8 +849,10 @@ function mostrar(){
 				<ig:dwContentPane id="cpCuentasOperacion" style="text-align: center">
 
 					<hx:jspPanel id="jspCuentasOperacion">
+					<label>Debe de Digitar uno de los 3 componentes de la cuenta</label>
+					<br />
 						<table id="tbFiltrosCtas">
-							<tr>
+							<tr>								
 								<td><h:outputText styleClass="frmLabel2" id="lbletFiltroUN"
 									value="U.Negocio:"></h:outputText></td>
 								<td><h:inputText id="txtFiltroUN" styleClass="frmInput2"
@@ -868,7 +870,7 @@ function mostrar(){
 									size="30" binding="#{mbIngresoex.txtFiltroCsub}"
 									style="width: 60px; text-align: right"></h:inputText></td>
 								<td><ig:link id="lnkfiltrarcuentas" 
-									styleClass="igLink" tooltip="Usar filtros para datos de cuenta"
+									styleClass="igLink" tooltip="Usar filtros para datos de cuenta, Debe de Digitar uno de los 3 componentes de la cuenta"
 									iconUrl="/theme/icons2/search.png"
 									hoverIconUrl="/theme/icons2/searchOver.png"
 									actionListener="#{mbIngresoex.filtrarCuentas}"
@@ -929,7 +931,7 @@ function mostrar(){
 					</ig:gridView>
 					<h:panelGrid id="hpgAceptFiltro" columns="1"
 						style="text-align: right" width="510">
-						<ig:link value="Aceptar" id="lnkAceptarFiltrarCta"
+						<ig:link value="Aceptar" id="lnkAceptarFiltrarCta" tooltip="Usar filtros para datos de cuenta, Debe de Digitar uno de los 3 componentes de la cuenta"
 							styleClass="igLink" iconUrl="/theme/icons2/accept.png"
 							hoverIconUrl="/theme/icons2/acceptOver.png"
 							actionListener="#{mbIngresoex.seleccionarCuenta}"
