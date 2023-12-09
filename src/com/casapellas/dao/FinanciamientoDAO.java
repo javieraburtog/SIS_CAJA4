@@ -5161,9 +5161,9 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 					if (m.get("bdTasa") != null) {
 						bdTasa = (BigDecimal) m.get("bdTasa");
 					}
-					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio1, d.formatStringToDouble(sCambio1),f55ca01.getId().getCaid(), hFac.getId().getCodsuc(), bdTasa,valoresJDEInsFinanciamiento[0]);
+					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio1, d.formatStringToDouble(sCambio1),f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), bdTasa,valoresJDEInsFinanciamiento[0]);
 					////LogCrtl.sendLogDebgsFinancing("<===========> registrarCambio:  "+insertado);
-					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio2, d.formatStringToDouble(sCambio2),f55ca01.getId().getCaid(), hFac.getId().getCodsuc(), bdTasa,valoresJDEInsFinanciamiento[0]);
+					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio2, d.formatStringToDouble(sCambio2),f55ca01.getId().getCaid(), f55ca01.getId().getCaco(), bdTasa,valoresJDEInsFinanciamiento[0]);
 					////LogCrtl.sendLogDebgsFinancing("<===========> registrarCambio:  "+insertado);
 				} else {
 					sCambio1 = txtCambio.getValue().toString();
@@ -5175,7 +5175,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 					if (m.get("bdTasa") != null) {
 						bdTasa = (BigDecimal) m.get("bdTasa");
 					}
-					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio1, d.formatStringToDouble(sCambio1),f55ca01.getId().getCaid(),hFac.getId().getCodsuc(), bdTasa,valoresJDEInsFinanciamiento[0]);
+					insertado = recCtrl.registrarCambio(s, tx, iNumrec,hFac.getId().getCodcomp(), sLblCambio1, d.formatStringToDouble(sCambio1),f55ca01.getId().getCaid(),f55ca01.getId().getCaco(), bdTasa,valoresJDEInsFinanciamiento[0]);
 					////LogCrtl.sendLogDebgsFinancing("<===========> registrarCambio:  "+insertado);
 				}
 			} 
