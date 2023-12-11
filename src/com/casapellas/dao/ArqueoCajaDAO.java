@@ -121,6 +121,7 @@ import com.casapellas.util.CalendarToJulian;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.CustomEmailAddress;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LogCajaService;
 import com.casapellas.util.MailHelper;
@@ -1980,21 +1981,16 @@ public class ArqueoCajaDAO {
 			 *  Cuenta Inicial: 10.15000.15 => cuenta Actual: 24.13600
 			 */
 			//------------- Verificar que exista la cuenta de Funcionarios y Empleados.
-			String sUN =  cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();
-			String sCtaOb=sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getCodigoCuentaObjeto().toString();
+			String sUN = ""; String sCtaOb; String sSubCta;					
+			String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(sCodcomp.trim());
+			String[] CtaCfg = deudorCfg.split(",");
 			
-			if(sCodcomp.trim().equals("11")){
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE11").getValorAlfanumerico().toString();;
-			}else
-			if(sCodcomp.trim().equals("90")){
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE08").getValorAlfanumerico().toString();
-			}else
-			if(sCodcomp.trim().equals("20")){
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE03").getValorAlfanumerico().toString();
-			}	
-	
+			sUN = CtaCfg[0].trim();
+			sCtaOb = CtaCfg[1].trim();
+			sSubCta = CtaCfg.length == 3 && CtaCfg[2] != null ? CtaCfg[2].trim() : "";
 			
-			vCtaFE  = dv.validarCuentaF0901(sUN,sCtaOb,"");
+			vCtaFE  = dv.validarCuentaF0901(sUN,sCtaOb,sSubCta);
+			
 			if(vCtaFE!=null){
 				sCuentaFE = sUN+"."+sCtaOb;
 				sCompCtaFE = sUN;

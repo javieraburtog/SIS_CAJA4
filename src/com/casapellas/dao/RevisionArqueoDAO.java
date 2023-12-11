@@ -119,6 +119,7 @@ import com.casapellas.socketpos.PosCtrl;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.CustomEmailAddress;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LiquidacionCheque;
 import com.casapellas.util.LogCajaService;
@@ -2978,17 +2979,16 @@ public class RevisionArqueoDAO {
 			
 			
 			//--- Obtener la cuenta de funcionarios y empleados, crear el objeto Cuenta[];
-			String sUN="10";
-			if( sCodcomp.trim().toUpperCase().compareTo("11") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE02").getValorAlfanumerico().toString();//PropertiesSystem.CTA_DEUDORES_VARIOS_UNE02 ;
-			if( sCodcomp.trim().toUpperCase().compareTo("20") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE03").getValorAlfanumerico().toString();//PropertiesSystem.CTA_DEUDORES_VARIOS_UNE03 ;
-			if( sCodcomp.trim().trim().toUpperCase().compareTo("90") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE08").getValorAlfanumerico().toString();//PropertiesSystem.CTA_DEUDORES_VARIOS_UNE08 ;
-			if( sCodcomp.trim().trim().toUpperCase().compareTo("12") == 0 )
-				sUN = cajaparm.getParametros("34", "0", "DEUDO_VAR_UNE01").getValorAlfanumerico().toString();//PropertiesSystem.CTA_DEUDORES_VARIOS_UNE01 ;
+			String sUN = ""; String sCtaOb; String sSubCta;					
+			String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(sCodcomp.trim());
+			String[] CtaCfg = deudorCfg.split(",");
 			
-			Vf0901 vCtaFE  = dv.validarCuentaF0901(sUN, cajaparm.getParametros("34", "0", "CTA_DEUDO_VAR_OB").getValorAlfanumerico().toString(),"");
+			sUN = CtaCfg[0].trim();
+			sCtaOb = CtaCfg[1].trim();
+			sSubCta = CtaCfg.length == 3 && CtaCfg[2] != null ? CtaCfg[2].trim() : "";
+			
+			Vf0901 vCtaFE  = dv.validarCuentaF0901(sUN,sCtaOb,sSubCta);
+			
 			
 			if(vCtaFE==null){
 				sCuentaT = null;
