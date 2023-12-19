@@ -1386,7 +1386,7 @@ public List leerFacturasReciboFinan2(int iCaid,String sCodComp,int iNumrec,
 			" from " + PropertiesSystem.JDEDTA+".F03B11 "
 					+ "INNER JOIN "+PropertiesSystem.JDEDTA+".F0006 UN ON RPMCU = UN.MCMCU  " +
 			" where rpan8 = "+ f.getId().getCodcli()+" and rpaap > 0  and rpdct IN (select COD_DOCUMENTO from " + PropertiesSystem.GCPCXC + ".TIPOS_DOCUMENTOS_FINANCIAMIENTO "
-					+ "where TIPO_AGRUPACION = 'ICR' and cod_compania = CAST(TRIM(UN.MCRP01) AS VARCHAR(3) CCSID 37) "
+					+ "where TIPO_AGRUPACION = 'ICR' and cod_compania = CAST(TRIM(UN.MCRP09) AS VARCHAR(3) CCSID 37) "
 					+ "order by ORDEN_PROCESAMIENTO asc) " +
 			" and cast(rppo as numeric(8) ) = " + f.getId().getNosol() + 
 			" and rpdcto = '"+ f.getId().getTiposol()+"' " +
