@@ -3783,6 +3783,14 @@ public class FinanciamientoDAO {
 			if (dtaFacs == null || dtaFacs.size() <= 0) {
 				throw new Exception("No se encontraron facturas a aplicar.");
 			}
+			
+			// Validar que si es una cuota adelantada que solo pueda estar en aplicar a principal
+			Boolean esCuoataAdelantada = CodeUtil.getFromSessionMap("esCuotaAdelantada") != null 
+										? (Boolean)CodeUtil.getFromSessionMap("esCuotaAdelantada") : false;
+										
+			if (esCuoataAdelantada && !chkPrincipal.isChecked()) {
+				throw new Exception("Esta aplicando a una cuota adelantada y no se tiene la opcion Abono a Principal Seleccionada.");
+			}
 
 			
 			//***********************************************************************
@@ -4060,6 +4068,12 @@ public class FinanciamientoDAO {
 			if( aplicado && chkPrincipal.isChecked() ){	
 				aplicado = ajustarCuotaPagoPrincipal(lstFacturasSelected, lstComponentes);
 			}
+			
+			//&& ====================== Actualizacion de F5503am para pago de principal cuando los intereses no han sido generados totalmente pero el pricipal ya fue pagado.
+			if( aplicado && !chkPrincipal.isChecked() ){	
+				aplicado = ajustarCuotaPagoPrincipalAdelantado(lstFacturasSelected, lstComponentes);
+			}
+			
 			if(!aplicado){
 				msgProceso = "Recibo no aplicado, error al ajustar las cuotas del financimiento por adelanto a principal.";
 				throw new Exception(msgProceso);
@@ -4117,7 +4131,8 @@ public class FinanciamientoDAO {
 			try {
 				if(aplicado) { 
 					transInsJdeCaja.commit();
-					BitacoraSecuenciaReciboService.actualizarSatisfactorioLogReciboNumerico(caid, numrec, codcomp,codsuc, valoresJDEInsFinanciamiento[0]);
+					BitacoraSecuenciaReciboService.actualizarSatisfactorioLogReciboNumerico(caid, numrec, codcomp,codsuc, "FN");
+					CodeUtil.removeFromSessionMap("esCuotaAdelantada");
 				}
 			} catch (Exception e) {
 				LogCajaService.CreateLog("grabarRecibo", "ERR", e.getMessage());
@@ -5544,6 +5559,16 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 					}
 				}
 			}
+			
+			// Validar que si es una cuota adelantada que solo pueda estar en aplicar a principal
+			Boolean esCuoataAdelantada = CodeUtil.getFromSessionMap("esCuotaAdelantada") != null 
+										? (Boolean)CodeUtil.getFromSessionMap("esCuotaAdelantada") : false;
+										
+			if (esCuoataAdelantada && !chkPrincipal.isChecked()) {
+				sMensajeError = "Esta aplicando a una cuota adelantada y no se tiene la opcion Abono a Principal Seleccionada.";
+				validado = false;
+			}
+						
 			lblMensajeError.setValue(sMensajeError);
 			dwMensajeError.setStyle("width:390px;height:" + y + "px");
 			
@@ -5760,8 +5785,81 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 			
 		} catch (Exception e) {
 			aplicado = false;
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("ajustarCuotaPagoPrincipal", "ERR", e.getMessage());
 		}
+		return aplicado ;
+	}
+	
+	public boolean ajustarCuotaPagoPrincipalAdelantado(List<Finandet> lstFacturasSelected, List<Credhdr> lstComponentes){
+		boolean aplicado = true;
+		
+		try {
+			Finandet fd1 = lstFacturasSelected.get(0);
+			
+			String strSqlUpdate = " update "+PropertiesSystem.GCPCXC+".F5503AM F set  " +
+					"ATAAP = 0, " +
+					"ATFAP = 0 ";
+			
+			String strSqlQueryWhere = 
+				"WHERE TRIM(f.atcgrp) = '@CODCOMP' AND TRIM(f.atkcoo) = '@CODSUC' " +
+				"AND f.atan8 = @CODCLI AND TRIM(f.atdoco) = @NOSOL AND TRIM(f.atdcto) = '@TIPOSOL' AND f.ATDFR  = @NOCUOTA "  ;
+			
+			strSqlQueryWhere = strSqlQueryWhere
+					.replace("@CODCOMP",  fd1.getId().getCodcomp().trim() ) 
+					.replace("@CODSUC",  fd1.getId().getCodsuc().trim() ) 
+					.replace("@CODCLI",  String.valueOf(fd1.getId().getCodcli()) ) 
+					.replace("@NOSOL",   String.valueOf( fd1.getId().getNosol() ) ) 
+					.replace("@TIPOSOL", fd1.getId().getTiposol().trim() );
+					//.replace("@NOCUOTA", String.valueOf(fd1.getId().getNocuota()));
+			
+			//Filtrar los documentos de tipo Principal y verificar si tiene saldo en el JDE
+			ClsParametroCaja servicioCajaParm = new ClsParametroCaja();
+			CajaParametro objCajaParm = servicioCajaParm.getParametros("04", "0", "FN_TIPODOC_PRINCIPAL");
+			
+			List<String> lstPrincipal = Arrays
+					.stream(objCajaParm.getValorAlfanumerico().trim().split(","))
+					.map(String::trim)
+					.collect(Collectors.toList()); 
+			
+			Session sesion = HibernateUtilPruebaCn.currentSession();
+			List<Credhdr> listPrincipal = lstComponentes.stream()
+					.filter(x -> lstPrincipal.contains(x.getTipofactura().trim().toUpperCase()))
+					.collect(Collectors.toList());
+			
+			if (listPrincipal != null && listPrincipal.size() > 0) {
+				//&& ============== Validar cada cuota seleccionada, si el pago cubre todo su monto y actualizar tabla de pagos (F5503am)			
+				for (Credhdr cuotaPagar : listPrincipal) {
+					// Por cada factura de tipo H1 verificar si tiene saldo en el jdedwards
+					String strSQL = "SELECT " + 
+							"    SUM(B11.RPFAP) AS SALDODOL " + 
+							"FROM " + 
+							"    " + PropertiesSystem.JDEDTA + ".F03B11 B11 " + 
+							"WHERE " + 
+							"    CAST(B11.RPKCO AS VARCHAR(5)) = '" + fd1.getId().getCodsuc() + "' " + 
+							"    AND B11.RPAN8 = " + String.valueOf(fd1.getId().getCodcli()) + " " + 
+							"    AND CAST(B11.RPSFX AS INT) = " + Integer.parseInt(cuotaPagar.getPartida()) +" " + 
+							"    AND CAST(B11.RPPO AS INT) = " + String.valueOf( fd1.getId().getNosol() ) + " " + 
+							"    AND B11.RPDOC = " + String.valueOf(cuotaPagar.getNofactura()) + " " + 
+							"    AND B11.RPDCT = '" + String.valueOf(cuotaPagar.getTipofactura().trim().toUpperCase()) + "' " + 
+							"    AND TRIM(B11.RPPO) <> '' ";
+					
+					LogCajaService.CreateLog("ajustarCuotaPagoPrincipalAdelantado", "QRY", strSQL);
+					
+					BigDecimal resultado = (BigDecimal)sesion.createSQLQuery(strSQL).uniqueResult();
+					if (resultado.intValue() <= 0) {
+						String strF5503AMUpdateQry = (strSqlUpdate + strSqlQueryWhere)
+								.replace("@NOCUOTA", String.valueOf(Integer.parseInt(cuotaPagar.getPartida())));
+						
+						LogCajaService.CreateLog("ajustarCuotaPagoPrincipalAdelantado", "QRY", strF5503AMUpdateQry);
+						sesion.createSQLQuery(strF5503AMUpdateQry).executeUpdate();		
+					}
+				}
+			}
+		} catch (Exception e) {
+			aplicado = false;
+			LogCajaService.CreateLog("ajustarCuotaPagoPrincipalAdelantado", "ERR", e.getMessage());
+		}
+		
 		return aplicado ;
 	}
 	
@@ -6032,6 +6130,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 		Finanhdr fHdr = null;
 		Credhdr c = null;
 		Divisas d = new Divisas();
+		Vautoriz vaut =  ((Vautoriz[])m.get("sevAut"))[0];
 		
 		try{
 			
@@ -6054,7 +6153,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 				return;
 			}
 			 
-			boolean esAbonoPrincipal = chkPrincipal.isChecked() ;
+			boolean esAbonoPrincipal = chkPrincipal.isChecked();
 			
 			for(int i = 0; i < lstCreditosFinan.size();i++){
 				
@@ -6085,14 +6184,37 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 					 
 					f.getId().setMontopend( montoPendienteSinInteres );
 					
-				}else{
+				} else{
 					f = cuotaCtrl.buscarSiguienteCuota(fHdr.getId().getCodcomp(), fHdr.getId().getCodsuc(), 
 							fHdr.getId().getNosol(), fHdr.getId().getTiposol(), fHdr.getId().getCodcli(), lstFacturasSelected);
+					
+					if (f!= null) {
+						// Esta cuota tenemos que ver los intereces
+						List<Finandet> tmpFinanDet = new ArrayList<Finandet>();
+						tmpFinanDet.add(f);
+						String msgCreaInteres = crearFacturasPorIntereses2( lstCreditosFinan,  tmpFinanDet, vaut.getId().getLogin() );
+						
+						if (!msgCreaInteres.isEmpty()) {
+							lblMensajeError.setValue(msgCreaInteres);
+							dwMensajeError.setStyle("width:320px;height:160px");
+							dwMensajeError.setWindowState("normal");
+							return;
+						}
+						
+						// Verificar que la siguiente cuota tenga intereses
+						BigDecimal bdInteres = cuotaCtrl.buscarInteresCorrientePend(f);
+						if(bdInteres.compareTo(BigDecimal.ZERO ) == -1 || bdInteres.compareTo(BigDecimal.ZERO ) == 0 ){
+							lblMensajeError.setValue("No puede agregar la siguiente cuota por que no esta vigente o no tiene intereses corrientes generados");
+							dwMensajeError.setStyle("width:320px;height:160px");
+							dwMensajeError.setWindowState("normal");
+							return;
+						}
+					}
+					
 				}
- 
-				
+
 				if( f == null ){
-					lblMensajeError.setValue(" Ya no hay más cuotas disponibles " );
+					lblMensajeError.setValue("Ya no hay más cuotas disponibles " );
 					dwMensajeError.setStyle("width:320px;height:160px");
 					dwMensajeError.setWindowState("normal");
 					return;
@@ -6111,7 +6233,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 		
 		}catch(Exception ex){
 			dwAgregarCuota.setWindowState("hidden");
-			ex.printStackTrace(); 
+			LogCajaService.CreateLog("mostrarAgregarCuotas", "ERR", ex.getMessage());
 		}		
 	}
 	
@@ -7902,7 +8024,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			F55ca014[] f14 = (F55ca014[])m.get("cont_f55ca014");
 
 			CodeUtil.removeFromSessionMap(new String[] { "finan_MontoAplicar",
-					"Fn_CodUninegRecibo", "fn_NumeroUltimaCuotaCorriente" });
+					"Fn_CodUninegRecibo", "fn_NumeroUltimaCuotaCorriente", "esCuotaAdelantada" });
 			
 			chkPrincipal.setChecked(false);
 			caja = (Vf55ca01) ((List) m.get("lstCajas")).get(0);
@@ -8058,7 +8180,13 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 				
 			//buscar cuotas vencidas 
 			lstFacturasSelected = cuotaCtrl.getCuotasVencidas(lstSelected);
-				
+			
+			//Variable que se utiliza para verificar si la cuota adelantada que se esta pagando
+			//tiene que generado intereses corrientes. Sino no los tiene entonces se tiene
+			//que pagar usando la opcion adelanto a principal.
+			Boolean esCuotaAdelantada = false;
+			CodeUtil.putInSessionMap("esCuotaAdelantada",false);
+			
 			//&& ============= buscar mora e intereses corrientes para las cuotas pendientes
 			if( lstFacturasSelected != null && !lstFacturasSelected.isEmpty() ){
 				
@@ -8092,10 +8220,17 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 						return;
 					}
 					
+					// Si no hay intereses generados con saldo en la F03B11
+					// mostrar un mensaje que deberia usar la opcion pago a abono a principal
+					if (bdInteres.compareTo(BigDecimal.ZERO) == 0) {
+						esCuotaAdelantada = true;
+						CodeUtil.putInSessionMap("esCuotaAdelantada",true);
+					}
+					
 					if( bdInteres.compareTo(BigDecimal.ZERO) == 0 && fd.getId().getAticu() == 0 ){
 						bdInteres = fd.getId().getImpuesto().add( fd.getId().getInteres() );
 					}
-					
+
 					fd.setInteresPend(bdInteres);
 					lstFacturasSelected.add(fd);
 					
@@ -8113,12 +8248,29 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			Vautoriz vaut =  ((Vautoriz[])m.get("sevAut"))[0];
 			BigDecimal tasaoficial = obtenerTasaOficial();
 			String msgCreaInteres="";
-			
-			msgCreaInteres = crearFacturasPorIntereses2( lstSelected,  lstFacturasSelected, vaut.getId().getLogin() );
+			 msgCreaInteres = crearFacturasPorIntereses2( lstSelected,  lstFacturasSelected, vaut.getId().getLogin() );
 			
 			if( !msgCreaInteres.isEmpty() ){
 				msgProceso = msgCreaInteres ;
 				return ;
+			}
+			
+			// Si no hay intereses generados con saldo en la F03B11
+			// mostrar un mensaje que deberia usar la opcion pago a abono a principal
+			if (esCuotaAdelantada) {
+				if(fd == null) {
+					msgProceso = "Error al obtener la couta";
+					return;
+				}
+				
+				// Volver a buscar los interes despues de llamar al servicio que los genera
+				bdInteres = cuotaCtrl.buscarInteresCorrientePend(fd);
+				
+				if (bdInteres.compareTo(BigDecimal.ZERO ) == -1 || bdInteres.compareTo(BigDecimal.ZERO) == 0) {
+					msgProceso = "Esta intentando hacer un pago adelantado de cuota, por favor utilize la opcion Abono a Principal";
+					CodeUtil.putInSessionMap("esCuotaAdelantada",true);
+					//m.remove("esCuotaAdelantada");
+				}
 			}
 
 			//Buscar el detalle de cuotas en el f0311 (moratorios, corriente,saldo )
