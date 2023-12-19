@@ -92,7 +92,6 @@ public class BancoCtrl {
 			
 		} catch (Exception e) {
 			LogCajaService.CreateLog("ingresoBajoPreconciliacion", "ERR", e.getMessage());
-			e.printStackTrace();
 		}
 		return bajoPreconcilia;
 	}
@@ -115,12 +114,9 @@ public class BancoCtrl {
 			
 			f33 = (F55ca033)cr.uniqueResult();
 			
-			
-			
 		} catch (Exception e) {
 			f33 = null;
-			e.printStackTrace();
-//			System.out.println("GCPMCAJA:BancoCtrl:  Excepción capturada en:  obtenerCuentaTransitoriaBco() "+e);
+			LogCajaService.CreateLog("obtenerCuentaTransitoriaBco", "ERR", e.getMessage());
 		}
 		return f33;
 	}
@@ -153,7 +149,7 @@ public class BancoCtrl {
 			banco = bancos.toArray( new F55ca022[bancos.size()]);
 			
 		}catch(Exception ex){
-			ex.printStackTrace();
+			LogCajaService.CreateLog("obtenerBancosConciliar", "ERR", ex.getMessage());
 		}
 		return banco;
 	}
@@ -174,7 +170,7 @@ public class BancoCtrl {
 				f = (F55ca022)ob;
 			
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("obtenerBancoxId", "ERR", error.getMessage());
 			
 		}
 		
@@ -192,7 +188,7 @@ public class BancoCtrl {
 			return f =  ConsolidadoDepositosBcoCtrl.executeSqlQueryUnique(sql, F55ca022.class, true);
 			
 		} catch (Exception error) {
-			LogCajaService.CreateLog("executeSqlQuery", "ERR", error.getMessage());
+			LogCajaService.CreateLog("obtenerBancoxId", "ERR", error.getMessage());
 			f = null;
 			error.printStackTrace();
 		}  
@@ -216,7 +212,7 @@ public class BancoCtrl {
 			banco = result.toArray(banco);
 			
 		}catch(Exception ex){
-			ex.printStackTrace();
+			LogCajaService.CreateLog("obtenerBancos", "ERR", ex.getMessage());
 		} 
 		return banco;
 	}

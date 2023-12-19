@@ -26,6 +26,7 @@ import com.infragistics.faces.shared.smartrefresh.SmartRefreshManager;
 import com.infragistics.faces.window.component.html.HtmlDialogWindow;
 import com.infragistics.faces.window.component.html.HtmlDialogWindowHeader;
 import com.casapellas.entidades.ens.Vautoriz;
+import com.casapellas.util.LogCajaService;
 
 /**
  * CASA PELLAS S.A.
@@ -109,7 +110,7 @@ public class CrudEquivalenciaTipoDocs {
 			
 		} catch (Exception e) {
 			sMensaje = "Error de aplicación al validar datos configuración";
-			e.printStackTrace();
+			LogCajaService.CreateLog("validarDatosConfiguracion", "ERR", e.getMessage());
 		}
 		return sMensaje;
 	}
@@ -159,7 +160,7 @@ public class CrudEquivalenciaTipoDocs {
 			
 		} catch (Exception e) {
 			dwAgregarNuevaEquiv.setWindowState("hidden");
-			e.printStackTrace();
+			LogCajaService.CreateLog("editarDatosConfigEquiv", "ERR", e.getMessage());
 		}
 	}
 /******************************************************************************************/
@@ -204,7 +205,7 @@ public class CrudEquivalenciaTipoDocs {
 		} catch (Exception e) {
 			lblMsgNuevaconf.setStyle("color:red");
 			lblMsgNuevaconf.setValue("Error de aplicación: "+e.getMessage());
-			e.printStackTrace();
+			LogCajaService.CreateLog("agregarNuevaConfigEquiv", "ERR", e.getMessage());
 		}
 	}
 	/******************************************************************************************/
@@ -240,7 +241,7 @@ public class CrudEquivalenciaTipoDocs {
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("limpiarDatosConfig", "ERR", e.getMessage());
 		}
 	}
 	/******************************************************************************************/
@@ -271,7 +272,7 @@ public class CrudEquivalenciaTipoDocs {
 			
 		} catch (Exception e) {
 			dwAgregarNuevaEquiv.setWindowState("hidden");
-			e.printStackTrace();
+			LogCajaService.CreateLog("mostrarEditarConfiguracion", "ERR", e.getMessage());
 		}
 	}
 	/******************************************************************************************/
@@ -289,7 +290,7 @@ public class CrudEquivalenciaTipoDocs {
 			dwAgregarNuevaEquiv.setWindowState("normal");
 		} catch (Exception e) {
 			dwAgregarNuevaEquiv.setWindowState("hidden");
-			e.printStackTrace();
+			LogCajaService.CreateLog("mostrarAgregaNvaConfig", "ERR", e.getMessage());
 		}
 	}
 	
@@ -379,7 +380,7 @@ public class CrudEquivalenciaTipoDocs {
 				lstCodigosCaja = (ArrayList<SelectItem>)(m.get("ceq_lstCodigosCaja"));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogCajaService.CreateLog("getLstCodigosCaja", "ERR", e.getMessage());
 		}
 		return lstCodigosCaja;
 	}
@@ -404,7 +405,7 @@ public class CrudEquivalenciaTipoDocs {
 			}
 		} catch (Exception e) {
 			lstBancosDisp = new ArrayList<SelectItem>();
-			e.printStackTrace();
+			LogCajaService.CreateLog("getLstBancosDisp", "ERR", e.getMessage());
 		}
 		return lstBancosDisp;
 	}
