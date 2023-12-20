@@ -3922,8 +3922,11 @@ public class RevisionArqueoDAO {
 			
 			CodeUtil.removeFromSessionMap( "rv_bvalidoCheques");
 			CodeUtil.removeFromSessionMap( "rva_lstLiquidacionCheques");
+			
+			// Mostrar el boton lnkLiquidacionChk solo si es ALPESA
+			String companiaAlpesa = DocumuentosTransaccionales.companiaALPESA();
 			lnkLiquidacionChk.setStyleClass("igLink");
-			lnkLiquidacionChk.setStyle((ar.getId().getCodcomp().trim().equals("E03"))? "display:inline":"display:none");
+			lnkLiquidacionChk.setStyle((ar.getId().getCodcomp().trim().equals(companiaAlpesa.trim()))? "display:inline":"display:none");
 			
 			DetalleArqueoCaja dac = cargarDetArqueo(ar.getId().getReferdep(),
 					ar.getId().getNoarqueo(), ar.getId().getDfinal()
