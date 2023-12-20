@@ -433,7 +433,7 @@ public class ProcesarConsolidadoDepositos {
 				//&& ====== Si el ajuste es positivo es sobrante, buscar cuenta de otros ingresos
 				
 				if (coincidencia.getMontorporajuste().compareTo(BigDecimal.ZERO) == 1) {
-					String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",");
+					String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",",-1);
 					
 					sObj = cuentaOtrosingresos[1] ;
 					sSub = cuentaOtrosingresos[2] ;
@@ -474,11 +474,15 @@ public class ProcesarConsolidadoDepositos {
 					if (cargarFaltanteCajero) {
 						
 					
-							sUninegCaja = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(codcomp.trim());
-						
+							
+							String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(codcomp.trim());
+							String[] CtaCfg = deudorCfg.split(",");
+							
+							sUninegCaja = CtaCfg[0].trim();
+							sObj = CtaCfg[1].trim();
+							sSub = CtaCfg.length == 3 && CtaCfg[2] != null ? CtaCfg[2].trim() : "";
 	
-						sObj = DocumuentosTransaccionales.CTADEUDORESVARIOSOB() ;
-						sSub = DocumuentosTransaccionales.CTADEUDORESVARIOSSB() ;
+						
 						sTipoAuxiliar = DocumuentosTransaccionales.CODIGOTIPOAUXILIARFE();
 	
 						sCodEmpleado = CodeUtil.pad( String.valueOf( dpCaja.getCodcajero() ),	8, "0");
@@ -486,7 +490,7 @@ public class ProcesarConsolidadoDepositos {
 						cuentaContableFaltante  = dtaCuentaFaltantePorUnidadNegocio;
 							
 					} else {
-						String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",");
+						String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",",-1);
 						sObj = cuentaOtrosGastos[1];
 						sSub = cuentaOtrosGastos[2];
 						sCodEmpleado = "";
@@ -1194,7 +1198,7 @@ public class ProcesarConsolidadoDepositos {
 					String sObj = "", sSub = "";
 				
 					if (coincidencia.getMontorporajuste().compareTo(BigDecimal.ZERO) == 1) {
-						String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",");
+						String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",",-1);
 						
 						sObj = cuentaOtrosingresos[1] ;
 						sSub = cuentaOtrosingresos[2] ;
@@ -1234,10 +1238,12 @@ public class ProcesarConsolidadoDepositos {
 						
 						if (cargarFaltanteCajero) {
 							
-							sUninegCaja = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(codcomp.trim());
-				
-							sObj =DocumuentosTransaccionales.CTADEUDORESVARIOSOB() ;
-							sSub = DocumuentosTransaccionales.CTADEUDORESVARIOSSB() ;
+							String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(codcomp.trim());
+							String[] CtaCfg = deudorCfg.split(",");
+							
+							sUninegCaja = CtaCfg[0].trim();
+							sObj = CtaCfg[1].trim();
+							sSub = CtaCfg.length == 3 && CtaCfg[2] != null ? CtaCfg[2].trim() : "";
 							sTipoAuxiliar = DocumuentosTransaccionales.CODIGOTIPOAUXILIARFE();
 		
 							sCodEmpleado = CodeUtil.pad( String.valueOf(lstDepsCaja.get(0).getCodcajero()),	8, "0");
@@ -1245,7 +1251,7 @@ public class ProcesarConsolidadoDepositos {
 							cuentaContableFaltante  = dtaCuentaFaltantePorUnidadNegocio;
 								
 						} else {
-							String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",");
+							String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",",-1);
 							sObj = cuentaOtrosGastos[1];
 							sSub = cuentaOtrosGastos[2];
 							sCodEmpleado = "";

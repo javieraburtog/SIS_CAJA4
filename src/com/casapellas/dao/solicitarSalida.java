@@ -179,7 +179,7 @@ public class solicitarSalida {
 						
 						//----- Efectivo 
 						if(sMetodoP.equals( MetodosPagoCtrl.EFECTIVO )){
-							String [] cuentas = DocumuentosTransaccionales.obtenerCuentaSalida(vId.getCodcomp()).split(",");
+							String [] cuentas = DocumuentosTransaccionales.obtenerCuentaSalida(vId.getCodcomp()).split(",",-1);
 							sCtaDeudoresV = cuentas[1]+"."+cuentas[2];							
 							sCdv1mcu	  = cuentas[0];
 							sCdvobj		  = cuentas[1];

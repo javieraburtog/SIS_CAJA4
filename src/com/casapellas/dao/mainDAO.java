@@ -156,14 +156,14 @@ public class mainDAO {
 				F55ca017[] f55ca017 = CtrlCajas.obtenerUniNegCaja(caid,caco);
 				String[] sLineas  = CtrlCajas.lineasPorUnidadNegocio(f55ca017);
 				String[] sTipoDoc = CtrlCajas.documentosPorLineas(sLineas);
-				String[] valoresJDEInsContado = DocumuentosTransaccionales.getValuesJDEContado().split(",");
-				String[] valoresJDENumeracionIns = DocumuentosTransaccionales.getValuesJDENumeracion().split(",");
-				String[] valoresJDEInsDevolucionContado = DocumuentosTransaccionales.getValuesJDEDevolucionContado().split(",");
-				String[] valoresJDEInsCredito = DocumuentosTransaccionales.valoresJDEInsCredito().split(",");
-				String[] valoresJDEInsPrimaReservas = DocumuentosTransaccionales.valoresJDEInsPrimaReservas().split(",");
-				String[] valoresJDEInsFinanciamiento = DocumuentosTransaccionales.valoresJDEInsFinanciamiento().split(",");
-				String[] valoresJDEInsPMT = DocumuentosTransaccionales.valoresJDEInsPMT().split(",");
-				String[] valoresJDEInsFCV = DocumuentosTransaccionales.valoresJDEInsFCV().split(",");
+				String[] valoresJDEInsContado = DocumuentosTransaccionales.getValuesJDEContado().split(",",-1);
+				String[] valoresJDENumeracionIns = DocumuentosTransaccionales.getValuesJDENumeracion().split(",",-1);
+				String[] valoresJDEInsDevolucionContado = DocumuentosTransaccionales.getValuesJDEDevolucionContado().split(",",-1);
+				String[] valoresJDEInsCredito = DocumuentosTransaccionales.valoresJDEInsCredito().split(",",-1);
+				String[] valoresJDEInsPrimaReservas = DocumuentosTransaccionales.valoresJDEInsPrimaReservas().split(",",-1);
+				String[] valoresJDEInsFinanciamiento = DocumuentosTransaccionales.valoresJDEInsFinanciamiento().split(",",-1);
+				String[] valoresJDEInsPMT = DocumuentosTransaccionales.valoresJDEInsPMT().split(",",-1);
+				String[] valoresJDEInsFCV = DocumuentosTransaccionales.valoresJDEInsFCV().split(",",-1);
 				
 				m.put("f55ca017", f55ca017);
 				m.put("sTiposDoc", sTipoDoc);

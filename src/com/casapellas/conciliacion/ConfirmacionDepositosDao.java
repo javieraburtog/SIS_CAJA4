@@ -479,9 +479,8 @@ public class ConfirmacionDepositosDao {
 			
 		
 			Session session =  HibernateUtilPruebaCn.currentSession();
-			//Session sesionCajaW = HibernateUtil.getSessionFactoryMCAJA();
 			
-			Transaction transCaja = session.isOpen()?session.getTransaction():session.beginTransaction();
+			Transaction transCaja = session.beginTransaction();
 			
 			Connection cn = As400Connection.getJNDIConnection("DSMCAJA2");
 			cn.setAutoCommit(false);
@@ -505,7 +504,7 @@ public class ConfirmacionDepositosDao {
 							lstDepsCaja.get(0).getCodsuc(), cn  );
 			
 			bHecho = pca.realizarConfirmacionDepositos(archivo, lstDepsCaja,
-							dbp, session, session, 
+							dbp, session, 
 							cn, vaut, sTipoEmpleado,
 							dMontoAjuste, 34, 35, 
 							dtFechaConfirma, 
@@ -653,37 +652,7 @@ public class ConfirmacionDepositosDao {
 				sMensaje = "La diferencia entre montos de depósitos excede el monto configurado por sobrantes.";
 			}
 			
-			/*
-			//&& ======= Validar el uso de fecha definida por usuario para la confirmacion.
-			if(m.get("cdb_UsarFechaUsuarioConfirm") != null){
-				lblMsgFinConfirmacionManual.setStyle("color:red");
-				
-				if(dcCnfManualFConfirma.getValue()!=null){
-					Date dtFechaConfirma = (Date)dcCnfManualFConfirma.getValue();
-					
-					//&& ========= Fijar la ultima fecha del mes anterior.
-					Calendar calFechaPrimerDiaMesAnt = Calendar.getInstance();
-					calFechaPrimerDiaMesAnt.add(Calendar.MONTH, -1);
-					calFechaPrimerDiaMesAnt.set(calFechaPrimerDiaMesAnt.get(Calendar.YEAR),
-												calFechaPrimerDiaMesAnt.get(Calendar.MONTH),
-												calFechaPrimerDiaMesAnt.getActualMinimum(Calendar.DAY_OF_MONTH),
-												0,0,0);
-					Date dtIniMesAnterior =  calFechaPrimerDiaMesAnt.getTime();
-					if( dtFechaConfirma.compareTo(new Date()) > 0){
-						sMensaje = "La fecha no puede ser mayor a la actual";
-						bHecho = false;
-					}
-					if( dtFechaConfirma.compareTo(dtIniMesAnterior) < 0){
-						sMensaje = "La fecha esta en mes anterior no válido";
-						bHecho = false;
-					}
-					
-				}else{
-					sMensaje = "El valor de Fecha es requerido";
-					bHecho = false;
-				}				
-			}
-			*/
+			
 			//&& ====== validar la confirmacion de los depositos.
 			if(bHecho){
 				sMensaje = "Desea confirmar el depósito # "+dbp.getReferencia() +" por "+lblCmRsmBcoMonto.getValue().toString();
@@ -1299,61 +1268,28 @@ public class ConfirmacionDepositosDao {
 		Connection cn = null;
 
 		Session sesionCajaR = null;
-		Session sesionCajaW = null;
+		
 		
 		
 		try {
 			lstMsgSelecDepsConfirmCa.setValue("");
 			
-			/*if(m.get("cdb_UsarFechaUsuarioConfirm") != null){
-				lstMsgSelecDepsConfirmCa.setStyle("color:red");
-				
-				if(dcCnfAutoFechaConfirma.getValue()!=null){
-					dtFechaUsoConfirma = (Date)dcCnfAutoFechaConfirma.getValue();
-					
-					//&& ========= Fijar la ultima fecha del mes anterior.
-					Calendar calFechaPrimerDiaMesAnt = Calendar.getInstance();
-					calFechaPrimerDiaMesAnt.add(Calendar.MONTH, -1);
-					calFechaPrimerDiaMesAnt.set(calFechaPrimerDiaMesAnt.get(Calendar.YEAR),
-												calFechaPrimerDiaMesAnt.get(Calendar.MONTH),
-												calFechaPrimerDiaMesAnt.getActualMinimum(Calendar.DAY_OF_MONTH),
-												0,0,0);
-					Date dtIniMesAnterior = calFechaPrimerDiaMesAnt.getTime();
-					if( dtFechaUsoConfirma.compareTo(new Date()) > 0){
-						lstMsgSelecDepsConfirmCa.setValue("La fecha no puede ser mayor a la actual");
-						return;
-					}
-					if( dtFechaUsoConfirma.compareTo(dtIniMesAnterior) < 0){
-						lstMsgSelecDepsConfirmCa.setValue("La fecha esta en mes anterior no válido");
-						return;
-					}
-				}else{
-					lstMsgSelecDepsConfirmCa.setValue("El valor de Fecha es requerido");
-					return;
-				}				
-			}*/
+
 			
 			Vautoriz vaut = ((Vautoriz[]) m.get("sevAut"))[0];
 			sTipoEmpleado = new EmpleadoCtrl().determinarTipoCliente(vaut.getId().getCodreg());
 			lstResultadoConfirmAuto  =  (ArrayList<CoincidenciaDeposito>)m.get("cdb_lstResultadoConfirmAuto");
 			
 			//&& ======= Recorrer la lista de coincidencias y realizar los movientos contables para cada una.
-//			Transaction transCaja = null;
-//			Connection cn = null;
-//			As400Connection as400connection = new As400Connection();
-//			Session sesionCajaR = HibernateUtil.getSessionFactoryMCAJAR().openSession();
-//			Session sesionCajaW = HibernateUtil.getSessionFactoryMCAJA().openSession();
-			
-//			  sesionCajaR = HibernateUtil.getSessionFactoryMCAJAR().openSession();
-//			  sesionCajaW = HibernateUtil.getSessionFactoryMCAJA().openSession();
+
 			
 			sesionCajaR = HibernateUtilPruebaCn.currentSession();
-			sesionCajaW = HibernateUtilPruebaCn.currentSession();
+			
 			cn = As400Connection.getJNDIConnection("DSMCAJA2");
 			
 			for (CoincidenciaDeposito cdb : lstResultadoConfirmAuto) {
 				
-				transCaja = sesionCajaW.beginTransaction();
+				transCaja = sesionCajaR.beginTransaction();
 				cn.setAutoCommit(false);
 				
 				lstDepsCaja = new ArrayList<Deposito>();	
@@ -1375,7 +1311,7 @@ public class ConfirmacionDepositosDao {
 				
 				bHecho = pca.realizarConfirmacionDepositos(cdb.getArchivo(), 
 								lstDepsCaja, cdb.getDepbancodet(), 
-								sesionCajaR, sesionCajaW, cn, vaut, 
+								sesionCajaR, cn, vaut, 
 								sTipoEmpleado, cdb.getMontoXajuste(), 
 								32, 35, dtFechaUsoConfirma,
 								cdb.getDigitosCompara());

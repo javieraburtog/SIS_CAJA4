@@ -121,6 +121,7 @@ import com.casapellas.util.CalendarToJulian;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.CustomEmailAddress;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.JulianToCalendar;
 import com.casapellas.util.LogCajaService;
@@ -422,7 +423,7 @@ public class FacContadoDAO {
 	
 	//Valores de insercion de documentos en JDE
 	String[] valoresJdeIns = (String[]) m.get("valoresJDEInsContado");
-	String[] valoresJdeInsDev = (String[]) m.get("valoresJDEInsDevolucionContado");
+	//String[] valoresJdeInsDev = (String[]) m.get("valoresJDEInsDevolucionContado");
 	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
 	String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
 	String[] valoresJDEInsFinanciamiento = (String[]) m.get("valoresJDEInsFinanciamiento");
@@ -780,15 +781,19 @@ public class FacContadoDAO {
 			
 			//&& ==== Validar la cuenta a utilizar, en dependencia del tipo de transaccion.
 			//&& ==== UN.66000.01: Diferencial Cambiario, UN.65100.10: Sobrante de Caja.
-			sCtaOb = "66000";
-			sCtaSub= "01";
+			String[] fcvCuentaPerdia = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(f55.getId().getCaco()).split(",",-1);
+			sCtaOb = fcvCuentaPerdia[0];
+			sCtaSub= fcvCuentaPerdia[1];
 			
+		
 				MetodosPago mpSobrante = (MetodosPago)m.get("sco_MpagoSobrante");
 				if(Factura.getMoneda().equals(mpSobrante.getMoneda())){
 					sTipo = "SBRTE";
 					sConcepto = "Sobrante en RcCo:" +iNumrec+ " Ca:"+f55.getId().getCaid();
-					sCtaOb = "65100";
-					sCtaSub= "10";
+					String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(f55.getId().getCaco()).split(",",-1);
+					sCtaOb = fcvCuentaGanacia[0];
+					sCtaSub= fcvCuentaGanacia[1];
+					
 				}
 //				}
 			vCtaDI  = dv.validarCuentaF0901(sCodunineg,sCtaOb,sCtaSub);
@@ -1572,7 +1577,7 @@ public class FacContadoDAO {
 				ProcesarNuevaFacturaF03B11.tipoSolicitud  = sTipodoco;       
 				ProcesarNuevaFacturaF03B11.numeroSolicitud = String.valueOf(iNoDoco);
 				ProcesarNuevaFacturaF03B11.numeroCuota  = "001";
-				ProcesarNuevaFacturaF03B11.tipoInteres  = valoresJdeInsDev[1];
+				ProcesarNuevaFacturaF03B11.tipoInteres  = dev.getTipofactura();
 				ProcesarNuevaFacturaF03B11.moneda  = dev.getMoneda();
 				ProcesarNuevaFacturaF03B11.sucursal  = CodeUtil.pad( dev.getCodsuc().trim(), 5, "0" );
 				ProcesarNuevaFacturaF03B11.unidadNegocio1  = dev.getCodunineg().trim();
@@ -1675,11 +1680,11 @@ public class FacContadoDAO {
 					if(iNobatch>0){
 	
 						
-						iNodoc = getNumeroRM( CodeUtil.pad( dev.getCodsuc().trim(), 5, "0") ,valoresJdeInsDev[1]);
+						iNodoc = getNumeroRM( CodeUtil.pad( dev.getCodsuc().trim(), 5, "0") ,dev.getTipofactura());
 						
 						if(iNodoc > 0){
 														
-						bHecho = rCtrl.insertarRM(cn, dev, valoresJdeInsDev[1], iNodoc,
+						bHecho = rCtrl.insertarRM(cn, dev, dev.getTipofactura(), iNodoc,
 								iFecha, iNobatch, dev.getTasa(), v.getId()
 										.getLogin(), v.getId().getNomcorto(),
 								iCaid, c, sMonedaBase, iNoDoco + "", sTipodoco);
@@ -1697,7 +1702,7 @@ public class FacContadoDAO {
 										iMonto =  d.pasarAentero(dev.getTotal());
 										
 										bHecho = rCtrl.insertarAsientoRM(cn, dev,
-												valoresJdeInsDev[1], iNodoc, iFecha, iNobatch,
+												dev.getTipofactura(), iNodoc, iFecha, iNobatch,
 												BigDecimal.ZERO, v.getId()
 												.getLogin(), v.getId()
 												.getNomcorto(), sCuenta,
@@ -1715,7 +1720,7 @@ public class FacContadoDAO {
 										iMonto  = d.pasarAentero( monto1 );
 										iMonto2 = d.pasarAentero( dev.getTotal() );
 										
-										bHecho = rCtrl.insertarAsientoRM(cn, dev, valoresJdeInsDev[1], iNodoc, iFecha, iNobatch, 
+										bHecho = rCtrl.insertarAsientoRM(cn, dev, dev.getTipofactura(), iNodoc, iFecha, iNobatch, 
 												dev.getTasa(), v.getId().getLogin(), v.getId().getNomcorto(), 
 												sCuenta, "CA", iMonto2, iCaid , c, 1,
 												"USD",sCuenta[2],"F");	
@@ -1725,7 +1730,7 @@ public class FacContadoDAO {
 											return false;
 										}else{
 
-											bHecho = rCtrl.insertarAsientoRM(cn, dev, valoresJdeInsDev[1], iNodoc, iFecha, iNobatch, dev.getTasa(), 
+											bHecho = rCtrl.insertarAsientoRM(cn, dev, dev.getTipofactura(), iNodoc, iFecha, iNobatch, dev.getTasa(), 
 													 v.getId().getLogin(), v.getId().getNomcorto(), sCuenta, "AA", 
 													 iMonto, iCaid, c, 2,sMonedaBase,sCuenta[2],"F");
 										}

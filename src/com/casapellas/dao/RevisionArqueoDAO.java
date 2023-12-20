@@ -2981,7 +2981,7 @@ public class RevisionArqueoDAO {
 			//--- Obtener la cuenta de funcionarios y empleados, crear el objeto Cuenta[];
 			String sUN = ""; String sCtaOb; String sSubCta;					
 			String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(sCodcomp.trim());
-			String[] CtaCfg = deudorCfg.split(",");
+			String[] CtaCfg = deudorCfg.split(",",-1);
 			
 			sUN = CtaCfg[0].trim();
 			sCtaOb = CtaCfg[1].trim();
@@ -3391,12 +3391,12 @@ public class RevisionArqueoDAO {
 						if(bHecho){
 							//--- Asiento de pagos en Córdobas.
 							if(sMoneda.equals(f14.getId().getC4bcrcd().trim())){
-								bHecho  = recCtrl.registrarAsientoDiario(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,1.0,iNoBatch,sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],
+								bHecho  = recCtrl.registrarAsientoDiarioWithSession(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,1.0,iNoBatch,sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],
 														sCuentaB[5],"AA", sMoneda, iMontoH,  sConcepto, vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
 														BigDecimal.ZERO,sTipoCliente,"Débito Bco por POS "+ra.getCodigo(),sCuentaB[2],
 														"","",sMoneda,sCuentaB[2],"F");
 								if(bHecho){
-									bHecho  = recCtrl.registrarAsientoDiario(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,2.0,iNoBatch,sCuentaC[0],sCuentaC[1],sCuentaC[3],sCuentaC[4],
+									bHecho  = recCtrl.registrarAsientoDiarioWithSession(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,2.0,iNoBatch,sCuentaC[0],sCuentaC[1],sCuentaC[3],sCuentaC[4],
 														sCuentaC[5],"AA", sMoneda, iMontoH*(-1),sConcepto, vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
 														BigDecimal.ZERO,sTipoCliente,"Crédito Caja por POS "+ra.getCodigo(),sCuentaC[2],
 														"","",sMoneda,sCuentaC[2],"F");
@@ -3436,22 +3436,22 @@ public class RevisionArqueoDAO {
 							else{
 								iMontoCorH = (int)dv.roundDouble((ra.getDmontoneto() * dTasaJDE)*100);
 								bdTasa = new BigDecimal(dTasaJDE);
-								bHecho  = recCtrl.registrarAsientoDiario(dtFecha,sesionCaja,sSucursalDeposito,"ZX",iNorefer,1.0,iNoBatch,sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],
+								bHecho  = recCtrl.registrarAsientoDiarioWithSession(dtFecha,sesionCaja,sSucursalDeposito,"ZX",iNorefer,1.0,iNoBatch,sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],
 												sCuentaB[5],"AA", sMoneda, iMontoCorH,  sConcepto, vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
 												bdTasaJDE,sTipoCliente,"Débito Bco por POS "+ra.getReferencia(),sCuentaB[2],
 												"","",f14.getId().getC4bcrcd(),sCuentaB[2],"F");
 								if(bHecho){
-									bHecho  = recCtrl.registrarAsientoDiario(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,1.0,iNoBatch,sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],
+									bHecho  = recCtrl.registrarAsientoDiarioWithSession(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,1.0,iNoBatch,sCuentaB[0],sCuentaB[1],sCuentaB[3], sCuentaB[4],
 													sCuentaB[5],"CA", sMoneda, iMontoH,  sConcepto, vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
 													BigDecimal.ZERO,sTipoCliente,"Débito Bco por POS "+ra.getReferencia(),sCuentaB[2],
 													"","",sMoneda,sCuentaB[2],"F");
 									if(bHecho){
-										bHecho  = recCtrl.registrarAsientoDiario(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,2.0,iNoBatch,sCuentaC[0],sCuentaC[1],sCuentaC[3],sCuentaC[4],
+										bHecho  = recCtrl.registrarAsientoDiarioWithSession(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,2.0,iNoBatch,sCuentaC[0],sCuentaC[1],sCuentaC[3],sCuentaC[4],
 														sCuentaC[5],"AA", sMoneda, iMontoCorH*(-1),sConcepto, vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
 														bdTasaJDE,sTipoCliente,"Crédito Caja por POS "+ra.getReferencia(),sCuentaC[2],
 														"","",f14.getId().getC4bcrcd(),sCuentaC[2],"F");
 										if(bHecho){
-											bHecho  = recCtrl.registrarAsientoDiario(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,2.0,iNoBatch,sCuentaC[0],sCuentaC[1],sCuentaC[3],sCuentaC[4],
+											bHecho  = recCtrl.registrarAsientoDiarioWithSession(dtFecha, sesionCaja,sSucursalDeposito,"ZX",iNorefer,2.0,iNoBatch,sCuentaC[0],sCuentaC[1],sCuentaC[3],sCuentaC[4],
 													sCuentaC[5],"CA", sMoneda, iMontoH*(-1),sConcepto, vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
 													bdTasaJDE,sTipoCliente,"Crédito Caja por POS "+ra.getReferencia(),sCuentaC[2],
 													"","",sMoneda,sCuentaC[2],"F");

@@ -1983,7 +1983,7 @@ public class ArqueoCajaDAO {
 			//------------- Verificar que exista la cuenta de Funcionarios y Empleados.
 			String sUN = ""; String sCtaOb; String sSubCta;					
 			String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(sCodcomp.trim());
-			String[] CtaCfg = deudorCfg.split(",");
+			String[] CtaCfg = deudorCfg.split(",",-1);
 			
 			sUN = CtaCfg[0].trim();
 			sCtaOb = CtaCfg[1].trim();

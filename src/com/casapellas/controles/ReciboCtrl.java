@@ -200,6 +200,7 @@ public class ReciboCtrl {
 			 ProcesarEntradaDeDiarioCustom.usuario = usuario;
 			 ProcesarEntradaDeDiarioCustom.codigousuario = codigousuario;
 			 ProcesarEntradaDeDiarioCustom.lineasComprobante = lineasComprobante;
+			 ProcesarEntradaDeDiarioCustom.tipoDocumento=valoresJDEInsContado[1];
 			 ProcesarEntradaDeDiarioCustom.valoresJdeInsContado = valoresJDEInsContado; 
 			 ProcesarEntradaDeDiarioCustom.procesarEntradaDeDiario(session,session.getTransaction());
 			 
@@ -5279,137 +5280,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
  *	Fecha:  15/08/2010
  *  Nombre: Carlos Manuel Hernández Morrison.
  **/
-	public boolean registrarAsientoDiario(Date dtFechaAsiento,Session s,String sCodSuc,String sTipodoc,int iNoDocumento,
-										  double dLineaJDE, int iNoBatch, String sCuenta, String sIdCuenta, String sCodUnineg,
-										  String sCuentaObj,String sCuentaSub,String sTipoAsiento,String sMoneda, long iMonto, 
-										  String sConcepto,String sUsuario,String sCodApp, BigDecimal dTasa, String sTipoCliente, 
-										  String sObservacion,String sCodSucCuenta,String sGlsbl,String sGlsblt,
-										  String sGlbcrc,String sGlhco, String sGlcrrm){
-		boolean bRegistrado = true;
-		String sNombrePc = null;
-		String sql = "";		
-		Date dHora = new Date();
-		SimpleDateFormat dfHora = new SimpleDateFormat("HH:mm:ss");
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		try{
-			Calendar cFecha = Calendar.getInstance();
-			cFecha.setTime(dtFechaAsiento);
-			CalendarToJulian fecha = new CalendarToJulian(cFecha);
-			int iFecha = fecha.getDate();
-			
-			sNombrePc = "SERVER";//InetAddress.getLocalHost().getHostName();
-			//obtener hora en enteros
-			String[] sHora = (dfHora.format(dHora)).split(":");
-			int iHora = Integer.parseInt(sHora[0] + sHora[1] + sHora[2]);
-			//obtener partes de la fecha
-			String[] sFecha = (sdf.format(dtFechaAsiento)).split("/");
-			
-			
-			sCodUnineg = com.casapellas.util.CodeUtil.pad(sCodUnineg.trim(), 12," ");
-			
-			
-			
-			if(sCuenta == null || sCuenta.trim().isEmpty() ) {
-				sCuenta = sCodUnineg + "." + sCuentaObj + ( sCuentaSub.trim().isEmpty() ? "" : "."  + sCuentaSub ) ;
-			}
-			
-			if(sConcepto.length() > 30){
-				sConcepto = sConcepto.substring(0,29);
-			}
-			if(sTipoCliente.compareTo( "E" ) == 0 ){
-				sTipoCliente = "EMP";
-			}else{
-				sTipoCliente = "";
-			}
-			if(sNombrePc.length() > 9){
-				sNombrePc =	sNombrePc.substring(0, 9);
-			}
-			if(sObservacion.length() > 30){
-				sObservacion = sObservacion.substring(0,29);
-			}
-			
-			String strNumDocJde = Integer.toString( iNoDocumento ); 
-			if( strNumDocJde.length() > 8){
-				strNumDocJde = strNumDocJde.substring(strNumDocJde.length() - 8, strNumDocJde.length() );
-				iNoDocumento = Integer.parseInt(strNumDocJde);
-			}
-			
-			sql =  " INSERT INTO "+PropertiesSystem.JDEDTA+".F0911 (GLKCO,GLDCT,GLDOC,GLDGJ,GLJELN,GLICU,GLICUT,GLDICJ,";
-			sql += " GLDSYJ,GLTICU,GLCO,GLANI,GLAM,GLAID,GLMCU,GLOBJ,GLSUB, GLSBL,GLSBLT, GLLT,GLPN,";
-			sql += " GLCTRY,GLFY,GLCRCD,GLAA,GLEXA,GLDKJ,GLDSVJ,GLTORG,GLUSER,GLPID,GLJOBN,GLUPMJ,GLUPMT,";
-			sql += " GLCRR,GLGLC,GLEXR,GLBCRC,GLHCO,GLCRRM) VALUES(" ;
-			
-			
-			sCodSuc = CodeUtil.pad( sCodSuc, 5, "0"); 
-			sCodSucCuenta = CodeUtil.pad( sCodSucCuenta, 5, "0"); 
-			sGlhco = CodeUtil.pad( sGlhco, 5, "0"); 
 
-			sql+=
-			"'"+sCodSuc+"'," +			
-			"'"+sTipodoc +"'," +
-			""+iNoDocumento+"," +
-			""+iFecha+"," +
-			""+dLineaJDE+"," +
-			""+iNoBatch+"," +
-			"'G'," +
-			""+iFecha+"," +
-			""+iFecha+"," +
-			""+iHora+"," +
-			
-			"'"+sCodSucCuenta+"'," +
-
-			"'"+sCuenta+"'," +
-			"'2'," +
-			"'"+sIdCuenta+"'," +
-			"'"+sCodUnineg+"'," +
-			"'"+sCuentaObj+"'," +
-			"'"+sCuentaSub+"'," +
-			"'"+sGlsbl+"',"+
-			"'"+sGlsblt+"',"+
-			"'"+sTipoAsiento+"'," +
-			""+Integer.parseInt(sFecha[1])+"," +
-			"20," +
-			""+Integer.parseInt(sFecha[2].substring(2, 4))+"," +
-			"'"+sMoneda+"'," +
-			""+iMonto+"," +
-			"'"+sConcepto+"'," +
-			""+iFecha+"," +
-			""+iFecha+"," +
-			"'"+sUsuario+"'," +
-			"'"+sUsuario+"'," +
-			"'"+sCodApp+"'," +
-			"'"+sNombrePc+"'," +
-			""+iFecha+"," +
-			""+iHora+"," +
-			""+dTasa.setScale(2, RoundingMode.HALF_UP).toString() +"," +
-			"'"+sTipoCliente+"'," +
-			"'"+sObservacion+"'," +
-			"'"+sGlbcrc+"'," +
-			
-			"'"+sGlhco+"'," +
-			
-			"'"+sGlcrrm+"'" +
-			")";
-			bRegistrado = ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, sql);
-		}catch(Exception ex){
-			
-			bRegistrado = false;
-			errorDetalle = ex;
-			error = new Exception("@No pudo grabarse Batch en JDE, favor intente de nuevo");
-			
-			if( ex.toString().trim().toLowerCase().contains("duplicatekeyexception") ||
-				ex.toString().trim().toLowerCase().contains("sql0803") || 
-				ex.toString().trim().toLowerCase().contains("SQLIntegrityConstraintViolationException")){
-				error = new Exception("@Ya existe en JDE un Batch con el numero de referencia: "
-						+iNoDocumento +" Asigne un nuevo número e intente nuevamente ");
-			}
-			
-			String invocado =  new Exception().getStackTrace()[1].getClassName() +":"+ new Exception().getStackTrace()[1].getMethodName() ;
-			ex.printStackTrace();
-			
-		}
-		return bRegistrado;
-	}
 	public boolean registrarAsientoDiarioWithSession(Date dtFechaAsiento,Session s,String sCodSuc,String sTipodoc,int iNoDocumento,
 			  double dLineaJDE, int iNoBatch, String sCuenta, String sIdCuenta, String sCodUnineg,
 			  String sCuentaObj,String sCuentaSub,String sTipoAsiento,String sMoneda, long iMonto, 
@@ -5438,15 +5309,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 		
 		sCodUnineg = com.casapellas.util.CodeUtil.pad(sCodUnineg.trim(), 12," ");
 		
-		/*
-		if(sCodUnineg.length() == 2){
-		sCodUnineg = "          "+sCodUnineg;
-		sCuenta = "          "+sCuenta;
-		}else{
-		sCodUnineg = "        "+sCodUnineg;
-		sCuenta = "        "+sCuenta;
-		}
-		*/
+		
 		
 		if(sCuenta == null || sCuenta.trim().isEmpty() ) {
 		sCuenta = sCodUnineg + "." + sCuentaObj + ( sCuentaSub.trim().isEmpty() ? "" : "."  + sCuentaSub ) ;
@@ -5476,7 +5339,7 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 		sql =  " INSERT INTO "+PropertiesSystem.JDEDTA+".F0911 (GLKCO,GLDCT,GLDOC,GLDGJ,GLJELN,GLICU,GLICUT,GLDICJ,";
 		sql += " GLDSYJ,GLTICU,GLCO,GLANI,GLAM,GLAID,GLMCU,GLOBJ,GLSUB, GLSBL,GLSBLT, GLLT,GLPN,";
 		sql += " GLCTRY,GLFY,GLCRCD,GLAA,GLEXA,GLDKJ,GLDSVJ,GLTORG,GLUSER,GLPID,GLJOBN,GLUPMJ,GLUPMT,";
-		sql += " GLCRR,GLGLC,GLEXR,GLBCRC,GLHCO,GLCRRM) VALUES(" ;
+		sql += " GLCRR,GLGLC,GLEXR,GLBCRC,GLCRRM,GLEXTL) VALUES(" ;
 		
 		
 		sCodSuc = CodeUtil.pad( sCodSuc, 5, "0"); 
@@ -5523,11 +5386,9 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 		""+dTasa.setScale(2, RoundingMode.HALF_UP).toString() +"," +
 		"'"+sTipoCliente+"'," +
 		"'"+sObservacion+"'," +
-		"'"+sGlbcrc+"'," +
-		
-		"'"+sGlhco+"'," +
-		
-		"'"+sGlcrrm+"'" +
+		"'"+sGlbcrc+"'," +				
+		"'"+sGlcrrm+"'," +
+		"''"+
 		")";
 	
 		ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, sql);

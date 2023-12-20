@@ -2106,6 +2106,7 @@ public class ConfirmaDepositosCtrl {
 					cr.add(Restrictions.sqlRestriction(" referencia like '%"+iNorefer+"%'"));
 				if(bdMonto.compareTo(BigDecimal.ZERO) == 1)
 					cr.add(Restrictions.eq("mtocredito", bdMonto));
+				List<Object> list = cr.list();
 				
 				List<Depbancodet>lstDbTemp = cr.list();
 				if(lstDbTemp != null && lstDbTemp.size() > 0){

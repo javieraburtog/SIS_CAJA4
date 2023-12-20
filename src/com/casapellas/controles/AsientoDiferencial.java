@@ -15,6 +15,7 @@ import com.casapellas.entidades.MetodosPago;
 import com.casapellas.entidades.Vf0901;
 import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.LogCajaService;
 import com.casapellas.entidades.ens.Vautoriz;
 
@@ -54,8 +55,11 @@ public class AsientoDiferencial {
 			
 			//&& ==== Validar la cuenta a utilizar, en dependencia del tipo de transaccion.
 			//&& ==== UN.66000.01: Diferencial Cambiario, UN.65100.10: Sobrante de Caja.
-			sCtaOb = "66000";
-			sCtaSub= "01";
+			String[] fcvCuentaPerdia = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(f55.getId().getCaco()).split(",",-1);
+			sCtaOb = fcvCuentaPerdia[0];
+			sCtaSub= fcvCuentaPerdia[1];
+			//sCtaOb = "66000";
+			//sCtaSub= "01";
 			
 			
 			vCtaDI  = dv.validarCuentaF0901(sCodunineg,sCtaOb,sCtaSub);

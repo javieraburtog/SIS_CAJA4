@@ -219,6 +219,7 @@ public class CodeUtil {
 		HttpServletRequest ob = null;
 		
 		try {
+			if(FacesContext.getCurrentInstance() !=  null && FacesContext.getCurrentInstance().getExternalContext() != null)
 			ob = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		} catch (Exception e) {
 			LogCajaService.CreateLog("getCurrentRequest", "ERR", e.getMessage());

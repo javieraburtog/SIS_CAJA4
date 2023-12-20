@@ -59,6 +59,10 @@ public class PropertiesSystem {
 		public final static String parametroCierre="34";
 		public final static String parametroCtaDeudores="40";
 		public final static String parametroCompania="41";
+		public final static String parametroConfiguracionMaximoPermisible="42";
+		
+		//Valore maximos de truncado
+		public final static String maximoPermitidoPMT= "VAL_DESC_TRUN";
 		
 		//Cierre
 		public final static String CIERRE_FALTANTE_TIPODOC = "GENENOTADEB_TIPODOC";
@@ -207,8 +211,8 @@ public class PropertiesSystem {
 	public final static BigDecimal FALTANTE_PERMITIDO_COR = BigDecimal.ONE;
 	public final static BigDecimal FALTANTE_PERMITIDO_USD = BigDecimal.ONE;
 	
-	public final static String DIFCAMB_CUENTA_OBJETO = "66000";
-	public final static String DIFCAMB_CUENTA_SUBSID = "01";
+	//public final static String DIFCAMB_CUENTA_OBJETO = "66000";
+	//public final static String DIFCAMB_CUENTA_SUBSID = "01";
 	
 	public final static String CODIGO_AUTORIZACION_REIMPRIMIR_RECIBOS = "A000000133";
 	

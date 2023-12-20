@@ -109,8 +109,9 @@ public static String valoresJDEInsFinanciamiento() {
 		}
 
 public static String obtenerCuentasFCVGanancia(String compania) {
+	int conpaniaEnviada= Integer.parseInt(compania);
 	
-	String query="SELECT CONCAT(CONCAT( COD_CUENTA_OBJETO,',' ),IFNULL(COD_SUBCUENTA,'')) CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ compania +"' ";     
+	String query="SELECT CONCAT(CONCAT( COD_CUENTA_OBJETO,',' ),IFNULL(COD_SUBCUENTA,' ')) CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ conpaniaEnviada +"' ";     
 		
 		List<Object> cuentaGanancia= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		
@@ -122,7 +123,8 @@ public static String obtenerCuentasFCVGanancia(String compania) {
 
 public static String obtenerCuentasFCVPerdida(String compania) {
 	
-	String query="SELECT CONCAT(CONCAT( COD_CUENTA_OBJETO,',' ),IFNULL(COD_SUBCUENTA,'')) CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ compania +"' ";     
+	int conpaniaEnviada= Integer.parseInt(compania);
+	String query="SELECT CONCAT(CONCAT( COD_CUENTA_OBJETO,',' ),IFNULL(COD_SUBCUENTA,' ')) CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ conpaniaEnviada +"' ";     
 		
 		List<Object> cuentaPerdida= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		
@@ -134,8 +136,9 @@ public static String obtenerCuentasFCVPerdida(String compania) {
 
 public static String obtenerIDCuentasFCVGanancia(String compania,String cuenta) {
 	
-	String qryCuentaObjeto="SELECT IFNULL(COD_CUENTA_OBJETO,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ compania +"' ";     
-	String qrySubcuenta = "SELECT IFNULL(COD_SUBCUENTA,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ compania +"' ";
+	int conpaniaEnviada= Integer.parseInt(compania);
+	String qryCuentaObjeto="SELECT IFNULL(COD_CUENTA_OBJETO,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ conpaniaEnviada +"' ";     
+	String qrySubcuenta = "SELECT IFNULL(COD_SUBCUENTA,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVGanancia + "' AND COD_COMPANIA = '"+ conpaniaEnviada +"' ";
 	List<Object> cuentaObjeto= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qryCuentaObjeto, null, true);
 	List<Object> subCuenta= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qrySubcuenta, null, true);
 	
@@ -156,9 +159,9 @@ public static String obtenerIDCuentasFCVGanancia(String compania,String cuenta) 
 	}
 
 public static String obtenerIDCuentasFCVPerdida(String compania,String cuenta) {
-	
-	String qryCuentaObjeto="SELECT IFNULL(COD_CUENTA_OBJETO,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ compania +"' ";     
-	String qrySubcuenta = "SELECT IFNULL(COD_SUBCUENTA,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ compania +"' ";
+	int conpaniaEnviada= Integer.parseInt(compania);
+	String qryCuentaObjeto="SELECT IFNULL(COD_CUENTA_OBJETO,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ conpaniaEnviada +"' ";     
+	String qrySubcuenta = "SELECT IFNULL(COD_SUBCUENTA,'')  CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroFCVPerdida + "' AND COD_COMPANIA = '"+ conpaniaEnviada +"' ";
 	List<Object> cuentaObjeto= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qryCuentaObjeto, null, true);
 	List<Object> subCuenta= ConsolidadoDepositosBcoCtrl.executeSqlQuery(qrySubcuenta, null, true);
 	
@@ -180,8 +183,8 @@ public static String obtenerIDCuentasFCVPerdida(String compania,String cuenta) {
 		return null;
 	}
 public static String obteneConfNumeracionRU(String compania) {
-	
-	String query="SELECT TVALALF  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroNumeracionRU + "' AND COD_COMPANIA = '"+ compania +"' ";     
+	int conpaniaEnviada= Integer.parseInt(compania);
+	String query="SELECT TVALALF  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroNumeracionRU + "' AND COD_COMPANIA = '"+ conpaniaEnviada +"' ";     
 		
 		List<Object> configuracion= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		
@@ -192,10 +195,10 @@ public static String obteneConfNumeracionRU(String compania) {
 	}
 
 public static String obtenerCuentaSalida(String compania) {
-	
+	int conpaniaEnviada= Integer.parseInt(compania);
 	String query="SELECT CONCAT(IFNULL(COD_UNIDAD_NEGOCIO,''),CONCAT(',',CONCAT(CONCAT( COD_CUENTA_OBJETO,',' ),IFNULL(COD_SUBCUENTA,''))))"
 			+ " CUENTA  FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCuentaSalida +
-			"' AND COD_COMPANIA = '"+ compania +"' ";     
+			"' AND COD_COMPANIA = '"+ conpaniaEnviada +"' ";     
 		
 		List<Object> cuentaPerdida= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		
@@ -217,28 +220,28 @@ public static String IDDPCONFIRMADO() {
 		return null;
 	}
 
-public static String IDDPNOCONFIRMADO() {
+public static int IDDPNOCONFIRMADO() {
 	
 	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroConciliacion + "' AND TCOD = '"+ PropertiesSystem.IDDPNOCONFIRMADO +"' ";     
 		
 		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		
 		if(tipoTRX.size()>0)
-		return tipoTRX.get(0).toString();
+		return Integer.parseInt(tipoTRX.get(0).toString());
 		else
-		return null;
+		return 0;
 	}
 
-public static String IDCRFAUTOMATICA() {
+public static int IDCRFAUTOMATICA() {
 	
 	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroConciliacion + "' AND TCOD = '"+ PropertiesSystem.IDCRFAUTOMATICA +"' ";     
 		
 		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		
 		if(tipoTRX.size()>0)
-		return tipoTRX.get(0).toString();
+		return Integer.parseInt(tipoTRX.get(0).toString());
 		else
-		return null;
+		return 0;
 	}
 
 public static String CFRAUTO() {
@@ -284,7 +287,7 @@ public static String DPNOCONFIRMADO() {
 		if(tipoTRX.size()>0)
 		return tipoTRX.get(0).toString();
 		else
-		return null;
+		return "";
 	}
 public static String TIPODOCREFERP9() {
 	
@@ -457,29 +460,7 @@ public static String CTAGASTOSDIVERSOS() {
 		else
 		return null;
 	}
-public static String CTADEUDORESVARIOSOB() {
-	
-	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCierre + "' AND TCOD = '"+ PropertiesSystem.CTADEUDORESVARIOSOB +"' ";     
-		
-		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
-		
-		if(tipoTRX.size()>0)
-		return tipoTRX.get(0).toString();
-		else
-		return null;
-	}
 
-public static String CTADEUDORESVARIOSSB() {
-	
-	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCierre + "' AND TCOD = '"+ PropertiesSystem.CTADEUDORESVARIOSSB +"' ";     
-		
-		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
-		
-		if(tipoTRX.size()>0)
-		return tipoTRX.get(0).toString();
-		else
-		return null;
-	}
 public static String CTADEUDORESVARIOSUNINEG(String codCompania) {
 		
 		String query="SELECT COD_UNIDAD_NEGOCIO CONCAT ',' CONCAT COD_CUENTA_OBJETO CONCAT ',' CONCAT IFNULL(COD_SUBCUENTA, '') FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCtaDeudores + "' AND COD_COMPANIA = '"+ codCompania +"' ";     
@@ -493,7 +474,7 @@ public static String CTADEUDORESVARIOSUNINEG(String codCompania) {
 		}
 public static String CTADEUDORESVARIOSUNINEGTODAS() {
 	
-	String query="SELECT LISTAGG(COD_UNIDAD_NEGOCIO,',') FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCierre + "'";     
+	String query="SELECT LISTAGG(COD_UNIDAD_NEGOCIO,',') FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCtaDeudores + "'";     
 		
 		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		
@@ -550,6 +531,17 @@ public static String companiaCAPESA() {
 public static String CIERREFALTANTETIPODOC() {
 	
 	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCierre + "' AND TCOD = '"+ PropertiesSystem.CIERRE_FALTANTE_TIPODOC +"' ";     
+		
+		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0).toString();
+		else
+		return null;
+	}
+public static String VALORMAXIMODESCUADRE() {
+	
+	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroConfiguracionMaximoPermisible + "' AND TCOD = '"+ PropertiesSystem.maximoPermitidoPMT +"' ";     
 		
 		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		

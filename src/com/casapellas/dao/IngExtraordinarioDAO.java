@@ -2573,22 +2573,22 @@ public class IngExtraordinarioDAO {
 						strModoMonedaF=  cajaparm.getParametros("33", "0", "INGEXT_MODO_MONEDA").getValorAlfanumerico().toString();
 						strModoMonedaD=  cajaparm.getParametros("33", "0", "INGEXT_MODO_MONEDA_2").getValorAlfanumerico().toString();
 						
-						bHecho = rcCtrl.registrarAsientoDiario(dtFecha, sesionCaja, sAsientoSucursal, strTipoDoc, iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCUSD[0],
+						bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFecha, sesionCaja, sAsientoSucursal, strTipoDoc, iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCUSD[0],
 									sCUSD[1], sCUSD[3], sCUSD[4], sCUSD[5], strTipoAsientoAA, sMonedaForanea, iMontoCOR, sConcepto, 
 									vaut[0].getId().getLogin(),	vaut[0].getId().getCodapp(), new BigDecimal(dTasaJDE), 
 									sTipoCliente,"Débito caja Efectivo USD",sCUSD[2],"","",sMonedaBase,sCUSD[2],strModoMonedaF);
 						if(bHecho){
-							bHecho = rcCtrl.registrarAsientoDiario(dtFecha,sesionCaja, sAsientoSucursal, strTipoDoc, iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCUSD[0],
+							bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFecha,sesionCaja, sAsientoSucursal, strTipoDoc, iNobatchNodoc[1], 1.0, iNobatchNodoc[0], sCUSD[0],
 										sCUSD[1], sCUSD[3], sCUSD[4], sCUSD[5],strTipoAsientoCA, sMonedaForanea, iMontoUSD, sConcepto, 
 										vaut[0].getId().getLogin(),	vaut[0].getId().getCodapp(), new BigDecimal(0),
 										sTipoCliente,"Débito caja Efectivo USD",sCUSD[2],"","",sMonedaForanea,sCUSD[2],strModoMonedaF);
 							if(bHecho){
-								bHecho = rcCtrl.registrarAsientoDiario(dtFecha, sesionCaja, sAsientoSucursal, strTipoDoc, iNobatchNodoc[1], 2.0, iNobatchNodoc[0], sCCOR[0],
+								bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFecha, sesionCaja, sAsientoSucursal, strTipoDoc, iNobatchNodoc[1], 2.0, iNobatchNodoc[0], sCCOR[0],
 											sCCOR[1], sCCOR[3], sCCOR[4], sCCOR[5], strTipoAsientoAA,sMonedaForanea, iMontoCOR*(-1), sConcepto, 
 											vaut[0].getId().getLogin(),	vaut[0].getId().getCodapp(), new BigDecimal(dTasaJDE), 
 											sTipoCliente,"Crédito caja Efectivo COR",sCCOR[2],"","",sMonedaBase,sCCOR[2],strModoMonedaD);
 								if(bHecho){
-									bHecho = rcCtrl.registrarAsientoDiario(dtFecha, sesionCaja, sAsientoSucursal,strTipoDoc,iNobatchNodoc[1], 2.0, iNobatchNodoc[0], sCCOR[0],
+									bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFecha, sesionCaja, sAsientoSucursal,strTipoDoc,iNobatchNodoc[1], 2.0, iNobatchNodoc[0], sCCOR[0],
 												sCCOR[1], sCCOR[3], sCCOR[4], sCCOR[5], strTipoAsientoCA, sMonedaForanea, iMontoUSD*(-1), sConcepto, 
 												vaut[0].getId().getLogin(),	vaut[0].getId().getCodapp(),  new BigDecimal(0), 
 												sTipoCliente,"Crédito caja Efectivo COR",sCCOR[2],"","",sMonedaForanea,sCCOR[2],strModoMonedaD);

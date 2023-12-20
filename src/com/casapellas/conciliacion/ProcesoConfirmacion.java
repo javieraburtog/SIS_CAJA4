@@ -147,7 +147,7 @@ public class ProcesoConfirmacion {
 					GLKCO = GLKCO.substring(GLKCO.length()-2,GLKCO.length());
 					GLCO = GLCO.substring(GLCO.length()-2,GLCO.length());
 					
-					bHecho = rcCtrl.registrarAsientoDiario(dtFechaAsiento, ProcesarConsolidadoDepositos.sesionForQuery
+					bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaAsiento, ProcesarConsolidadoDepositos.sesionForQuery
 							, sSucAsiento, GLDCT, iNobatchNodoc[1], 
 											dLineaDocs, iNobatchNodoc[0], GLANI, GLAID, GLMCU,
 											GLOBJ, GLSUB, GLLT, GLCRCD, iMonto*(-1), sConcepto,
@@ -307,7 +307,7 @@ public class ProcesoConfirmacion {
  *  Nombre: Carlos Manuel Hernández Morrison.
  */
 	public boolean realizarConfirmacionDepositos(Archivo ar,List<Deposito> lstDepsCaja, Depbancodet depBanco,
-								Session sesionCajaR, Session sesionCajaW1, Connection cn,
+								Session sesionCajaR, Connection cn,
 								Vautoriz vaut,String sTipoEmpleado, double dAjuste,
 								int iTipoConfirma, int iEstadoDeposito, 
 								Date dtFechaConfirma, int iDigConfrma ){
@@ -390,7 +390,6 @@ public class ProcesoConfirmacion {
 				error = rcCtrl.getError();
 				return false;
 			}
-//			sCtaBco = dv.obtenerCtaBancoxNoCta(depBanco.getNocuenta(), ar.getIdbanco());
 			sCtaBco = dv.obtenerCtaBancoxNoCta(depBanco.getNocuenta() );
 			if (sCtaBco == null) {
 				error = dv.getError();
@@ -422,11 +421,11 @@ public class ProcesoConfirmacion {
 			//&& ====== Grabar la primera linea del asiento de diario por el total notificado por banco.
 			String sDescrip = "Depósito de banco "+iReferOriginal;
 			if(ar.getMoneda().equals(sMonedaBase)){
-				bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+				bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 										iNoDocum, dLineaDocs, iNoBatch, sCtaBco[0], sCtaBco[1], sCtaBco[3],
 										sCtaBco[4],sCtaBco[5], "AA", ar.getMoneda(), iMontoTotal, sConcepto,
 										sLogin, vaut.getId().getCodapp(), new BigDecimal(0), sTipoEmpleado, 
-										sDescrip, sCtaBco[2], "", "", ar.getMoneda(), sCtaBco[2], "D");
+										sDescrip, sCodSucAsiento, "", "", ar.getMoneda(), sCtaBco[2], "D");
 				if(!bHecho){
 					error = rcCtrl.getError();
 					return false;
@@ -437,20 +436,20 @@ public class ProcesoConfirmacion {
 				
 				int iMontoDepsdom = dv.pasarAentero( dv.roundDouble(depBanco.getMtocredito().multiply(bdTasaJDE).doubleValue()));
 				
-				bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+				bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 										iNoDocum, dLineaDocs, iNoBatch, sCtaBco[0], sCtaBco[1], sCtaBco[3],
 										sCtaBco[4],sCtaBco[5], "AA", ar.getMoneda(), iMontoDepsdom, sConcepto,
 										sLogin, vaut.getId().getCodapp(), bdTasaJDE, sTipoEmpleado, 
-										sDescrip, sCtaBco[2], "", "", sMonedaBase, sCtaBco[2], "F");
+										sDescrip, sCodSucAsiento, "", "", sMonedaBase, sCtaBco[2], "F");
 				if(!bHecho){
 					error = rcCtrl.getError();
 					return false;
 				}
-				bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+				bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 										iNoDocum, dLineaDocs, iNoBatch, sCtaBco[0], sCtaBco[1], sCtaBco[3],
 										sCtaBco[4],sCtaBco[5], "CA", ar.getMoneda(), iMontoTotal, sConcepto,
 										sLogin, vaut.getId().getCodapp(), bdTasaJDE, sTipoEmpleado, 
-										sDescrip, sCtaBco[2], "", "", ar.getMoneda(), sCtaBco[2], "F");
+										sDescrip, sCodSucAsiento, "", "", ar.getMoneda(), sCtaBco[2], "F");
 				if(!bHecho){
 					error = rcCtrl.getError();
 					return false;
@@ -476,11 +475,11 @@ public class ProcesoConfirmacion {
 				iMontoDeps = dv.pasarAentero(dpCaja.getMonto().doubleValue());
 				
 				if(ar.getMoneda().equals(sMonedaBase)){
-					bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+					bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 									iNoDocum, dLineaDocs, iNoBatch, sCtaTBanco[0], sCtaTBanco[1], sCtaTBanco[3],
 									sCtaTBanco[4], sCtaTBanco[5], "AA", ar.getMoneda(), iMontoDeps*(-1), sConcepto, 
 									sLogin, vaut.getId().getCodapp(), new BigDecimal(0), sTipoEmpleado, 
-									sDescrip, sCtaTBanco[2], strSubLibroCuenta, tipoAuxiliarCtaTrans, ar.getMoneda(), sCtaTBanco[2], "D");
+									sDescrip,sCodSucAsiento, strSubLibroCuenta, tipoAuxiliarCtaTrans, ar.getMoneda(), sCtaTBanco[2], "D");
 					if(!bHecho){
 						error = rcCtrl.getError();
 						return false;
@@ -489,20 +488,20 @@ public class ProcesoConfirmacion {
 				}else{
 					int iMontoDepsdom = dv.pasarAentero( dv.roundDouble(dpCaja.getMonto().multiply(bdTasaJDE).doubleValue()));
 					
-					bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+					bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 									iNoDocum, dLineaDocs, iNoBatch, sCtaTBanco[0], sCtaTBanco[1], sCtaTBanco[3],
 									sCtaTBanco[4], sCtaTBanco[5], "AA", ar.getMoneda(), iMontoDepsdom*(-1), sConcepto, 
 									sLogin, vaut.getId().getCodapp(), bdTasaJDE, sTipoEmpleado, 
-									sDescrip, sCtaTBanco[2], strSubLibroCuenta, tipoAuxiliarCtaTrans, sMonedaBase, sCtaTBanco[2], "F");
+									sDescrip, sCodSucAsiento, strSubLibroCuenta, tipoAuxiliarCtaTrans, sMonedaBase, sCtaTBanco[2], "F");
 					if(!bHecho){
 						error = rcCtrl.getError();
 						return false;
 					}
-					bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+					bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 									iNoDocum, dLineaDocs, iNoBatch, sCtaTBanco[0], sCtaTBanco[1], sCtaTBanco[3],
 									sCtaTBanco[4], sCtaTBanco[5], "CA", ar.getMoneda(), iMontoDeps*(-1), sConcepto, 
 									sLogin, vaut.getId().getCodapp(), bdTasaJDE, sTipoEmpleado, 
-									sDescrip, sCtaTBanco[2], strSubLibroCuenta, tipoAuxiliarCtaTrans, ar.getMoneda(), sCtaTBanco[2], "F");
+									sDescrip, sCodSucAsiento, strSubLibroCuenta, tipoAuxiliarCtaTrans, ar.getMoneda(), sCtaTBanco[2], "F");
 					if(!bHecho){
 						error = rcCtrl.getError();
 						return false;
@@ -525,17 +524,21 @@ public class ProcesoConfirmacion {
 				String sObj = "", sSub = "";
 			
 				if (dAjuste > 0) {
-					String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",");
+					String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",",-1);
 					sObj = cuentaOtrosingresos[1] ;
 					sSub = cuentaOtrosingresos[2] ;
 				
 				} else{
 					
 					
-						sUninegCaja = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(lstDepsCaja.get(0).getCodcomp().trim());
+						
+						String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(lstDepsCaja.get(0).getCodcomp().trim());
+						String[] CtaCfg = deudorCfg.split(",");
+						
+						sUninegCaja = CtaCfg[0].trim();
+						sObj = CtaCfg[1].trim();
+						sSub = CtaCfg.length == 3 && CtaCfg[2] != null ? CtaCfg[2].trim() : "";
 					
-					sObj= DocumuentosTransaccionales.CTADEUDORESVARIOSOB()  ;
-					sSub = DocumuentosTransaccionales.CTADEUDORESVARIOSSB() ;
 					sTipoAuxiliar = "A";
 					sCodEmpleado = CodeUtil.pad(String.valueOf( lstDepsCaja.get(0).getCodcajero() ),  8,"0") ; // Divisas.rellenarCadena((lstDepsCaja.get(0).getCodcajero() + "").trim(), "0", 8);
 					if (sCodEmpleado.compareToIgnoreCase("") == 0)
@@ -550,9 +553,7 @@ public class ProcesoConfirmacion {
 				sCtaTemp = new String[6];
 				sCtaTemp[0] = sUninegCaja+"."+sObj+ ( (sSub.trim().length()>0)? "."+sSub:"");
 				sCtaTemp[1] = vCtaSbrt.getId().getGmaid().trim();
-				sCtaTemp[2] = vCtaSbrt.getId().getGmmcu().trim().length()==4? 
-								vCtaSbrt.getId().getGmmcu().trim().substring(0,2):
-								vCtaSbrt.getId().getGmmcu().trim();
+				sCtaTemp[2] = vCtaSbrt.getId().getGmco();
 				sCtaTemp[3] = vCtaSbrt.getId().getGmmcu().trim();
 				sCtaTemp[4] = vCtaSbrt.getId().getGmobj().trim();
 				sCtaTemp[5] = vCtaSbrt.getId().getGmsub().trim();
@@ -572,7 +573,7 @@ public class ProcesoConfirmacion {
 				
 				if(ar.getMoneda().equals(sMonedaBase)){
 					
-					bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+					bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 							iNoDocum, dLineaDocs, iNoBatch, sCtaCredAjuste[0], sCtaCredAjuste[1], sCtaCredAjuste[3],
 							sCtaCredAjuste[4],sCtaCredAjuste[5], "AA", ar.getMoneda(), iMontoDeps, sConcepto,
 							sLogin, vaut.getId().getCodapp(), new BigDecimal("0"), sTipoEmpleado, sDescrip, 
@@ -584,7 +585,7 @@ public class ProcesoConfirmacion {
 				}else{
 					int iMontoDepsdom = dv.pasarAentero( dv.roundDouble(new BigDecimal(dAjuste).multiply(bdTasaJDE).doubleValue()));
 					
-					bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+					bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 							iNoDocum, dLineaDocs, iNoBatch, sCtaCredAjuste[0], sCtaCredAjuste[1], sCtaCredAjuste[3],
 							sCtaCredAjuste[4], sCtaCredAjuste[5], "AA", ar.getMoneda(), iMontoDepsdom, sConcepto, 
 							sLogin, vaut.getId().getCodapp(), bdTasaJDE, sTipoEmpleado, sDescrip, 
@@ -594,7 +595,7 @@ public class ProcesoConfirmacion {
 						return false;
 					}
 					// ------------ 
-					bHecho = rcCtrl.registrarAsientoDiario(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
+					bHecho = rcCtrl.registrarAsientoDiarioWithSession(dtFechaConfirma, sesionCajaR, sCodSucAsiento, sTipoDoc,
 							iNoDocum, dLineaDocs, iNoBatch, sCtaCredAjuste[0], sCtaCredAjuste[1], sCtaCredAjuste[3],
 							sCtaCredAjuste[4], sCtaCredAjuste[5], "CA", ar.getMoneda(), iMontoDeps, sConcepto, 
 							sLogin, vaut.getId().getCodapp(), bdTasaJDE, sTipoEmpleado, sDescrip,
@@ -608,7 +609,7 @@ public class ProcesoConfirmacion {
 			/***********************  ===== Realizar transacciones en modulo de caja. ======= *****************************/
 			
 			//&& ======= Actualizar estado del deposito de banco.
-			bHecho = cdc.confirmarDepositoBanco(depBanco, sesionCajaW1, iEstadoDeposito,
+			bHecho = cdc.confirmarDepositoBanco(depBanco, sesionCajaR, iEstadoDeposito,
 												iTipoConfirma, vaut.getId().getCodreg(),
 												depBanco.getReferencia(), cn);
 			if(!bHecho){
@@ -617,7 +618,7 @@ public class ProcesoConfirmacion {
 				return false;
 			}
 			//&& ======= Actualizar estado del archivo.
-			bHecho = cdc.actualizarEstadoArchivo(ar, sesionCajaW1, vaut.getId().getCodreg(), cn);
+			bHecho = cdc.actualizarEstadoArchivo(ar, sesionCajaR, vaut.getId().getCodreg(), cn);
 			if(!bHecho){
 				error = cdc.getError();
 				errorDetalle = cdc.getErrorDetalle();
@@ -626,7 +627,7 @@ public class ProcesoConfirmacion {
 			
 			//&& ======= Guardar los registros de conciliacion y su detalle.
 			bHecho = cdc.registrarConciliacion(ar, depBanco, lstDepsCaja, sTipoDoc, iNoBatch, 
-											iNoDocum, vaut.getId().getCodreg(), sesionCajaW1);
+											iNoDocum, vaut.getId().getCodreg(), sesionCajaR);
 			if(!bHecho){
 				error = cdc.getError();
 				errorDetalle = cdc.getErrorDetalle();
@@ -636,7 +637,7 @@ public class ProcesoConfirmacion {
 			if(dAjuste!=0){
 				int iCodCargo = (dAjuste>0)?0:lstDepsCaja.get(0).getUsrcreate(); 
 				Conciliacion conciliacion = (Conciliacion)m.get("cdb_RegistroConciliacion");
-				bHecho = cdc.guardarDetalleAjuste(sesionCajaW1, conciliacion, iNoBatch, iNoDocum, 
+				bHecho = cdc.guardarDetalleAjuste(sesionCajaR, conciliacion, iNoBatch, iNoDocum, 
 												 new BigDecimal(String.valueOf(dAjuste)), iCodCargo,
 												 Integer.parseInt(sCtaCredAjuste[1]), sTipoDoc, 
 												 vaut.getId().getCodreg(), dtFechaConfirma);

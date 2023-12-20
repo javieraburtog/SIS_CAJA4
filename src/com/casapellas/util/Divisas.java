@@ -334,8 +334,7 @@ public class Divisas {
 										"."+f23.getId().getD3sub().trim(): "";
 					sCuentaBanco[0] = sCuenta;
 					sCuentaBanco[1] = vf.getId().getGmaid();
-					sCuentaBanco[2] = (vf.getId().getGmmcu().trim().length() == 4)?
-										vf.getId().getGmmcu().trim().substring(0,2):vf.getId().getGmmcu().trim();
+					sCuentaBanco[2] = vf.getId().getGmco();
 					sCuentaBanco[3] = vf.getId().getGmmcu().trim();
 					sCuentaBanco[4] = vf.getId().getGmobj().trim();
 					sCuentaBanco[5] = vf.getId().getGmsub().trim();
@@ -351,8 +350,7 @@ public class Divisas {
 			sCuentaBanco = null;
 			error = new Exception("@Error de sistema al obtener la cuenta Banco: "+iNoCuenta+"  "+e.getMessage().trim());
 			
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("obtenerCtaBancoxNoCta", "ERR", error.getMessage());
 			
 		}
 		return sCuentaBanco;
@@ -1540,37 +1538,6 @@ public class Divisas {
 		return codcomp ;
 	}
 	
-	
-	public static List<Vf0901> cuentasDiferencialUnidadNegocio(List<String> coduninegs){
-		List<Vf0901> cuentasDiferencial = null;
-		try {
-			
-			String sql = "Select * from @BDCAJA.vf0901 where trim(gmobj) = '@CTAOBJ' and trim(gmsub) = '@CTASUB' and trim(gmmcu) in (@UNINEGS)"  ;
-			
-			String strIn = coduninegs.toString().replace("[", "").replace("]", "");
-			 
-			sql = sql.replace("@BDCAJA", PropertiesSystem.ESQUEMA )
-					.replace("@CTAOBJ", PropertiesSystem.DIFCAMB_CUENTA_OBJETO )
-					.replace("@CTASUB", PropertiesSystem.DIFCAMB_CUENTA_SUBSID )
-					.replace("@UNINEGS", strIn ) ;
-			
-			
-			cuentasDiferencial = new RoQueryManager().executeSqlQuery(sql, Vf0901.class, true);
-			//cuentasDiferencial = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, Vf0901.class, true);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			cuentasDiferencial = null;
-		}finally{
-			
-			if( cuentasDiferencial  == null ){
-				cuentasDiferencial = new ArrayList<Vf0901>();
-			}
-			
-		}
-		return cuentasDiferencial ;
-	}
-	
 	public static List<String[]> cuentasFormasPago(List<MetodosPago>formasPago, int caid, String codcomp ){
 		List<String[]> cuentasFormasPago;
 		
@@ -2119,7 +2086,7 @@ public class Divisas {
 			iNobatch = -1;
 			error = new Exception("@LOGCAJA: No se pudo actualizar el numero de batch!!!");
 			errorDetalle = error;
-//			LogCrtl.imprimirError(error);
+
 			error.printStackTrace();
 		} finally {
 			
@@ -2129,9 +2096,7 @@ public class Divisas {
 			diffSeconds = ( new Date().getTime() - init.getTime() ) / 1000 % 60;
 			diffMinutes = ( new Date().getTime() - init.getTime() ) / (60 * 1000) % 60;	
 			msg += " <<<<>>>>> Tiempo total["+sdf.format(ini)+" <-> "+sdf.format(fin)+"]: "+  diffMinutes+" Mins : "+diffSeconds+" Segs";
-//			LogCrtl.sendLogInfo(msg);
-			//*****************************
-			
+
 		}
 		return iNobatch;
 	}
@@ -2153,10 +2118,10 @@ public class Divisas {
 				
 				//--------- Actualizar el número de documento.
 				sql = "UPDATE "+PropertiesSystem.JDECOM+".F0002 SET NNN002 = " + (iNodoco+1) + " where NNSY = '09'";
-				Query q = sesion.createSQLQuery(sql);
-				iActualizado = q.executeUpdate();
-				if(iActualizado != 1)
+				Boolean x=	ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(null, sql);
+				if(!x)
 					iNodoco = -1;
+				
 				LogCajaService.CreateLog("leerActualizarNoDocJDE", "INS", sql);
 			}else{
 				error = new Exception("@LOGCAJA:Error al intentar leer el número de documento JDE a utilizar ");
@@ -2167,17 +2132,7 @@ public class Divisas {
 			iNodoco = -1;
 			error = new Exception("@LOGCAJA:Error al intentar leer el número de documento JDE a utilizar ");
 			errorDetalle = error;
-		} finally {
-			
-			try{trans.commit();}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			try { sesion.close();}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		} 
 		return iNodoco;
 	}
 	

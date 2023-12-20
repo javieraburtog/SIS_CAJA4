@@ -1649,7 +1649,7 @@ public class ConsolidadoDepositosBanco {
 			}
 			CodeUtil.putInSessionMap("pcd_dtaCuentaTransitoriaxBanco", dtaCuentaFromQuery);
 			
-			String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",");
+			String[] cuentaOtrosingresos = DocumuentosTransaccionales.CTAOTROSINGRESOS().split(",",-1);
 			
 			// && ========================== cuentas para ajustes por sobrantes en los depositos. 
 			strSqlQueryExecute =
@@ -1676,6 +1676,12 @@ public class ConsolidadoDepositosBanco {
 			}
 			CodeUtil.putInSessionMap("pcd_dtaCuentaSobrantePorUnidadNegocio", dtaCuentaFromQuery);
 			
+			String deudorCfg = DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEG(codcomp);
+			String[] CtaCfg = deudorCfg.split(",");
+			
+			String sUN = CtaCfg[0].trim();
+			String sCtaOb = CtaCfg[1].trim();
+			String sSubCta = CtaCfg.length == 3 && CtaCfg[2] != null ? CtaCfg[2].trim() : "";
 			
 			// && ========================== cuentas para ajustes por faltantes en los depositos. 
 			strSqlQueryExecute =
@@ -1686,8 +1692,8 @@ public class ConsolidadoDepositosBanco {
 					"trim(gmobj) ||'@@@'|| "+
 					"  (case when trim(gmsub) = '' then '    @@@' else  trim(gmsub) end ) " +
 				"from "+PropertiesSystem.ESQUEMA+".vf0901  " +
-				"where trim(gmobj) = '"+ DocumuentosTransaccionales.CTADEUDORESVARIOSOB()  +"' " + 
-				 " and trim(gmsub) = '"+ DocumuentosTransaccionales.CTADEUDORESVARIOSSB()+"' " + 
+				"where trim(gmobj) = '"+ sCtaOb  +"' " + 
+				 " and trim(gmsub) = '"+ sSubCta+"' " + 
 				 " and trim(gmmcu) in ( " +
 						 "'" + DocumuentosTransaccionales.CTADEUDORESVARIOSUNINEGTODAS() +"'"+ 
 			 		" ) " ;
@@ -1700,7 +1706,7 @@ public class ConsolidadoDepositosBanco {
 			}
 			CodeUtil.putInSessionMap("pcd_dtaCuentaFaltantePorUnidadNegocio", dtaCuentaFromQuery);
 		
-			String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",");
+			String[] cuentaOtrosGastos= DocumuentosTransaccionales.CTAGASTOSDIVERSOS().split(",",-1);
 			// && ========================== cuentas para ajustes por sobrantes en los depositos. 
 			strSqlQueryExecute =
 				"select trim(gmmcu) ||'.'|| trim(gmobj) ||'.'|| trim(gmsub)   ||'@@@'|| "+

@@ -171,7 +171,7 @@ public class CompaniaCtrl {
 		} catch (Exception e) {
 			sMonedaBase = "";
 //			System.out.println(".CompaniaCtrl(): Excepción capturada en: obtenerMonedaBasexComp() "+e);
-			e.printStackTrace();
+			LogCajaService.CreateLog("obtenerMonedaBasexComp", "ERR", e.getMessage());
 		}
 		return sMonedaBase;
 	}

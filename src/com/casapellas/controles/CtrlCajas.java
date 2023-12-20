@@ -363,8 +363,7 @@ public class CtrlCajas {
 			
 		} catch (Exception e) {
 			bExiste = false;
-			e.printStackTrace();
-			e = null;
+			LogCajaService.CreateLog("validarReferenciaJDE", "ERR", e.getMessage());
 		}
 		lstRegist = null; 
 		return bExiste;

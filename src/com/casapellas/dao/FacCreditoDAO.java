@@ -1313,12 +1313,12 @@ public class FacCreditoDAO {
 			int numeroReciboJde = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9]);
 			
 			String concepto = "Sobrante ";
-			String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(codcomp).split(",");
+			String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(codcomp).split(",",-1);
 			String strCuentaObj = fcvCuentaGanacia[0];
 			String strCuentaSub = fcvCuentaGanacia[1] ;
 			
 			if( monedaFactura.compareTo(mpago.getMoneda()) != 0 || diferencialCambiario){
-				String[] fcvCuentaPerdida = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(codcomp).split(",");
+				String[] fcvCuentaPerdida = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(codcomp).split(",",-1);
 				strCuentaObj = fcvCuentaPerdida[0]; strCuentaSub = fcvCuentaPerdida[1] ;
 			}
 			 
@@ -1456,7 +1456,7 @@ public class FacCreditoDAO {
 			//&& ==== Validar la cuenta a utilizar, en dependencia del tipo de transaccion.
 			//&& ==== UN.66000.01: Diferencial Cambiario, UN.65100.10: Sobrante de Caja.
 			
-			String[] fcvCuentaPerdia = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(f55.getId().getCaco()).split(",");
+			String[] fcvCuentaPerdia = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(f55.getId().getCaco()).split(",",-1);
 			sCtaOb = fcvCuentaPerdia[0];
 			sCtaSub= fcvCuentaPerdia[1];
 			
@@ -1465,7 +1465,7 @@ public class FacCreditoDAO {
 				if( m.get("scr_SbrDfr")!=null && chkSobranteDifrl.isChecked()){
 					sTipo = "SBRTE";
 					sConcepto = "Sobrante en Rc:" +iNumrec+ " Ca:"+f55.getId().getCaid();
-					String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(f55.getId().getCaco()).split(",");
+					String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(f55.getId().getCaco()).split(",",-1);
 					sCtaOb = fcvCuentaGanacia[0];
 					sCtaSub= fcvCuentaGanacia[1];
 				}
@@ -1474,7 +1474,7 @@ public class FacCreditoDAO {
 				if(Factura.getMoneda().equals(mpSobrante.getMoneda())){
 					sTipo = "SBRTE";
 					sConcepto = "Sobrante en Rc:" +iNumrec+ " Ca:"+f55.getId().getCaid();
-					String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(f55.getId().getCaco()).split(",");
+					String[] fcvCuentaGanacia = DocumuentosTransaccionales.obtenerCuentasFCVGanancia(f55.getId().getCaco()).split(",",-1);
 					sCtaOb = fcvCuentaGanacia[0];
 					sCtaSub= fcvCuentaGanacia[1];
 				}
@@ -2067,7 +2067,7 @@ public class FacCreditoDAO {
 
 							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-												 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
+												 valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
 												 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
 							if(bHecho){
@@ -2151,7 +2151,7 @@ public class FacCreditoDAO {
 
 							
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									            "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
+									            valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
 									            hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
 							if(bHecho ){ 
@@ -2227,7 +2227,7 @@ public class FacCreditoDAO {
 							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), 
 										hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-										"RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, 
+										valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, 
 										
 										//d.roundDouble( mPago.getEquivalente()*hFacSel.getId().getTasa().doubleValue()),
 										Divisas.roundDouble( mPago.getMonto(), 2 ),
@@ -2332,7 +2332,7 @@ public class FacCreditoDAO {
 							}																																				
 
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									            "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
+									            valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
 									            hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
 							if(bHecho){
@@ -2425,7 +2425,7 @@ public class FacCreditoDAO {
 							
 							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
+									             valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d2, "F",  hFacSel.getMoneda(), hFacSel.getId().getTasa().doubleValue(), d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), 
 									             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
 							if(bHecho){
@@ -2493,7 +2493,7 @@ public class FacCreditoDAO {
 							BigDecimal tasatmp = hFacSel.getId().getCpendiente().divide(hFacSel.getId().getDpendiente(),4,RoundingMode.HALF_UP);
 							
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto() * tasatmp.doubleValue() ), "F",  hFacSel.getMoneda(), tasatmp.doubleValue(), d.roundDouble(mPago.getMonto()), 
+									 valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto() * tasatmp.doubleValue() ), "F",  hFacSel.getMoneda(), tasatmp.doubleValue(), d.roundDouble(mPago.getMonto()), 
 									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
 							
@@ -2563,7 +2563,7 @@ else{//facturas en cor F: COR
 							
 							//Para el caso de fdc dFechaDelRecibo viene con la fecha del Recibo, para el resto de casos viene con new Date().
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
+									             valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 									             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 																			
 							if(bHecho){
@@ -2602,7 +2602,7 @@ else{//facturas en cor F: COR
 							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - hFacSel.getMontoAplicar().doubleValue());
 
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
+									             valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 									             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 																			
 							if(bHecho){
@@ -2638,7 +2638,7 @@ else{//facturas en cor F: COR
 							dMontoF = d.roundDouble(hFacSel.getMontoAplicar().doubleValue() - mPago.getEquivalente());
 							i++;
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getEquivalente()), "D",  hFacSel.getMoneda(), 0,0, 
+									 valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getEquivalente()), "D",  hFacSel.getMoneda(), 0,0, 
 									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
 							if(!bHecho){
@@ -2689,7 +2689,7 @@ else{//facturas en cor F: COR
 							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
 							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - d.roundDouble(hFacSel.getMontoAplicar().doubleValue()));
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
+									             valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 									             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 							
 							if(bHecho){																										
@@ -2723,7 +2723,7 @@ else{//facturas en cor F: COR
 							dMontoAplicarxFactura = d.roundDouble(dMontoAplicarxFactura + hFacSel.getMontoAplicar().doubleValue());
 							dNewPendienteDom = d.roundDouble(hFacSel.getId().getCpendiente().doubleValue() - d.roundDouble(hFacSel.getMontoAplicar().doubleValue()));
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
+									             valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 									             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 
 							if(bHecho){																										
@@ -2763,7 +2763,7 @@ else{//facturas en cor F: COR
 							dMontoF = d.roundDouble(hFacSel.getMontoAplicar().doubleValue() - mPago.getMonto());
 							i++;
 							bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-									 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto()), "D",  hFacSel.getMoneda(), 0, 0, 
+									 valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto()), "D",  hFacSel.getMoneda(), 0, 0, 
 									 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 																				
 							if(!bHecho){
@@ -3097,7 +3097,7 @@ else{//facturas en cor F: COR
 											dMontoF = d.roundDouble(mPago.getEquivalente() - hFacSel.getMontoAplicar().doubleValue());
 											
 											bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-										             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
+										             valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 										             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 
 											if(bHecho) {
@@ -3132,7 +3132,7 @@ else{//facturas en cor F: COR
 											//d.roundDouble(mPago.getEquivalente()) --> dMontoAplicar        --> RPAG,  RPAAP
 											//                                   0  --> dMontoAplicarForaneo --> RPACR, RPFAP
 											bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-													 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getEquivalente()), "D",  hFacSel.getMoneda(), 0,0, 
+													 valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getEquivalente()), "D",  hFacSel.getMoneda(), 0,0, 
 													 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 											
 											if (bHecho) {
@@ -3171,7 +3171,7 @@ else{//facturas en cor F: COR
 										if (d.roundDouble(mPago.getMonto()) >= d.roundDouble(hFacSel.getMontoAplicar().doubleValue())) {												
 											dMontoF = d.roundDouble(mPago.getMonto() - hFacSel.getMontoAplicar().doubleValue());																						
 											bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-													             "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
+													             valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), "D",  hFacSel.getMoneda(), 0, 0, 
 													             hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());											
 											if (bHecho) {
 												bHecho = rcCtrl.aplicarMontoF0311_fdc(cn, d.roundDouble(hFacSel.getMontoAplicar().doubleValue()), hFacSel.getMoneda(), sMonedaBase, vaut.getId().getLogin(), hFacSel.getId().getCodsuc(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(),hFacSel.getId().getCodcli());
@@ -3200,7 +3200,7 @@ else{//facturas en cor F: COR
 										else { //inicio -> el pago <  que la factura
 											dMontoF = d.roundDouble(hFacSel.getMontoAplicar().doubleValue() - mPago.getMonto());
 											bHecho = rcCtrl.grabarRC(cn, hFacSel.getId().getCodsuc(), hFacSel.getId().getCodcli(), hFacSel.getId().getTipofactura(), hFacSel.getId().getNofactura(), hFacSel.getId().getPartida(), hFacSel.getId().getRpdivj(), 
-													 "RC", iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto()), "D",  hFacSel.getMoneda(), 0, 0, 
+													 valoresJDEInsCredito[1], iNoReciboJDE, fecUtil.obtenerFechaJulianaDia(dFechaDelRecibo), "R", iNobatch, d.roundDouble(mPago.getMonto()), "D",  hFacSel.getMoneda(), 0, 0, 
 													 hFacSel.getId().getCompenslm(), sCuentaCaja[1], hFacSel.getId().getCodunineg().trim(), hFacSel.getId().getTipopago(), "I", sConcepto, "", hFacSel.getId().getNomcli(), vaut.getId().getLogin(), vaut.getId().getNomapp(),hFacSel.getId().getRpddj(),hFacSel.getId().getRppo(),hFacSel.getId().getRpdcto());
 
 											if (bHecho) {

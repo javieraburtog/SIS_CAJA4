@@ -106,6 +106,7 @@ import com.casapellas.util.BitacoraSecuenciaReciboService;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.CustomEmailAddress;
 import com.casapellas.util.Divisas;
+import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.FechasUtil;
 import com.casapellas.util.LogCajaService;
 import com.casapellas.util.MailHelper;
@@ -4320,7 +4321,10 @@ public class FinanciamientoDAO {
 				str_rpicu = String.valueOf(dtaF311[15]);
 				
 				//str_rpglba = rCtrl.obtenerIdCuenta(null, null, str_rpmcu.trim(), "65200", "");  
-				str_rpglba = rCtrl.obtenerIdCuenta(null, null, str_rpmcu.trim(), "66000", "01");  
+				String[] fcvCuentaPerdia = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(str_rpkco).split(",",-1);
+				String sCtaOb = fcvCuentaPerdia[0];
+				String sCtaSub= fcvCuentaPerdia[1];
+				str_rpglba = rCtrl.obtenerIdCuenta(null, null, str_rpmcu.trim(), sCtaOb, sCtaSub);  
 				
 				rpdoc = Integer.valueOf(String.valueOf(dtaF311[1]));
 				montodif =  ((BigDecimal)dtaF311[3]).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP).doubleValue() ; // Double.valueOf(String.valueOf(dtaF311[3])) / 100;

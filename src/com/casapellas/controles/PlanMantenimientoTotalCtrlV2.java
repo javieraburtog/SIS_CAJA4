@@ -291,7 +291,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 					if(lngMontoFormaDePago!=0)
 					{
 						String comp = Integer.parseInt(codcomp)+"";
-						String[] fcvCuentaPerdiav2 = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(comp).split(",");
+						String[] fcvCuentaPerdiav2 = DocumuentosTransaccionales.obtenerCuentasFCVPerdida(comp).split(",",-1);
 						
 						String sCtaObDif = fcvCuentaPerdiav2[0];
 						String sCtaSubDif = fcvCuentaPerdiav2[1];
@@ -557,6 +557,43 @@ public class PlanMantenimientoTotalCtrlV2 {
 			if( !codbnf_aux.isEmpty() ){
 				tipoAuxiliar = "A";
 			}
+			///Validacion de descuadre  
+			boolean cuadrar=false;
+			long  montoCuadrar = 0;
+			if(formas_de_pago.size()>1) {
+				long sumadeequivalencias=0;
+				for(final MetodosPago mp : formas_de_pago) {
+					
+					lngMontoFormaDePago = mp.getMoneda().compareTo(moneda_base)==0 ? 
+							mp.getMoneda().compareTo(moneda_contrato)==0 ? 
+									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto()/tasaoficial.doubleValue())).replace(".", "")) : 
+									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto()/tasaparalela.doubleValue())).replace(".", "")) :
+							Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto())).replace(".", ""));
+					
+					sumadeequivalencias+=	 mp.getMoneda().compareTo(moneda_base)==0 && mp.getMoneda().compareTo(moneda_contrato)==0 ? 
+							Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto())).replace(".", ""))
+							: 
+							Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(((double)lngMontoFormaDePago/100)*tasaoficial.doubleValue())).replace(".", ""));
+				}
+				
+				lngMontoFormaDePagoEq =  Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_cod).replace(".", ""));
+				
+				long diferenciaExistente =sumadeequivalencias-lngMontoFormaDePagoEq;
+				
+				if(diferenciaExistente!=0) {
+					double montoMaximopermitido = Double.parseDouble(DocumuentosTransaccionales.VALORMAXIMODESCUADRE());
+					long maximopermitodo = (long) (montoMaximopermitido * 100);
+					 long calculoDescuadre = maximopermitodo - (diferenciaExistente);
+					if(calculoDescuadre>0) {
+						cuadrar=true;
+						montoCuadrar=diferenciaExistente;
+					}
+				}
+				
+			}
+		
+			
+			
 			
 			for (final MetodosPago mp : formas_de_pago) {
 				
@@ -586,7 +623,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 				{
 					lngMontoFormaDePago = Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_usd).replace(".", ""));
 					
-					lngMontoFormaDePagoEq =  Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_cod).replace(".", ""));;
+					lngMontoFormaDePagoEq =  Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_cod).replace(".", ""));
 												
 	
 					lngMontoFormaDePagoEq = lngMontoFormaDePagoEq + Long.parseLong( String.format("%1$.2f", mp.getDiferenciaCor()).replace(".", ""));
@@ -603,7 +640,10 @@ public class PlanMantenimientoTotalCtrlV2 {
 									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto())).replace(".", ""))
 									: 
 									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(((double)lngMontoFormaDePago/100)*tasaoficial.doubleValue())).replace(".", ""));
-												
+					if(cuadrar) {
+						lngMontoFormaDePagoEq = lngMontoFormaDePagoEq - montoCuadrar;
+						cuadrar = false;
+					}							
 	
 					lngMontoFormaDePagoEq = lngMontoFormaDePagoEq + Long.parseLong( String.format("%1$.2f", mp.getDiferenciaCor()).replace(".", ""));
 				}

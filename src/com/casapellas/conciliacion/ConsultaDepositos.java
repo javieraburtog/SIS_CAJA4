@@ -946,7 +946,7 @@ public class ConsultaDepositos {
 		try {
 			if(m.get("cdep_lstcdbDepositosBco") == null ){
 			 
-				int idnoconfirmado=Integer.parseInt(DocumuentosTransaccionales.IDDPNOCONFIRMADO());
+				int idnoconfirmado=DocumuentosTransaccionales.IDDPNOCONFIRMADO();
 				lstcdbDepositosBco = new ConfirmaDepositosCtrl()
 						.obtenerDepositosBcoxFecha( FechasUtil.quitarAgregarDiasFecha(-2, new Date()),
 						new Date(),"",idnoconfirmado,100001,400);
