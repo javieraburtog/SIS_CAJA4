@@ -839,7 +839,7 @@ public class FacContadoDAO {
 									vCtaDI.getId().getGmsub().trim(), valoresJdeIns[5],	mpago.getMoneda(),  iMonto*-1,
 									sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 									BigDecimal.ZERO, sTipoCliente,"CRDTO X "+sTipo+" CTA ",
-									sCoCuentaDI, "", "",mpago.getMoneda(),sCoCuentaDI,valoresJdeIns[7], 0);
+									sCuentaCaja[2], "", "",mpago.getMoneda(),sCoCuentaDI,valoresJdeIns[7], 0);
 					
 						if(!bHecho){
 							sMensajeError = "No se ha podido registrar  línea 2.0 de asientos para registro de Sobrante de Pagos ";
