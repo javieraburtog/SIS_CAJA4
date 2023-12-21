@@ -60,8 +60,13 @@ public class PropertiesSystem {
 		public final static String parametroCtaDeudores="40";
 		public final static String parametroCompania="41";
 		public final static String parametroConfiguracionMaximoPermisible="42";
+		public final static String parametroTipoBatchDevolucion="43";
 		
-		//Valore maximos de truncado
+		//Valores maximos de truncado
+		public final static String tipoBatchDevolucionCredito= "DCO_TIPO_BACH_CR";
+		
+		
+		//Valores maximos de truncado
 		public final static String maximoPermitidoPMT= "VAL_DESC_TRUN";
 		
 		//Cierre

@@ -1710,7 +1710,7 @@ public class ReciboCtrl {
 
 		Recibofac rf = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 		String sql = "", sFecha = "";
 		JulianToCalendar fecha = null;
 		Credhdr crFN = null;
@@ -1722,9 +1722,9 @@ public class ReciboCtrl {
 					+ " and r.id.numrec = " + iNumrec + " and r.id.tiporec = '"
 					+ sTiporec + "' and r.id.codcli = " + iCodcli;
 
-			tx = session.beginTransaction();
+			
 			lstRecibofac = session.createQuery(sql).list();
-			tx.commit();
+			
 
 			for (int i = 0; i < lstRecibofac.size(); i++) {
 				rf = (Recibofac) lstRecibofac.get(i);
@@ -1745,16 +1745,8 @@ public class ReciboCtrl {
 				lstFacturasRecibo.add(facturaRec);
 			}
 		} catch (Exception ex) {
-			System.out
-					.println("Se capturo una excepcion en ReciboCtrl.leerFacturasReciboCredito: "
-							+ ex);
-		} finally {
-			try {
-				HibernateUtilPruebaCn.closeSession(session);
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
+			LogCajaService.CreateLog("leerFacturasReciboFN", "ERR", ex.getMessage());
+		} 
 		return lstFacturasRecibo;
 	}
 
@@ -3498,7 +3490,7 @@ public class ReciboCtrl {
 		Hfacturajde hfac = null;
 		Recibofac recFac = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 		String sql = "";
 		try {
 			sql = "from Recibofac as r where r.id.caid = " + iCaid
@@ -3507,9 +3499,9 @@ public class ReciboCtrl {
 					+ " and r.id.tiporec = '" + sTiporec + "'"
 					+ " and r.id.codcli = " + iCodcli;
 
-			tx = session.beginTransaction();
+			
 			lstRecibofac = session.createQuery(sql).list();
-			tx.commit();
+			
 
 			for (int i = 0; i < lstRecibofac.size(); i++) {
 				recFac = (Recibofac) lstRecibofac.get(i);
@@ -3527,15 +3519,7 @@ public class ReciboCtrl {
 				lstFacturasRecibo.add(facturaRec);
 			}
 		} catch (Exception ex) {
-			System.out
-					.println("Se capturo una excepcion en ReciboCtrl.leerFacturasReciboCredito: "
-							+ ex);
-		} finally {
-			try {
-				HibernateUtilPruebaCn.closeSession(session);
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
+			LogCajaService.CreateLog("leerFacturasReciboCredito", "ERR", ex.getMessage());
 		}
 		return lstFacturasRecibo;
 	}
@@ -3549,7 +3533,7 @@ public class ReciboCtrl {
 		Hfacturajde hfac = null;
 		Recibofac recFac = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 
 		String sql = "from Recibofac as r where r.id.caid = " + iCaid
 				+ " and r.id.codcomp = '" + sCodComp.trim()
@@ -3557,9 +3541,9 @@ public class ReciboCtrl {
 				+ sTiporec + "' and r.id.codcli = " + iCodcli;
 
 		try {
-			tx = session.beginTransaction();
+			
 			lstRecibofac = session.createQuery(sql).list();
-			tx.commit();
+			
 			for (int i = 0; i < lstRecibofac.size(); i++) {
 				recFac = (Recibofac) lstRecibofac.get(i);
 				hfac = getInfoFacturaCredito(recFac.getId().getNumfac(),
@@ -3573,16 +3557,8 @@ public class ReciboCtrl {
 				lstFacturasRecibo.add(hfac);
 			}
 		} catch (Exception ex) {
-			System.out
-					.println("Se capturo una excepcion en ReciboCtrl.leerFacturasReciboCredito2: "
-							+ ex);
-		} finally {
-			try {
-				HibernateUtilPruebaCn.closeSession(session);
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
+			LogCajaService.CreateLog("leerFacturasReciboCredito2", "ERR", ex.getMessage());
+		} 
 		return lstFacturasRecibo;
 	}
 
@@ -3599,20 +3575,12 @@ public class ReciboCtrl {
 				+ "trim(hf.id.codunineg) = '" + sCodunineg + "'";
 		try {
 			session = HibernateUtilPruebaCn.currentSession();
-			tx = session.beginTransaction();
+			
 			factura = (Hfactjdecon) session.createQuery(sql).uniqueResult();
-			tx.commit();
+			
 		} catch (Exception ex) {
-			System.out
-					.println("Se capturo una excepcion en ReciboCtrl.getInfoFactura: "
-							+ ex);
-		} finally {
-			try {
-				HibernateUtilPruebaCn.closeSession(session);
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
+			LogCajaService.CreateLog("getInfoFactura", "ERR", ex.getMessage());
+		} 
 		return factura;
 	}
 

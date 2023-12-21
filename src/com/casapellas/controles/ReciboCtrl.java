@@ -4029,8 +4029,6 @@ returValue=ConsolidadoDepositosBcoCtrl.executeSqlQueryTx(s, query);
 			}
 		}catch(Exception ex){
 			LogCajaService.CreateLog("leerFacturasReciboCredito", "ERR", ex.getMessage());
-		}finally{
-			session.close();
 		}
 		return lstFacturasRecibo;
 	}
@@ -4044,16 +4042,16 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 		Hfacturajde hfac = null;
 		Recibofac recFac = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
-		Transaction tx = null;
+		
 		
 		String sql = "from Recibofac as r where r.id.caid = " + iCaid
 				+ " and r.id.codcomp = '" + sCodComp.trim()
 				+ "' and r.id.numrec = " + iNumrec + " and r.id.tiporec = '"
 				+ sTiporec + "' and r.id.codcli = "+iCodcli;
 		try{
-			tx = session.beginTransaction();
+			
 			lstRecibofac = session.createQuery(sql).list();
-			tx.commit();
+			
 			
 			for(int i = 0; i < lstRecibofac.size();i++){
 				
@@ -4069,8 +4067,6 @@ public List leerFacturasReciboCredito2(int iCaid,String sCodComp,int iNumrec,
 			}
 		}catch(Exception ex){
 			LogCajaService.CreateLog("leerFacturasReciboCredito2", "ERR", ex.getMessage());
-		}finally{
-			session.close();
 		}
 		return lstFacturasRecibo;
 	}

@@ -210,6 +210,7 @@ public class CodeUtil {
 		try {
 			ob = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(varname) ;
 		} catch (Exception e) {
+			if(FacesContext.getCurrentInstance() !=  null && FacesContext.getCurrentInstance().getExternalContext() != null)
 			LogCajaService.CreateLog("getFromSessionMap", "ERR", e.getMessage());
 		}
 		return ob; 

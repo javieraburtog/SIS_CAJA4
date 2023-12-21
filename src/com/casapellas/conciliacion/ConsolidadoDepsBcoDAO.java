@@ -557,27 +557,7 @@ public class ConsolidadoDepsBcoDAO {
 			}	
 			
 			
-			/*
-			 * 
-			 * 	"pcd.idresumenbanco,  pcd.numerocuenta, pcd.moneda,  pcd.codigobanco, " +
-				"pcd.fechadeposito,   pcd.referenciaoriginal,  pcd.montooriginal,  pcd.iddepbcodet, " +
-				"pcd.codigotransaccionbco, consecutivo, d.fecha, d.referencenumber, " +
-				"d.monto, d.mpagodep,  d.codcajero, d.usrcreate, " +
-				"d.coduser, nombrebanco, pcd.Descriptransbanco,  pcd.Descriptransjde, " + 
-				"pcd.descripcion, 1 cantdpscaja, consecutivo idscaja, d.referencenumber references, d.coduser codusers";
-			 * 
-			 */
-			
-/*		public ConsolidadoCoincidente(int idresumenbanco, long numerocuenta, String moneda, long codigobanco, Date fechabanco, long referenciabanco, BigDecimal montoBanco,
-				BigDecimal montoAjustado, int iddepbcodet, String codigotransaccionbco, int iddepositocaja, Date fechacaja,	long referenciacaja, BigDecimal montoCaja,
-				String tipotransaccionjde, int codigocajero, int codigocontador, String usuariocajero, String usuariocontador, String nombrebanco, 
-				int nivelcomparacion, List<Deposito>depositoscaja, String descriptransactbanco, String descriptransjde,	String conceptodepbco, BigDecimal montorporajuste,
-				int cantdepositoscaja, int excluircoincidencia, String motivoexclusion, boolean enconflicto, String dtaConsolidadoConflicto,  String dtaDepositoCajaConflicto,
-				String dtaIdsDepsBcoCnfl,String dtaIdDepsBancoConflicto, int statusValidaConflicto, boolean comprobanteaplicado, String observaciones, int nobatch, String tipodocumentojde, 
-				int referenciacomprobante,  boolean permiteConflictos, String idsdepscaja,
-				String referencesdepscaja  ) {*/
 		
-			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

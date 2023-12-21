@@ -426,7 +426,7 @@ public class FacContadoDAO {
 	//String[] valoresJdeInsDev = (String[]) m.get("valoresJDEInsDevolucionContado");
 	String[] valoresJdeNumeracion = (String[]) m.get("valoresJDENumeracionIns");
 	String[] valoresJDEInsCredito = (String[]) m.get("valoresJDEInsCredito");
-	String[] valoresJDEInsFinanciamiento = (String[]) m.get("valoresJDEInsFinanciamiento");
+	//String[] valoresJDEInsFinanciamiento = (String[]) m.get("valoresJDEInsFinanciamiento");
 	
 /*******************************************************************************************************/	
 	
@@ -1554,7 +1554,7 @@ public class FacContadoDAO {
 				String concepto = "Dev:" + dev.getNofactura() + " " + dev.getTipofactura() + " C:" + caid;
 				
 				List<String> codigosSucursal = Arrays.asList(new String[]{dev.getCodsuc()}); 
-				List<String[]> cuentasContableFactura = CuotaCtrl.idCuentaFacturaTipoClienteSucursal(codigosSucursal, cliente.getId().getA5arc(), valoresJDEInsCredito[1]);
+				List<String[]> cuentasContableFactura = CuotaCtrl.idCuentaFacturaTipoClienteSucursal(codigosSucursal, cliente.getId().getA5arc(), "RC");
 				
 				String[] sCuenta = new Divisas().obtenerCuentaVenta(caid, dev.getCodcomp(), dev.getCodunineg(), session, transaction);
 				
@@ -1583,7 +1583,7 @@ public class FacContadoDAO {
 				ProcesarNuevaFacturaF03B11.unidadNegocio1  = dev.getCodunineg().trim();
 				ProcesarNuevaFacturaF03B11.unidadNegocio2  = dev.getCodunineg().trim();
 				ProcesarNuevaFacturaF03B11.usuario  = v.getId().getLogin();
-				ProcesarNuevaFacturaF03B11.tipoBatch  = valoresJDEInsFinanciamiento[1];
+				ProcesarNuevaFacturaF03B11.tipoBatch  = DocumuentosTransaccionales.tipoBatchDevolucionCredito();
 				ProcesarNuevaFacturaF03B11.tipoImpuesto  = "EXE";
 				ProcesarNuevaFacturaF03B11.fechavencimiento = String.valueOf( fechajul ) ;
 				ProcesarNuevaFacturaF03B11.monedaLocal = sMonedaBase;
@@ -1605,7 +1605,7 @@ public class FacContadoDAO {
 				
 				ProcesarNuevaFacturaF03B11.fecha = fecharecibo;
 				ProcesarNuevaFacturaF03B11.fechaFactura = fecharecibo;
-				
+								
 				ProcesarNuevaFacturaF03B11.procesarNuevaFactura(session);
 				
 				String msgProcesoNotaCredito = ProcesarNuevaFacturaF03B11.strMensajeProceso;

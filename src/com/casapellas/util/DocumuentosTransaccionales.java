@@ -550,4 +550,15 @@ public static String VALORMAXIMODESCUADRE() {
 		else
 		return null;
 	}
+public static String tipoBatchDevolucionCredito() {
+	
+	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroTipoBatchDevolucion + "' AND TCOD = '"+ PropertiesSystem.tipoBatchDevolucionCredito +"' ";     
+		
+		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0).toString();
+		else
+		return null;
+	}
 }
