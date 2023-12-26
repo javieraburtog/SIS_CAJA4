@@ -1396,7 +1396,7 @@ public class RevisionArqueoDAO {
 		Divisas dv = new Divisas();
 		ReciboCtrl recCtrl = new ReciboCtrl();
 		String sTipoDoc = "";
-		String sDescrip = "";
+		String sDescrip = "",sFecha,sFecha_Short;
 		
 		List<Ctaxdeposito> lstCtasxDeps = null;
 		Ctaxdeposito ctaxDeps = null;
@@ -1407,11 +1407,19 @@ public class RevisionArqueoDAO {
 		
 		
 		try {
+			sFecha = FechasUtil.formatDatetoString(dtFecha, "dd/MM/yyyy");
+			sFecha_Short = FechasUtil.formatDatetoString(dtFecha, "dd/MM/yy");
 			sTipoDoc = cajaparm.getParametros("34", "0", "CIERRE_DOCTYPE_ZX").getValorAlfanumerico().toString();
 			Vautoriz vaut = ((Vautoriz[]) CodeUtil.getFromSessionMap( "sevAut"))[0];
 			 
-			sConcepto = "Arqueo "+iNoarqueo+" Caja "+lstLiquidaCheque.get(0).getCaid()+ " "+   FechasUtil.formatDatetoString(dtFecha, "dd/MM/yyyy");
+			sConcepto = "Arqueo "+iNoarqueo+" Caja "+lstLiquidaCheque.get(0).getCaid()+ " "+ sFecha;
+			
+			if (sConcepto.length() > 30) {
+				sConcepto = "Arqueo"+iNoarqueo+" Caja"+lstLiquidaCheque.get(0).getCaid()+ " "+ sFecha_Short;
+			}
+			
 			String logs = sConcepto;
+			
 			
 			//-----Recorrer la lista de liquidaciones y hacer asiento por cada registro.
 			String monedaBaseCompania = f14.getId().getC4bcrcd() ;
@@ -2953,7 +2961,7 @@ public class RevisionArqueoDAO {
 	 
 	 	boolean bHecho = true;
 		int iNoBatch = 0,iNorefer=0, iCajaUso=0;
-		String sCuentaC[], sSucursalDeposito ="", sConcepto,sFecha, sMensaje="";
+		String sCuentaC[], sSucursalDeposito ="", sConcepto,sFecha,sFecha_Short, sMensaje="";
 		String sCuentaT[], sCuentaBco[], sDescripcion,sCodigoAuxiliar,sTipoAuxiliar,sTipodoc;
 		String sCuentaTemp[];
 		String sCuentaB[];
@@ -2974,7 +2982,14 @@ public class RevisionArqueoDAO {
 			
 			vaut =  ( (Vautoriz[]) CodeUtil.getFromSessionMap( "sevAut") ) [0];
 			sFecha = FechasUtil.formatDatetoString(dtFecha, "dd/MM/yyyy");
+			sFecha_Short= FechasUtil.formatDatetoString(dtFecha, "dd/MM/yy");
 			sConcepto = "Arqueo "+iNoarqueo+", Caja "+iCaid+ " "+ sFecha;
+			
+			
+			if (sConcepto.length() > 30) {
+				sConcepto = "Arqueo"+iNoarqueo+" Caja"+iCaid+ " "+ sFecha_Short;
+			}
+			
 			String logs = sConcepto;
 			
 			
@@ -3335,7 +3350,7 @@ public class RevisionArqueoDAO {
 		double dTasaJDE = 1.0;
 		BigDecimal bdTasaJDE = BigDecimal.ONE, bdTasa = BigDecimal.ZERO;
 		int iNoBatch = 0,iMontoH,iMontoCorH,iNorefer;
-		String sCuentaC[],sCuentaB[], sSucursalDeposito ="", sTipoCliente, sConcepto,sFecha,sMensaje="";
+		String sCuentaC[],sCuentaB[], sSucursalDeposito ="", sTipoCliente, sConcepto,sFecha,sFecha_Short,sMensaje="";
 		
 		Vautoriz[] vaut;
 		Vf55ca01 f55ca01;
@@ -3350,7 +3365,13 @@ public class RevisionArqueoDAO {
 			f55ca01 = (Vf55ca01)((List)CodeUtil.getFromSessionMap( "lstCajas")).get(0);
 			vaut = (Vautoriz[]) CodeUtil.getFromSessionMap( "sevAut");
 			sFecha = f.formatDatetoString(dtFecha, "dd/MM/yyyy");
+			sFecha_Short= f.formatDatetoString(dtFecha, "dd/MM/yy");
 			sConcepto = "Arqueo "+iNoarqueo+", Caja "+iCaid+ " "+ sFecha;
+			
+			if (sConcepto.length() > 30) {
+				sConcepto = "Arqueo"+iNoarqueo+" Caja"+iCaid+ " "+ sFecha_Short;
+			}
+			
 			
 			//--- Tasa de Cambio.
 			if(!sMoneda.equals(f14.getId().getC4bcrcd().trim())){
@@ -6437,11 +6458,11 @@ public class RevisionArqueoDAO {
 		boolean bHecho = true;
 		int iNobatchNodoc[];
 		String sMensaje = "";
-		String sCompCuentaCaja="",sCompCuentaBanco="",sFecha,sCuenta[],sAsientoSucursal="";
+		String sCompCuentaCaja="",sCompCuentaBanco="",sFecha,sFecha_Short,sCuenta[],sAsientoSucursal="";
 		String sConcepto, sCtmcu = "", sCtobj = "",sCtsub = "",sCcobj="", sCcsub="",sCc1mcu="" ;
 		String sIdCuentaCaja = "", sIdCtaTranBanco = "", sCuentaCaja = "", sCtaTranBanco = "";
 		int iNoBatch = 0, iNoDocumento = 0,  iMontoQ ;
-		SimpleDateFormat format ;
+		SimpleDateFormat format,format_Short ;
 		Vautoriz[] vaut;
 		Vf55ca01 f55ca01;
 		 
@@ -6470,8 +6491,15 @@ public class RevisionArqueoDAO {
 			vaut = (Vautoriz[]) CodeUtil.getFromSessionMap( "sevAut");
 			
 			format = new SimpleDateFormat("dd/MM/yyyy");
+			format_Short = new SimpleDateFormat("dd/MM/yy");
 			sFecha = format.format(dtFecha);
-			sConcepto = "Arqueo "+iNoarqueo+" Caja "+iCaid+ " "+ sFecha;
+			sFecha_Short = format_Short.format(dtFecha);
+			sConcepto = "Arqueo "+iNoarqueo+" Caja "+iCaid+ " "+ sFecha_Short;
+			
+			if (sConcepto.length() > 30) {
+				sConcepto = "Arqueo"+iNoarqueo+" Caja"+iCaid+ " "+ sFecha_Short;
+			}
+			
 			String logs = sConcepto;
 			
 			iCodigoBanco = f14.getId().getC4bnc();
@@ -7353,11 +7381,11 @@ public class RevisionArqueoDAO {
 			boolean bHecho = true;
 			int iNobatchNodoc[];
 			String sMensaje = "";
-			String sCompCuentaCaja="",sCompCuentaBanco="",sFecha,sCuenta[],sAsientoSucursal="";
+			String sCompCuentaCaja="",sCompCuentaBanco="",sFecha,sFecha_Short,sCuenta[],sAsientoSucursal="";
 			String sConcepto, sCtmcu = "", sCtobj = "",sCtsub = "",sCcobj="", sCcsub="",sCc1mcu="" ;
 			String sIdCuentaCaja = "", sIdCtaTranBanco = "", sCuentaCaja = "", sCtaTranBanco = "";
 			int iNoBatch = 0, iNoDocumento = 0,  iMontoQ ;
-			SimpleDateFormat format ;
+			SimpleDateFormat format,format_Short ;
 			Vautoriz[] vaut;
 			Vf55ca01 f55ca01;
 			 
@@ -7387,8 +7415,16 @@ public class RevisionArqueoDAO {
 				vaut = (Vautoriz[]) CodeUtil.getFromSessionMap( "sevAut");
 				
 				format = new SimpleDateFormat("dd/MM/yyyy");
+				format_Short = new SimpleDateFormat("dd/MM/yy");
+				
 				sFecha = format.format(dtFecha);
+				sFecha_Short = format_Short.format(dtFecha);
 				sConcepto = "Arqueo "+iNoarqueo+" Caja "+iCaid+ " "+ sFecha;
+				
+				if (sConcepto.length() > 30) {
+					sConcepto = "Arqueo"+iNoarqueo+" Caja"+iCaid+ " "+ sFecha_Short;
+				}
+				
 				String logs = sConcepto;
 				
 				iCodigoBanco = f14.getId().getC4bnc();

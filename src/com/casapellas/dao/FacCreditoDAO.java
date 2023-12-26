@@ -1487,8 +1487,9 @@ public class FacCreditoDAO {
 			}else{
 				
 				sCoCuentaDI = vCtaDI.getId().getGmco().trim();
-												
-				sCuentaDI = sCodunineg+"."+sCtaOb+"."+sCtaSub;				
+				
+				sCuentaDI = vCtaDI.getCuenta().trim();
+				//sCuentaDI = sCodunineg+"."+sCtaOb+(sCtaSub==" "?"":".")+sCtaSub;				
 			}
 			sAsientoSuc  = sCuentaCaja[2];
 			

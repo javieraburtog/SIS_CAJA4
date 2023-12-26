@@ -805,7 +805,7 @@ public class FacContadoDAO {
 				sCoCuentaDI = (sCodunineg.length()==4)? 
 								sCodunineg.substring(0,2):
 								sCodunineg;
-				sCuentaDI = sCodunineg+"."+sCtaOb+"."+sCtaSub;				
+				sCuentaDI = vCtaDI.getCuenta().trim();//sCodunineg+"."+sCtaOb+ (sCtaSub==" "?"":".") +sCtaSub;				
 			}
 			sAsientoSuc  = sCuentaCaja[2];
 			
