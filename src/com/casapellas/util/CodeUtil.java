@@ -208,6 +208,7 @@ public class CodeUtil {
 		Object ob = null;
 		
 		try {
+			if(FacesContext.getCurrentInstance() !=  null && FacesContext.getCurrentInstance().getExternalContext() != null)
 			ob = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(varname) ;
 		} catch (Exception e) {
 			if(FacesContext.getCurrentInstance() !=  null && FacesContext.getCurrentInstance().getExternalContext() != null)

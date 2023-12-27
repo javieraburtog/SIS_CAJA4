@@ -28,7 +28,7 @@ public class FechasUtil {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(fecha);
 			
-			String sql ="select count(*) from gcpsiseva2.workcalendar"+
+			String sql ="select count(*) from " + PropertiesSystem.GCPSISEVA + ".workcalendar"+
 					" where '"+ new SimpleDateFormat("yyyy-MM-dd").format(fecha) + "'  between startdate and enddate " +
 					" and plan = '" + cal.get(Calendar.YEAR) + "' "+
 					" and clocal = 'Nacional' and trim(Ccountry) = 'NI' " ;

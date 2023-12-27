@@ -27,7 +27,6 @@ import com.casapellas.controles.tmp.ReciboCtrl;
 import com.casapellas.controles.tmp.TasaCambioCtrl;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.jde.creditos.CodigosJDE1;
-import com.casapellas.navegacion.As400Connection;
 import com.casapellas.reportes.Rptmcaja012Pdf;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.Divisas;
@@ -35,11 +34,6 @@ import com.casapellas.util.DocumuentosTransaccionales;
 import com.casapellas.util.PropertiesSystem;
 import com.casapellas.util.jdbcTransaction;
 import com.casapellas.entidades.ens.Vautoriz;
-import com.ibm.ObjectQuery.crud.util.Array;
-import com.ibm.icu.text.DecimalFormat;
-import com.prueba.ws.P5509800Input;
-import com.prueba.ws.P5509800PortType;
-import com.prueba.ws.P5509800_Service;
 
 /**
  * Servlet implementation class svltProcesarAjuste
@@ -670,7 +664,6 @@ public class svltProcesarAjuste extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	public boolean crearBatchPorAjuste( Object[]dtaAjusteMaestro, List<Object[]>  dtaAjusteDetalle, Vautoriz vaut, List<String> updateDetalles){
 		boolean hecho = true;
-		String msgErrorProceso;
 		
 		int NobatchToUse;
 		long iMontoTotal;
@@ -693,7 +686,6 @@ public class svltProcesarAjuste extends HttpServlet {
 			
 			//&& ========== Datos del encabezado del ajuste.
 			Date fechabatch =  new Date() ;
-			int cantidad_docs = Integer.parseInt(String.valueOf( dtaAjusteMaestro[2] ) ) ;
 			String moneda_ajuste = String.valueOf( dtaAjusteMaestro[3] );
 			BigDecimal monto_ajuste = (BigDecimal)dtaAjusteMaestro[4] ;
 			String codcomp = String.valueOf( dtaAjusteMaestro[5] );
@@ -806,7 +798,6 @@ public class svltProcesarAjuste extends HttpServlet {
 								observacion, cuenta_destino[2], "", "", monedabase, sCodSucAsiento, "D", 0);
 					
 					if(!hecho){
-						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					
@@ -817,7 +808,6 @@ public class svltProcesarAjuste extends HttpServlet {
 							observacion, cuenta_origen[2], strSubLibroCuenta, strTipoAuxiliarCt, monedabase, sCodSucAsiento, "D", 0);
 					
 					if(!hecho){
-						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					
@@ -832,7 +822,6 @@ public class svltProcesarAjuste extends HttpServlet {
 								usuariobatch, vaut.getId().getCodapp(), tasa_cambio_oficial, "E", 
 								observacion, cuenta_destino[2], "", "", monedabase, sCodSucAsiento, "F",  monto_linea );
 					if(!hecho){
-						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					hecho = rcCtrl.registrarAsientoDiarioLogs( session, msgLogs,  fechabatch,  sCodSucAsiento, tipodocumento,
@@ -841,7 +830,6 @@ public class svltProcesarAjuste extends HttpServlet {
 								usuariobatch, vaut.getId().getCodapp(), tasa_cambio_oficial, "E", 
 								observacion, cuenta_destino[2], "", "", monedabase, sCodSucAsiento, "F", 0 );
 					if(!hecho){
-						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					//&& ========== cuenta origen (debitar)
@@ -851,7 +839,6 @@ public class svltProcesarAjuste extends HttpServlet {
 							usuariobatch, vaut.getId().getCodapp(), tasa_cambio_oficial, "E", 
 							observacion, cuenta_origen[2], strSubLibroCuenta, strTipoAuxiliarCt, monedabase, sCodSucAsiento, "F" ,(-1*monto_linea));
 					if(!hecho){
-						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					hecho = rcCtrl.registrarAsientoDiarioLogs( session, msgLogs, fechabatch, sCodSucAsiento, tipodocumento,
@@ -860,7 +847,6 @@ public class svltProcesarAjuste extends HttpServlet {
 								usuariobatch, vaut.getId().getCodapp(), tasa_cambio_oficial, "E", 
 								observacion, cuenta_origen[2], strSubLibroCuenta, strTipoAuxiliarCt, monedabase, sCodSucAsiento, "F", 0);
 					if(!hecho){
-						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 				}
@@ -868,12 +854,6 @@ public class svltProcesarAjuste extends HttpServlet {
 				updateDetalles.add( " update " + PropertiesSystem.ESQUEMA +".pcd_dt_ajuste_excepcion_deposito set numero_documento = " + numerodocjde  +" where iddtaed = " + lineaDetalleAjuste[6] ) ;
 				updateDetalles.add( " update " + PropertiesSystem.ESQUEMA +".ajustes_preconciliacion set estado = 4 where id =  " + lineaDetalleAjuste[7]  ) ;
 			}
-			
-			/*
-			if(hecho){
-				updateDetalles.add( " update " + PropertiesSystem.JDECOM+".F98301 set DESVL = " + NobatchToUse + " WHERE DEPID ='P09800' and DEVERS = 'PRE_CONCIL' AND DEFLDN = 'GLICU' " );
-			}
-			*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();

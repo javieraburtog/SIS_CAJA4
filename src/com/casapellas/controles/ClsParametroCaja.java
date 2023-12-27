@@ -159,7 +159,8 @@ public class ClsParametroCaja {
 		{
 			try
 			{
-			dbC.closedConnection(conn);
+				if (conn!=null)
+					dbC.closedConnection(conn);
 			}
 			catch (Exception e) {
 				LogCajaService.CreateLog("getParametros", "ERR", e.getMessage());

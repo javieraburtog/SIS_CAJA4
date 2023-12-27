@@ -61,7 +61,7 @@ public class QueryConfirmacion {
 				String strWhere = 
 					" WHERE estadocnfr = 'CFR' AND TIPOMOV = 'C' " + 
 					 strInCuentaMoneda  + ( strFechaIni.compareToIgnoreCase("") != 0 ? 
-					" AND  FECHA BETWEEN '"+strFechaIni+"' AND ' " +(strFechaFin.compareToIgnoreCase("") != 0 ? strFechaFin:strFechaIni )+ "'" : "" ) + 
+					" AND  FECHA BETWEEN '"+strFechaIni+"' AND '" +(strFechaFin.compareToIgnoreCase("") != 0 ? strFechaFin:strFechaIni )+ "'" : "" ) + 
 					( strQuery.trim().isEmpty() ? "" : " and lower("+strQtype+") like lower('%"+strQuery+"%')" ) ;	
 					
 				String strSqlQuery = " SELECT @camposC FROM (SELECT @camposT FROM "+PropertiesSystem.ESQUEMA+".DEPOSITO M INNER JOIN " +
@@ -185,18 +185,22 @@ public class QueryConfirmacion {
 			sesion = HibernateUtilPruebaCn.currentSession() ;
 			trans = (newCn = !(sesion.getTransaction().isActive())) ? sesion.beginTransaction() : sesion.getTransaction(); 
 			
+			String strWhere = "WHERE "+strRestriction+" ESTADO= "+Integer.parseInt(strKind)+(strFechaIni.compareToIgnoreCase("")!=0?" AND  FECHA BETWEEN '"+strFechaIni+"'  AND '"+(strFechaFin.compareToIgnoreCase("")!=0?strFechaFin:strFechaIni)+"'":"");
+			strWhere+= (strQuery.trim().compareToIgnoreCase("")!=0?" AND LOWER("+strQtype+") LIKE LOWER('%"+strQuery+"%')" :"") ;
+			
 			String strSql =
-			" select " +
-			" fechacrea," +                                                                     
-			" (select login from ens.usuario where codreg = usercrea fetch first rows only)," +   
+			" SELECT * FROM (select " +
+			" to_char(fechacrea , 'YYYY-MM-DD') as FechaCrea," +                                                                     
+			" (select login from ens.usuario where codreg = usercrea fetch first rows only) AS Usuario," +   
 			" monto_Transaccion," +                                                                    
 			" moneda," +                                                             
 			" codcomp," +
-			" (select trim(drdl01) from ens.vcompania where drky = CODCOMP)," +
+			" coalesce((select trim(drdl01) from " + PropertiesSystem.ESQUEMA + ".vcompania where drky = CODCOMP), '') AS COMPANIA," +
 			" idajusteexcepcion," +
-			" cantidad_documentos " + 
-			" from "+PropertiesSystem.ESQUEMA+".PCD_MT_AJUSTE_EXCEPCION_DEPOSITO" +                           
-			" where estado = 1 " ;                  
+			" cantidad_documentos," + 
+			" estado " +
+			" from "+PropertiesSystem.ESQUEMA+".PCD_MT_AJUSTE_EXCEPCION_DEPOSITO) AS RESULTADOS " +   
+			strWhere  ;                 
 
 			result = (List<Object[]>) sesion.createSQLQuery( strSql )
 					.setFirstResult( (pagina-1) * cantxpagina )
@@ -239,7 +243,7 @@ public class QueryConfirmacion {
 			
 			
 				String strWhere = 
-					"WHERE "+strRestriction+" ESTADO = "+Integer.parseInt(strKind) + (strFechaIni.compareToIgnoreCase("")!=0? " AND  FECHA BETWEEN '"+strFechaIni+"'  AND '"+(strFechaFin.compareToIgnoreCase("")!=0?strFechaFin:strFechaIni)+"'":"")  + 
+					"WHERE "+strRestriction+" ESTADO = " + Integer.parseInt(strKind) + (strFechaIni.compareToIgnoreCase("")!=0? " AND  FECHA BETWEEN '"+strFechaIni+"'  AND '"+(strFechaFin.compareToIgnoreCase("")!=0?strFechaFin:strFechaIni)+"'":"")  + 
 				  (strQuery.trim().compareToIgnoreCase("")!=0?" AND LOWER("+strQtype+") LIKE LOWER('%"+strQuery+"%')" :"") ;
 				
 				String strCampos = 

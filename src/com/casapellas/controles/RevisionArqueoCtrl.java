@@ -1431,7 +1431,7 @@ public class RevisionArqueoCtrl {
 			cr = sesion.createCriteria(Arqueorec.class)
 							.add(Restrictions.eq("id.noarqueo", noarqueo))
 							.add(Restrictions.ilike("id.codcomp", codcomp.trim().toLowerCase(), MatchMode.ANYWHERE))
-							.add(Restrictions.ilike("id.codsuc",  codsuc.trim().toLowerCase(),  MatchMode.ANYWHERE))
+							//.add(Restrictions.ilike("id.codsuc",  codsuc.trim().toLowerCase(),  MatchMode.ANYWHERE))
 							.add(Restrictions.eq("id.caid", caid))
 							.add(Restrictions.in("id.tipodoc", new String[]{"R","S"}));
 			cr.setProjection(Projections.property("id.numrec"));

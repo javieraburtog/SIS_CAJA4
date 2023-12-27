@@ -56,7 +56,7 @@ public class svltRegistrarAjuste extends HttpServlet {
 					
 					lstResults = qc.cargarConfiguracionAjustes_Contador((request.getParameter("fechaInicial").compareToIgnoreCase("")!=0 ? sdfF.format(sdfC.parse(request.getParameter("fechaInicial"))):""),
 														(request.getParameter("fechaFinal").compareToIgnoreCase("")!=0?sdfF.format(sdfC.parse(request.getParameter("fechaFinal"))):""),Integer.parseInt(strPage),
-														 Integer.parseInt(strRp),request.getParameter("sortname"), request.getParameter("sortorder"),request.getParameter("qtype"), request.getParameter("query"),"3","");
+														 Integer.parseInt(strRp),request.getParameter("sortname"), request.getParameter("sortorder"),request.getParameter("qtype"), request.getParameter("query"),"1","");
 			  
 				
 				for(int i=0;i<lstResults.size();i++){   
