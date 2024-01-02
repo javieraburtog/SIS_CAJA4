@@ -159,7 +159,6 @@ public class ClsParametroCaja {
 		{
 			try
 			{
-				if (conn!=null)
 					dbC.closedConnection(conn);
 			}
 			catch (Exception e) {

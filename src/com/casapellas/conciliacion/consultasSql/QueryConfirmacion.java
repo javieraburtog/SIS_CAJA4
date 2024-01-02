@@ -185,22 +185,35 @@ public class QueryConfirmacion {
 			sesion = HibernateUtilPruebaCn.currentSession() ;
 			trans = (newCn = !(sesion.getTransaction().isActive())) ? sesion.beginTransaction() : sesion.getTransaction(); 
 			
-			String strWhere = "WHERE "+strRestriction+" ESTADO= "+Integer.parseInt(strKind)+(strFechaIni.compareToIgnoreCase("")!=0?" AND  FECHA BETWEEN '"+strFechaIni+"'  AND '"+(strFechaFin.compareToIgnoreCase("")!=0?strFechaFin:strFechaIni)+"'":"");
+			/*String strWhere = "WHERE "+strRestriction+" ESTADO= "+Integer.parseInt(strKind)+(strFechaIni.compareToIgnoreCase("")!=0?" AND  FECHA BETWEEN '"+strFechaIni+"'  AND '"+(strFechaFin.compareToIgnoreCase("")!=0?strFechaFin:strFechaIni)+"'":"");
 			strWhere+= (strQuery.trim().compareToIgnoreCase("")!=0?" AND LOWER("+strQtype+") LIKE LOWER('%"+strQuery+"%')" :"") ;
-			
+			*/
 			String strSql =
+			" select " +
+			" fechacrea," +                                                                     
+			" (select login from ens.usuario where codreg = usercrea fetch first rows only)," +   
+			" monto_Transaccion," +                                                                    
+			" moneda," +                                                             
+			" codcomp," +
+			" (select trim(drdl01) from " + PropertiesSystem.ENS + ".vcompania where drky = CODCOMP)," +
+			" idajusteexcepcion," +
+			" cantidad_documentos " + 
+			" from "+PropertiesSystem.ESQUEMA+".PCD_MT_AJUSTE_EXCEPCION_DEPOSITO" +                           
+			" where estado = 1 " ;   
+			
+			/*String strSql =
 			" SELECT * FROM (select " +
 			" to_char(fechacrea , 'YYYY-MM-DD') as FechaCrea," +                                                                     
 			" (select login from ens.usuario where codreg = usercrea fetch first rows only) AS Usuario," +   
 			" monto_Transaccion," +                                                                    
 			" moneda," +                                                             
 			" codcomp," +
-			" coalesce((select trim(drdl01) from " + PropertiesSystem.ESQUEMA + ".vcompania where drky = CODCOMP), '') AS COMPANIA," +
+			" coalesce((select trim(drdl01) from " + PropertiesSystem.ENS2 + ".vcompania where drky = CODCOMP), '') AS COMPANIA," +
 			" idajusteexcepcion," +
 			" cantidad_documentos," + 
 			" estado " +
 			" from "+PropertiesSystem.ESQUEMA+".PCD_MT_AJUSTE_EXCEPCION_DEPOSITO) AS RESULTADOS " +   
-			strWhere  ;                 
+			strWhere  ;   */              
 
 			result = (List<Object[]>) sesion.createSQLQuery( strSql )
 					.setFirstResult( (pagina-1) * cantxpagina )
@@ -338,7 +351,7 @@ public class QueryConfirmacion {
 	@SuppressWarnings("unchecked")
 	public static List<Object[]> filtrarCuentasF0901WC( List<String[]> ctaxconciliador ){
 		List<Object[]> lstCuentas = null;
-
+		Session sesion = HibernateUtilPruebaCn.currentSession();
 		try {
 			
 			String query = "select trim(unineg), trim(cuentaobj), trim(cuentasub), trim(descripcion) " +
@@ -355,7 +368,7 @@ public class QueryConfirmacion {
 				query += "and " + sqlOrCtaConc ;
 			}
 			
-			return lstCuentas = (List<Object[]>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, true, null);
+			return lstCuentas =sesion.createSQLQuery(query).list();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -384,13 +397,7 @@ public class QueryConfirmacion {
 			
 		} catch (Exception error) {
 			error.printStackTrace();
-		} finally {
-			try {
-				sesion.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		} 
 		return lstCuentas;		
 	}
 }

@@ -21,8 +21,8 @@ public class PropertiesSystem {
    // Código de Usuario para Conexión a Base de Datos.
 	//public final static String CN_USRNAME = "APPCP";
 	//public final static String CN_USRPWD  = "APPCP1810";
-	public final static String CN_USRNAME = "PRUEBAE2PD";
-	public final static String CN_USRPWD  = "password";
+	public final static String CN_USRNAME = "APPCP";
+	public final static String CN_USRPWD  = "APPCP1810";
 	
    // Ambiente de Desarrollo/Pruebas, ESQUEMAS de Base de Datos.
    /*public final static String ESQUEMA = "E1GCPMCAJA";
@@ -36,17 +36,17 @@ public class PropertiesSystem {
 	public final static String INV = "E1INV";*/
 	
 	 // Ambiente de Produccion, ESQUEMAS de Base de Datos.
-	   public final static String ESQUEMA = "E2GCPMCAJA";
+	   public final static String ESQUEMA = "GCPMCAJA";
 		public final static String JDEDTA = "PRODDTA920"; 
 		public final static String JDECOM = "PRODCTL920";
-		public final static String QS36F = "E2QS36F" ;
+		public final static String QS36F = "QS36F" ;
 		public final static String GCPDES = "GCPCERT";	
-		public final static String GCPCXC = "E2GCPCXC";
+		public final static String GCPCXC = "GCPCXC";
 		public final static String ENS = "ENS";
-		public final static String GCPSISEVA = "E2GCPSISEV";
-		public final static String INV = "E2INV";
+		public final static String GCPSISEVA = "GCPSISEVA2";
+		public final static String INV = "INV";
 		
-		public final static Boolean Is_Debug_Mode = true;
+		public final static Boolean Is_Debug_Mode = false;
 	
 		
 		// Configuraciones para obtener cuentas

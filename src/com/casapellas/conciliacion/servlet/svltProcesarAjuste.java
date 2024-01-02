@@ -22,6 +22,7 @@ import org.hibernate.Transaction;
 
 import com.casapellas.controles.ConfirmaDepositosCtrl;
 import com.casapellas.controles.ConsolidadoDepositosBcoCtrl;
+import com.casapellas.controles.ReciboCtrlV2;
 import com.casapellas.controles.RevisionArqueoCtrl;
 import com.casapellas.controles.tmp.ReciboCtrl;
 import com.casapellas.controles.tmp.TasaCambioCtrl;
@@ -664,6 +665,7 @@ public class svltProcesarAjuste extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	public boolean crearBatchPorAjuste( Object[]dtaAjusteMaestro, List<Object[]>  dtaAjusteDetalle, Vautoriz vaut, List<String> updateDetalles){
 		boolean hecho = true;
+		String msgErrorProceso;
 		
 		int NobatchToUse;
 		long iMontoTotal;
@@ -675,7 +677,8 @@ public class svltProcesarAjuste extends HttpServlet {
 		
 		Session session = null;
 		Transaction transaction = null;
-		com.casapellas.controles.ReciboCtrl rcCtrl = new com.casapellas.controles.ReciboCtrl();
+		
+		com.casapellas.controles.ReciboCtrlV2 rcCtrl = new com.casapellas.controles.ReciboCtrlV2();
 		
 		try {
 			
@@ -686,6 +689,7 @@ public class svltProcesarAjuste extends HttpServlet {
 			
 			//&& ========== Datos del encabezado del ajuste.
 			Date fechabatch =  new Date() ;
+			int cantidad_docs = Integer.parseInt(String.valueOf( dtaAjusteMaestro[2] ) ) ;
 			String moneda_ajuste = String.valueOf( dtaAjusteMaestro[3] );
 			BigDecimal monto_ajuste = (BigDecimal)dtaAjusteMaestro[4] ;
 			String codcomp = String.valueOf( dtaAjusteMaestro[5] );
@@ -798,6 +802,7 @@ public class svltProcesarAjuste extends HttpServlet {
 								observacion, cuenta_destino[2], "", "", monedabase, sCodSucAsiento, "D", 0);
 					
 					if(!hecho){
+						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					
@@ -808,6 +813,7 @@ public class svltProcesarAjuste extends HttpServlet {
 							observacion, cuenta_origen[2], strSubLibroCuenta, strTipoAuxiliarCt, monedabase, sCodSucAsiento, "D", 0);
 					
 					if(!hecho){
+						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					
@@ -822,6 +828,7 @@ public class svltProcesarAjuste extends HttpServlet {
 								usuariobatch, vaut.getId().getCodapp(), tasa_cambio_oficial, "E", 
 								observacion, cuenta_destino[2], "", "", monedabase, sCodSucAsiento, "F",  monto_linea );
 					if(!hecho){
+						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					hecho = rcCtrl.registrarAsientoDiarioLogs( session, msgLogs,  fechabatch,  sCodSucAsiento, tipodocumento,
@@ -830,6 +837,7 @@ public class svltProcesarAjuste extends HttpServlet {
 								usuariobatch, vaut.getId().getCodapp(), tasa_cambio_oficial, "E", 
 								observacion, cuenta_destino[2], "", "", monedabase, sCodSucAsiento, "F", 0 );
 					if(!hecho){
+						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					//&& ========== cuenta origen (debitar)
@@ -839,6 +847,7 @@ public class svltProcesarAjuste extends HttpServlet {
 							usuariobatch, vaut.getId().getCodapp(), tasa_cambio_oficial, "E", 
 							observacion, cuenta_origen[2], strSubLibroCuenta, strTipoAuxiliarCt, monedabase, sCodSucAsiento, "F" ,(-1*monto_linea));
 					if(!hecho){
+						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 					hecho = rcCtrl.registrarAsientoDiarioLogs( session, msgLogs, fechabatch, sCodSucAsiento, tipodocumento,
@@ -847,6 +856,7 @@ public class svltProcesarAjuste extends HttpServlet {
 								usuariobatch, vaut.getId().getCodapp(), tasa_cambio_oficial, "E", 
 								observacion, cuenta_origen[2], strSubLibroCuenta, strTipoAuxiliarCt, monedabase, sCodSucAsiento, "F", 0);
 					if(!hecho){
+						msgErrorProceso = rcCtrl.error.toString().split("@")[1] ;
 						return false;
 					}
 				}

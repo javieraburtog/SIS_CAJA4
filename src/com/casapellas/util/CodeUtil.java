@@ -207,12 +207,10 @@ public class CodeUtil {
 	public static Object getFromSessionMap(String varname) {
 		Object ob = null;
 		
-		try {
-			if(FacesContext.getCurrentInstance() !=  null && FacesContext.getCurrentInstance().getExternalContext() != null)
+		try {			
 			ob = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(varname) ;
-		} catch (Exception e) {
-			if(FacesContext.getCurrentInstance() !=  null && FacesContext.getCurrentInstance().getExternalContext() != null)
-			LogCajaService.CreateLog("getFromSessionMap", "ERR", e.getMessage());
+		} catch (Exception e) {			
+			//LogCajaService.CreateLog("getFromSessionMap", "ERR", e.getMessage());
 		}
 		return ob; 
 	}
@@ -224,7 +222,7 @@ public class CodeUtil {
 			if(FacesContext.getCurrentInstance() !=  null && FacesContext.getCurrentInstance().getExternalContext() != null)
 			ob = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		} catch (Exception e) {
-			LogCajaService.CreateLog("getCurrentRequest", "ERR", e.getMessage());
+			//LogCajaService.CreateLog("getCurrentRequest", "ERR", e.getMessage());
 		}
 		return ob;
 	}
@@ -241,7 +239,7 @@ public class CodeUtil {
 					.getClientId(FacesContext.getCurrentInstance()));		
 			}
 		} catch (Exception e) {
-			LogCajaService.CreateLog("refreshIgObjects", "ERR", e.getMessage());
+			//LogCajaService.CreateLog("refreshIgObjects", "ERR", e.getMessage());
 		}
 	}
 	public static void refreshIgObjects(Object igObject){
@@ -252,7 +250,7 @@ public class CodeUtil {
 				.getClientId(FacesContext.getCurrentInstance()));		
 		 
 		} catch (Exception e) {
-			LogCajaService.CreateLog("refreshIgObjects", "ERR", e.getMessage());
+			//LogCajaService.CreateLog("refreshIgObjects", "ERR", e.getMessage());
 		}
 	}
 	

@@ -327,6 +327,7 @@ public class LogCajaService {
 			Object objSec = CodeUtil.getFromSessionMap("sevAut");
 			if(objSec != null) {
 				Vautoriz vaut = ((Vautoriz[]) objSec)[0];
+				if(vaut.getId()!= null && vaut.getId().getLogin() != null )
 				usuario = vaut.getId().getLogin(); 
 			}	
 		} catch (Exception e) {

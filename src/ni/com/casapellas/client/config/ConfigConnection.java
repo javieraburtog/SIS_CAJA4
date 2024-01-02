@@ -7,28 +7,28 @@ public class ConfigConnection {
 	
    //Datos para Consumir Web Services de Proyecto CANALES ALTERNOS (Integración con Bancos V1).
 	public static String PROTOCOL = "http";
-	public static String SERVER = "172.17.17.20";
-	public static String PORT = "9083";
+	public static String SERVER = "localhost";
+	public static String PORT = "80";
     public static String CONTEXT_NAME_WS_CAJA = "GCPMCAJAWSREST";
     public static String CONTEXT_NAME_CAJA = "gcpmcajarest";
 
    //Datos para Consumir Web Services de Proyecto FINANCIAMIENTO V1.
     public static String PROTOCOL_WS_FINAN = "http";
-    public static String SERVER_WS_FINAN = "172.17.17.20";
-	public static String PORT_WS_FINAN = "9083";
+    public static String SERVER_WS_FINAN = "localhost";
+	public static String PORT_WS_FINAN = "80";
     public static String CONTEXT_NAME_WS_FINANCIAMIENTO = "GCPFINANCIAMIENTOWSREST";
     public static String CONTEXT_NAME_FINANCIAMIENTO = "gcpfinanciamientorest";
     
-    //Datos para Consumir Web Services de Proyecto CANALES ALTERNOS (Integración con Bancos V2).
+    //Datos para Consumir Web Services de Proyecto CANALES ALTERNOS (Integracion con Bancos V2).
     public static String PROTOCOL_WS_CAJA_N = "http";
-    public static String SERVER_WS_CAJA_N = "172.17.17.20";
-	public static String PORT_WS_CAJA_N = "9083";
+    public static String SERVER_WS_CAJA_N = "localhost";
+	public static String PORT_WS_CAJA_N = "80";
     public static String CONTEXT_NAME_WS_CAJA_N = "GCPCAJAWSRESTV2";
     public static String CONTEXT_NAME_CAJA_N = "gcpcajarest";
     
    // Ambiente de Desarrollo/Pruebas, ESQUEMAS de Base de Datos  
-    public static String SchemaCaja = "E2GCPMCAJA";								// Esquema Sistema de Caja
-    public final static String SchemaENS = "E2ENS";								// Esquema de Entorno de Navegación y Seguridad (ENS)
+    public static String SchemaCaja = "GCPMCAJA";								// Esquema Sistema de Caja
+    public final static String SchemaENS = "ENS";								// Esquema de Entorno de Navegación y Seguridad (ENS)
 	public final static String SchemaJDEDTA = "PRODDTA920";							// Esquema de Jd Edwards E1 
 	public final static String SChemaJDECTL = "PRODCTL920";							// Esquema de Jd Edwards E1 - Tablas compartidas
 	

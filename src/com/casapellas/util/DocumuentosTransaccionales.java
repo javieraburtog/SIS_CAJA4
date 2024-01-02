@@ -2,10 +2,13 @@ package com.casapellas.util;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
 import com.casapellas.controles.ConsolidadoDepositosBcoCtrl;
+import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 
 public class DocumuentosTransaccionales {
-	
+	Session sesion = HibernateUtilPruebaCn.currentSession();
 	public static CatalogoGenerico gettipoTRX() {
 		
 	String query="SELECT TVALALF AS VALOR, TDESC AS DESCRIPCION FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCaja + "' AND TCOD = '"+ PropertiesSystem.tipoTrxContado +"' ";     
@@ -391,10 +394,11 @@ public static String CODIGOCREDOMATIC() {
 	}
 
 public static String USUARIOPRECONCILIACION() {
-	
+	Session sesion = HibernateUtilPruebaCn.currentSession();
 	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroConciliacion + "' AND TCOD = '"+ PropertiesSystem.USUARIOPRECONCILIACION +"' ";     
 		
-		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+	@SuppressWarnings("unchecked")
+	List<Object> tipoTRX= sesion.createSQLQuery(query).list();
 		
 		if(tipoTRX.size()>0)
 		return tipoTRX.get(0).toString();
@@ -403,10 +407,11 @@ public static String USUARIOPRECONCILIACION() {
 	}
 
 public static String ENSADMINISTRADORCAJA() {
-	
+	Session sesion = HibernateUtilPruebaCn.currentSession();
 	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroConciliacion + "' AND TCOD = '"+ PropertiesSystem.ENSADMINISTRADORCAJA +"' ";     
 		
-		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+	@SuppressWarnings("unchecked")
+	List<Object> tipoTRX= sesion.createSQLQuery(query).list();
 		
 		if(tipoTRX.size()>0)
 		return tipoTRX.get(0).toString();
@@ -414,10 +419,11 @@ public static String ENSADMINISTRADORCAJA() {
 		return null;
 	}
 public static String ENSCONCILIADORPRINCIPAL() {
-	
+	Session sesion = HibernateUtilPruebaCn.currentSession();
 	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroConciliacion + "' AND TCOD = '"+ PropertiesSystem.ENSCONCILIADORPRINCIPAL +"' ";     
 		
-		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		@SuppressWarnings("unchecked")
+		List<Object> tipoTRX= sesion.createSQLQuery(query).list();
 		
 		if(tipoTRX.size()>0)
 		return tipoTRX.get(0).toString();
@@ -425,10 +431,11 @@ public static String ENSCONCILIADORPRINCIPAL() {
 		return null;
 	}
 public static String ENSCONCILIADORSUPERVISOR() {
-	
+	Session sesion = HibernateUtilPruebaCn.currentSession();
 	String query="SELECT TVALALF FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroConciliacion + "' AND TCOD = '"+ PropertiesSystem.ENSCONCILIADORSUPERVISOR +"' ";     
 		
-		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+	@SuppressWarnings("unchecked")
+	List<Object> tipoTRX= sesion.createSQLQuery(query).list();
 		
 		if(tipoTRX.size()>0)
 		return tipoTRX.get(0).toString();
