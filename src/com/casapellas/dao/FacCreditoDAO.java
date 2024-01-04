@@ -4400,7 +4400,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 		    	
 				//&& ========== cargar afiliados
 		    	sMoneda = cmbMoneda.getValue().toString() ;
-				sLineaFactura = (hFac.getId().getCodunineg().trim()).substring(2, 4);
+				sLineaFactura = (hFac.getId().getCodunineg().trim()).substring(2, 5);
 		    	
 				lstAfiliado = vf01.getId().getCasktpos() == 'N' ?
 								getLstAfiliados(iCajaId, hFac.getId()
@@ -4925,7 +4925,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 	    	m.put("lstMetodosPagoCre", lstMetodosPago);
 	    	
 	    	//&& ========== cargar afiliados
-			String sLineaFactura = (hFac.getId().getCodunineg().trim()).substring(2, 4);
+			String sLineaFactura = (hFac.getId().getCodunineg().trim()).substring(2, 5);
 	    	lstAfiliado = caja.getId().getCasktpos() == 'N' ?
 					getLstAfiliados(caja.getId().getCaid(), hFac.getId()
 							.getCodcomp(), sLineaFactura, sMoneda):
