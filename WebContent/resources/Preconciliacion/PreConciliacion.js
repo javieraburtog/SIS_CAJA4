@@ -599,13 +599,11 @@ var rows = new Array()  ;
 		                    ],
 		                    
 		        searchitems : [    
-			                //{display: 'Cuenta', name : 'Cuenta'},
-			                //{display: 'Referencia', name : 'Referencia'},
-			                //{display: 'Banco', name : 'Banco'},
+			                {display: 'Cuenta', name : 'Cuenta'},
+			                {display: 'Referencia', name : 'Referencia'},
+			                {display: 'Banco', name : 'Banco'},
 			                {display: 'Moneda', name : 'Moneda'},
-			                //{display: 'Caja', name : 'caja'},
-			                {display: 'Compania', name : 'Compania'},
-			                {display: 'Fecha', name : 'FechaCrea'},
+			                {display: 'Caja', name : 'caja'},
 			                {display: 'Usuario', name : 'Usuario'}
 			                 ] ,  
 		        sortname: "",
