@@ -802,9 +802,7 @@ public class FacContadoDAO {
 				m.put("sMsgErrorSobrante", sMensajeError);
 				throw new Exception(sMensajeError);
 			}else{
-				sCoCuentaDI = (sCodunineg.length()==4)? 
-								sCodunineg.substring(0,2):
-								sCodunineg;
+				sCoCuentaDI = sCodunineg;
 				sCuentaDI = vCtaDI.getCuenta().trim();//sCodunineg+"."+sCtaOb+ (sCtaSub==" "?"":".") +sCtaSub;				
 			}
 			sAsientoSuc  = sCuentaCaja[2];
@@ -885,7 +883,7 @@ public class FacContadoDAO {
 											vCtaDI.getId().getGmsub().trim(), valoresJdeIns[5],	mpago.getMoneda(), (iMontoDom*-1), 
 											sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 											new BigDecimal(dTasaJDE), sTipoCliente,"CRDTO CTA  X "+sTipo+" PAGO",
-											sCoCuentaDI, "", "",mpago.getMoneda(),sCoCuentaDI,valoresJdeIns[4],  (iMonto*-1));
+											sCuentaCaja[2], "", "",mpago.getMoneda(),sCoCuentaDI,valoresJdeIns[4],  (iMonto*-1));
 							
 							if(bHecho){
 								bHecho = rcCtrl.registrarAsientoDiarioLogs(s,  msgLogs, dtFecha, sAsientoSuc, valoresJdeIns[1], iNobatchNodoc[1], 2.0,
@@ -894,7 +892,7 @@ public class FacContadoDAO {
 													vCtaDI.getId().getGmsub().trim(), valoresJdeIns[2],	mpago.getMoneda(), (iMonto*-1), 
 													sConcepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 													BigDecimal.ZERO, sTipoCliente,"CRDTO CTA  X "+sTipo+" PAGO",
-													sCoCuentaDI, "", "", mpago.getMoneda(),sCoCuentaDI,valoresJdeIns[4], 0);
+													sCuentaCaja[2], "", "", mpago.getMoneda(),sCoCuentaDI,valoresJdeIns[4], 0);
 								if(!bHecho)
 									sMensajeError = "No se ha podido registrar  línea 2.0 cA de asientos para registro de Excedente de Pagos ";
 							}else{
