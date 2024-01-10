@@ -418,6 +418,13 @@ public class MenuDAO {
 							fc.getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME + '/' + url);
 							break;
 						}
+						else if(secciones[i].getId().getCodsec().equals("S000000547")){
+							Vautoriz[] vAut = (Vautoriz[]) m.get("sevAut");
+							String url = secciones[i].getId().getUrl() + "&id=" + vAut[0].getId().getLogin().toString();
+							System.out.println("Redirige a: " + "/"+PropertiesSystem.CONTEXT_NAME + '/' + url);
+							fc.getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME + '/' + url);
+							break;
+						}
 					}else if(lastItem.equals("Salir")){
 						HttpSession session = (HttpSession) FacesContext
 								.getCurrentInstance().getExternalContext()
