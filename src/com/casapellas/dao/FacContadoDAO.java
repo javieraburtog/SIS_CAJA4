@@ -14587,7 +14587,7 @@ public class FacContadoDAO {
 		List<MetodosPago> lstMetodosPago = new ArrayList<MetodosPago>();
 		List<Hfactura> lstFacturasSelected = new ArrayList<Hfactura>();
 		
-		String peticionPago = new String();
+		
 		int ihascode =  0; 		
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss ss");
 		Date dtIniciaPago = new Date();
@@ -14742,12 +14742,7 @@ public class FacContadoDAO {
 			
 			//*********************************************************
 			try{ihascode = ev.hashCode() ;}catch(Exception e ){ }
-			peticionPago = "Codigo:["+ihascode+"] >>> Pago a factura "+hFac.getNofactura() + ", cliente "
-					+hFac.getCodcli() +", Caja: "+caja.getId().getCaid()
-					+", Recibo: "+iNumrec+", Peticion invocada en: "
-					+ new PropertiesSystem().URLSIS +" >>> "
-					+ new PropertiesSystem().WEBBROWSER +" >>> Usuario: "+vautoriz[0].getId().getLogin();
-
+			
 			
 			//&& ======== remover sobrante de los pagos.
 			if( m.containsKey("sco_SobrantePago") ){
