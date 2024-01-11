@@ -802,7 +802,7 @@ public class FacContadoDAO {
 				m.put("sMsgErrorSobrante", sMensajeError);
 				throw new Exception(sMensajeError);
 			}else{
-				sCoCuentaDI = sCodunineg;
+				sCoCuentaDI =  vCtaDI.getId().getGmco().trim(); //sCodunineg;
 				sCuentaDI = vCtaDI.getCuenta().trim();//sCodunineg+"."+sCtaOb+ (sCtaSub==" "?"":".") +sCtaSub;				
 			}
 			sAsientoSuc  = sCuentaCaja[2];
@@ -4536,7 +4536,7 @@ public class FacContadoDAO {
 //												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) asiento de diario para cuenta de venta de contado el pago es menor al monto de la factura" );
 												
 												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[2],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
+																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
 																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
 																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
 												if (bContabilizado) {
