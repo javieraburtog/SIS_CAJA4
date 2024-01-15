@@ -9692,8 +9692,8 @@ public class RevisionArqueoDAO {
 				
 				Vautoriz[] vAut = (Vautoriz[])CodeUtil.getFromSessionMap( "sevAut");
 				
-				if (vAut[0].getId().getCodper().compareTo(cajaparm.getParametros("33", "0", "ENS_CONCILI_PRIN").getValorAlfanumerico().toString())  == 0 || 
-					vAut[0].getId().getCodper().compareTo(cajaparm.getParametros("33", "0", "ENS_CONCIL_SUPER").getValorAlfanumerico().toString()) == 0 ){
+				if (vAut[0].getId().getCodper().compareTo(cajaparm.getParametros("34", "0", "ENS_CONCILI_PRIN").getValorAlfanumerico().toString())  == 0 || 
+					vAut[0].getId().getCodper().compareTo(cajaparm.getParametros("34", "0", "ENS_CONCIL_SUPER").getValorAlfanumerico().toString()) == 0 ){
 					
 					String sql = "select * from " + PropertiesSystem.ESQUEMA +".Vf55ca01 where castat = 'A' " ; 
 					List<Vf55ca01> cajas = (ArrayList<Vf55ca01>)ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, true, Vf55ca01.class);
