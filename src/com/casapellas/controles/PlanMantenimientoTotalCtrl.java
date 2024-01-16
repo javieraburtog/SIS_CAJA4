@@ -239,7 +239,7 @@ public class PlanMantenimientoTotalCtrl {
 						
 				ctaBnfcuenta = dtactaExt[0].trim();
 				ctaBnfGmaid = dtactaExt[1];
-				ctaBnfMcu = companiaRpkco; // dtactaExt[3]; Aqui va el codigo de la compania columna GLCO
+				ctaBnfMcu = dtactaExt[3]; // Aqui va el codigo de la compania columna GLCO companiaRpkco
 			    ctaBnfObj = dtactaExt[4];
 				ctaBnfSub = dtactaExt[5];
 				
@@ -268,7 +268,7 @@ public class PlanMantenimientoTotalCtrl {
 								( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
 								moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, lngMontoFormaDePagoExt, concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 								mp.getTasa(),  //tasaoficial, //
-								"", observacion, ctaBnfMcu,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
+								"", observacion, companiaRpkco,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 								companiaRpkco, "F", 0 );
 					
 					
@@ -280,7 +280,7 @@ public class PlanMantenimientoTotalCtrl {
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, lngMontoFormaDePagoNac, concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, ctaBnfMcu,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
+							"", observacion, companiaRpkco,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
 					
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -288,7 +288,7 @@ public class PlanMantenimientoTotalCtrl {
 					
 					ctaBnfcuenta = dtactaNac[0].trim();
 					ctaBnfGmaid = dtactaNac[1];
-					ctaBnfMcu = companiaRpkco; //dtactaNac[3]; Aqui va el codigo de la compania columna GLCO
+					ctaBnfMcu = dtactaNac[3]; // Aqui va el codigo de la compania columna GLCO companiaRpkco
 					ctaBnfObj = dtactaNac[4];
 					ctaBnfSub = dtactaNac[5];
 				
@@ -296,7 +296,7 @@ public class PlanMantenimientoTotalCtrl {
 							( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, ctaBnfMcu,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
+							"", observacion, companiaRpkco,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 							companiaRpkco, "F", 0);
 					
 					if(!hecho){
@@ -307,7 +307,7 @@ public class PlanMantenimientoTotalCtrl {
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoNac*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial,//
-							"", observacion, ctaBnfMcu,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
+							"", observacion, companiaRpkco,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
 	
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -327,7 +327,7 @@ public class PlanMantenimientoTotalCtrl {
 								( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
 								moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 								mp.getTasa(),  //tasaoficial, //
-								"", observacion, ctaBnfMcu,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
+								"", observacion, companiaRpkco,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 								companiaRpkco, "F", 0 );
 					
 					
@@ -339,7 +339,7 @@ public class PlanMantenimientoTotalCtrl {
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, ((lngMontoFormaDePagoNac-lngMontoFormaDePago)*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, ctaBnfMcu,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
+							"", observacion, companiaRpkco,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
 					
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -347,7 +347,7 @@ public class PlanMantenimientoTotalCtrl {
 					
 					ctaBnfcuenta = dtactaNac[0].trim();
 					ctaBnfGmaid = dtactaNac[1];
-					ctaBnfMcu = companiaRpkco; //dtactaNac[3]; Aqui va el codigo de la compania columna GLCO
+					ctaBnfMcu = dtactaNac[3]; // Aqui va el codigo de la compania columna GLCO
 					ctaBnfObj = dtactaNac[4];
 					ctaBnfSub = dtactaNac[5];
 				
@@ -355,7 +355,7 @@ public class PlanMantenimientoTotalCtrl {
 							( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, ctaBnfMcu,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
+							"", observacion, companiaRpkco,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 							companiaRpkco, "F", 0);
 					
 					if(!hecho){
@@ -366,7 +366,7 @@ public class PlanMantenimientoTotalCtrl {
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
 							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoNac-lngMontoFormaDePago), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial,//
-							"", observacion, ctaBnfMcu,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
+							"", observacion, companiaRpkco,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
 	
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -380,10 +380,10 @@ public class PlanMantenimientoTotalCtrl {
 						String sCtaSubDif = ""; //"01";
 						
 						ClsParametroCaja servCajaParametro = new ClsParametroCaja();
-						CajaParametro cajaParametro = servCajaParametro.getParametros("11", "0", String.format("CTA_INGRESO_%s", codigo_compania.trim()));
+						CajaParametro cajaParametro = servCajaParametro.getParametros("10", "0", String.format("CTA_PERDIDA_%s", codigo_compania.trim()));
 						
 						if (cajaParametro == null) {
-							return strMensajeProceso = "No se encuentra la configuracion asociada a las cuentas por diferencial cambiario CTA_INGRESO_" + companiaRpkco;
+							return strMensajeProceso = "No se encuentra la configuracion asociada a las cuentas por diferencial cambiario CTA_PERDIDA_" + companiaRpkco;
 						}
 						
 						sCtaObDif = cajaParametro.getCodigoCuentaObjeto().trim();
@@ -404,7 +404,10 @@ public class PlanMantenimientoTotalCtrl {
 						String ctaBnfMcuD = cuenta_diferencial.getId().getGmmcu();
 						String ctaBnfObjD = cuenta_diferencial.getId().getGmobj();
 						String ctaBnfSubD = cuenta_diferencial.getId().getGmsub(); 
-						String ctaBnfcuentaD = ctaBnfMcuD+"."+ctaBnfObjD+"."+ctaBnfSubD;
+						String ctaBnfcuentaD = ctaBnfMcuD+"."+ctaBnfObjD; //+"."+ctaBnfSubD;
+						if (ctaBnfSubD.trim().length() > 0) {
+							ctaBnfcuentaD = ctaBnfcuentaD+"."+ctaBnfSubD.trim();
+						}
 						String companiaCuenta = cuenta_diferencial.getId().getGmco().trim();
 						
 						hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
