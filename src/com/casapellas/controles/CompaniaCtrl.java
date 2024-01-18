@@ -72,7 +72,8 @@ public class CompaniaCtrl {
 					+ " AND TRIM(CAST(mcrp10 AS VARCHAR(3))) = '" +  linea.trim()+"'";
 			
 
-			List<String> lstUnineg = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, null, true);
+			List<Object> lstUnineg = ConsolidadoDepositosBcoCtrl.executeSqlQuery(sql, null, true);
+			
 			
 			if(lstUnineg == null || lstUnineg.isEmpty() )
 				return codunineg = "" ;

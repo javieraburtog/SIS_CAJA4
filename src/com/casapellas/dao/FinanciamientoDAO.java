@@ -5057,8 +5057,12 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 				lstSolicitud = (List) m.get("fin_lstSolicitud");				
 				sCodunineg = CompaniaCtrl.leerUnidadNegocioPorLineaSucursal(hFac.getId().getCodsuc(), hFac.getId().getLinea()); 
 				
+				
 				if( sCodunineg.trim().isEmpty() )
-					sCodunineg = hFac.getId().getCodsuc().substring(3, 5) + hFac.getId().getLinea().trim();
+					{
+					lblMensajeError.setValue("No se ha podido obtener la unidad de negocio, intentar nuevamente!");
+					insertado = false;
+					}
 		
 				CodeUtil.putInSessionMap("Fn_CodUninegRecibo", sCodunineg.trim());
 				CodeUtil.putInSessionMap("Fn_MontoAplicadoRecibo", Double.toString( dMontoAplicar ) );
