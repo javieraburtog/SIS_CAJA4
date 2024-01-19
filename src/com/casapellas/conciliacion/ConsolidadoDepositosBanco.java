@@ -1602,7 +1602,7 @@ public class ConsolidadoDepositosBanco {
 				"select ( " +
 				"   trim( cast ( f23.d3mcu  as varchar(12) ccsid 37 ) ) ||'.'|| trim( cast ( f23.d3obj  as varchar(6) ccsid 37) ) ||'.'||  trim(cast ( f23.d3sub  as varchar(8) ccsid 37 ) ) ||'@@@'|| "+
 				"	trim( cast ( f09.gmaid as varchar(8) ccsid 37 ) )    ||'@@@'|| "+ 
-				"	trim( right( trim( cast ( f23.d3mcu as varchar(12) ccsid 37 ) ),  2 ) )  ||'@@@'|| "+
+				"	trim( trim( cast ( f09.GMCO as varchar(12) ccsid 37 ) ) )  ||'@@@'|| "+
 				"	trim( cast ( f23.d3mcu  as varchar(12) ccsid 37 ) )  ||'@@@'|| "+
 				"	trim( cast ( f23.d3obj  as varchar(6) ccsid 37 ) )   ||'@@@'|| "+
 				"	trim( cast ( f23.d3sub  as varchar(8) ccsid 37 ) )   ||'@@@'|| "+
