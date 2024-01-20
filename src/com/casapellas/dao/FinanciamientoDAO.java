@@ -5055,14 +5055,13 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 				sCajero = (String) m.get("sNombreEmpleado");
 				
 				lstSolicitud = (List) m.get("fin_lstSolicitud");				
-				sCodunineg = CompaniaCtrl.leerUnidadNegocioPorLineaSucursal(hFac.getId().getCodsuc(), hFac.getId().getLinea()); 
-				
+				sCodunineg = CompaniaCtrl.leerUnidadNegocioPorLineaSucursal(hFac.getId().getCodsuc(), hFac.getId().getLinea()); 				
 				
 				if( sCodunineg.trim().isEmpty() )
-					{
+				{
 					lblMensajeError.setValue("No se ha podido obtener la unidad de negocio, intentar nuevamente!");
-					insertado = false;
-					}
+					return insertado = false;
+				}
 		
 				CodeUtil.putInSessionMap("Fn_CodUninegRecibo", sCodunineg.trim());
 				CodeUtil.putInSessionMap("Fn_MontoAplicadoRecibo", Double.toString( dMontoAplicar ) );
@@ -5209,6 +5208,7 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 			m.put("iNumRecFinan", iNumrec);
 			
 		}catch(Exception ex){
+			LogCajaService.CreateLog("insertarRecibo", "ERR", ex.getMessage());			
 			insertado = false;
 			ex.printStackTrace();
 		}
@@ -5640,6 +5640,10 @@ public boolean generarIF(Connection cn,Finanhdr fh,Finandet fd, BigDecimal bdTas
 		} else{
 			dwMensajeError.setWindowState("normal");
 		}
+		
+		//Cerrar la session para liberar los recursos antes de iniciar el proceso del recibo
+		 HibernateUtilPruebaCn.closeSession();
+		
 	}
 	
 	public boolean crearHistoricoCuotaFinancimiento( Session session, List<Finandet> lstFacturasSelected, int caid, 
