@@ -337,8 +337,8 @@ public class ProcesarReciboRG {
 			ReciboF03B13 f03b13 = new ReciboF03B13(
 					 String.valueOf( numeroReciboJde ), 
 					 "", 
-					 "0", // String.valueOf(codigoCliente), 
-					 "0", // String.valueOf(codigoCliente), 
+					  String.valueOf(codigoCliente), 
+					  String.valueOf(codigoCliente), 
 					 sucursal, 
 					 String.valueOf(numeroBatchJde),
 					 "0", // String.valueOf(codigoClientePadre), 
