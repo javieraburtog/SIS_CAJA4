@@ -902,7 +902,7 @@ public class svltProcesarAjuste extends HttpServlet {
 			String strSqlQueryExecute =
 				"select trim(gmmcu) ||'.'|| trim(gmobj) ||'.'|| trim(gmsub)   ||'@@@'|| "+
 					"trim(gmaid) ||'@@@'||  "+
-					"right( trim( gmco ),  2 ) ||'@@@'||  "+
+					"trim( gmco ) ||'@@@'||  "+
 					"trim(gmmcu) ||'@@@'|| "+
 					"trim(gmobj) ||'@@@'|| "+
 					"trim(gmsub) ||'@@@'|| "+

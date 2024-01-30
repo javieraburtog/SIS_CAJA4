@@ -1629,7 +1629,7 @@ public class ConsolidadoDepositosBanco {
 				" select 	" +
 				" trim( cast ( f09.gmmcu  as varchar(12) ccsid 37 ) ) ||'.'|| trim( cast ( f09.gmobj  as varchar(6) ccsid 37) ) ||'.'||  trim(cast ( f09.gmsub  as varchar(8) ccsid 37 ) ) ||'@@@'||  "+
 				" trim( cast ( f09.gmaid as varchar(8) ccsid 37 ) )  ||'@@@'|| "+
-				" trim( right( trim( cast ( f09.gmmcu as varchar(12) ccsid 37 ) ),  2 ) )  ||'@@@'|| "+
+				" trim( cast ( f09.gmco as varchar(12)ccsid 37 ) )  ||'@@@'|| "+
 				" trim( cast ( f09.gmmcu  as varchar(12) ccsid 37 ) ) ||'@@@'|| "+
 				" trim( cast ( f09.gmobj  as varchar(6) ccsid 37 )  ) ||'@@@'|| "+
 				" trim( cast ( f09.gmsub  as varchar(8) ccsid 37 )  ) ||'@@@'|| "+
@@ -1655,7 +1655,7 @@ public class ConsolidadoDepositosBanco {
 			strSqlQueryExecute =
 				"select trim(gmmcu) ||'.'|| trim(gmobj) ||'.'|| trim(gmsub)   ||'@@@'|| "+
 					"trim(gmaid) ||'@@@'||  "+
-					"right( trim( gmco ),  2 ) ||'@@@'||  "+
+					"trim( gmco ) ||'@@@'||  "+
 					"trim(gmmcu) ||'@@@'|| "+
 					"trim(gmobj) ||'@@@'|| "+
 					"trim(gmsub) ||'@@@'|| "+
@@ -1687,7 +1687,7 @@ public class ConsolidadoDepositosBanco {
 			strSqlQueryExecute =
 				"select trim(gmmcu) ||'.'|| trim(gmobj) || (case when trim(gmsub) = '' then '' else '.' || trim(gmsub) end )  ||'@@@'|| "+
 					"trim(gmaid) ||'@@@'||  "+
-					"right( trim( gmmcu),  2 ) ||'@@@'||  "+
+					"trim( gmco ) ||'@@@'||  "+
 					"trim(gmmcu) ||'@@@'|| "+
 					"trim(gmobj) ||'@@@'|| "+
 					"  (case when trim(gmsub) = '' then '    @@@' else  trim(gmsub) end ) " +
@@ -1711,7 +1711,7 @@ public class ConsolidadoDepositosBanco {
 			strSqlQueryExecute =
 				"select trim(gmmcu) ||'.'|| trim(gmobj) ||'.'|| trim(gmsub)   ||'@@@'|| "+
 					"trim(gmaid) ||'@@@'||  "+
-					"right( trim( gmco ),  2 ) ||'@@@'||  "+
+					"trim( gmco ) ||'@@@'||  "+
 					"trim(gmmcu) ||'@@@'|| "+
 					"trim(gmobj) ||'@@@'|| "+
 					"trim(gmsub) ||'@@@'|| "+
@@ -1742,7 +1742,7 @@ public class ConsolidadoDepositosBanco {
 			strSqlQueryExecute =
 				"select trim(gmmcu) ||'.'|| trim(gmobj) ||'.'|| trim(gmsub)   ||'@@@'|| "+
 					"trim(gmaid) ||'@@@'||  "+
-					"right( trim( gmco ),  2 ) ||'@@@'||  "+
+					"trim( gmco ) ||'@@@'||  "+
 					"trim(gmmcu) ||'@@@'|| "+
 					"trim(gmobj) ||'@@@'|| "+
 					"trim(gmsub) ||'@@@'|| "+
