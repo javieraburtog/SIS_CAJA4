@@ -328,6 +328,7 @@ public class PrimaReservaDAO {
 		} catch (Exception e) {
 			proforma_valida = false;
 			e.printStackTrace(); 
+			LogCajaService.CreateLog("consultarProformaRepuestos", "ERR", e.getMessage());
 		}finally{
 			
 			if(proforma_valida){
@@ -365,6 +366,7 @@ public class PrimaReservaDAO {
 			
 		} catch (Exception e) {
 			e.printStackTrace(); 
+			LogCajaService.CreateLog("procesarDonacionesIngresadas", "ERR", e.getMessage());
 		}finally{
 			msgValidaIngresoDonacion.setValue(msg);
 			CodeUtil.refreshIgObjects(new Object[]{msgValidaIngresoDonacion}) ;
@@ -462,6 +464,7 @@ public class PrimaReservaDAO {
 		} catch (Exception e) {
 			msg = "Donación no pudo ser aplicada";
 			e.printStackTrace(); 
+			LogCajaService.CreateLog("agregarMontoDonacion", "ERR", e.getMessage());
 		}finally{
 		
 			msgValidaIngresoDonacion.setValue(msg);
@@ -523,6 +526,7 @@ public class PrimaReservaDAO {
 		} catch (Exception e) {
 			msg=" Error al cargar interfaz para donaciones " ;
 			e.printStackTrace(); 
+			LogCajaService.CreateLog("mostrarVentanaDonaciones", "ERR", e.getMessage());
 		}finally{
 			
 			valido = msg.isEmpty();
@@ -549,6 +553,7 @@ public class PrimaReservaDAO {
 			m.put("metodopagoborrar", mPago);
 		} catch (Exception e) {
 			e.printStackTrace();
+			LogCajaService.CreateLog("mostrarBorrarPago", "ERR", e.getMessage());
 		}
 		dwBorrarPago.setWindowState("normal");
 	}
@@ -649,6 +654,7 @@ public class PrimaReservaDAO {
 		}catch(Exception ex){
 			bHecho = false;
 			ex.printStackTrace();
+			LogCajaService.CreateLog("anularRecibo", "ERR", ex.getMessage());
 		}
 		finally{
 //			try {cn.close();} catch (Exception e) {}		
@@ -786,6 +792,7 @@ public class PrimaReservaDAO {
 			}			
 		}catch(Exception ex){
 			ex.printStackTrace();
+			LogCajaService.CreateLog("ImprimirVoucher", "ERR", ex.getMessage());
 		}
 	}
 /***********************************************************************************************************************/
@@ -810,6 +817,7 @@ public class PrimaReservaDAO {
 		}catch(Exception ex){
 			bPago = false;
 			ex.printStackTrace();
+			LogCajaService.CreateLog("anularPagosSP", "ERR", ex.getMessage());
 		}
 		return bPago;
 	}	
@@ -918,6 +926,7 @@ public class PrimaReservaDAO {
 			 bHecho = false;
 			 lblMensajeValidacion.setValue("Error en aplicarPagoSocketPos!!!" + ex);
 			 ex.printStackTrace();
+				LogCajaService.CreateLog("AplicarPagosSocketPos", "ERR", ex.getMessage());
 		}
 		return bHecho;
 	}
@@ -990,6 +999,7 @@ public class PrimaReservaDAO {
 		} catch (Exception error) {
 			Afiliados = new ArrayList();
 			error.printStackTrace();
+			LogCajaService.CreateLog("getLstAfiliadosSocketPos", "ERR", error.getMessage());
 		}
 		return Afiliados;
 	} 
@@ -1034,6 +1044,7 @@ public class PrimaReservaDAO {
 			}	
 		}catch(Exception ex){
 			ex.printStackTrace();
+			LogCajaService.CreateLog("setVoucherManual", "ERR", ex.getMessage());
 		}
 	}
 /*************************************************************************************************************************/	
@@ -1072,6 +1083,7 @@ public class PrimaReservaDAO {
 			
 		}catch(Exception ex){
 			ex.printStackTrace();
+			LogCajaService.CreateLog("setIngresoManual", "ERR", ex.getMessage());
 		}
 	}
 /***********************************************************************************************************/	
@@ -1117,6 +1129,7 @@ public class PrimaReservaDAO {
 		} catch (Exception error) {
 			objConfigComp = null;
 			error.printStackTrace();
+			LogCajaService.CreateLog("generarObjConfig", "ERR", error.getMessage());
 		}
 	}
 /******************************************************************************************/
@@ -1229,6 +1242,7 @@ public class PrimaReservaDAO {
 			sMensaje += error.getCause();
 			m.put("MsgErrorJDE",sMensaje);
 			error.printStackTrace();
+			LogCajaService.CreateLog("guardarAsientosFCV", "ERR", error.getMessage());
 		}
 		return bHecho;
 	}
@@ -1260,6 +1274,7 @@ public class PrimaReservaDAO {
 		} catch (Exception error) {
 			bHecho = false;
 			error.printStackTrace();
+			LogCajaService.CreateLog("leerTasaJDExFecha", "ERR", error.getMessage());
 		}
 		return bHecho;
 	}
@@ -1338,6 +1353,7 @@ public class PrimaReservaDAO {
 			}
 		} catch (Exception error) {
 			error.printStackTrace();
+			LogCajaService.CreateLog("aplicarCambio", "ERR", error.getMessage());
 		}
 	}
 /*************************************************************************************/
@@ -1462,6 +1478,7 @@ public class PrimaReservaDAO {
 			
 		} catch (Exception error) {
 			error.printStackTrace();
+			LogCajaService.CreateLog("determinarCambio", "ERR", error.getMessage());
 		}
 	}	
 	
@@ -1569,6 +1586,7 @@ public class PrimaReservaDAO {
 			}
 		} catch (Exception error) {
 			error.printStackTrace();
+			LogCajaService.CreateLog("FijarMontoAplicado", "ERR", error.getMessage());
 		}
 	}
 /***********************************************************/
@@ -1624,6 +1642,7 @@ public class PrimaReservaDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			LogCajaService.CreateLog("resetResumenPago", "ERR", e.getMessage());
 		}
 	}
 	public void selecionarMonedaAplicar(ValueChangeEvent ev){
@@ -1648,6 +1667,7 @@ public class PrimaReservaDAO {
 
 		} catch (Exception error) {
 			error.printStackTrace();
+			LogCajaService.CreateLog("selecionarMonedaAplicar", "ERR", error.getMessage());
 		}
 	}
 	
@@ -1685,6 +1705,7 @@ public class PrimaReservaDAO {
 			
 		} catch (Exception error) { 
 			error.printStackTrace();
+			LogCajaService.CreateLog("actualizarInfoCliente", "ERR", error.getMessage());
 		}
 	}
 
@@ -1724,6 +1745,7 @@ public class PrimaReservaDAO {
 			}
 		} catch (Exception error) {
 			error.printStackTrace();
+			LogCajaService.CreateLog("cambiarTasaJdexFecha", "ERR", error.getMessage());
 		}
 	}
 /*******************************************************************************/
@@ -1847,6 +1869,7 @@ public class PrimaReservaDAO {
 			}
 		} catch (Exception error) {
 			error.printStackTrace();
+			LogCajaService.CreateLog("guardarDC", "ERR", error.getMessage());
 		}
 		return bHecho;
 	}
@@ -1938,6 +1961,7 @@ public class PrimaReservaDAO {
 			bHecho = false;
 			m.put("MsgErrorJDE", "Error al registrar batchs para diferencial cambiario: Error de sistema: "+error) ;
 			error.printStackTrace();
+			LogCajaService.CreateLog("guardarDifCambiario", "ERR", error.getMessage());
 		}
 		return bHecho;
 	}
@@ -2210,6 +2234,7 @@ public class PrimaReservaDAO {
 			bHecho = false;
 			error.printStackTrace();
 			m.put("MsgErrorJDE", "No se ha podido registrar el Recibo de primas");
+			LogCajaService.CreateLog("realizarTransJDE", "ERR", error.getMessage());
 		}
 		return bHecho;
 	}
@@ -2257,6 +2282,7 @@ public class PrimaReservaDAO {
 			
 		} catch (Exception error) {
 			error.printStackTrace();
+			LogCajaService.CreateLog("limpiarPantalla", "ERR", error.getMessage());
 		}
 	}
 /*********************************************************************************/
@@ -2352,6 +2378,7 @@ public class PrimaReservaDAO {
 			
 		} catch (Exception error) { 
 			error.printStackTrace();
+			LogCajaService.CreateLog("cambiarUnineg", "ERR", error.getMessage());
 		} finally{
 			
 			ConsolidadoDepositosBcoCtrl.isNewSession = nuevaConexion;
@@ -2405,6 +2432,7 @@ public class PrimaReservaDAO {
 			}
 		} catch (Exception error) {
 			error.printStackTrace(); 
+			LogCajaService.CreateLog("CambiarSucursal", "ERR", error.getMessage());
 		}
 
 	}
@@ -2440,6 +2468,7 @@ public class PrimaReservaDAO {
 			 
 		} catch (Exception error) { 
 			error.printStackTrace();
+			LogCajaService.CreateLog("actualizarInfoCliente", "ERR", error.getMessage());
 		}
 		
 	}
@@ -2826,6 +2855,7 @@ public void cancelarIncersion(ActionEvent ev){
 					sNoItem = String.valueOf( Integer.parseInt(sNoItem) );
 				} catch (Exception e) {
 					sNoItem = txtNoItem.getValue().toString().trim();
+					LogCajaService.CreateLog("GuardaReciboPrima", "ERR", e.getMessage());
 				}
 				
 				CodeUtil.putInSessionMap("pr_NumeroProformaRepuesto", sNoItem);
@@ -3708,6 +3738,7 @@ public void cancelarIncersion(ActionEvent ev){
 				m.remove("noContrato");
 			}
 		} catch (Exception error) {
+			LogCajaService.CreateLog("GuardarReciboPrima1", "ERR", error.getMessage());
 			try{
 				String sMensaje = "";
 				sMensaje =  " No se puede realizar operación => Error de sistema: <br>";
@@ -3730,6 +3761,7 @@ public void cancelarIncersion(ActionEvent ev){
 				
 			}catch(Exception ex){
 				ex.printStackTrace();
+				LogCajaService.CreateLog("GuardarReciboPrima1", "ERR", ex.getMessage());
 			}
 		}finally{
 			dwCargando.setWindowState("hidden");
@@ -3761,6 +3793,7 @@ public void cancelarIncersion(ActionEvent ev){
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();
+			LogCajaService.CreateLog("ponerCodigoBanco", "ERR", ex.getMessage());
 		}
 		return lstMetodosPago;
 	}
@@ -4101,6 +4134,7 @@ public boolean validarDatosRecibo(){
 	}catch(Exception ex){
 		validado = false;
 		ex.printStackTrace();
+		LogCajaService.CreateLog("validarDatosRecibo", "ERR", ex.getMessage());
 	}
 	return validado;
 }
@@ -4127,7 +4161,8 @@ public boolean validarDatosRecibo(){
 			});
 		
 		} catch (Exception error) {
-			error.printStackTrace(); 
+			error.printStackTrace();
+			LogCajaService.CreateLog("restablecerEstilos", "ERR", error.getMessage());
 		}
 		
 	}
@@ -4221,7 +4256,7 @@ public boolean validarDatosRecibo(){
 			dwProcesa.setWindowState("normal");
 			 
 			error.printStackTrace(); 
-			
+			LogCajaService.CreateLog("cambiarCompania", "ERR", error.getMessage());
 		}
 
 	}
@@ -4741,6 +4776,7 @@ public void registrarPago(ActionEvent e) {
 		
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("registrarPago", "ERR", ex.getMessage());
 	}
 }
 
@@ -5077,7 +5113,7 @@ public void registrarPago(ActionEvent e) {
 			dwProcesa.setStyle("width:320px;height: 180px");
 			dwProcesa.setWindowState("normal");
 			error.printStackTrace(); 
-			
+			LogCajaService.CreateLog("validarMpagos", "ERR", error.getMessage());
 		}finally{
 			
 			if(!validado && !bErrorPoliticas){
@@ -5422,6 +5458,7 @@ public boolean validarPago(String metodo, String sMonto, String ref1,String ref2
 		dwProcesa.setStyle("width:320px;height:"+y+"px");
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("validarPago", "ERR", ex.getMessage());
 	}
 	//metodosGrid.dataBind();
 	return validado;
@@ -5440,6 +5477,7 @@ public void restablecerEstilosPago(){
 		txtReferencia3.setStyleClass("frmInput2");
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("restablecerEstilosPago", "ERR", ex.getMessage());
 	}
 }
 
@@ -5494,6 +5532,7 @@ public void restablecerEstilosPago(){
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			LogCajaService.CreateLog("borrarPago", "ERR", ex.getMessage());
 		} finally {
 			dwBorrarPago.setWindowState("hidden");
 			m.remove("metodopagoborrar");
@@ -5605,6 +5644,7 @@ public void modificarPago(CellValueChangeEvent e){
 		srm.addSmartRefreshId(dwProcesa.getClientId(FacesContext.getCurrentInstance()));
     }catch(Exception ex){
     	ex.printStackTrace();
+    	LogCajaService.CreateLog("modificarPago", "ERR", ex.getMessage());
 	}
 	
 }
@@ -5632,6 +5672,7 @@ public boolean validarModificacionMonto(String sNewMonto){
 	}catch(Exception ex){
 		validado = false;
 		ex.printStackTrace();
+		LogCajaService.CreateLog("validarModificacionMonto", "ERR", ex.getMessage());
 	}
 	return validado;
 }
@@ -5732,6 +5773,7 @@ public void setTipoRecibo(ValueChangeEvent e) {
 		
 	} catch (Exception error) {
 		error.printStackTrace();
+		LogCajaService.CreateLog("setTipoRecibo", "ERR", error.getMessage());
 	}
 }
 /*****************************************************************************************************/
@@ -5763,6 +5805,7 @@ public void setMetodosPago(ValueChangeEvent e) {
 		cambiarVistaMetodos(codmetodo,vf01);
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("setMetodoPago", "ERR", ex.getMessage());
 	}
 	
 }
@@ -6001,6 +6044,7 @@ public void cambiarVistaMetodos(String sCodMetodo, Vf55ca01 vf01){
 		
 	} catch (Exception error) {
 		error.printStackTrace(); 
+		LogCajaService.CreateLog("cambiarVistaMetodos", "ERR", error.getMessage());
 	}	
 	
 }
@@ -6012,6 +6056,7 @@ public void limpiarPantalla(ActionEvent ev){
 		cleanWindow();
 	} catch (Exception error) {
 		error.printStackTrace();
+		LogCajaService.CreateLog("limpiarPantalla", "ERR", error.getMessage());
 	}
 }
 /***********************************************************************************************************************/
@@ -6127,6 +6172,7 @@ public void cleanWindow(){
 		
 	} catch (Exception error) {
 		error.printStackTrace(); 
+		LogCajaService.CreateLog("cleanWindow", "ERR", error.getMessage());
 	}
 }
 /***************GET LISTA DE MONEDAS*****************************************************/
@@ -6221,6 +6267,7 @@ public void setMoneda(ValueChangeEvent e) {
 		}			
 	}catch(Exception ex){
 		ex.printStackTrace(); 
+		LogCajaService.CreateLog("setMoneda", "ERR", ex.getMessage());
 	}		
 }
 /********************************************************************************************************/
@@ -6345,6 +6392,7 @@ public void establecerModelos(ValueChangeEvent ev){
 		cmbModelos.dataBind();
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("establecerModelos", "ERR", ex.getMessage());
 	}
 }
 /*********************************************************************************************************/
@@ -7187,6 +7235,7 @@ public String getLblNumeroRecibo() {
 		}
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("getLblNumeroRecibo", "ERR", ex.getMessage());
 	}
 	return lblNumeroRecibo;
 }
@@ -7243,6 +7292,7 @@ public List getLstTipoProducto() {
 		}
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("getLstTipoProducto", "ERR", ex.getMessage());
 	}
 	return lstTipoProducto;
 }
@@ -7268,6 +7318,7 @@ public List getLstMarcas() {
 		}
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("getLstMarcas", "ERR", ex.getMessage());
 	}
 	return lstMarcas;
 }
@@ -7293,6 +7344,7 @@ public List getLstModelos() {
 		}
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("getLstModelos", "ERR", ex.getMessage());
 	}
 	return lstModelos;
 }
@@ -7410,7 +7462,8 @@ public void setLblMensajeAutorizacion(UIOutput lblMensajeAutorizacion) {
 			CodeUtil.putInSessionMap("pr_lstAutorizadores", "");
 
 		} catch (Exception ex) {
-			ex.printStackTrace(); 
+			ex.printStackTrace();
+			LogCajaService.CreateLog("getLstAutoriza", "ERR", ex.getMessage());
 		}
 		return lstAutoriza;
 	}
@@ -7552,6 +7605,7 @@ public List getLstFiltrounineg() {
 		
 	} catch (Exception error) {
 		error.printStackTrace();
+		LogCajaService.CreateLog("getLstFiltrounineg", "ERR", error.getMessage());
 	}
 	return lstFiltrounineg;
 }
@@ -7624,6 +7678,7 @@ public List getLstMonedaAplicada() {
 		lstMonedaAplicada = new ArrayList(1);
 		lstMonedaAplicada.set(1,new SelectItem("SM","Moneda","Sin Moneda Configurada para la compañía"));
 		error.printStackTrace();
+		LogCajaService.CreateLog("getMonedaAplicada", "ERR", error.getMessage());
 	}
 	return lstMonedaAplicada;
 }
@@ -7666,6 +7721,7 @@ public String getLbletCambioapl1() {
 			lbletCambioapl1 = "Cambio " + ddlMonedaAplicada.getValue().toString();
 	} catch (Exception error) {
 		error.printStackTrace();
+		LogCajaService.CreateLog("getLbletCambioapl1", "ERR", error.getMessage());
 	}
 	return lbletCambioapl1;
 }
@@ -7690,6 +7746,7 @@ public String getLbletMontoRecibido() {
 			lbletMontoRecibido = "Recibido " + ddlMonedaAplicada.getValue().toString();
 	} catch (Exception error) {
 		error.printStackTrace();
+		LogCajaService.CreateLog("getLbletMontoRecibido", "ERR", error.getMessage());
 	}
 	return lbletMontoRecibido;
 }
@@ -7708,6 +7765,7 @@ public String getLblMontoAplicar2() {
 							"Aplicado " + ddlMonedaAplicada.getValue().toString()+":":"Aplicado:";
 	} catch (Exception error) {
 		error.printStackTrace();
+		LogCajaService.CreateLog("getLblMontoAplicar2", "ERR", error.getMessage());
 	}
 	return lblMontoAplicar2;
 }
@@ -7841,6 +7899,7 @@ public List getLstTipodoc() {
 		}
 	}catch(Exception ex){
 		ex.printStackTrace();
+		LogCajaService.CreateLog("getLstTipodoc", "ERR", ex.getMessage());
 	}
 	return lstTipodoc;
 }
@@ -7939,7 +7998,7 @@ protected P55CA090 getP55ca090() {
 			lstBeneficiarios = (ArrayList<SelectItem>)DonacionesCtrl.obtenerBeneficiariosConfigurados(true, false);
 			
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			LogCajaService.CreateLog("getLstBeneficiarios", "ERR", e.getMessage());
 		}finally{
 			
 			if(lstBeneficiarios == null )
