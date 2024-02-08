@@ -3011,7 +3011,7 @@ public class RevisionArqueoDAO {
 				sCuentaT = new String[6];
 				sCuentaT[0] = sUN + "." + cajaparm.getParametros("34", "0", "CTA_DEUDO_VAR_OB").getValorAlfanumerico().toString();
 				sCuentaT[1] = vCtaFE.getId().getGmaid();
-				sCuentaT[2] = sUN;
+				sCuentaT[2] = vCtaFE.getId().getGmco().trim();
 				sCuentaT[3] = vCtaFE.getId().getGmmcu().trim();
 				sCuentaT[4] = vCtaFE.getId().getGmobj().trim();
 				sCuentaT[5] = vCtaFE.getId().getGmsub().trim();
