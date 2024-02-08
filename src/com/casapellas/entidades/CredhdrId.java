@@ -63,6 +63,8 @@ public class CredhdrId implements java.io.Serializable {
 	private String lossAccountId;
 	private String gainAccountId;
 	
+	private String rprmk;
+	
 
 	public CredhdrId() {
 	}
@@ -79,7 +81,7 @@ public class CredhdrId implements java.io.Serializable {
 			int rpicu, String rpicut, String rpco, int rppa8, int rppyr,
 			String rppst, int rpjcl, String rpbcrc, String rpcrrm,
 			int rpdgj, int rpddnj, String rpaid,  BigDecimal tasaoriginal, 
-			String lossAccountId,  String gainAccountId ) {
+			String lossAccountId,  String gainAccountId, String rprmk ) {
 		
 		this.tipofactura = tipofactura;
 		this.nofactura = nofactura;
@@ -131,7 +133,7 @@ public class CredhdrId implements java.io.Serializable {
 		this.lossAccountId = lossAccountId;
 		this.gainAccountId = gainAccountId;
 		
-		
+		this.rprmk = rprmk;
 	}
 
 	public CredhdrId(String tipofactura, int nofactura, String partida,
@@ -143,7 +145,7 @@ public class CredhdrId implements java.io.Serializable {
 			BigDecimal dsubtotal, BigDecimal monto, BigDecimal montopend,
 			BigDecimal subtotal, BigDecimal impuesto, Date fecha,
 			Date fechavenc, String compenslm, String tipopago, int rpdivj,
-			int rpddj, String rppo, String rpdcto) {
+			int rpddj, String rppo, String rpdcto, String rprmk) {
 		this.tipofactura = tipofactura;
 		this.nofactura = nofactura;
 		this.partida = partida;
@@ -177,6 +179,7 @@ public class CredhdrId implements java.io.Serializable {
 		this.rpddj = rpddj;
 		this.rppo = rppo;
 		this.rpdcto = rpdcto;
+		this.rprmk=rprmk;
 	}
 
 	public String getTipofactura() {
@@ -571,7 +574,7 @@ public class CredhdrId implements java.io.Serializable {
 				moneda, tasa, cpendiente, dpendiente, ctotal, dtotal, 
 				cimpuesto, dimpuesto, csubtotal, dsubtotal, monto, 
 				montopend, csubtotal, cimpuesto, fecha, fechavenc, 
-				compenslm, tipopago, rpdivj, rpddj, rppo, rpdcto) ;
+				compenslm, tipopago, rpdivj, rpddj, rppo, rpdcto,rprmk) ;
 		
 	}
 	
@@ -690,6 +693,14 @@ public class CredhdrId implements java.io.Serializable {
 				&& ((this.getRpdcto() == castOther.getRpdcto()) || (this
 						.getRpdcto() != null && castOther.getRpdcto() != null && this
 						.getRpdcto().equals(castOther.getRpdcto())));
+	}
+
+	public String getRprmk() {
+		return rprmk;
+	}
+
+	public void setRprmk(String rprmk) {
+		this.rprmk = rprmk;
 	}
 
 	public int hashCode() {

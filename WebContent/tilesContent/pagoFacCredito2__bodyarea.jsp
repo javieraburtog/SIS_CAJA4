@@ -46,8 +46,8 @@
 				press = 9;
 		}
  		if( (press < 48 || press > 57) &&   press != 8 && press != 46 && press != 9 ||
-			(input.value.indexOf(".") != -1 && press == 46) ){  
-			
+			(input.value.indexOf(".") != -1 && press == 46) )
+ 		{	
 			 $("#errmsg").html("Solo Números!").show();
 			 $("#errmsg").html("Solo Números!").fadeOut(700);
 			
@@ -185,7 +185,20 @@
 
 										</td>
 									</tr>
-									
+										<tr>
+										<td  style="float: left; width: 38px; margin-top: 1px;"> 
+											<span class="frmLabel2" >Doc Original</span>
+										</td>
+										<td>
+											
+										</td>										
+										<td>
+											<h:inputText styleClass="frmInput2" id="txtDocOrginal"
+													size="40" binding="#{facturasCre.txtDocOriginal}">													
+												</h:inputText>
+										</td>
+										
+									</tr>
 									<tr>
 										<td colspan="4">
 											<table>
@@ -296,6 +309,15 @@
 								value="#{DATA_ROW.nofactura}" styleClass="frmLabel3"></h:outputText>
 							<f:facet name="header">
 								<h:outputText id="lblNofacturaCredito2" value="No. Fact."
+									styleClass="lblHeaderColumnGrid"></h:outputText>
+							</f:facet>
+						</ig:column>
+						<ig:column id="coCodOriginal" style=" text-align: right"
+							sortBy="nofactura" styleClass="igGridColumn" movable="false">
+							<h:outputText id="lblCopOriginal"
+								value="#{DATA_ROW.id.rprmk}" styleClass="frmLabel3"></h:outputText>
+							<f:facet name="header">
+								<h:outputText id="lblcodOriginal2" value="Doc. Orig."
 									styleClass="lblHeaderColumnGrid"></h:outputText>
 							</f:facet>
 						</ig:column>
@@ -515,6 +537,15 @@
 											value="#{DATA_ROW.nofactura}" styleClass="frmLabel3"></h:outputText>
 										<f:facet name="header">
 											<h:outputText id="lblNofacturaAgregarFactura2" value="No. Fact."
+												styleClass="lblHeaderColumnGrid"></h:outputText>
+										</f:facet>
+									</ig:column>
+					   				<ig:column id="coDocOrginalv2" style=" text-align: right"
+										sortBy="nofactura" styleClass="igGridColumn" movable="false">
+										<h:outputText id="lblDocOriginalv2"
+											value="#{DATA_ROW.id.rprmk}" styleClass="frmLabel3"></h:outputText>
+										<f:facet name="header">
+											<h:outputText id="lblDocOrginalv3" value="Doc. Original"
 												styleClass="lblHeaderColumnGrid"></h:outputText>
 										</f:facet>
 									</ig:column>
@@ -1670,6 +1701,14 @@
 										<f:facet name="header">
 											<h:outputText id="lblNofacturaDetalle2"
 												value="factura" styleClass="lblHeaderColumnGrid"/>
+										</f:facet>
+									</ig:column>
+									<ig:column>
+										<h:outputText id="lblDocOriginalv3"
+											value="#{DATA_ROW.id.rprmk}" styleClass="frmLabel3"/>
+										<f:facet name="header">
+											<h:outputText id="lblDocOriginalv23"
+												value="docOrginal" styleClass="lblHeaderColumnGrid"/>
 										</f:facet>
 									</ig:column>
 									<ig:column style="text-align: left" >

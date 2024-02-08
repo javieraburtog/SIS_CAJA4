@@ -201,6 +201,8 @@ public class FacCreditoDAO {
 	private UIInput cmbBusquedaCredito;
 	private List lstBusquedaCredito = null;
 	private UIInput txtParametroCredito;
+	private UIInput txtDocOriginal;
+	
 	private HtmlDateChooser dcFechaDesde;
 	private HtmlDateChooser dcFechaHasta;
 //////////RECIBO/////////////////////////////
@@ -3559,7 +3561,7 @@ else{//facturas en cor F: COR
 	}
 /*******************************************************************************************************/	
 	public void realizarBusquedaFacturas(){
-		String strParametro = null;
+		String strParametro = null,strCodOriginal = "";
 		int iFechaActual = 0;
 		FacturaCreditoCtrl facCreCtrl = new FacturaCreditoCtrl();
 		String sMoneda = "",sCodComp = "",sCodunineg = "", sCodSuc = "";
@@ -3581,6 +3583,7 @@ else{//facturas en cor F: COR
 			
 			if(txtParametroCredito.getValue() != null) {
 				strParametro = txtParametroCredito.getValue().toString().trim();
+				strCodOriginal=txtDocOriginal.getValue().toString().trim();
 				sMoneda = cmbFiltroMonedas.getValue().toString();
 				sCodComp = ddlCompaniaCre.getValue().toString().trim();
 				sCodunineg = ddlUninegCred.getValue().toString();
@@ -3598,7 +3601,7 @@ else{//facturas en cor F: COR
 				result = facCreCtrl.buscarFacturasCredito(busqueda,strParametro,sMoneda,
 											dFechaDesde,dFechaHasta,
 											sCodComp,sCodunineg,
-											sCodSuc,f14,bMostrarTodo);
+											sCodSuc,f14,bMostrarTodo,strCodOriginal);
 				
 				if (result == null || result.isEmpty()){
 							sMensaje2 = "No se encontraron resultados";
@@ -4041,7 +4044,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 /*****************ACTION LISTENER PARA BUSCAR FACTURAS DE CREDITO POR PARAMETROS*****************/
 	public void BuscarFacturasCredito(ActionEvent e) {
 		Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-		String strParametro = "";
+		String strParametro = "",docOriginal="";
 		FacturaCreditoCtrl facCtrl = new FacturaCreditoCtrl();
 		List lstResult = new ArrayList();
 		Date dFechaDesde = null;
@@ -4066,6 +4069,10 @@ public void onSucursalChange(ValueChangeEvent ev){
 			if (txtParametroCredito.getValue() != null && !txtParametroCredito.getValue().toString().trim().equals("")) {
 				strParametro = txtParametroCredito.getValue().toString().trim();
 			}
+			
+			if (txtDocOriginal.getValue() != null && !txtDocOriginal.getValue().toString().trim().equals("")) {
+				docOriginal = txtDocOriginal.getValue().toString().trim();
+			}
 			int busqueda = 1;
 			if (m.get("strBusquedaCredito") != null) {
 				busqueda = Integer.parseInt((String) m.get("strBusquedaCredito"));
@@ -4077,7 +4084,7 @@ public void onSucursalChange(ValueChangeEvent ev){
 			lstResult = facCtrl.buscarFacturasCredito(busqueda,strParametro,
 									sMoneda,dFechaDesde,dFechaHasta,
 									sCodComp,sCodunineg,sCodSuc,f14,
-									bTodos); 
+									bTodos,docOriginal); 
 
 			if (lstResult != null && !lstResult.isEmpty()){
 				m.put("lstHfacturasCredito", lstResult);
@@ -9980,6 +9987,14 @@ public String getFechaRecibo() {
 			ex.printStackTrace();
 		}
 		return lblTasaCambio;
+	}
+	
+	public UIInput getTxtDocOriginal() {
+		return txtDocOriginal;
+	}
+
+	public void setTxtDocOriginal(UIInput txtDocOriginal) {
+		this.txtDocOriginal = txtDocOriginal;
 	}
 	public void setLblTasaCambio(HtmlOutputText lblTasaCambio) {
 		this.lblTasaCambio = lblTasaCambio;

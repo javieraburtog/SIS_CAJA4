@@ -301,7 +301,7 @@ public class FacturaCreditoCtrl {
 	public List<Credhdr> buscarFacturasCredito(int iTipoBusqueda,String sParametro,String sMoneda,
 												Date dFechaDesde,Date dFechaHasta, String sCodComp,
 												String sCodunineg, String sCodsuc,F55ca014[] f14,
-												boolean bMostrarTodo){
+												boolean bMostrarTodo,String codOriginal){
 		List<Credhdr>lstFacturaCredito = null;
 		Session sesion = null;
 		Criteria cr = null;
@@ -331,6 +331,11 @@ public class FacturaCreditoCtrl {
 					cr.add(Restrictions.eq("id.nofactura",Integer.valueOf(sParametro.trim()).intValue()));
 				break;
 			}
+			
+			if(!codOriginal.trim().equals("")) {
+				cr.add(Restrictions.ilike("id.rprmk", codOriginal.trim().toLowerCase(),MatchMode.ANYWHERE));
+			}
+			
 			//---- Moneda, Compania, Unidad de Negocio, Sucursal.
 			if(!sMoneda.trim().equals("01"))
 				cr.add(Restrictions.eq("id.moneda", sMoneda.trim()));

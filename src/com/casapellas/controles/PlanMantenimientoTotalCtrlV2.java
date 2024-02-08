@@ -398,74 +398,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 				}
 			}); 
 
-			//Se agrego para ver diferencias de centavos
-			//------  lfonseca --------
-			if(formas_pago_compraVenta != null && !formas_pago_compraVenta.isEmpty() ){
-				
-				long lngMontoFormaDePagoT = 0;
-				long lngMontoFormaDePagoT2 = 0;
-				long lngMontoFormaDePagoEqT = 0;
-				
-				for (final MetodosPago mp : formas_de_pago) {
-					
-					lngMontoFormaDePagoT += mp.getMoneda().compareTo(moneda_base)==0 ? 
-							mp.getMoneda().compareTo(moneda_contrato)==0 ? 
-									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto()/tasaoficial.doubleValue())).replace(".", "")) : 
-									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto()/tasaparalela.doubleValue())).replace(".", "")) :
-							Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto())).replace(".", ""));
-					
-					lngMontoFormaDePagoT2 = mp.getMoneda().compareTo(moneda_base)==0 ? 
-							mp.getMoneda().compareTo(moneda_contrato)==0 ? 
-									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto()/tasaoficial.doubleValue())).replace(".", "")) : 
-									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto()/tasaparalela.doubleValue())).replace(".", "")) :
-							Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto())).replace(".", ""));
-									
-													
-					lngMontoFormaDePagoEqT +=  mp.getMoneda().compareTo(moneda_base)==0 && mp.getMoneda().compareTo(moneda_contrato)==0 ? 
-									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto())).replace(".", ""))
-									: 
-									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(((double)lngMontoFormaDePagoT2/100)*tasaoficial.doubleValue())).replace(".", ""));
-												
-				}
-				
-				long diferenciaT = 0;
-				if(lngMontoFormaDePagoEqT!=Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_cod).replace(".", "")))
-				{
-					diferenciaT = Long.parseLong( String.format("%1$.2f", cuota_contrato_pmt_cod).replace(".", "")) - lngMontoFormaDePagoEqT;
-				}
-				
-				if(diferenciaT!=0)
-				{
-					int i = 0;
-					for (final MetodosPago mp : formas_de_pago) {
-						
-						if(mp.getMoneda().compareTo(moneda_contrato)!=0)
-						{
-							formas_de_pago.get(i).setDiferenciaCor(new BigDecimal((double)diferenciaT/100));
-							break;
-						}
-						
-						i++;
-					}
-					
-					i = 0;
-					for (final MetodosPago mp2 : formas_pago_compraVenta) {
-						
-						if(mp2.getMoneda().compareTo(moneda_contrato)!=0)
-						{
-							formas_pago_compraVenta.get(i).setDiferenciaCor(new BigDecimal((double)diferenciaT/100));
-							break;
-						}
-						
-						i++;
-					}
-				}
-				
-			}
-			
-			//Se agrego para ver diferencias de centavos
-			//------  lfonseca --------
-			//Termino
+		
 			
 			if(formas_pago_compraVenta != null && !formas_pago_compraVenta.isEmpty() ){
 				
@@ -586,7 +519,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 					 long calculoDescuadre = maximopermitodo - (diferenciaExistente);
 					if(calculoDescuadre>0) {
 						cuadrar=true;
-						montoCuadrar=diferenciaExistente;
+						montoCuadrar=  diferenciaExistente ;
 					}
 				}
 				
@@ -640,12 +573,12 @@ public class PlanMantenimientoTotalCtrlV2 {
 									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(mp.getMonto())).replace(".", ""))
 									: 
 									Long.parseLong( String.format("%1$.2f", BigDecimal.valueOf(((double)lngMontoFormaDePago/100)*tasaoficial.doubleValue())).replace(".", ""));
-					if(cuadrar) {
-						lngMontoFormaDePagoEq = lngMontoFormaDePagoEq - montoCuadrar;
+					if(cuadrar) {					
+						lngMontoFormaDePagoEq = lngMontoFormaDePagoEq - montoCuadrar;							
 						cuadrar = false;
 					}							
 	
-					lngMontoFormaDePagoEq = lngMontoFormaDePagoEq + Long.parseLong( String.format("%1$.2f", mp.getDiferenciaCor()).replace(".", ""));
+					lngMontoFormaDePagoEq = lngMontoFormaDePagoEq ;
 				}
 				//&& =========== Grabar el registro en F0911 
 				//Ajustado por LFonseca
