@@ -34,7 +34,7 @@ public class jdbcTransaction {
 		 SimpleDateFormat sdfF = new SimpleDateFormat("yyyy-MM-dd");
 		 int hecho =0 ;
 		try {
-			System.out.println("query transaccional : "+ queryString);
+			
 			ppe = getCnx().prepareStatement(queryString);
 			for (int i = 0; i < parameters.length; i++) {
 				if(String.valueOf(parameters[i][1]).compareToIgnoreCase("0")==0){					
@@ -64,7 +64,7 @@ public class jdbcTransaction {
 		 SimpleDateFormat sdfF = new SimpleDateFormat("yyyy-MM-dd");
 		 String Results [] = new String [16];
 		try {
-			System.out.println("query transaccional : "+ SqlQuery);
+			
 			ppe = getCnx().prepareStatement(SqlQuery,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);	  
 			
 			for (int i = 0; i < parameters.length; i++) {
@@ -99,7 +99,7 @@ public class jdbcTransaction {
 		 SimpleDateFormat sdfF = new SimpleDateFormat("yyyy-MM-dd");
 		 String Results [] = new String [18];
 		try {
-			System.out.println("query transaccional : "+ SqlQuery);
+			
 			ppe = getCnx().prepareStatement(SqlQuery,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);	  
 			
 			for (int i = 0; i < parameters.length; i++) {
