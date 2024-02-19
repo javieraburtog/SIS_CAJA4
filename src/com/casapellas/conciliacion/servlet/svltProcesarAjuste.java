@@ -705,7 +705,7 @@ public class svltProcesarAjuste extends HttpServlet {
 			
 			iMontoTotal = Divisas.pasarAenteroLong(  monto_ajuste.doubleValue() );
 			String[] valoresJDEInsContado = DocumuentosTransaccionales.getValuesJDEContado().split(",");
-			hecho = rcCtrl.registrarBatchA92(session, fechabatch, valoresJDEInsContado[8], NobatchToUse, iMontoTotal, usuariobatch, 1, "AJUSTE-EXC", valoresJDEInsContado[9] );
+			hecho = rcCtrl.registrarBatchA92(session, fechabatch, valoresJDEInsContado[8], NobatchToUse, iMontoTotal, usuariobatch, 1, "AJUSTE-EXC", valoresJDEInsContado[10] );
 			
 			if(!hecho)
 				return false;
