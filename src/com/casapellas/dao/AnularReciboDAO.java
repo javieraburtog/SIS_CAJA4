@@ -758,9 +758,9 @@ public class AnularReciboDAO {
 			//&& ================ aplicar las actualizaciones.
 			String codigoCliente = String.valueOf( recibo.getCodcli() ) ;
 			
-			if(recibo.getId().getTiporec().compareTo("EX") == 0	){
+			/*if(recibo.getId().getTiporec().compareTo("EX") == 0	){
 				codigoCliente = "0";
-			}
+			}*/
 			
 			for (String[] dtaQuery : lstQueriesUpdate) {
 
