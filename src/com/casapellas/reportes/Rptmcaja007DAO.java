@@ -180,7 +180,6 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 		}
 	}
 	
-	
 	public void mostrarFiltrosBusqueda(ActionEvent ev){
 		try {
 			txtCodigoCliente.setValue(" ");
@@ -236,6 +235,8 @@ public HtmlDialogWindow dwFiltrosBusquedaRecibos ;
 				lstfcCajas.add( new SelectItem( Integer.toString(caja.getId().getCaid() ),
 						( Integer.toString(caja.getId().getCaid()) + " " + caja.getId().getCaname().trim().toLowerCase() ),
 						( Integer.toString(caja.getId().getCaid()) + " " + caja.getId().getCaname().trim().toLowerCase() ) ) ) ;
+			
+			
 			}
 				
 		} catch (Exception e) {
