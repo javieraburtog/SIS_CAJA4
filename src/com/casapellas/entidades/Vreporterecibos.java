@@ -126,15 +126,15 @@ public class Vreporterecibos implements java.io.Serializable {
 		
 		String _motivo = "", _estado = "";
 		
-		if (estado.trim().toLowerCase().equals("error")) {
+		if (estado.trim().toLowerCase().contains("error")) {
 			_motivo = motivo;
-			_estado = "Error";
+			_estado = estado;
 		}else if(estado.compareTo("A") == 0) {
 			_motivo = motivo;
 			_estado = "Anulado";
 		}else {
-			_motivo = "   ";
-			_estado = "   ";
+			_motivo = motivo;
+			_estado = estado;
 		}
 	
 		
