@@ -22,48 +22,48 @@ import com.casapellas.util.LogCajaService;
 import com.casapellas.util.PropertiesSystem;
 
 public class ProcesarPagoFacturaJdeCustom {
-	public static String monedaDomestica;
-	public static String codcomp;
-	public static String tiporec;
-	public static int caid ;
-	public static int numrec;
-	public static Date fecharecibo;
-	public static BigDecimal tasaCambioRecibo;
-	public static BigDecimal tasaCambioOficial;
+	public String monedaDomestica;
+	public String codcomp;
+	public String tiporec;
+	public int caid ;
+	public int numrec;
+	public Date fecharecibo;
+	public BigDecimal tasaCambioRecibo;
+	public BigDecimal tasaCambioOficial;
 	
-	public static String numeroBatchJde;
-	public static String numeroReciboJde;
-	public static List<String>numerosReciboJde;
+	public  String numeroBatchJde;
+	public  String numeroReciboJde;
+	public  List<String>numerosReciboJde;
 	
-	public static String msgProceso;
-	public static String usuario;
-	public static int codigousuario;
-	public static String programaActualiza;
-	public static String moduloSistema;
+	public  String msgProceso;
+	public  String usuario;
+	public  int codigousuario;
+	public  String programaActualiza;
+	public  String moduloSistema;
 	
-	public static List<Credhdr> facturas ;
-	public static List<MetodosPago> formasdepago;
-	public static List<MetodosPago> formasdepagoProceso;
+	public  List<Credhdr> facturas ;
+	public  List<MetodosPago> formasdepago;
+	public  List<MetodosPago> formasdepagoProceso;
 	
-	private static List<FacturaF03B11> facturasJde;
-	private static String fecharecibojde;
-	private static String horarecibojde;
+	private  List<FacturaF03B11> facturasJde;
+	private  String fecharecibojde;
+	private  String horarecibojde;
 	
-	public static String montoReciboLocal;
-	public static String montoReciboExtranjero;
+	public  String montoReciboLocal;
+	public  String montoReciboExtranjero;
 	
-	public static boolean ajustarMontoAplicado = true;
+	public  boolean ajustarMontoAplicado = true;
 	
-	public static List<String[]> lstSqlsInserts;
+	public  List<String[]> lstSqlsInserts;
 	
-	private static BigDecimal montoEnteroTotalRecibo = BigDecimal.ZERO;
+	private  BigDecimal montoEnteroTotalRecibo = BigDecimal.ZERO;
 	
-	public static boolean executeQueries = true;
+	public  boolean executeQueries = true;
 	
-	public static String[]  valoresJDEIns;
+	public  String[]  valoresJDEIns;
 	
-	private static List<ReciboF03B13> rcsF03B13 = new ArrayList<ReciboF03B13>() ;
-	private static List<ReciboDetalleF03B14> rcsF03B14 = new ArrayList<ReciboDetalleF03B14>() ;
+	private  List<ReciboF03B13> rcsF03B13 = new ArrayList<ReciboF03B13>() ;
+	private  List<ReciboDetalleF03B14> rcsF03B14 = new ArrayList<ReciboDetalleF03B14>() ;
 	
 	public ProcesarPagoFacturaJdeCustom() {
 		caid = 0;
@@ -95,7 +95,7 @@ public class ProcesarPagoFacturaJdeCustom {
 		
 	}
 	
-	public static void procesarPagoFacturaMultipleRecibo(){
+	public void procesarPagoFacturaMultipleRecibo(){
 		try {
 			
 			msgProceso = "" ;
@@ -180,7 +180,7 @@ public class ProcesarPagoFacturaJdeCustom {
 	}
 	
 	
-	public static void procesarPagosFacturas(Session session){
+	public  void procesarPagosFacturas(Session session){
 		
 		try {
 			
@@ -286,7 +286,7 @@ public class ProcesarPagoFacturaJdeCustom {
 
 	//&& ===============================================================================//
 	//&& ======================= actualizar la fecha de pago  ==========================//
-	public static void actualizarUltimaFechaPago(){
+	public  void actualizarUltimaFechaPago(){
 		
 		try {
 			
@@ -328,7 +328,7 @@ public class ProcesarPagoFacturaJdeCustom {
 	
 	
 	
-	public static void grabarControlBatch(){
+	public void grabarControlBatch(){
 		try {
 			
 			BigDecimal totalFacturas = montoEnteroTotalRecibo;
@@ -356,7 +356,7 @@ public class ProcesarPagoFacturaJdeCustom {
 	}
 	
 	
-	public static void grabarReciboEdwards(){
+	public  void grabarReciboEdwards(){
 		
 		try {
 			
@@ -728,7 +728,7 @@ public class ProcesarPagoFacturaJdeCustom {
 		
 	}
 	
-	private static void actualizarSaldoFacturas(){
+	private void actualizarSaldoFacturas(){
 		try {
 			
 			for (FacturaF03B11 f03b11 : facturasJde) {
@@ -819,7 +819,7 @@ public class ProcesarPagoFacturaJdeCustom {
 		}
 	}
 	
-	private static void crearHistoricoFacturas(){
+	private void crearHistoricoFacturas(){
 		try {
 			
  
@@ -878,7 +878,7 @@ public class ProcesarPagoFacturaJdeCustom {
 		}
 	}
 	
-	private static void crearF03b11FromCredHdr(){
+	private void crearF03b11FromCredHdr(){
 		try {
 			
 			facturasJde = new ArrayList<FacturaF03B11>( facturas.size() );
