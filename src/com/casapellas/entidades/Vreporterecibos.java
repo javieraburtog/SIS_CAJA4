@@ -58,6 +58,7 @@ public class Vreporterecibos implements java.io.Serializable {
 	private String nombrecontador;
 	private String usuariocontador;
 	private String cuentacontablebanco;
+	private int numerosolicitud;
 	
 	
 	
@@ -116,8 +117,10 @@ public class Vreporterecibos implements java.io.Serializable {
 		cajero + concatwith +  
 		caprnt.trim().toUpperCase() + concatwith +
 		
-		( mpago.compareTo(MetodosPagoCtrl.TRANSFERENCIA) == 0 ? refer3.trim() : (  mpago.compareTo(MetodosPagoCtrl.DEPOSITO) == 0 ||  mpago.compareTo(MetodosPagoCtrl.CHEQUE) == 0 ) ? refer2.trim() : "0" )
-	 ;
+		( mpago.compareTo(MetodosPagoCtrl.TRANSFERENCIA) == 0 ? refer3.trim() : (  mpago.compareTo(MetodosPagoCtrl.DEPOSITO) == 0 ||  mpago.compareTo(MetodosPagoCtrl.CHEQUE) == 0 ) ? refer2.trim() : "0" )+ concatwith +
+		
+		numerosolicitud
+		;
 	}
 	
 	public  String dataToExcel(String concatwith){
@@ -176,7 +179,9 @@ public class Vreporterecibos implements java.io.Serializable {
 		caprnt.trim().toUpperCase() + concatwith +
 		
 		( mpago.compareTo("8") == 0 ? refer3.trim() : (  mpago.compareTo("N") == 0 ||  mpago.compareTo("Q") == 0 ) ? refer2.trim() : "0" )
-	 ;
+		+ concatwith +
+		numerosolicitud
+		;
 	}
 	
 	
@@ -407,7 +412,7 @@ public class Vreporterecibos implements java.io.Serializable {
 	public void setCaprnt(String caprnt) {
 		this.caprnt = caprnt;
 	}
-
+	
 	public int getCodigocontador() {
 		return codigocontador;
 	}
@@ -415,10 +420,18 @@ public class Vreporterecibos implements java.io.Serializable {
 	public void setCodigocontador(int codigocontador) {
 		this.codigocontador = codigocontador;
 	}
+	
+	public int getnumerosolicitud() {
+		return numerosolicitud;
+	}
+
+	public void setnumerosolicitud(int numerosolicitud) {
+		this.numerosolicitud = numerosolicitud;
+	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = 32;
 		int result = 1;
 		result = prime * result + ((banco == null) ? 0 : banco.hashCode());
 		result = prime * result + caid;
@@ -478,6 +491,7 @@ public class Vreporterecibos implements java.io.Serializable {
 				+ ((usuarioanula == null) ? 0 : usuarioanula.hashCode());
 		result = prime * result
 				+ ((usuariocontador == null) ? 0 : usuariocontador.hashCode());
+		result = prime * result + numerosolicitud;
 		return result;
 	}
 
@@ -679,6 +693,8 @@ public class Vreporterecibos implements java.io.Serializable {
 				return false;
 		} else if (!usuariocontador.equals(other.usuariocontador))
 			return false;
+		if (numerosolicitud != other.numerosolicitud)
+			return false;
 		return true;
 	}
 
@@ -706,6 +722,5 @@ public class Vreporterecibos implements java.io.Serializable {
 	public void setCuentacontablebanco(String cuentacontablebanco) {
 		this.cuentacontablebanco = cuentacontablebanco;
 	}
- 
-	
+
 }

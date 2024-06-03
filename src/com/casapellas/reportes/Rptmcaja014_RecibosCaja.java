@@ -118,7 +118,7 @@ public class Rptmcaja014_RecibosCaja {
 					"ROC JDE", "Batch", "Usuario", "Motivo",   // 16 - 19
 					"Estado", "Estado", "Anulado Por", "U.Negocio",   // 20 - 23 
 					"Caja", "Compañía", "Cajero", "Grupo de Cajas",  // 24 - 27
-					"Referencia"  // 28 - 31
+					"Referencia","Número de Préstamo"  // 28 - 31
 				};
 			
 			
@@ -238,7 +238,7 @@ public class Rptmcaja014_RecibosCaja {
 					{ 12, 3000 }, { 13, 4000 }, { 14, 4000 }, { 15, 7000 },
 					{ 16, 5000 },{ 17, 3000 }, { 18, 3000 }, { 19, 4000 }, 
 					{ 22, 3000 },{ 25, 5000 }, { 26, 5000 }, { 27, 8000 }, 
-					{ 29, 4000 } 
+					{ 29, 4000 } ,{ 30, 4000 } 
 			};
 			
 			 for (Integer[] columnWidth : columnSizes) {
@@ -274,7 +274,7 @@ public class Rptmcaja014_RecibosCaja {
 					{ 12, 3000 }, { 13, 4000 }, { 14, 4000 }, { 15, 7000 },
 					{ 16, 5000 },{ 17, 3000 }, { 18, 3000 }, { 19, 4000 }, 
 					{ 22, 3000 },{ 25, 5000 }, { 26, 5000 }, { 27, 8000 }, 
-					{ 29, 4000 } 
+					{ 29, 4000 } ,{ 30, 4000 } 
 			};
 			
 			 for (Integer[] columnWidth : columnSizes) {
@@ -477,7 +477,7 @@ public class Rptmcaja014_RecibosCaja {
 	private void detalleReporteRecibos(){
 		try {
 			
-			int[] indexCeldasTipoString = {1, 3, 4, 5, 6, 7, 9, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27 };
+			int[] indexCeldasTipoString = {1, 3, 4, 5, 6, 7, 9, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,29 };
 			int[] indexCeldasTipoNumero = {0, 2, 8, 10, 11, 12, 13, 17, 28};
 			
 			String[] titulos =  { 
@@ -488,7 +488,7 @@ public class Rptmcaja014_RecibosCaja {
 					"ROC JDE", "Batch", "Usuario", "Motivo",   // 16 - 19
 					"Estado", "Estado", "Anulado Por", "U.Negocio",   // 20 - 23 
 					"Caja", "Compañía", "Cajero", "Grupo de Cajas",  // 24 - 27
-					"Referencia"  // 28 - 31
+					"Referencia", "Número de Préstamo" // 28 - 31
 				};
 			
 			
@@ -535,6 +535,7 @@ public class Rptmcaja014_RecibosCaja {
 			iEstilosCel[26] = stylesBorders.get("sNormalIzquiArial10");
 			iEstilosCel[27] = stylesBorders.get("sNormalIzquiArial10");
 			iEstilosCel[28] = stylesBorders.get("sNorNumIntDerArial10");
+			iEstilosCel[29] = stylesBorders.get("sNorNumIntDerArial10");
 			 
 			
 			String[] dtaCuenta;
@@ -627,7 +628,7 @@ public class Rptmcaja014_RecibosCaja {
 					"ROC JDE", "Batch", "Usuario", "Motivo",   // 16 - 19
 					"Estado", "Estado", "Anulado Por", "U.Negocio",   // 20 - 23 
 					"Caja", "Compañía", "Cajero", "Grupo de Cajas",  // 24 - 27
-					"Referencia"  // 28 - 31
+					"Referencia" , "Número de Préstamo"  // 28 - 31
 				};
 			
 			
