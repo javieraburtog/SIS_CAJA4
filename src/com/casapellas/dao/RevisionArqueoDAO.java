@@ -9749,7 +9749,8 @@ public class RevisionArqueoDAO {
 			else
 				lstReferenciapos = (ArrayList)CodeUtil.getFromSessionMap( "rva_lstReferenciapos");
 		} catch (Exception error) {
-			error.printStackTrace();
+			
+			LogCajaService.CreateLog("getLstFiltroCaja", "ERR", error.getMessage());
 		}
 		return lstReferenciapos;
 	}
@@ -9829,7 +9830,8 @@ public class RevisionArqueoDAO {
 							new ArrayList():
 							(ArrayList)CodeUtil.getFromSessionMap( "rva_rv_lstEditarRecibosIdPos");
 		} catch (Exception error) {
-			error.printStackTrace();
+			
+			LogCajaService.CreateLog("getRv_lstEditarRecibosIdPos", "ERR", error.getMessage());
 		}
 		return rv_lstEditarRecibosIdPos;
 	}
@@ -9870,7 +9872,7 @@ public class RevisionArqueoDAO {
 			else
 				rv_lstAsignarReferenciaCheque = (ArrayList)CodeUtil.getFromSessionMap( "rva_lstAsignarReferenciaCheque");
 		} catch (Exception error) {
-			error.printStackTrace();
+			LogCajaService.CreateLog("getRv_lstEditarRecibosIdPos", "ERR", error.getMessage());
 		}
 		return rv_lstAsignarReferenciaCheque;
 	}
@@ -9987,7 +9989,7 @@ public class RevisionArqueoDAO {
 									"display:inline":"display:none";
 		} catch (Exception e) {
 			strParametrosBloqueo = "display:none";
-			e.printStackTrace();
+			LogCajaService.CreateLog("getStrParametrosBloqueo", "ERR", e.getMessage());
 		}
 		return strParametrosBloqueo;
 	}
@@ -10097,7 +10099,7 @@ public class RevisionArqueoDAO {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			LogCajaService.CreateLog("getLstGvActualizaCodigoAfiliado", "ERR", e.getMessage());
 		}finally{
 			
 			if(lstGvActualizaCodigoAfiliado == null )
@@ -10124,8 +10126,9 @@ public class RevisionArqueoDAO {
 			lstMarcasTarjetaDisponibles = AfiliadoCtrl.obtenerTiposMarcaTarjetas();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-//			LogCrtl.imprimirError(e);
+			
+			LogCajaService.CreateLog("getLstMarcasTarjetaDisponibles", "ERR", e.getMessage());
+
 		}finally{
 			
 			if(lstMarcasTarjetaDisponibles == null )

@@ -114,7 +114,9 @@ public class ArqueoCtrl {
 			
 			if(arqueos == null || arqueos.isEmpty()) return new ArrayList<Varqueo>();
 			
-			Collections.sort(arqueos, new Comparator<Varqueo>(){
+		
+			 
+			/*Collections.sort(arqueos, new Comparator<Varqueo>(){
 				public int compare(Varqueo v1, Varqueo v2) {
 					int iCompCaja = (v1.getId().getCaid() < v2.getId()
 							.getCaid())? -1: (v1.getId().getCaid() >
@@ -127,11 +129,40 @@ public class ArqueoCtrl {
 				}
 			});
 			
+			Collections.sort(arqueos, new Comparator<Varqueo>() {
+			    public int compare(Varqueo v1, Varqueo v2) {
+			        if (v1 == null || v1.getId() == null) {
+			            return (v2 == null || v2.getId() == null) ? 0 : -1;
+			        }
+			        if (v2 == null || v2.getId() == null) {
+			            return 1;
+			        }
+			        
+			        int caid1 = v1.getId().getCaid();
+			        int caid2 = v2.getId().getCaid();
+			        
+			        if (caid1 != caid2) {
+			            return caid1 < caid2 ? -1 : 1;
+			        }
+			        
+			        int noarqueo1 = 1;//v1.getId().getNoarqueo();
+			        int noarqueo2 = 1;//v2.getId().getNoarqueo();
+			        
+			        return noarqueo1 < noarqueo2 ? -1 : (noarqueo1 > noarqueo2 ? 1 : 0);
+			    }
+			});
+			
+			Collections.sort(arqueos, Comparator.comparingInt((Varqueo v) -> v.getId().getCaid())
+				    .thenComparingInt(v -> v.getId().getNoarqueo()));
+*/
+			
 			for (int i = 0; i < arqueos.size(); i++) {
 				Varqueo v = arqueos.get(i);
 				v.setNoarqueo(v.getId().getNoarqueo());
 				arqueos.set(i, v);
 			}
+			
+			 
 			
 		} catch (Exception e) {			
 			LogCajaService.CreateLog("getArqueosCaja", "ERR", e.getMessage());

@@ -1064,7 +1064,8 @@ public class ArqueoCajaDAO {
 			
 		} catch (Exception e) {
 			sRETURN = "Error de aplicación al enviar minuta de depósito por correo";
-			e.printStackTrace(); 
+			//e.printStackTrace();
+			LogCajaService.CreateLog("envioCorreoMinutaDeposito", "ERR", e.getMessage());
 		}
 		return sRETURN;
 	}
