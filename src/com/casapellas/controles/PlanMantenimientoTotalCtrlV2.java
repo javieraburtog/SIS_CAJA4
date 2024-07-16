@@ -70,7 +70,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 		
 		try {
 			
-			
+			LogCajaService.CreateLog("comprantesPorCompraVenta", "INF", "INICIO - Registrando Compra Venta");
 			String companiaRpkco =  codcomp;
 			double lineadoc = 0 ;
 			Date fechaRecibo = new Date();
@@ -87,8 +87,6 @@ public class PlanMantenimientoTotalCtrlV2 {
 			String ctaBnfSub    ;
 			
 			msgLog = concepto;
-			
-//			int numero_batch = Divisas.numeroSiguienteJdeE1( CodigosJDE1.NUMEROBATCH );
 			int numero_batch = Divisas.numeroSiguienteJdeE1( );
 			int numero_documento = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8], valoresJdeNumeracion[9] );
 			
@@ -239,7 +237,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 					
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 								( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
-								moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
+								moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 								mp.getTasa(),  //tasaoficial, //
 								"", observacion, codcomp,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 								companiaRpkco, "F", 0 );
@@ -251,7 +249,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 					
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
-							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, ((lngMontoFormaDePagoNac-lngMontoFormaDePago)*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
+							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, ((lngMontoFormaDePagoNac-lngMontoFormaDePago)), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
 							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
 					
@@ -267,7 +265,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 				
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 							( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
-							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
+							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt)*-1, concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
 							"", observacion, codcomp,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 							companiaRpkco, "F", 0);
@@ -278,7 +276,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 	
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
-							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoNac-lngMontoFormaDePago), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
+							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoNac-lngMontoFormaDePago)*-1, concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial,//
 							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
 	
@@ -338,7 +336,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 			LogCajaService.CreateLog("comprantesPorCompraVenta", "ERR", e.getMessage());
 			e.printStackTrace(); 
 		}finally{
-			
+			LogCajaService.CreateLog("comprantesPorCompraVenta", "INF", "FIN - Registrando Compra Venta");
 		}
 		return strMensajeProceso;
 	}
