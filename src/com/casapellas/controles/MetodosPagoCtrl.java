@@ -228,27 +228,19 @@ public class MetodosPagoCtrl {
 	}
 /*******************************************************************************************************************/
 /**********OBTIENE LOS METODOS DE PAGO POR EL CODIGO************************************************************/
+	@SuppressWarnings("rawtypes")
 	public Metpago[] obtenerDescripcionMetodosPago(String sCodMet){
 		List lstMetodos = null;
 		Session session = HibernateUtilPruebaCn.currentSession();
 		
-		Transaction tx = null;
 		Metpago[] metpago = null;
-		boolean bNuevaSesionENS = false;
 		
 		try{												
 			String sql = "from Metpago as m where m.id.codigo = '"+sCodMet +"'";
 			
-			if( session.getTransaction().isActive() )
-				tx = session.getTransaction();
-			else{
-				tx = session.beginTransaction();
-				bNuevaSesionENS = true;
-			}
-			lstMetodos = (List)session.createQuery(sql).list();
+			LogCajaService.CreateLog("obtenerDescripcionMetodosPago", "QRY", sql);
 			
-			if(bNuevaSesionENS)
-				tx.commit();
+			lstMetodos = (List)session.createQuery(sql).list();
 			
 			metpago = new Metpago[lstMetodos.size()];
 			for(int i = 0; i < lstMetodos.size(); i++){
@@ -256,16 +248,11 @@ public class MetodosPagoCtrl {
 			}
 			
 		}catch(Exception ex){
+			LogCajaService.CreateLog("obtenerDescripcionMetodosPago", "ERR", ex.getMessage());
 			lstMetodos = null;
 			ex.printStackTrace();
-		}finally {			
-			try {
-				if(bNuevaSesionENS){
-					HibernateUtilPruebaCn.closeSession(session);
-				}
-			}
-			catch (Exception e) { e.printStackTrace(); }
 		}
+
 		return metpago;
 	}
 /*******************************************************************************************************************/

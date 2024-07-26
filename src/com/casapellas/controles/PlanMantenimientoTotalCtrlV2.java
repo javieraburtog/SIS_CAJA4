@@ -18,6 +18,7 @@ import com.casapellas.controles.tmp.ReciboCtrl;
 import com.casapellas.donacion.entidades.GValidate;
 import com.casapellas.entidades.HistoricoReservasProformas;
 import com.casapellas.entidades.MetodosPago;
+import com.casapellas.entidades.Metpago;
 import com.casapellas.entidades.Recibo;
 import com.casapellas.entidades.Vf0901;
 import com.casapellas.jde.creditos.DefaultJdeFieldsValues;
@@ -155,7 +156,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 			    ctaBnfObj = dtactaExt[4];
 				ctaBnfSub = dtactaExt[5];
 				
-				observacion = "Mp: " + mp.getMetododescrip();
+				observacion = "Mp: " + obtenerDescripcionMetodoPago(mp); // mp.getMetododescrip();
 				lngMontoFormaDePagoExt = (mp.getMoneda().trim().compareTo(moneda_base)==0 && mp.getMoneda().trim().compareTo(moneda_contrato)==0) ? 
 						Long.parseLong( String.format("%1$.2f", mp.getMonto() ).replace(".", "")) : 
 							mp.getMoneda().trim().compareTo(moneda_contrato)==0 ? 
@@ -1663,4 +1664,25 @@ public class PlanMantenimientoTotalCtrlV2 {
 		return Integer.parseInt(cuenta.get(0).toString());		
 	}
 	
+	public String obtenerDescripcionMetodoPago(MetodosPago mp) {
+		String metPagoDesc = "";
+		try {
+			//Obtener la descripcion del metodo de pago
+			Metpago[] listaMetPago = null;
+			
+			MetodosPagoCtrl ctrlMetPago = new MetodosPagoCtrl();
+			listaMetPago = ctrlMetPago.obtenerDescripcionMetodosPago(mp.getMetodo());
+			
+			if (listaMetPago != null && listaMetPago.length > 0) {
+				Metpago itm = listaMetPago[0];
+				
+				metPagoDesc = itm != null && itm.getId() != null && itm.getId().getMpago() != null ? itm.getId().getMpago().trim() : "";
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return metPagoDesc.trim();
+	}
 }
