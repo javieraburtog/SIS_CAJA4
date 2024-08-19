@@ -142,6 +142,19 @@ import com.infragistics.faces.shared.smartrefresh.SmartRefreshManager;
 import com.infragistics.faces.window.component.html.HtmlDialogWindow;
 import com.infragistics.faces.window.component.html.HtmlDialogWindowHeader;
 
+import ni.com.casapellas.client.config.ConfigConnection;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
 public class RevisionArqueoDAO {
 	
 	ClsParametroCaja cajaparm = new ClsParametroCaja();
@@ -151,12 +164,14 @@ public class RevisionArqueoDAO {
 	private String sMcuIVAcomision = "";
 	private String sObjIVAcomision = "";
 	private String sSubIVAcomision = "";
+	public String FechaString ="";
+	
 	/** Pantalla Principal **/
 	private HtmlGridView gvArqueosPendRev;
 	
 	private List<SelectItem>lstFiltroCompania;
 	
-	private List lstArqueosPendRev,lstFiltroMoneda,lstFiltroEstado, lstFiltroCaja;
+	private List lstArqueosAutomatico, lstArqueosPendRev,lstFiltroMoneda,lstFiltroEstado, lstFiltroCaja;
 	private DropDownList ddlFiltroCompania,ddlFiltroMoneda,ddlFiltroEstado,ddlFiltroCaja;
 	private HtmlOutputText lblMensaje;	
 	private String msgArqueos;
@@ -325,6 +340,15 @@ public class RevisionArqueoDAO {
 	private List<HistoricoReservasProformas> detalleContratoPmt ;
 	private HtmlGridView gvDetalleContratoPmt;
 	
+	 private final static String PathToRest = "AutomaticClosingREST/AutomaticClosing/ApplyAutomaticClosingRest/applyCashBoxClosing";
+	 private final static String PathToRestConfiguration = "AutomaticClosingREST/AutomaticClosing/GetCashierBoxConfigurationRest/ReadConfiguration/1";
+	 private final static String PathToRestIncomeDetailsReport = "AutomaticClosingREST/AutomaticClosing/IncomeDetailsRest/CreateIncomeDetailsReport/";
+
+	 private static String codeApiKey
+     = "DUyLDUzLDU3OTcsNTEsMTAyLDU1LDQ5LDU3LDk5LDUOTcsNTE"
+     + "sMTU0LDUxLDU3LDEwMSw1Myw1Miw1OTcsNTEsMTsNTEsMTAx"
+     + "LDU1LDUwLDEwMSw0OSOTcsNTEsMT1234098765TEsMTAxLDU1"
+     + "LDUwLDEwMSw0OSOTcsNTEsMT=";
 	
 	//Valores reimplentacion JDE
 	Map m = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();	
@@ -2948,6 +2972,60 @@ public class RevisionArqueoDAO {
 			error.printStackTrace();
 		}
 	}
+	
+	/****************************************************************************************/
+	/** Método: Crear Arqueos de Cajas automaticos.
+	 *	Fecha:  10/08/2024
+	 *  Nombre: Milton Moises Pomares Martinez.
+	 **/	
+		public void crearArqueoxfecha(ActionEvent ev){
+			String sMensaje = "";
+			boolean bValido = true;
+			try {			
+				
+				ValueChangeEvent vcEvent = null;
+				crearArqueosAutomaticos(vcEvent);
+
+			} catch (Exception error) {
+				error.printStackTrace();
+			}
+		}
+		
+		/****************************************************************************************/
+		/** Método: Filtra los Arqueo para la opción de búsqueda por fecha.
+		 *	Fecha:  18/05/2010
+		 *  Nombre: Carlos Manuel Hernández Morrison.
+		 **/	
+			public void filtrarArqueoAuto(ActionEvent ev){
+				String sMensaje = "";
+				boolean bValido = true;
+				try {			
+					
+					ValueChangeEvent vcEvent = null;
+					filtrarArqueosCierreCajaAutomaticos(vcEvent);
+
+				} catch (Exception error) {
+					error.printStackTrace();
+				}
+			}
+		
+	/****************************************************************************************/
+	/** Método: Filtra los Arqueo para la opción de búsqueda por fecha.
+	 *	Fecha:  18/05/2010
+	 *  Nombre: Carlos Manuel Hernández Morrison.
+	 **/	
+		public void GenerarArqueoAuto(ActionEvent ev){
+			String sMensaje = "";
+			boolean bValido = true;
+			try {			
+				
+				ValueChangeEvent vcEvent = null;
+				filtrarArqueos(vcEvent);
+
+			} catch (Exception error) {
+				error.printStackTrace();
+			}
+		}
 /****************************************************************************************/
 /** Método: Registra los registro de depósitos en banco por Afiliados y su monto neto.
  *	Fecha:  18/05/2010
@@ -3796,6 +3874,284 @@ public class RevisionArqueoDAO {
 			error.printStackTrace();
 		}
 	}
+	@SuppressWarnings("unchecked")
+	public void crearArqueosAutomaticos(ValueChangeEvent ev){
+		try{
+			
+			String sCaid, sMoneda, sCodcomp,sMsg="", sEstado;
+			Date dtFechaAr = new Date();
+			Date dtFechaArFin = new Date();
+			List<Varqueo> lstArqueos;
+			
+			sCaid    = ddlFiltroCaja.getValue().toString();
+			
+			sCodcomp = ddlFiltroCompania.getValue().toString();
+			sMoneda   = ddlFiltroMoneda.getValue().toString();
+			sEstado   = ddlFiltroEstado.getValue().toString();
+			
+			
+			FechasUtil f = new FechasUtil();
+			dtFechaArFin = (dcFechaArqueoFin.getValue() == null)?
+					f.quitarAgregarDiasFecha(-1, new Date())
+					:(Date)dcFechaArqueoFin.getValue();
+				
+					
+					
+					if(sCodcomp.compareTo("COMP") == 0 )
+						sCodcomp = "";
+					if(sMoneda.compareTo("MON") == 0 )
+						sMoneda = "";
+					if(sEstado.compareTo("SE") == 0 )
+						sEstado = "";
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					String fechaActual = sdf.format(dtFechaArFin);
+					FechaString=fechaActual;
+					        
+				      List<AutomaticSettlementConfiguration> configuration = readConfiguration();
+				       
+				         
+					
+				        for (AutomaticSettlementConfiguration asc : configuration) {
+				        	asc.setFecha(FechaString);
+				        	
+				        	
+				        	if(Integer.parseInt(sCaid)==999 )
+				        	{
+				        		lstArqueos = new ArqueoCtrl().getArqueosCajaCierreAuto(0,asc.getCaid(),sCodcomp,sMoneda,sEstado,dtFechaArFin, 300 );
+								   
+				        		if(lstArqueos.size() == 0) {
+				        			sMsg = sMsg +" "+ "Mensaje de Caja: "+ asc.getCaid() +" "+callRestAutomaticSettlement(asc);
+				        			sMsg = sMsg.contains(":0")? 
+					    					"Arqueo Generado Exitosamente!":
+					    					"Error : "+ extractMessage(sMsg);
+				        			
+				        		   	lstArqueos = new ArqueoCtrl().getArqueosCajaCierreAuto(0,Integer.parseInt(sCaid),sCodcomp,sMoneda,sEstado,dtFechaArFin, 300 );
+						        	CodeUtil.putInSessionMap("lstArqueosAutomatico", lstArqueos);
+							
+			        
+				        				}else {
+				        					sMsg = "La caja: "+ asc.getCaid() + "ya cuenta con un arqueo para el día: "+FechaString;
+						        			LogCajaService.CreateLog("CrearArqueoAutomatico", "INFO", sMsg);
+						        	
+						        		   	lstArqueos = new ArqueoCtrl().getArqueosCajaCierreAuto(0,Integer.parseInt(sCaid),sCodcomp,sMoneda,sEstado,dtFechaArFin, 300 );
+								        	CodeUtil.putInSessionMap("lstArqueosAutomatico", lstArqueos);
+									
+				        		}
+				        		
+				        	}else if (asc.getCaid()== Integer.parseInt(sCaid) )
+				        	{
+				        		lstArqueos = new ArqueoCtrl().getArqueosCajaCierreAuto(0,asc.getCaid(),sCodcomp,sMoneda,sEstado,dtFechaArFin, 300 );
+								
+				        		if(lstArqueos.size() == 0) {
+				        			sMsg = callRestAutomaticSettlement(asc);				        			
+				        			sMsg = sMsg.contains(":0")? 
+					    					"Arqueo Generado Exitosamente!":
+					    					"Error : "+ extractMessage(sMsg);
+			
+						        	lstArqueos = new ArqueoCtrl().getArqueosCajaCierreAuto(0,Integer.parseInt(sCaid),sCodcomp,sMoneda,sEstado,dtFechaArFin, 300 );
+						        	CodeUtil.putInSessionMap("lstArqueosAutomatico", lstArqueos);
+								}else {
+				        			sMsg = "La caja: "+ asc.getCaid() + " ya cuenta con un arqueo para el día: "+FechaString;
+						        	LogCajaService.CreateLog("CrearArqueoAutomatico", "INFO", sMsg);
+						        	
+						        	lstArqueos = new ArqueoCtrl().getArqueosCajaCierreAuto(0,Integer.parseInt(sCaid),sCodcomp,sMoneda,sEstado,dtFechaArFin, 300 );
+						        	CodeUtil.putInSessionMap("lstArqueosAutomatico", lstArqueos);
+						
+				        			}
+					        }
+				        }
+				        
+				    	
+		        	gvArqueosPendRev.dataBind();
+					lblMensaje.setValue(sMsg);
+					
+					dwCargando.setWindowState("hidden");
+					
+					SmartRefreshManager.getCurrentInstance().addSmartRefreshId(
+							dwCargando.getClientId(FacesContext.getCurrentInstance()));
+				        
+		}catch(Exception error){
+			LogCajaService.CreateLog("filtrarArqueos", "ERR", error.getMessage());
+		} finally {
+			LogCajaService.CreateLog("filtrarArqueos", "INFO", "filtrarArqueos-INICIO");
+			HibernateUtilPruebaCn.closeSession();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String callRestAutomaticSettlement(AutomaticSettlementConfiguration asc) {
+		String sCaid, sMoneda, sCodcomp,sMsg, sEstado, Msg = "";
+		List<Varqueo> lstArqueos;
+		
+		try {
+
+            String strUrlToRestCall = "http://@IpServerRest:@ServerRestPort/@PathToRest/@CAID/@FECHA/@HORA/@CODENOT/@APROBAR";
+
+            if (asc == null) {
+                System.out.println(" null search data cashbox");
+                //return null;
+            }
+
+            if (asc.getFecha() == null || asc.getFecha().trim().isEmpty()) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                asc.setFecha(new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
+            }
+
+            strUrlToRestCall = strUrlToRestCall
+                    .replace("@IpServerRest", ConfigConnection.SERVER)
+                    .replace("@ServerRestPort", ConfigConnection.PORT)
+                    .replace("@PathToRest", PathToRest)
+                    .replace("@CAID", String.valueOf(asc.getCaid()))
+                    .replace("@FECHA", asc.getFecha())
+                    .replace("@HORA", asc.getHoracierre())
+                    .replace("@CODENOT", String.valueOf(asc.getCodigonotificacion()))
+                    .replace("@APROBAR", String.valueOf(asc.getAprobarcierre()) ) ;
+
+             URL url = new URL(strUrlToRestCall);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("GCP-API-KEY", codeApiKey);
+            connection.setRequestProperty("Accept", "application/json");
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+            InputStream is = connection.getInputStream();
+
+            int count;
+            byte[] buffer = new byte[1024];
+            while ((count = is.read(buffer)) != -1) {
+                os.write(buffer, 0, count);
+            }
+            connection.disconnect();
+
+            Msg= os.toString("UTF-8");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+        	return Msg;
+        }
+    }
+	
+	public static List<AutomaticSettlementConfiguration> readConfiguration() {
+        List<AutomaticSettlementConfiguration> configuration;
+
+        try {
+
+            String strUrlToRestConfiguration = "http://@IpServerRest:@ServerRestPort/@PathToRestConfiguration";
+
+            strUrlToRestConfiguration = strUrlToRestConfiguration
+                    .replace("@IpServerRest", ConfigConnection.SERVER )
+                    .replace("@ServerRestPort", ConfigConnection.PORT)
+                    .replace("@PathToRestConfiguration", PathToRestConfiguration);
+
+            System.out.println("URL a mandar" + strUrlToRestConfiguration );
+			   
+            
+            URL url = new URL(strUrlToRestConfiguration);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("GCP-API-KEY", codeApiKey);
+            connection.setRequestProperty("Accept", "application/json");
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            InputStream is = connection.getInputStream();
+
+            int count = 0;
+            byte[] buffer = new byte[1024];
+            while ((count = is.read(buffer)) != -1) {
+                os.write(buffer, 0, count);
+            }
+            connection.disconnect();
+
+            String response = os.toString("UTF-8");
+
+            Gson gson = new Gson();
+            Message message = gson.fromJson(response, Message.class);
+
+            Type founderListType = new TypeToken<ArrayList<AutomaticSettlementConfiguration>>() { }.getType();
+            configuration = gson.fromJson(message.getMessage(), founderListType);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            configuration = null;
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+            configuration = null;
+        }
+        return configuration;
+    }
+	
+	@SuppressWarnings("unchecked")
+	public void filtrarArqueosCierreCajaAutomaticos(ValueChangeEvent ev){
+		String sCaid, sMoneda, sCodcomp,sMsg, sEstado;
+		Date dtFechaAr = new Date();
+		Date dtFechaArFin = new Date();
+		int iCaid = 0;
+		List<Varqueo> lstArqueos;
+		 
+		try{
+			
+			
+			Vf55ca01 caja = ((ArrayList<Vf55ca01>)CodeUtil.getFromSessionMap( "lstCajas")).get(0);
+			
+			sCaid    = ddlFiltroCaja.getValue().toString();
+			sCodcomp = ddlFiltroCompania.getValue().toString();
+			sMoneda   = ddlFiltroMoneda.getValue().toString();
+			sEstado   = ddlFiltroEstado.getValue().toString();
+			
+			FechasUtil f = new FechasUtil();
+			
+
+			dtFechaArFin = (dcFechaArqueoFin.getValue() == null)?
+					f.quitarAgregarDiasFecha(-1, new Date())
+					:(Date)dcFechaArqueoFin.getValue();
+			
+			if(sCaid.compareTo("SCA") != 0)
+				iCaid = Integer.parseInt(sCaid);
+			if(sCodcomp.compareTo("COMP") == 0 )
+				sCodcomp = "";
+			if(sMoneda.compareTo("MON") == 0 )
+				sMoneda = "";
+			if(sEstado.compareTo("SE") == 0 )
+				sEstado = "";
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaActual = sdf.format(dtFechaArFin);
+			FechaString=fechaActual;
+			
+			lstArqueos = new ArqueoCtrl().getArqueosCajaCierreAuto(0, iCaid,sCodcomp,sMoneda,sEstado, dtFechaArFin, 300);
+					
+			
+			sMsg = (lstArqueos.size() == 0)? 
+					"No se encontraron arqueos pendientes":
+					"Resultados encontrados: "+lstArqueos.size();
+			
+			CodeUtil.putInSessionMap("lstArqueosAutomatico", lstArqueos);
+			gvArqueosPendRev.dataBind();
+			lblMensaje.setValue(sMsg);
+			
+			dwCargando.setWindowState("hidden");
+			dcFechaArqueoFin.setValue(dtFechaArFin);
+			
+			SmartRefreshManager.getCurrentInstance().addSmartRefreshId(
+				dcFechaArqueoFin.getClientId(FacesContext.getCurrentInstance()));
+			SmartRefreshManager.getCurrentInstance().addSmartRefreshId(
+					dwCargando.getClientId(FacesContext.getCurrentInstance()));
+
+		}catch(Exception error){
+			LogCajaService.CreateLog("filtrarArqueos", "ERR", error.getMessage());
+		} finally {
+			LogCajaService.CreateLog("filtrarArqueos", "INFO", "filtrarArqueos-INICIO");
+			HibernateUtilPruebaCn.closeSession();
+		}
+	}
+	
 /****** 2. Filtrar los arqueos por monedas, por compañía o por ambos **************/
 	@SuppressWarnings("unchecked")
 	public void filtrarArqueos(ValueChangeEvent ev){
@@ -8594,8 +8950,23 @@ public class RevisionArqueoDAO {
 		}
 		return lstArqueosPendRev;
 	}
+	public List getLstArqueosAutomatico() {		
+		try{			
+			if(CodeUtil.getFromSessionMap( "lstArqueosAutomatico")==null)
+				lstArqueosAutomatico = new ArrayList();
+			else
+				lstArqueosAutomatico = (ArrayList)CodeUtil.getFromSessionMap( "lstArqueosAutomatico");
+			
+		}catch(Exception error){
+			error.printStackTrace();
+		}
+		return lstArqueosAutomatico;
+	}
 	public void setLstArqueosPendRev(List lstArqueosPendRev) {
 		this.lstArqueosPendRev = lstArqueosPendRev;
+	}
+	public void setLstArqueosAutomatico(List lstArqueosAutomatico) {
+		this.lstArqueosAutomatico = lstArqueosAutomatico;
 	}
 	public DropDownList getDdlFiltroCompania() {
 		return ddlFiltroCompania;
@@ -9678,6 +10049,39 @@ public class RevisionArqueoDAO {
 	public void setDdlFiltroCaja(DropDownList ddlFiltroCaja) {
 		this.ddlFiltroCaja = ddlFiltroCaja;
 	}
+	public List getLstFiltroCajaCierreAuto() {
+		try {
+
+			//if(CodeUtil.getFromSessionMap( "rva_lstFiltroCaja")==null){
+				List lstcaja = (ArrayList)CodeUtil.getFromSessionMap( "lstCajas");
+				Vf55ca01 caja = (Vf55ca01)lstcaja.get(0);
+				CtrlCajas cc = new CtrlCajas();
+				
+				lstFiltroCaja = new ArrayList();
+				lstFiltroCaja.add(new SelectItem("999","TODAS LAS CAJAS","Seleccione la Caja para filtrar"));
+				
+				
+				Vautoriz[] vAut = (Vautoriz[])CodeUtil.getFromSessionMap( "sevAut");
+						
+					List lstCaContador = cc.obtenerCajasCierreCajaAhora();
+					if(lstCaContador!=null && lstCaContador.size()>0){
+						for(int i=0;i<lstCaContador.size();i++){
+							Vf55ca01 v = (Vf55ca01)lstCaContador.get(i);
+							lstFiltroCaja.add(new SelectItem(v.getId().getCaid()+"",
+									v.getId().getCaid()+ " " +v.getId().getCaname().trim(),
+										v.getId().getCaid()+ " " +v.getId().getCaname().trim() ));
+						}
+					}
+				
+				
+				CodeUtil.putInSessionMap("rva_lstFiltroCaja", lstFiltroCaja);
+				
+			//}
+      		} catch (Exception error) {
+			LogCajaService.CreateLog("getLstFiltroCaja", "ERR", error.getMessage());
+		}
+		return lstFiltroCaja;
+	}
 	public List getLstFiltroCaja() {
 		try {
 
@@ -10111,6 +10515,14 @@ public class RevisionArqueoDAO {
 		return  lstGvActualizaCodigoAfiliado  ;
 		
 	}
+	
+	public static String extractMessage(String input) {
+		String keyword = "\"message\":\"";
+		int startIndex = input.indexOf(keyword) + keyword.length();
+		int endIndex = input.indexOf("\"", startIndex);
+		return input.substring(startIndex, endIndex);
+		}
+	
 	public void setLstGvActualizaCodigoAfiliado(
 			List<Vrecibosxtipompago> lstGvActualizaCodigoAfiliado) {
 		this.lstGvActualizaCodigoAfiliado = lstGvActualizaCodigoAfiliado;

@@ -278,6 +278,12 @@ public class MenuDAO {
 							fc.getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME+"/cierre/revisionArqueo.faces");
 							break;
 						}
+						else if(secciones[i].getId().getCodsec().equals("S000000548")){							
+							cargarArqueosPendientes();
+							
+							fc.getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME+"/cierre/CierreAutomaticoArqueo.faces");
+							break;
+						}
 						else if(secciones[i].getId().getCodsec().equals("S000000048")){
 							fc.getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME+"/reportes/rptmcaja003.faces"); //nh.handleNavigation(fc, "onItemClick", "rptmcaja003");
 							break;

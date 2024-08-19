@@ -10,8 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.casapellas.util.PropertiesSystem;
+
 @Entity
-@Table(name = "VAUTORIZ", catalog = "SYSTEMIP", schema = "ENS")
+@Table(name = "VAUTORIZ", catalog = "SYSTEMIP", schema = PropertiesSystem.ENS)
 @XmlRootElement
 public class Vautoriz implements Serializable {
 

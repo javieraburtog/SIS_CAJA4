@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.model.SelectItem;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -14,6 +16,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.casapellas.entidades.F55ca01;
 import com.casapellas.entidades.Varqueo;
+import com.casapellas.entidades.Vf55ca01;
 import com.casapellas.entidades.Vrecibostcir;
 import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.util.LogCajaService;
@@ -113,49 +116,67 @@ public class ArqueoCtrl {
 			arqueos = (ArrayList<Varqueo>)cr.list();
 			
 			if(arqueos == null || arqueos.isEmpty()) return new ArrayList<Varqueo>();
+
+			for (int i = 0; i < arqueos.size(); i++) {
+				Varqueo v = arqueos.get(i);
+				v.setNoarqueo(v.getId().getNoarqueo());
+				arqueos.set(i, v);
+			}
 			
-		
 			 
-			/*Collections.sort(arqueos, new Comparator<Varqueo>(){
-				public int compare(Varqueo v1, Varqueo v2) {
-					int iCompCaja = (v1.getId().getCaid() < v2.getId()
-							.getCaid())? -1: (v1.getId().getCaid() >
-								v2.getId().getCaid())? 1 : 0;
-					if (iCompCaja == 0)
-						iCompCaja = (v1.getId().getNoarqueo() < v2.getId()
-							.getNoarqueo())? -1: (v1.getId().getNoarqueo() >
-								v2.getId().getNoarqueo())? 1 : 0;
-					return iCompCaja;
+			
+		} catch (Exception e) {			
+			LogCajaService.CreateLog("getArqueosCaja", "ERR", e.getMessage());
+		}
+		return arqueos;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<Varqueo> getArqueosCajaCierreAuto(int iCaidBusq, int iCajaUso , 
+			String sCodcomp, String sMoneda, String sEstado, 
+					Date dtFinal,  int iMaximos){
+		Session sesion = null;
+		CtrlCajas cc = new CtrlCajas();
+		
+		List<Integer>lstCajas = new ArrayList<Integer>();
+		ArrayList<Varqueo> arqueos = new ArrayList<Varqueo>();
+		
+		try {
+			sesion = HibernateUtilPruebaCn.currentSession();
+			
+			Criteria cr = sesion.createCriteria(Varqueo.class);
+			cr.add(Restrictions.between("id.fecha", dtFinal, dtFinal));
+			
+			LogCajaService.CreateLog("getArqueosCaja", "HQRY", LogCajaService.toSql(cr));
+		
+			if(sEstado.compareTo("") != 0)
+				cr.add(Restrictions.eq("id.estado", sEstado));
+			if(sCodcomp.compareTo("") != 0)
+				cr.add(Restrictions.eq("id.codcomp", sCodcomp));
+			if(sMoneda.compareTo("") != 0)
+				cr.add(Restrictions.eq("id.moneda", sMoneda));
+			
+			List lstCaCierre = cc.obtenerCajasCierreCajaAhora();
+			if(iCajaUso==999){
+				for(int i=0;i<lstCaCierre.size();i++){
+					Vf55ca01 v = (Vf55ca01)lstCaCierre.get(i);
+					lstCajas.add(v.getId().getCaid());
 				}
-			});
+			}
 			
-			Collections.sort(arqueos, new Comparator<Varqueo>() {
-			    public int compare(Varqueo v1, Varqueo v2) {
-			        if (v1 == null || v1.getId() == null) {
-			            return (v2 == null || v2.getId() == null) ? 0 : -1;
-			        }
-			        if (v2 == null || v2.getId() == null) {
-			            return 1;
-			        }
-			        
-			        int caid1 = v1.getId().getCaid();
-			        int caid2 = v2.getId().getCaid();
-			        
-			        if (caid1 != caid2) {
-			            return caid1 < caid2 ? -1 : 1;
-			        }
-			        
-			        int noarqueo1 = 1;//v1.getId().getNoarqueo();
-			        int noarqueo2 = 1;//v2.getId().getNoarqueo();
-			        
-			        return noarqueo1 < noarqueo2 ? -1 : (noarqueo1 > noarqueo2 ? 1 : 0);
-			    }
-			});
+			if(iCaidBusq == 0 && ( lstCajas == null || lstCajas.isEmpty() ) ){
+				lstCajas = new ArrayList<Integer>();
+				lstCajas.add(iCajaUso);
+			}
 			
-			Collections.sort(arqueos, Comparator.comparingInt((Varqueo v) -> v.getId().getCaid())
-				    .thenComparingInt(v -> v.getId().getNoarqueo()));
-*/
 			
+			
+			cr.add(Restrictions.in("id.caid", lstCajas));
+			
+			arqueos = (ArrayList<Varqueo>)cr.list();
+			
+			if(arqueos == null || arqueos.isEmpty()) return new ArrayList<Varqueo>();
+
 			for (int i = 0; i < arqueos.size(); i++) {
 				Varqueo v = arqueos.get(i);
 				v.setNoarqueo(v.getId().getNoarqueo());

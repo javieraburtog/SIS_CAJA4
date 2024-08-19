@@ -1155,6 +1155,29 @@ public class CtrlCajas {
 		
 		return lstCajas;
 	}
+	
+	public static List<Vf55ca01> obtenerCajasCierreCajaAhora(){
+		List<Vf55ca01> lstCajas = null;
+		
+		StringBuilder sbSql2 = new StringBuilder();
+		
+		Session session = null; 		
+		try{
+			session = HibernateUtilPruebaCn.currentSession();
+			
+			sbSql2.append(" select f.* from "+PropertiesSystem.ESQUEMA+".Vf55ca01 as f inner join "+PropertiesSystem.ESQUEMA+".cierrecajahora c "); 
+			sbSql2.append("on c.caid=f.caid WHERE c.ESTADO=1 and f.castat = 'A'  order by f.caid");
+			
+			LogCajaService.CreateLog("leerCajasCierreAuto", "QRY", sbSql2.toString());
+			
+			lstCajas = session.createSQLQuery(sbSql2.toString()).addEntity(Vf55ca01.class).list();
+			
+		}catch(Exception ex){
+			LogCajaService.CreateLog("leerTraslados", "ERR", ex.getLocalizedMessage());
+		}
+		return lstCajas;
+	}
+	
 	public List obtenerCajasxContador1(int iCodContador){
 		List lstCajas = new ArrayList();
 		Session session = HibernateUtilPruebaCn.currentSession();		
