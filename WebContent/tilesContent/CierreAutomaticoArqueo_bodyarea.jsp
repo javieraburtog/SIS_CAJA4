@@ -123,41 +123,51 @@ function mostrarCargando(id){
 					<td id="rvaTD2" height="15" valign="bottom" class="datosCaja">&nbsp;&nbsp;
 					<h:outputText styleClass="frmLabel2" id="lblTitRevisionArqueo0"
 						value="Cierre de Caja" style="color: #888888"></h:outputText> <h:outputText
-						id="lblTitRevisionArqueo1" value=" : Revisión de Arqueo"
+						id="lblTitRevisionArqueo1" value=" : Cierre de cajas Automáticas"
 						styleClass="frmLabel3"></h:outputText></td>
 				</tr>
 			</table>
 			<center id="cnRevisionArqueo"><br>
 			<table width="100%">
 				<tr>
-					
-					<td align="left" valign="bottom" style="padding-left: 7px;" ><ig:dateChooser
-						styleClass="dateChooserSyleClass" id="dcFechaArqueo"
-						tooltip="Fecha de arqueo de caja" editMasks="dd/MM/yyyy"
-						showDayHeader="true" showHeader="true" firstDayOfWeek="2"
-						binding="#{mbRevArqueo.dcFechaArqueo}"
-						value="#{mbRevArqueo.dtFechaArqueo}" />
+					<td align="left" valign="bottom" style="padding-left: 7px;">
+						<h:outputText
+						id="lblFiltroFecha" value="Fecha a Procesar: " styleClass="frmLabel2"></h:outputText>
 					</td>	
-					
-					<td align="left" valign="bottom">
+					<td align="left" valign="bottom" >
 						<ig:dateChooser 
-							styleClass="dateChooserSyleClass" id="dcFechaArqueoFin"
-							tooltip="Fecha Final de busqueda" editMasks="dd/MM/yyyy"
+							styleClass="dateChooserSyleClass" 
+							id="dcFechaArqueoFin"
+							tooltip="Fecha a procesar" editMasks="dd/MM/yyyy"
 							showDayHeader="true" showHeader="true" firstDayOfWeek="2" 
 							binding="#{mbRevArqueo.dcFechaArqueoFin}"
 							value="#{mbRevArqueo.dtFechaArqueoFin}" />
 					</td>	
+					
+					<td width="40" valign="bottom" ><h:outputText
+						id="lblFiltroCajaCierreAuto" value="Caja: " styleClass="frmLabel2"></h:outputText></td>
+						<td align="left" valign="bottom">
+						<ig:dropDownList
+						style = "width: 150px;"
+						styleClass="frmInput2ddl" id="ddlFiltroCaja"
+						dataSource="#{mbRevArqueo.lstFiltroCajaCierreAuto}"
+						binding="#{mbRevArqueo.ddlFiltroCaja}"
+						smartRefreshIds="gvArqueosPendRev,lblMensaje"
+						valueChangeListener="#{mbRevArqueo.filtrarArqueosCierreCajaAutomaticos}" >
+						<ig:dropDownListClientEvents onChange="mostrar" />
+						</ig:dropDownList></td>
 						
-					<td align="middle" valign="middle"><ig:link
+					
+					<td align="middle" valign="bottom"><ig:link
 						id="lnkFiltrarxFecha" styleClass="igLink" 
-						tooltip="Buscar arqueos a la fecha seleccionada"
+						tooltip="Generar Arqueos"
 						iconUrl="/theme/icons2/accept.png"
 						hoverIconUrl="/theme/icons2/acceptOver.png"
-						actionListener="#{mbRevArqueo.filtrarArqueoxfecha}"
-						smartRefreshIds="lblMensaje,gvArqueosPendRev, dcFechaArqueoFin, dcFechaArqueo" />
+						actionListener="#{mbRevArqueo.crearArqueoxfecha}"
+						smartRefreshIds="lblMensaje,gvArqueosPendRev, dcFechaArqueoFin" />
 					</td>				
 					
-					<td align="left" valign="bottom" style="width: 70%;"><h:outputText
+					<td align="left" valign="bottom" style="width: 50%;"><h:outputText
 						styleClass="frmLabel2" id="lblMensaje"
 						binding="#{mbRevArqueo.lblMensaje}"
 						value="#{mbRevArqueo.msgArqueos}" style="color: red" />
@@ -167,12 +177,12 @@ function mostrarCargando(id){
 			
 			<ig:gridView id="gvArqueosPendRev"
 				binding="#{mbRevArqueo.gvArqueosPendRev}"
-				dataSource="#{mbRevArqueo.lstArqueosPendRev}" pageSize="15"
+				dataSource="#{mbRevArqueo.lstArqueosAutomatico}" pageSize="15"
 				sortingMode="multi" styleClass="igGrid" movableColumns="false"
 				style="height: 350px;width: 966px">
 				<f:facet name="header">
 					<h:outputText id="lblHeader"
-						value="Arqueos de caja pendientes de revisión"
+						value="Arqueos de caja cierre automáticos"
 						style="color: #353535; font-family: Arial; font-variant: small-caps; font-weight: bold; font-size: 10pt"></h:outputText>
 				</f:facet>
 
@@ -212,15 +222,7 @@ function mostrarCargando(id){
 							styleClass="lblHeaderColumnGrid"></h:outputText>
 					</f:facet>
 				</ig:column>
-				<ig:column id="coCodcomp" style=" text-align: left"
-					styleClass="igGridColumn" sortBy="nombrecomp">
-					<h:outputText id="lblcodcomp0" value="#{DATA_ROW.id.nombrecomp}"
-						styleClass="frmLabel3"></h:outputText>
-					<f:facet name="header">
-						<h:outputText id="lblcodcomp1" value="Compañía"
-							styleClass="lblHeaderColumnGrid"></h:outputText>
-					</f:facet>
-				</ig:column>
+				
 				<ig:column id="coNoarqueo" style=" text-align: right"
 					styleClass="igGridColumn" sortBy="id.noarqueo">
 					<h:outputText id="lblnoarqueo0" value="#{DATA_ROW.noarqueo}"
@@ -311,8 +313,8 @@ function mostrarCargando(id){
 						iconUrl="/theme/icons2/refresh2.png"
 						hoverIconUrl="/theme/icons2/refreshOver2.png"
 						styleClass="igLink"
-						actionListener="#{mbRevArqueo.filtrarArqueoxfecha}"
-						smartRefreshIds="gvArqueosPendRev,lblMensaje">
+						actionListener="#{mbRevArqueo.filtrarArqueoAuto}"
+						smartRefreshIds="gvArqueosPendRev,ddlFiltroCompania,ddlFiltroMoneda,lblMensaje">
 					</ig:link></td>
 					 <td  align="left" valign="bottom"  ><ig:link
 					 		style ="#{mbRevArqueo.strParametrosBloqueo}"
@@ -325,17 +327,7 @@ function mostrarCargando(id){
 							smartRefreshIds="dwUpdParamBloqueo"
 							styleClass="igLink" />
 					</td>
-					<td width="40" valign="bottom" ><h:outputText
-						id="lblFiltroCaja" value="Caja: " styleClass="frmLabel2"></h:outputText></td>
-					<td width="40" valign="bottom" ><ig:dropDownList
-						style = "width: 150px;"
-						styleClass="frmInput2ddl" id="ddlFiltroCaja"
-						dataSource="#{mbRevArqueo.lstFiltroCaja}"
-						binding="#{mbRevArqueo.ddlFiltroCaja}"
-						smartRefreshIds="gvArqueosPendRev,lblMensaje"
-						valueChangeListener="#{mbRevArqueo.filtrarArqueos}" >
-						<ig:dropDownListClientEvents onChange="mostrar" />
-						</ig:dropDownList></td>
+					
 					<td width="65" valign="bottom" ><h:outputText
 						id="lblFiltroComp" value="Compañía: " styleClass="frmLabel2" /></td>
 					<td width="40" valign="bottom" ><ig:dropDownList
@@ -343,7 +335,7 @@ function mostrarCargando(id){
 						dataSource="#{mbRevArqueo.lstFiltroCompania}"
 						binding="#{mbRevArqueo.ddlFiltroCompania}"
 						smartRefreshIds="gvArqueosPendRev,lblMensaje"
-						valueChangeListener="#{mbRevArqueo.filtrarArqueos}">
+						valueChangeListener="#{mbRevArqueo.filtrarArqueosCierreCajaAutomaticos}">
 						<ig:dropDownListClientEvents onChange="mostrar" />
 						</ig:dropDownList></td>
 					<td width="40" valign="bottom" ><h:outputText
@@ -353,7 +345,7 @@ function mostrarCargando(id){
 						dataSource="#{mbRevArqueo.lstFiltroMoneda}"
 						binding="#{mbRevArqueo.ddlFiltroMoneda}"
 						smartRefreshIds="gvArqueosPendRev,lblMensaje"
-						valueChangeListener="#{mbRevArqueo.filtrarArqueos}">
+						valueChangeListener="#{mbRevArqueo.filtrarArqueosCierreCajaAutomaticos}">
 						<ig:dropDownListClientEvents onChange="mostrar" />
 						</ig:dropDownList></td>
 					<td width="40" valign="bottom"><h:outputText
@@ -363,7 +355,7 @@ function mostrarCargando(id){
 						dataSource="#{mbRevArqueo.lstFiltroEstado}"
 						binding="#{mbRevArqueo.ddlFiltroEstado}"
 						smartRefreshIds="gvArqueosPendRev,lblMensaje"
-						valueChangeListener="#{mbRevArqueo.filtrarArqueos}">
+						valueChangeListener="#{mbRevArqueo.filtrarArqueosCierreCajaAutomaticos}">
 						<ig:dropDownListClientEvents id="cleddlComapaniaCre" onChange="mostrar" />
 						</ig:dropDownList></td>
 				</tr>
