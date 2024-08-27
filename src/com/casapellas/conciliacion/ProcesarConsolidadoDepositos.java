@@ -87,7 +87,7 @@ public class ProcesarConsolidadoDepositos {
 			 }
 			 
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();	
 		}
 		 
 	}

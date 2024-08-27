@@ -481,7 +481,7 @@ public static String CTADEUDORESVARIOSUNINEG(String codCompania) {
 		}
 public static String CTADEUDORESVARIOSUNINEGTODAS() {
 	
-	String query="SELECT LISTAGG(COD_UNIDAD_NEGOCIO,',') FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCtaDeudores + "'";     
+	String query="SELECT LISTAGG(COD_UNIDAD_NEGOCIO,''',''') FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCtaDeudores + "'";     
 		
 		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
 		
