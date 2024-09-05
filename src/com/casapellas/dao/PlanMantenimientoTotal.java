@@ -559,6 +559,7 @@ public class PlanMantenimientoTotal {
 		
 		try {
 			
+			HibernateUtilPruebaCn.closeSession();
 			
 			LogCajaService.CreateLog("procesarReciboAnticiposPMT", "INF", "procesarReciboAnticiposPMT - INICIO - " + LogCajaService.getTimeInf());
 			

@@ -12,14 +12,10 @@ import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import com.casapellas.controles.tmp.ReciboCtrl;
-import com.casapellas.donacion.entidades.GValidate;
-import com.casapellas.entidades.HistoricoReservasProformas;
 import com.casapellas.entidades.MetodosPago;
 import com.casapellas.entidades.Metpago;
-import com.casapellas.entidades.Recibo;
 import com.casapellas.entidades.Vf0901;
 import com.casapellas.jde.creditos.DefaultJdeFieldsValues;
 import com.casapellas.util.CodeUtil;
