@@ -142,7 +142,7 @@ public class SvltExportDocumentosCierre extends HttpServlet {
 					if(b64strfile.isEmpty())
 						continue;
 					
-					filename = prefixfiletodelete + ("Arqueo_" + me.getId().getNoarqueo()+"_Caja_"+(me.getId().getCaid()  )+".pdf");
+					filename = prefixfiletodelete + ("Arqueo_" + me.getId().getNoarqueo()+"_Caja_"+(me.getId().getCaid()+"_Comp_"+(me.getId().getCodcomp().trim())) +".pdf");
 					socketfilesnames.add(filename);
 					
 					FileOutputStream fos = new FileOutputStream(absolutePath +  filename);
@@ -155,7 +155,7 @@ public class SvltExportDocumentosCierre extends HttpServlet {
 					if(b64strfile.isEmpty())
 						continue;
 					
-					filename = prefixfiletodelete +  "RecibosCaja_"+me.getId().getCaid()+"_Arqueo_" 
+					filename = prefixfiletodelete +  "RecibosCaja_"+me.getId().getCaid()+"_"+ me.getId().getCodcomp().trim() +"_Arqueo_" 
 							+ me.getId().getNoarqueo() +"_" 
 							+ new SimpleDateFormat("ddMMyyyy").format(me.getId().getFecha())
 							+ new SimpleDateFormat("ddMMyyyy").format(me.getId().getHora() ) 
@@ -192,41 +192,7 @@ public class SvltExportDocumentosCierre extends HttpServlet {
 					fos.close();
 					
 				}
-				
-				/*
-				String sql = "select * from "+PropertiesSystem.ESQUEMA
-						+".cierre_spos where caid = "+va.getId().getCaid() 
-						+" and date(date_closing) = '"
-						+ FechasUtil.formatDatetoString(va.getId().getFecha(), "yyyy-MM-dd") +"'";
-				
-				@SuppressWarnings("unchecked")
-				List<CierreSpos>  cierressocket = (ArrayList<CierreSpos>) 
-						sesion.createSQLQuery(sql).addEntity(CierreSpos.class).list();
-					
-				if(cierressocket == null || cierressocket.isEmpty()){
-					out.println("");
-					return;
-				}		
-				
-				List<String> socketfilesnames = new ArrayList<String>();
-				for (int i = 0; i < cierressocket.size(); i++) {
-				
-					CierreSpos me = cierressocket.get(i);
-					b64strfile = RevisionArqueoCtrl.getBase64StringFromFile( me.getIdcierrespos(), 
-							68, String.valueOf(  me.getIdcierrespos() ) );
-					
-					if(b64strfile.isEmpty())
-						continue;
-					
-					filename = ( prefixfiletodelete + "CierreSocketPos_"+(i+1)+".pdf");
-					socketfilesnames.add(filename);
-					
-					FileOutputStream fos = new FileOutputStream(absolutePath +  filename);
-					fos.write(Base64.decodeBase64(  b64strfile.getBytes("UTF-8") ));
-					fos.close();
-				}
-				*/
-				
+							
 				String socketzipname = prefixfiletodelete + "DocumentosCierresCaja.zip";
 				FileOutputStream fos = new FileOutputStream( absolutePath + socketzipname );
 				ZipOutputStream zos = new ZipOutputStream(fos);
