@@ -4928,7 +4928,7 @@ public class RevisionArqueoDAO {
 					for (Vreciboxdevolucion v : lstDevpme) 
 						bdTotal = bdTotal.add(v.getId().getMonto());
 						
-					dTotalirme -= dv.roundDouble(bdTotal.doubleValue());
+					dTotalerme += dv.roundDouble(bdTotal.doubleValue());
 				}
 				//&& =========== Otras devoluciones......
 				List<Vreciboxdevolucion>lstDev3 = rvCtrl1.obtenerRecxDevmonex3(
@@ -4936,10 +4936,10 @@ public class RevisionArqueoDAO {
 											 fechaAr, horaAr, recibos);
 				if(lstDev3 != null && !lstDev3.isEmpty()){
 					for (Vreciboxdevolucion vr : lstDev3) 
-						dTotalirme += vr.getId().getMontoapl().doubleValue();
+						dTotalerme += vr.getId().getMontoapl().doubleValue();
 				}
-				dTotalirme = dv.roundDouble(dTotalirme);
-				
+				// dTotalirme = dv.roundDouble(dTotalirme);
+				dTotalerme = dv.roundDouble(dTotalerme);
 				
 				//&& =========== Egresos		
 				lstRecEgre = rvCtrl1.obtenerIngEgrRecMonEx(false, caid, sCodcomp, sCodsuc, sArqueoMon, fechaAr, horaAr, recibos);//<<<<...>>>>//

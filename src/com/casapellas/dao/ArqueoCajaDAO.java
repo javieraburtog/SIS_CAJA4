@@ -4992,6 +4992,10 @@ ArqueoControl acCtrl1 = new ArqueoControl();
 					}
 
 					//&& =============  buscar devolucion total para la linea del metodo de pago.
+					/*
+					 * Segmento de codigo comentado debido a que no es necesario
+					 * restar las devoluciones en otra moneda
+					 * pq se toman en consideracion en los egresos.
 					boolean devoluciontotal = false;
 					List<Recibo> recibos = ReciboCtrl.getDevolucionPorRecibo(
 							iCaid, vm.getId().getNumrec(), 
@@ -5010,6 +5014,7 @@ ArqueoControl acCtrl1 = new ArqueoControl();
 							//&&==============  buscar devolucion parcial para la linea del metodo de pago.
 							if( r != null && r.getMontoapl().compareTo( vm.getId().getMontoapl()) == -1 
 										&& !sComparaDevolucion.contains(sComparaDevolucionTmp) ){
+								// Preguntar por la moneda base
 								dTotalrme -= Divisas.roundDouble( r.getMontoapl()
 											.multiply(vm.getId().getTasa()).doubleValue(), 2);
 								sComparaDevolucion += sComparaDevolucionTmp;
@@ -5017,8 +5022,10 @@ ArqueoControl acCtrl1 = new ArqueoControl();
 							}
 						} 
 					}
+
 					if(devoluciontotal)
 						continue;
+					*/
 					
 					if(vm.getId().getMpago().compareTo(MetodosPagoCtrl.EFECTIVO )!=0 && 
 							vm.getId().getCambio().compareTo(BigDecimal.ZERO) == 1 
