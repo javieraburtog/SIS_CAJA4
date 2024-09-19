@@ -747,13 +747,18 @@ public class RevisionArqueoCtrl {
 		List<Object[]> lstPOSdncs = null; 
 		List<ResumenAfiliado> lstPos = new ArrayList<ResumenAfiliado>();
 		Divisas dv = new Divisas();
+		ClsParametroCaja cajaparm = new ClsParametroCaja();
+		String sTrader = "0";
+		String sAlpesa = "0";
 		
 		try {
 			
 			String sFecha = FechasUtil.formatDatetoString(dtFecha, "yyyy-MM-dd");
 			
+			sTrader = cajaparm.getParametros("38", "0", "TRADERSA").getCodigoCompania().toString().trim();
+			sAlpesa = cajaparm.getParametros("38", "0", "ALPESA").getCodigoCompania().toString().trim();
+			
 			String sql = 
-					
 			"SELECT sum(rd.monto) as MONTOTOTAL,  " +
 				" (SELECT CXCOMI FROM "+PropertiesSystem.ESQUEMA+".F55CA03 AF WHERE CXCAFI =  RD.REFER1 AND CXRP01 =R.CODCOMP FETCH FIRST ROWS ONLY  )  AS COMISION, " +
 				" (SELECT TRIM(CXDCAFI) FROM "+PropertiesSystem.ESQUEMA+".F55CA03 AF WHERE CXCAFI = RD.REFER1 AND CXRP01 =R.CODCOMP FETCH FIRST ROWS ONLY  ) AS NOMBREPOS, " +
@@ -909,7 +914,7 @@ public class RevisionArqueoCtrl {
 				}
 				 
 				//&& =============== Calcular comision segun compania 
-				if(sCodcomp.trim().equals("90")){
+				if(sCodcomp.trim().equals(sTrader)){
 					
 					//calcular el monto comisionable
 					bdmontoComisionable =  new BigDecimal(dv.roundDouble(bdTotal.doubleValue()/bdivaTrader.doubleValue()));				
