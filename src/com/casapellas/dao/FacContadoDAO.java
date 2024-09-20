@@ -4985,6 +4985,9 @@ public class FacContadoDAO {
 							
 						}
 						//termina validacion de cuenta transitoria
+						
+						//Fin del blucle While agrego el i++ para evitar el bucle infinito en que estaba
+						i++;
 					}
 				} else {
 					// no se pudo actualizar el no de batch					
