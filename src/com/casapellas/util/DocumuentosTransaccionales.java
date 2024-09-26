@@ -512,6 +512,17 @@ public static String companiaALPESA() {
 		else
 		return null;
 	}
+public static String companiaTRADERSA() {
+	
+	String query="SELECT COD_COMPANIA FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCompania + "' AND TCOD = '"+ PropertiesSystem.companiaTRADERSA +"' ";     
+		
+		List<Object> tipoTRX= ConsolidadoDepositosBcoCtrl.executeSqlQuery(query, null, true);
+		
+		if(tipoTRX.size()>0)
+		return tipoTRX.get(0).toString();
+		else
+		return null;
+	}
 public static String companiaKIPESA() {
 	
 	String query="SELECT COD_COMPANIA FROM "+PropertiesSystem.ESQUEMA+".CAJAPARM WHERE TPARM = '"+ PropertiesSystem.parametroCompania + "' AND TCOD = '"+ PropertiesSystem.companiaKIPESA +"' ";     

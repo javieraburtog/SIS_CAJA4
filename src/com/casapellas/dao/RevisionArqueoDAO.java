@@ -6259,8 +6259,9 @@ public class RevisionArqueoDAO {
 		
 		try{
 			
-			sTrader = cajaparm.getParametros("38", "0", "TRADERSA").getCodigoCompania().toString().trim();
-			sAlpesa = cajaparm.getParametros("38", "0", "ALPESA").getCodigoCompania().toString().trim();
+			sTrader = DocumuentosTransaccionales.companiaTRADERSA().toString().trim();
+			sAlpesa = DocumuentosTransaccionales.companiaALPESA().toString().trim();
+		
 			
 			
 			rv_dwConfirmarProcesarArq.setWindowState("hidden");
@@ -9003,7 +9004,10 @@ public class RevisionArqueoDAO {
 				
 				String sqlOrCtaConc = ConfirmaDepositosCtrl.constructSqlOrCtaxCon( Arrays.asList(new String[][]{ {"drky","2"} }) );
 				
-				String strSql = "select * from ENS.Vcompania " ;
+				String strSql ="select * from "+PropertiesSystem.ENS+".Vcompania ";
+				
+				
+				
 				
 				if( !sqlOrCtaConc.isEmpty() ){
 					strSql += " where "+ sqlOrCtaConc;

@@ -1,4 +1,4 @@
-package com.casapellas.util;
+	package com.casapellas.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -19,24 +19,24 @@ import nl.bitwalker.useragentutils.UserAgent;
 public class PropertiesSystem {
 	
    // Código de Usuario para Conexión a Base de Datos.
-	//public final static String CN_USRNAME = "APPCP";
-	//public final static String CN_USRPWD  = "APPCP1810";
 	public final static String CN_USRNAME = "APPCP";
 	public final static String CN_USRPWD  = "APPCP1810";
+	//public final static String CN_USRNAME = "pruebae2py";
+	//public final static String CN_USRPWD  = "password";
 	
    // Ambiente de Desarrollo/Pruebas, ESQUEMAS de Base de Datos.
-   /*public final static String ESQUEMA = "E1GCPMCAJA";
-	public final static String JDEDTA = "CRPDTA"; 
-	public final static String JDECOM = "CRPCTL";
-	public final static String QS36F = "E1QS36F" ;
-	public final static String GCPDES = "GCPCERT";	
-	public final static String GCPCXC = "E1GCPCXC";
-	public final static String ENS = "E1ENS";
-	public final static String GCPSISEVA = "E1GCPSISEVA2";
-	public final static String INV = "E1INV";*/
+	public final static String ESQUEMA = "E2GCPMCAJA";
+	public final static String JDEDTA = "CRPDTA920"; 
+	public final static String JDECOM = "CRPCTL920";
+	public final static String QS36F = "E2QS36F" ;
+	public final static String GCPDES = "E2GCPCERT";	
+	public final static String GCPCXC = "E2GCPCXC";
+	public final static String ENS = "E2ENS";
+	public final static String GCPSISEVA = "E2GCPSISEV";
+	public final static String INV = "E2INV";
 	
 	 // Ambiente de Produccion, ESQUEMAS de Base de Datos.
-	   public final static String ESQUEMA = "GCPMCAJA";
+	/*public final static String ESQUEMA = "GCPMCAJA";
 		public final static String JDEDTA = "PRODDTA920"; 
 		public final static String JDECOM = "PRODCTL920";
 		public final static String QS36F = "QS36F" ;
@@ -44,7 +44,7 @@ public class PropertiesSystem {
 		public final static String GCPCXC = "GCPCXC";
 		public final static String ENS = "ENS";
 		public final static String GCPSISEVA = "GCPSISEVA2";
-		public final static String INV = "INV";
+		public final static String INV = "INV";*/
 		
 		public final static Boolean Is_Debug_Mode = false;
 	
@@ -118,9 +118,11 @@ public class PropertiesSystem {
 		public final static String companiaALPESA ="ALPESA";
 		public final static String companiaKIPESA ="KIPESA";
 		public final static String companiaCAPESA ="CAPESA";
+		public final static String companiaTRADERSA ="TRADERSA";
 		
    // Datos de Servidor de Base de Datos.
-	public final static String IPSERVERDB2 = "192.168.1.3";
+	public final static String IPSERVERDB2 = "172.29.9.150";
+	//	public final static String IPSERVERDB2 = "192.168.1.3";
 
    // Datos para guardar archivos en el servidor en donde esté publicado el Sistema de CAja
 	public final static String JNA_PATHx64 = "E:\\GCPMCAJA\\SocketPos_220x64";

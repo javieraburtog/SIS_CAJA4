@@ -213,7 +213,7 @@ public class RevisionArqueoCtrl {
 			String codigoJDE = "";
 			
 			if (tipopago.compareTo(MetodosPagoCtrl.EFECTIVO ) == 0){
-				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_5").getValorAlfanumerico().toString();//PropertiesSystem.TIPODOC_JDE_DEP_5;
+				tipodocjde = cajaparm.getParametros("34", "0", "TIPODOC_JDE_DEP_5").getValorAlfanumerico().toString();
 				codigoJDE = cajaparm.getParametros("34", "0", "TIPODOC_JDE_5").getValorAlfanumerico().toString();
 			}
 			if (tipopago.compareTo(MetodosPagoCtrl.TRANSFERENCIA) == 0){
