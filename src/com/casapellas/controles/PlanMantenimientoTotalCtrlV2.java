@@ -234,7 +234,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 					
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 								( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
-								moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
+								moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 								mp.getTasa(),  //tasaoficial, //
 								"", observacion, codcomp,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 								companiaRpkco, "F", 0 );
@@ -246,9 +246,9 @@ public class PlanMantenimientoTotalCtrlV2 {
 					
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
-							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, ((lngMontoFormaDePagoNac-lngMontoFormaDePago)), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
+							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, ((lngMontoFormaDePagoNac-lngMontoFormaDePago)*-1), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
-							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt );
+							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", lngMontoFormaDePagoExt*-1 );
 					
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
@@ -262,7 +262,7 @@ public class PlanMantenimientoTotalCtrlV2 {
 				
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 							( ++lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "CA",
-							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt)*-1, concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
+							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoExt), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial, //
 							"", observacion, codcomp,"","", moneda_contrato.compareTo(moneda_base)==0 ? moneda_base : moneda_contrato, //mp.getMoneda(), 
 							companiaRpkco, "F", 0);
@@ -273,9 +273,9 @@ public class PlanMantenimientoTotalCtrlV2 {
 	
 					hecho = recCtrl.registrarAsientoDiarioLogs(session, msgLog, fechaRecibo, companiaRpkco, tipodocjde, numero_documento, 
 							( lineadoc ), numero_batch, ctaBnfcuenta, ctaBnfGmaid, ctaBnfMcu, ctaBnfObj, ctaBnfSub, "AA",
-							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoNac-lngMontoFormaDePago)*-1, concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
+							moneda_contrato.compareTo(moneda_base)==0 ? mp.getMoneda() : moneda_contrato, (lngMontoFormaDePagoNac-lngMontoFormaDePago), concepto, vaut.getId().getLogin(), vaut.getId().getCodapp(), 
 							mp.getTasa(), //tasaoficial,//
-							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt*-1) );
+							"", observacion, codcomp,"","", moneda_base, companiaRpkco, "F", (lngMontoFormaDePagoExt) );
 	
 					if(!hecho){
 						return strMensajeProceso = "No se puede generar asiento de diario por compra Venta de Moneda Extranjera para metodo de pago " + mp.getMetododescrip().trim();
