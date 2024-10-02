@@ -3895,6 +3895,7 @@ public class FacContadoDAO {
 						nombreEvento += "(F) ["+sdf.format(new Date())+"]";
 						if (sCuentaVenta != null) 
 						{
+							j=0;
 							while (j < lstMetodosPago.size()) {
 								iCinf2++;
 								if(iCinf2>99){
@@ -4070,8 +4071,7 @@ public class FacContadoDAO {
 												metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getCpendiente()));
 												metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getDpendiente()));
 												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												i++;
-												break;
+												
 											}else if(d.roundDouble4(metPago.getEquivalente()) == d.roundDouble4(hFac.getDpendiente())){// el pago es igual al monto de la factura
 												if (!bForGenerado) {
 													// leer el numero de documento foraneo a utilizar para el asiento de diario	
@@ -4214,8 +4214,7 @@ public class FacContadoDAO {
 												metPago.setMonto(0);
 												metPago.setEquivalente(0);
 												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												i++;j++;
-												break;
+												
 											}else{// el pago es menor al monto de la factura
 												if (!bForGenerado) {
 													
@@ -4355,8 +4354,7 @@ public class FacContadoDAO {
 												metPago.setMonto(0);
 												metPago.setEquivalente(0);
 												
-												j++;
-												break;
+											
 											}
 										
 										}else{// F:USD P:USD el pago es en la misma moneda de la factura
@@ -4426,15 +4424,12 @@ public class FacContadoDAO {
 													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 													throw new Exception(strMensajeValidacion);
 												}
-//												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(F) asiento de diario para cuenta de venta de contado Factura Dolares pago dolares" );	
-												
-												
+		
 												//poner en cero el monto de factura y restar el monto a aplicar
 												metPago.setMonto(d.roundDouble4(metPago.getMonto() - dMonto1));
 												metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - dMonto1));
 												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												i++;
-												break;
+												
 											}else if(d.roundDouble4(metPago.getMonto()) == d.roundDouble4(hFac.getDpendiente())){// el pago es igual al monto de la factura
 												// comprobar si generar el no. de documento
 												if (!bForGenerado) {
@@ -4505,8 +4500,7 @@ public class FacContadoDAO {
 												metPago.setMonto(0);
 												metPago.setEquivalente(0);
 												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												i++;j++;
-												break;
+												
 											}else{// el pago es menor al monto de la factura
 												// comprobar si generar el no. de documento
 												if (!bForGenerado) {
@@ -4533,8 +4527,7 @@ public class FacContadoDAO {
 												dMonto1 = d.roundDouble4(metPago.getMonto());
 												dMonto2 = d.roundDouble4(metPago.getMonto()* hFac.getTasa().doubleValue());
 												
-//												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) asiento de diario para cuenta de venta de contado el pago es menor al monto de la factura" );
-												
+										
 												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
 																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
 																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
@@ -4571,16 +4564,13 @@ public class FacContadoDAO {
 													throw new Exception(strMensajeValidacion);
 												}
 												
-//												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(F) asiento de diario para cuenta de venta de contado el pago es menor al monto de la factura" );
-												
-												
 												//poner en cero el monto de pagos y poner el monto pendiente
 												hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - dMonto2));hFac.setDpendiente(d.roundDouble4(hFac.getDpendiente() - dMonto1));
 												metPago.setMonto(0);
 												metPago.setEquivalente(0);
 												
-												j++;
-												break;											}
+													
+												}
 										}
 									} else {// factura en cordobas
 										if (!metPago.getMoneda().equals(sMonedaBase)) {//F:COR P:USD activar compra venta pago dolares
@@ -4657,8 +4647,7 @@ public class FacContadoDAO {
 												metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getDpendiente()));
 												metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getCpendiente()));
 												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												i++;
-												break;
+												
 											}else if (d.roundDouble(metPago.getEquivalente()) == d.roundDouble(hFac.getCpendiente())){
 												
 												if (!bForGenerado) {
@@ -4727,8 +4716,7 @@ public class FacContadoDAO {
 												metPago.setMonto(0);
 												metPago.setEquivalente(0);
 												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												i++;j++;
-												break;
+												
 											}else{//el pago es menor al monto de la factura
 												if (!bForGenerado) {
 													
@@ -4790,18 +4778,15 @@ public class FacContadoDAO {
 													}
 												}
 												
-//												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(F) asiento de diario para cuenta de venta de contado el pago es menor al monto de la factura" );
-												
-												//iContadorDom = Integer.parseInt(m.get("iContadorDom").toString());
+
 												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
 												
 
 												//poner en cero el monto de factura y restar el monto a aplicar
 												hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - dMonto1));hFac.setDpendiente(d.roundDouble4(hFac.getDpendiente() - dMonto2));
 												metPago.setMonto(0);
-												metPago.setEquivalente(0);												
-												j++;
-												break;
+												metPago.setEquivalente(0);											
+											
 											}
 										}else{//F:COR P:COR pago en la moneda de la factura
 											if(d.roundDouble4(metPago.getMonto()) > d.roundDouble4(hFac.getCpendiente())){//el pago es mayor al monto de la factura
@@ -4853,9 +4838,7 @@ public class FacContadoDAO {
 												//poner en cero el monto de factura y restar el monto a aplicar
 												metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getCpendiente()));
 												metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getDpendiente()));
-												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												i++;
-												break;
+												hFac.setCpendiente(0);hFac.setDpendiente(0);												
 												
 											}else if(d.roundDouble4(metPago.getMonto()) == d.roundDouble4(hFac.getCpendiente())){//El pago es igual al monto de la factura
 												// comprobar si generar el no. de documento
@@ -4900,9 +4883,7 @@ public class FacContadoDAO {
 												//poner en cero el monto de factura y restar el monto a aplicar
 												metPago.setMonto(0);
 												metPago.setEquivalente(0);
-												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												i++;j++;
-												break;
+												hFac.setCpendiente(0);hFac.setDpendiente(0);												
 												
 											}else{//el pago es menor al monto de la factura
 												// comprobar si generar el no. de documento
@@ -4955,9 +4936,8 @@ public class FacContadoDAO {
 												//poner en cero el monto de factura y restar el monto a aplicar
 												hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - metPago.getMonto()));
 												metPago.setMonto(0);
-												metPago.setEquivalente(0);												
-												j++;
-												break;
+												metPago.setEquivalente(0);											
+											
 											}//Fin del pago es menos al monto de la factura																				
 										}//Fin de pago F:COR P:COR
 									}// fin de factura en cordobas
@@ -4971,7 +4951,9 @@ public class FacContadoDAO {
 									throw new Exception(strMensajeValidacion);
 								}
 								
+								j++;
 							}
+							
 						} else {
 
 							try{
@@ -4987,6 +4969,7 @@ public class FacContadoDAO {
 						//termina validacion de cuenta transitoria
 						
 						//Fin del blucle While agrego el i++ para evitar el bucle infinito en que estaba
+				
 						i++;
 					}
 				} else {
