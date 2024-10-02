@@ -755,8 +755,11 @@ public class RevisionArqueoCtrl {
 			
 			String sFecha = FechasUtil.formatDatetoString(dtFecha, "yyyy-MM-dd");
 			
-			sTrader = cajaparm.getParametros("38", "0", "TRADERSA").getCodigoCompania().toString().trim();
-			sAlpesa = cajaparm.getParametros("38", "0", "ALPESA").getCodigoCompania().toString().trim();
+			
+			sTrader = DocumuentosTransaccionales.companiaTRADERSA().toString().trim();
+			sAlpesa = DocumuentosTransaccionales.companiaALPESA().toString().trim();
+		
+			
 			
 			String sql = 
 			"SELECT sum(rd.monto) as MONTOTOTAL,  " +
