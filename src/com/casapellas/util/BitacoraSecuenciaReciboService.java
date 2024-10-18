@@ -69,7 +69,7 @@ public class BitacoraSecuenciaReciboService {
 		return sdf.format(dt);
 	}
 
-	public static void insertarLogReciboNumerico(int noCaja,int noRecibo,String codCompania,String codSucursal,String tipoRecibo) {
+	public static void insertarLogReciboNumerico(int noCaja,int noRecibo,String codCompania,String codSucursal,String tipoRecibo) throws Exception {
 		try {
 			Object objSec = CodeUtil.getFromSessionMap("sevAut");
 			Vautoriz vaut = ((Vautoriz[]) objSec)[0];
@@ -91,6 +91,7 @@ public class BitacoraSecuenciaReciboService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LogCajaService.CreateLog("insertarLogReciboNumerico", "ERR", e.getMessage());
+			throw new Exception("No se pudo insertar en la Bitacora");
 		}
 	}
 	
@@ -117,6 +118,7 @@ public class BitacoraSecuenciaReciboService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			LogCajaService.CreateLog("actualizarSatisfactorioLogReciboNumerico", "ERR", e.getMessage());
+			
 		}
 	}
 }
