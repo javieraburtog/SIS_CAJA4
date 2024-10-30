@@ -14,7 +14,6 @@ import ni.com.casapellas.tool.restful.connection.RestResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -186,6 +185,44 @@ public class ClsF5503B11 {
 		
 		LogCajaService.CreateLog("procesarGenerarFacturaInteres", "WSCALL", baseUrl, json);
 		
+		RestConnection conn = new RestConnection(apiKey, baseUrl);
+		RestResponse response = conn.post(queryHeaders, json, RestConnection.CONTENT_TYPE_JSON);
+		conn.closeConection();
+		return response;
+	}
+    
+    public RestResponse procesarGenerarFacturaInteres_V3(
+			String strCodigoCompania,
+			String strCodigoSucursal,
+			String strCodigoTipoDocumento,
+			String strCodigoSolicitud,
+			String strCodigoCliente,
+			String strCodigoUsuario,
+			String strCodigoPrograma,
+			String strCodigoTrabajo)
+			throws IOException {
+		String[][] queryHeaders = new String[][] {};
+		Gson gson = new Gson();
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		map.put("codigoCompania", strCodigoCompania);
+		map.put("codigoSucursal", strCodigoSucursal);
+		map.put("codigoTipoDocumento", strCodigoTipoDocumento);
+		map.put("codigoSolicitud", strCodigoSolicitud);
+		map.put("codigoCliente", strCodigoCliente);
+		map.put("codigoUsuario", strCodigoUsuario);
+		map.put("codigoPrograma", strCodigoPrograma);
+		map.put("codigoTrabajo", strCodigoTrabajo);
+
+		String json = gson.toJson(map);
+		String baseUrl = ConfigConnection.PROTOCOL_WS_FINAN + "://" + ConfigConnection.SERVER_WS_FINAN
+				+ (ConfigConnection.PORT_WS_FINAN.compareToIgnoreCase("") == 0 ? "" : ":") + ConfigConnection.PORT_WS_FINAN + "/"
+				+ ConfigConnection.CONTEXT_NAME_WS_FINANCIAMIENTO + "/" + ConfigConnection.CONTEXT_NAME_FINANCIAMIENTO
+				+ "/InteresesRest/generar";
+
+		LogCajaService.CreateLog("procesarGenerarFacturaInteres_V3", "WSCALL", baseUrl, json);
+
 		RestConnection conn = new RestConnection(apiKey, baseUrl);
 		RestResponse response = conn.post(queryHeaders, json, RestConnection.CONTENT_TYPE_JSON);
 		conn.closeConection();

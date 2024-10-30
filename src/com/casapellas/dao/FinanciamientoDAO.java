@@ -1497,11 +1497,13 @@ public class FinanciamientoDAO {
 					Vautoriz vaut =  ((Vautoriz[])m.get("sevAut"))[0];
 					BigDecimal tasaoficial = obtenerTasaOficial();
 					
+					/*
 					String msgCreaInteres = crearFacturasPorIntereses2( lstSelected,  lstDetalle, vaut.getId().getLogin() );
 					
 					if( !msgCreaInteres.isEmpty() ){
 						return ;
 					}
+					*/
 
 					//&& ========= Buscar el detalle de cuotas en el f0311 (moratorios, corriente,saldo )
 					for(int i = 0;i < lstSelected.size();i++){					
@@ -1942,6 +1944,58 @@ public class FinanciamientoDAO {
 		return msgProceso;
 	}
 	
+	public static String crearFacturasPorIntereses_V3(List<Finanhdr> financiamientos, 
+			List<Finandet>cuotasPorFinanciamientos, 
+			String usuario){
+		
+		String msgProceso = "" ;
+
+		try 
+		{
+			String paramCodigoCliente = "";
+		    String paramCodigoCompania = "";
+		    String paramCodigoSucursal = "";
+		    String paramNumeroDocumento = "";
+		    String paramTipoDocumento = "";      
+		    String paramUsuario = "";      
+		    String paramPantalla = "";
+		    String paramPrograma = "";
+		    
+		    for (final Finandet finandet : cuotasPorFinanciamientos) {
+		    	paramCodigoCliente = String.valueOf(financiamientos.get(0).getId().getCodcli());
+				paramCodigoCompania = finandet.getId().getCodcomp().trim();
+				paramCodigoSucursal = finandet.getId().getCodsuc().trim();
+				paramNumeroDocumento = String.valueOf(finandet.getId().getNosol());
+				paramTipoDocumento = finandet.getId().getTiposol().trim();
+				paramUsuario = usuario;
+				paramPantalla = "GCPMCAJA";
+				paramPrograma = "WSCANALES";
+				
+		    }
+
+		    ClsF5503B11 clsF5503b11 = new ClsF5503B11();
+			RestResponse resultado = clsF5503b11.procesarGenerarFacturaInteres_V3(
+					paramCodigoCompania, 
+					paramCodigoSucursal, 
+					paramTipoDocumento, 
+					paramNumeroDocumento, 
+					paramCodigoCliente, 
+					paramUsuario, 
+					paramPrograma, 
+					paramPantalla);
+			
+			if(resultado.getDataAsString().equals("Error:"))
+				msgProceso=resultado.getDataAsString();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			LogCajaService.CreateLog("crearFacturasPorIntereses_V3", "ERR", e.getMessage());
+			msgProceso = "No se pudieron generar los intereses Corrientes o Moratorios, WS no esta respondiendo";
+			return msgProceso;
+		} 
+		return msgProceso;
+	}
+	
 	//-----------------------------------------------------------------
 	//Termina ajuste de LFonseca
 	//------------------------------------------------------------------
@@ -2293,11 +2347,13 @@ public class FinanciamientoDAO {
 				Vautoriz vaut =  ((Vautoriz[])m.get("sevAut"))[0];
 				BigDecimal tasaoficial = obtenerTasaOficial();
 				
+				/*
 				String msgCreaInteres = crearFacturasPorIntereses2(financimientos, cuotaSeleccionada, vaut.getId().getLogin() );
 				
 				if( !msgCreaInteres.isEmpty() ){
 					return ;
 				}
+				*/
 			}
 			
 			
@@ -6205,6 +6261,9 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 					
 					if (f!= null) {
 						// Esta cuota tenemos que ver los intereces
+						/* Esto ya no es necesario dado que el calculo de intereses se hace por toda las cuotas
+						 * y se realiza al momento de cargar el financiamiento
+						 * 
 						List<Finandet> tmpFinanDet = new ArrayList<Finandet>();
 						tmpFinanDet.add(f);
 						String msgCreaInteres = crearFacturasPorIntereses2( lstCreditosFinan,  tmpFinanDet, vaut.getId().getLogin() );
@@ -6215,7 +6274,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 							dwMensajeError.setWindowState("normal");
 							return;
 						}
-						
+						*/
 						// Verificar que la siguiente cuota tenga intereses
 						BigDecimal bdInteres = cuotaCtrl.buscarInteresCorrientePend(f);
 						if(bdInteres.compareTo(BigDecimal.ZERO ) == -1 || bdInteres.compareTo(BigDecimal.ZERO ) == 0 ){
@@ -8235,12 +8294,14 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 						return;
 					}
 					
+					/*
 					// Si no hay intereses generados con saldo en la F03B11
 					// mostrar un mensaje que deberia usar la opcion pago a abono a principal
 					if (bdInteres.compareTo(BigDecimal.ZERO) == 0) {
 						esCuotaAdelantada = true;
 						CodeUtil.putInSessionMap("esCuotaAdelantada",true);
 					}
+					*/
 					
 					if( bdInteres.compareTo(BigDecimal.ZERO) == 0 && fd.getId().getAticu() == 0 ){
 						bdInteres = fd.getId().getImpuesto().add( fd.getId().getInteres() );
@@ -8263,29 +8324,27 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			Vautoriz vaut =  ((Vautoriz[])m.get("sevAut"))[0];
 			BigDecimal tasaoficial = obtenerTasaOficial();
 			String msgCreaInteres="";
-			 msgCreaInteres = crearFacturasPorIntereses2( lstSelected,  lstFacturasSelected, vaut.getId().getLogin() );
-			
+			msgCreaInteres = crearFacturasPorIntereses_V3(lstSelected, lstFacturasSelected, vaut.getId().getLogin());
+			 
 			if( !msgCreaInteres.isEmpty() ){
 				msgProceso = msgCreaInteres ;
 				return ;
 			}
 			
+			// Verificar despues de haber generado los interes si en realidad existen intereces generados con saldo
+			// incluir intereses corrientes y moratorios.
+			bdInteres = cuotaCtrl.buscarInteres(hFac);
+			
+			//Si despues de consultar nuevamente los intereses no hay saldo entonces es cuota adelantada
+			if(bdInteres.compareTo(BigDecimal.ZERO ) == -1 || bdInteres.compareTo(BigDecimal.ZERO ) == 0 ){
+				esCuotaAdelantada = true;
+			}
+			
 			// Si no hay intereses generados con saldo en la F03B11
 			// mostrar un mensaje que deberia usar la opcion pago a abono a principal
 			if (esCuotaAdelantada) {
-				if(fd == null) {
-					msgProceso = "Error al obtener la couta";
-					return;
-				}
-				
-				// Volver a buscar los interes despues de llamar al servicio que los genera
-				bdInteres = cuotaCtrl.buscarInteresCorrientePend(fd);
-				
-				if (bdInteres.compareTo(BigDecimal.ZERO ) == -1 || bdInteres.compareTo(BigDecimal.ZERO) == 0) {
-					msgProceso = "Esta intentando hacer un pago adelantado de cuota, por favor utilize la opcion Abono a Principal";
-					CodeUtil.putInSessionMap("esCuotaAdelantada",true);
-					//m.remove("esCuotaAdelantada");
-				}
+				msgProceso = "Esta intentando hacer un pago adelantado de cuota, por favor utilize la opcion Abono a Principal";
+				CodeUtil.putInSessionMap("esCuotaAdelantada",true);
 			}
 
 			//Buscar el detalle de cuotas en el f0311 (moratorios, corriente,saldo )

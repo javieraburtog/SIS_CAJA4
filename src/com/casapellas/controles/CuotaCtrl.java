@@ -1409,6 +1409,40 @@ public List leerFacturasReciboFinan2(int iCaid,String sCodComp,int iNumrec,
 		} 
 		return bdMonto;
 	}
+	
+	public BigDecimal buscarInteres(Finanhdr f){
+		String sql = "";
+		Object obj = null;
+		BigDecimal bdMonto = BigDecimal.ZERO;
+		
+		try{
+			
+			sql = 
+			"SELECT IFNULL(SUM((CASE WHEN RPCRCD = 'COR' THEN CAST(RPAAP/100 AS DECIMAL(10,2) ) ELSE CAST(RPFAP/100 AS DECIMAL(10,2) ) END)), 0) MONTOPEND " +
+			" from " + PropertiesSystem.JDEDTA+".F03B11 "
+					+ "INNER JOIN "+PropertiesSystem.JDEDTA+".F0006 UN ON RPMCU = UN.MCMCU  " +
+			" where rpan8 = "+ f.getId().getCodcli()+" and rpaap > 0  and rpdct IN (select COD_DOCUMENTO from " + PropertiesSystem.GCPCXC + ".TIPOS_DOCUMENTOS_FINANCIAMIENTO "
+					+ "where TIPO_AGRUPACION IN ('ICR', 'IMO') and cod_compania = CAST(TRIM(UN.MCRP09) AS VARCHAR(3) CCSID 37) "
+					+ "order by ORDEN_PROCESAMIENTO asc) " +
+			" and cast(rppo as numeric(8) ) = " + f.getId().getNosol() + 
+			" and rpdcto = '"+ f.getId().getTiposol()+"' " +
+			" and rpkco = '" + f.getId().getCodsuc()+"' ";
+
+			LogCajaService.CreateLog("buscarInteres", "QRY", sql);
+			
+			obj = new RoQueryManager().executeSqlQueryUnique(sql, null, true);
+			
+			return (obj == null)? BigDecimal.ZERO :  new BigDecimal( String.valueOf( obj ) ) ;
+			
+		}catch(Exception ex){
+			
+			bdMonto = BigDecimal.ONE.negate();
+			LogCajaService.CreateLog("buscarInteresCorrientePend", "ERR", ex.getMessage());
+			ex.printStackTrace(); 
+		} 
+		return bdMonto;
+	}
+	
 	/********************APLICAR PAGO A CUOTA EN EL MODULO DE FINANCIAMIENTO*******************************************************************/
 	public boolean aplicarPagoCuotaModFinan1(Connection cn,Finandet fd,int iMontoD,int iMontoF){
 		boolean bHecho = true;
