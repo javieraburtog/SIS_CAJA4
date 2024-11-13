@@ -2615,6 +2615,7 @@ public void cancelarIncersion(ActionEvent ev){
 			}
 			m.put("procesandoReciboValidacion", "true");	
 		}catch(Exception e) {
+			
 			LogCajaService.CreateLog("procesarReciboCr", "ERR", "Error al validad multiples procesamiento");
 		}
 		
@@ -2630,6 +2631,7 @@ public void cancelarIncersion(ActionEvent ev){
 			try {
 				idProceso = Long.parseLong(String.valueOf(m.get("pr_idNumericPago"))) ;
 			} catch (Exception e) {
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR", e.getMessage());
 				e.printStackTrace();
 				msgError = "La transacción no ha sido completada, intente nuevamente";
 				rcNoduplicado = false;
@@ -2686,6 +2688,7 @@ public void cancelarIncersion(ActionEvent ev){
 			sessionInsJdeCaja = HibernateUtilPruebaCn.currentSession();
 			transInsJdeCaja = sessionInsJdeCaja.beginTransaction();
 			
+			LogCajaService.CreateLog("guardarReciboPrima", "INFO", "Actualizacion de la tabla Estado Recibo Log");	
 			//&& ===== Validar que en la tabla este aplicado el identificador en pendiente.
 			rcNoduplicado = com.casapellas.controles.ReciboCtrl.updEstadoRecibolog(
 					caid, codcomp, iCodCli, tiporec, idProceso, vAut.getId()
@@ -2693,6 +2696,7 @@ public void cancelarIncersion(ActionEvent ev){
 			if(!rcNoduplicado){
 				aplicado = rcNoduplicado;
 				msgError = "La transacción no ha sido completada";
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR","Validar que en la tabla este aplicado el identificador en pendiente, La transacción no ha sido completada");
 				return;
 			}
 			
@@ -2763,10 +2767,13 @@ public void cancelarIncersion(ActionEvent ev){
 				dtFecham = (Date)txtFecham.getValue();
 			}
 			
+			LogCajaService.CreateLog("guardarReciboPrima", "INFO", "Obtenemos numero de recibo");
 			iNumRec = com.casapellas.controles.tmp.ReciboCtrl.generarNumeroRecibo(caid, compRc);
 			if(iNumRec == 0){
 				msgError = "Recibo no aplicado: Error al generar numero de recibo";
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR","Recibo no aplicado: Error al generar numero de recibo");
 				throw new Exception(msgError);
+				
 			}
 			
 			BitacoraSecuenciaReciboService.insertarLogReciboNumerico(caid,iNumRec,codcomp,codsuc,"PR");
@@ -2799,6 +2806,7 @@ public void cancelarIncersion(ActionEvent ev){
 			//Aqui hace en base a la transacciones de hibernate
 			//control de compromiso de hibernate
 			//Tabla Recibo
+			LogCajaService.CreateLog("guardarReciboPrima", "INFO", "Comenzando a grabar en tablas principales");
 			aplicado = rc.registrarRecibo(sessionInsJdeCaja, transInsJdeCaja, iNumRec,
 								iNumRecm, compRc,dMontoApl, dMontoRec, 0.0,
 								sConcepto, dtFecharec, dHora, iCodCli, sNomCli,
@@ -2806,6 +2814,7 @@ public void cancelarIncersion(ActionEvent ev){
 								nofcv, dtFecham, sCodunineg, "", sMonedaApl);
 			if(!aplicado){
 				msgError = "Recibo no aplicado: Error al grabar Recibo";
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR","Recibo no aplicado: Error al grabar Recibo");
 				throw new Exception(msgError);
 			}
 			
@@ -2817,6 +2826,7 @@ public void cancelarIncersion(ActionEvent ev){
 								caid, codsuc, "PR");
 			if(!aplicado){
 				msgError = "Recibo no aplicado: Error al grabar Detalle de recibo";
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR",msgError);
 				throw new Exception(msgError);
 			}
 			
@@ -2828,6 +2838,8 @@ public void cancelarIncersion(ActionEvent ev){
 								new BigDecimal(dtasaCam),"PR");
 			if(!aplicado){
 				msgError = "Recibo no aplicado: Error al grabar detalle de cambios";
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR",msgError);
+				
 				throw new Exception(msgError);
 			}
 			
@@ -2870,6 +2882,7 @@ public void cancelarIncersion(ActionEvent ev){
 									sModelo, sNoItem, codsucProf );
 			if(!aplicado){
 				msgError = "Recibo no aplicado: Error al grabar detalle del bien aplicado";
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
 				throw new Exception(msgError);
 			}
 			//&& ========= Datos para las solicitudes de ingreso a caja.
@@ -2884,6 +2897,8 @@ public void cancelarIncersion(ActionEvent ev){
 				if(iNumSol == 0){
 					msgError = "No se ha encontrado numeración " +
 							"de solicitudes de ingresos de  caja";
+					
+					LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
 					throw new Exception(msgError);
 				}
 				
@@ -2899,6 +2914,7 @@ public void cancelarIncersion(ActionEvent ev){
 				if(!aplicado){
 					msgError = "Recibo no aplicado, Error al grabar datos " +
 							"de Solicitud de ingresos a caja";
+					LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
 					throw new Exception(msgError);
 				}
 			}
@@ -2926,6 +2942,8 @@ public void cancelarIncersion(ActionEvent ev){
 					if(!aplicado){
 						msgError = "Recibo no aplicado, Error al grabar Recibo" +
 								" por Compra de Divisas";
+						LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+						
 						throw new Exception(msgError);
 					}
 					
@@ -2935,6 +2953,8 @@ public void cancelarIncersion(ActionEvent ev){
 					if(!aplicado){
 						msgError = "Recibo no aplicado, Error al grabar detalle " +
 								" de Compra de Divisas";
+						LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+						
 						throw new Exception(msgError);
 					}
 				}
@@ -3029,6 +3049,8 @@ public void cancelarIncersion(ActionEvent ev){
 				}
 			}
 			
+			LogCajaService.CreateLog("guardarReciboPrima", "INFO", "FINALIZADO grabacion en tablas principales");
+			
 			//&& ====== generar un numero de factura y un numero de recibo asociado
 			List<String> numerosRecibosJde = new ArrayList<String>();
 			List<String[]> numerosFacturaRecibo = new ArrayList<String[]>();
@@ -3040,16 +3062,21 @@ public void cancelarIncersion(ActionEvent ev){
 				numerosRecibosJde.add( String.valueOf(numeroRecibo) ) ;
 			}
 			
+			LogCajaService.CreateLog("guardarReciboPrima", "INFO", "Iniciamos proceso de recuperacion de No.Batch");
 			int numeroBatchJde  = Divisas.numeroSiguienteJdeE1(   );
 			//numeroBatchJde = 1008252 ;
 			if( numerosFacturaRecibo.isEmpty() ) {
 				aplicado = false;
 				msgError = "No se pudo obtener número de factura y documento de JdEdward's para recibo de caja " ;
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+				
 				throw new Exception(msgError);
 			}
 			if( numeroBatchJde == 0 ) {
 				aplicado = false;
 				msgError = "No se pudo obtener número de batch JdEdward's para recibo de caja " ;
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+				
 				throw new Exception(msgError);
 			}
 			
@@ -3099,6 +3126,8 @@ public void cancelarIncersion(ActionEvent ev){
 			
 			if(!aplicado){
 				msgError = ProcesarReciboRUCustom.msgProceso ;
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+				
 				throw new Exception(msgError);
 			}
 			
@@ -3106,6 +3135,8 @@ public void cancelarIncersion(ActionEvent ev){
 			if( queriesInsert == null || queriesInsert.isEmpty() ){
 				aplicado = false;
 				msgError = "Error al crear recibo en JdEdward's por factura de Crédito ";
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+				
 				throw new Exception(msgError);
 			}
 			
@@ -3121,6 +3152,8 @@ public void cancelarIncersion(ActionEvent ev){
 						LogCajaService.CreateLog("guardarReciboPrima-" + querys[1], "ERR", "No hay filas afectadas");
 						aplicado = false;
 						msgError = "error al procesar: " + querys[1];
+						LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+						
 						throw new Exception(msgError);
 					}
 					
@@ -3133,10 +3166,12 @@ public void cancelarIncersion(ActionEvent ev){
 				}
 			}
 
-			//Cambiado por lfonseca
+			LogCajaService.CreateLog("guardarReciboPrima", "INFO", "Comenzamos a crear el registro puente en ReciboJDE");
 			aplicado =  com.casapellas.controles.ReciboCtrl.crearRegistroReciboCajaJde(sessionInsJdeCaja, caid, iNumRec, codcomp, codsuc, tiporec, "R", numeroBatchJde, numerosRecibosJde);
 			if(!aplicado){
 				msgError = "Error al generar registro de asociación de Caja a JdEdward's @recibojde" ;
+				LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+				
 				throw new Exception(msgError);
 			}
 			
@@ -3157,7 +3192,10 @@ public void cancelarIncersion(ActionEvent ev){
 				aplicado = msgError.isEmpty();
 				
 				if(!aplicado){
+					LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
+					
 					throw new Exception(msgError);
+					
 				}
 			}
 
@@ -3178,6 +3216,7 @@ public void cancelarIncersion(ActionEvent ev){
 					else{ 
 						msgError = "Procesar Donacion: " + msgError; 
 					}
+					LogCajaService.CreateLog("GuardaReciboPrima", "ERR", msgError);
 					throw new Exception(msgError);
 				}
 				
