@@ -3840,7 +3840,6 @@ public class FacContadoDAO {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss sss");
 		
 		int posicionProceso = 1;
-		String nombreEvento = "";
 		String termina = "" ;
 		String dtaLog =  " |||| generarAsientos: Caja: "+iCajaId+" ||  Recibo:"+iNumrec+" || Compania: "+sCodComp+"|| Monto: "+dTotalAplicar+" ||";
 		
@@ -3873,12 +3872,7 @@ public class FacContadoDAO {
 						//---- Verificar si factura es un traslado o es local y determinar cuenta Venta de Contado.
 						int iCaid = 0;
 						TrasladoCtrl tcCtrl = new TrasladoCtrl();
-						
-						
-						nombreEvento = " TrasladoFactura:(I) ["+sdf.format(new Date())+"] << -- >>" ;
 						tf = tcCtrl.buscarTrasladofac(s, hFac, f55ca01.getId().getCaid(), 0, "P");
-						nombreEvento += "(F) ["+sdf.format(new Date())+"]";
-//						LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ " Paso "+(++posicionProceso) + dtaLog + " "+nombreEvento);
 						
 						if(tf!=null){
 							 bTraslado = true; 
@@ -3890,9 +3884,8 @@ public class FacContadoDAO {
 					
 						
 						// obtener cuenta de venta de contado
-						nombreEvento = " obtenerCuentaVenta:(I) ["+sdf.format(new Date())+"] << -- >>" ;
 						sCuentaVenta = d.obtenerCuentaVenta(iCaid, hFac.getCodcomp(), hFac.getCodunineg(), s, tx);
-						nombreEvento += "(F) ["+sdf.format(new Date())+"]";
+
 						if (sCuentaVenta != null) 
 						{
 							j=0;
@@ -3904,297 +3897,141 @@ public class FacContadoDAO {
 								}//seguro contra ciclo infinito
 								
 								metPago = (MetodosPago) lstMetodosPago.get(j);
-								
-								//============ Determinar si es un traslado de voucher's y de afiliados.
-								if(metPago.getMetodo().equals(MetodosPagoCtrl.TARJETA) && metPago.getVmanual().equals("1") && 
-											metPago.getICaidpos() != f55ca01.getId().getCaid()){
-									if(m.get("fdc_ObjTrasladoFacTrasladoPOS")==null){
-										strMensajeValidacion = "Error al leer datos de traslado de factura en registro de Traslado de POS";
-										bContabilizado = false; 
-										throw new Exception(strMensajeValidacion);
+								if (metPago.getMonto() > 0 || metPago.getEquivalente() > 0) {
+									//============ Determinar si es un traslado de voucher's y de afiliados.
+									if(metPago.getMetodo().equals(MetodosPagoCtrl.TARJETA) && metPago.getVmanual().equals("1") && 
+												metPago.getICaidpos() != f55ca01.getId().getCaid()){
+										if(m.get("fdc_ObjTrasladoFacTrasladoPOS")==null){
+											strMensajeValidacion = "Error al leer datos de traslado de factura en registro de Traslado de POS";
+											bContabilizado = false; 
+											throw new Exception(strMensajeValidacion);
+										}else{
+											Trasladofac tfPos = (Trasladofac)m.get("fdc_ObjTrasladoFacTrasladoPOS");
+											sCuentaCaja = d.obtenerCuentaCaja(tfPos.getCaidorig(),tfPos.getCodcomp(),
+																			  metPago.getMetodo(),metPago.getMoneda(),
+																			  s,tx,null,null);
+										}
 									}else{
-										Trasladofac tfPos = (Trasladofac)m.get("fdc_ObjTrasladoFacTrasladoPOS");
-										sCuentaCaja = d.obtenerCuentaCaja(tfPos.getCaidorig(),tfPos.getCodcomp(),
-																		  metPago.getMetodo(),metPago.getMoneda(),
-																		  s,tx,null,null);
+										sCuentaCaja = d.obtenerCuentaCaja(f55ca01.getId().getCaid(),
+														hFac.getCodcomp(),metPago.getMetodo(),
+														metPago.getMoneda(),s,tx,null,null);	
 									}
-								}else{
-									sCuentaCaja = d.obtenerCuentaCaja(f55ca01.getId().getCaid(),
-													hFac.getCodcomp(),metPago.getMetodo(),
-													metPago.getMoneda(),s,tx,null,null);	
-								}
 
-								double dTasaCalculada = hFac.getCpendiente()/hFac.getDpendiente();
-								 
-								if (sCuentaCaja != null) {
-									if (!hFac.getMoneda().equals(sMonedaBase)) {// factura en moneda foranea
-										if (metPago.getMoneda().equals(sMonedaBase)) {//F:USD P:COR pago en moneda domestica activar compra venta
-																						
-											if(d.roundDouble4( metPago.getEquivalente() ) > d.roundDouble4(hFac.getDpendiente())){//el pago es mayor al monto de la factura
-												
-												if (!bForGenerado) {
-													// leer el numero de documento foraneo a utilizar para el asiento de diario	
+									double dTasaCalculada = hFac.getCpendiente()/hFac.getDpendiente();
+									 
+									if (sCuentaCaja != null) {
+										if (!hFac.getMoneda().equals(sMonedaBase)) {// factura en moneda foranea
+											if (metPago.getMoneda().equals(sMonedaBase)) {//F:USD P:COR pago en moneda domestica activar compra venta
+																							
+												if(d.roundDouble4( metPago.getEquivalente() ) > d.roundDouble4(hFac.getDpendiente())){//el pago es mayor al monto de la factura
 													
-													nombreEvento = " leerActualizarNoDocJDE - iNoDocumentoFor:(I) ["+sdf.format(new Date())+"] << -- >>" ;
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													nombreEvento += "(F) ["+sdf.format(new Date())+"]";
-													
-													if (iNoDocumentoFor > 0) {												
-														bForGenerado = true;												
-													} else {
-														// No se pudo encontrar el No.  de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-														lblMensajeValidacion.setValue(strMensajeValidacion);	
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
-													}
-												}
-
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												
-												//validar si hay diferencial cambiario
-
-												if(metPago.getTasa().doubleValue()!=dTasaCalculada){
-													bHayDiferencial = true;
-													//partir el monto
-
-													dMonto1 = d.roundDouble4(hFac.getDpendiente() * dTasaCalculada);
-													dMonto2 = hFac.getDpendiente();
-													dMontoDif = d.roundDouble4((hFac.getDpendiente()*(metPago.getTasa().doubleValue())) -  dMonto1);
-
-													if (!bDomGenerado) {
-														
-														
-														nombreEvento = " leerActualizarNoDocJDE - iNoDocumentoFor:(I) ["+sdf.format(new Date())+"] << -- >>" ;
-														
-
+													if (!bForGenerado) {
+														// leer el numero de documento foraneo a utilizar para el asiento de diario	
 														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-														
-														nombreEvento += "(F) ["+sdf.format(new Date())+"]";
 
-														
-														
-														if (iNoDocumentoFor > 0) {
-															bDomGenerado = true;
+														if (iNoDocumentoFor > 0) {												
+															bForGenerado = true;												
 														} else {
-															// No se pudo encontrar el No. de documento
-															lblMensajeValidacion.setValue("No se encontró No. de Documento para Asiento Domestico!!!");
-															strMensajeValidacion ="Asiento Domestico!!! " + d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-															
-															bContabilizado = false;
-															throw new Exception(strMensajeValidacion);
-														}
-													}
-												}else{
-													dMonto1 = hFac.getCpendiente();
-													dMonto2 = hFac.getDpendiente();
-												}
-												
-												iContadorFor++;
-												//partir el monto en pago neto y dif cambiario
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2], hFac.getMoneda(), d.pasarAenteroLong(dMonto2),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
-												if (bContabilizado) {
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],hFac.getMoneda(),d.pasarAenteroLong(dMonto1),
-																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
-													if (bContabilizado) {
-														// asiento de diario para cuenta de venta de contado
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha,  hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																		sCuentaVenta[5],valoresJdeIns[2],hFac.getMoneda(), -1*( d.pasarAenteroLong(dMonto2) ), sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																		hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0);
-														if (bContabilizado) {
-															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																				sCuentaVenta[5],valoresJdeIns[5],hFac.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"",
-																				"Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4] , (-1*( d.pasarAenteroLong(dMonto2) ) ) );
-															iContadorFor++;
-															
-															//validar si hay diferencial cambiario
-															if(bHayDiferencial){
-																
-
-																
-																//buscar cuenta para el dif cambiario
-																if(sCuentaDC==null){
-
-																	sCuentaDC = d.obtenerCuentaDifCambiario(iCaid, hFac.getCodcomp(), hFac.getCodunineg(), s, tx, null, null);
-																}
-																if(sCuentaDC!=null){
-																	
-																	//iContadorDom++;
-																	iContadorFor++;
-																	
-																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],sMonedaBase,d.pasarAenteroLong(dMontoDif),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7],0 );
-																	
-																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha,  hFac.getCodsuc(), valoresJdeIns[1], iNoDocumentoFor,(iContadorFor /*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaDC[0],sCuentaDC[1],sCuentaDC[3],sCuentaDC[4],
-																			sCuentaDC[5],valoresJdeIns[5],sMonedaBase,(-1)* (d.pasarAenteroLong(dMontoDif)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"",
-																			"Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaDC[2],"","",sMonedaBase,sCuentaDC[2],valoresJdeIns[7], 0);
-																	
-																	//iContadorDom++;
-																	iContadorFor++;
-																	
-																}else{
-																	bContabilizado = false;
-																	strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();																			
-																	throw new Exception(strMensajeValidacion);
-																}
-															}
-
-															m.put("iContadorFor",iContadorFor);
-															
-														} else {
-															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();																																	
-															throw new Exception(strMensajeValidacion);
-														}
-													} else {
-														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-														throw new Exception(strMensajeValidacion);
-													}
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													throw new Exception(strMensajeValidacion);
-												}
-												if (!bContabilizado) {
-													throw new Exception("No se pudo contabilizar!!");
-												}
-												//poner en cero el monto de factura y restar el monto a aplicar
-												metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getCpendiente()));
-												metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getDpendiente()));
-												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												
-											}else if(d.roundDouble4(metPago.getEquivalente()) == d.roundDouble4(hFac.getDpendiente())){// el pago es igual al monto de la factura
-												if (!bForGenerado) {
-													// leer el numero de documento foraneo a utilizar para el asiento de diario	
-													
-													
-													nombreEvento= " leerActualizarNoDocJDE: documento foraneo a utilizar para el asiento de diario (I) ["+sdf.format(new Date())+"] << -- >>" ;
-													
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													nombreEvento+= "(F) ["+sdf.format(new Date())+"]";
-//													LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + " "+nombreEvento);
-													
-													if (iNoDocumentoFor > 0) {												
-														bForGenerado = true;												
-													} else {
-														// No se pudo encontrar el No.  de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();	
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
-													}
-												}
-												
-
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												
-												if(metPago.getTasa().doubleValue()!=dTasaCalculada){
-													bHayDiferencial = true;
-													//partir el monto
-
-													dMonto1 = d.roundDouble4(metPago.getEquivalente() * dTasaCalculada);
-													dMonto2 = metPago.getEquivalente();
-													dMontoDif = metPago.getMonto() -  dMonto1;
-													// leer el numero de documento domestico a utilizar para el asiento de diario
-													
-													if (!bDomGenerado) {			
-														
-														nombreEvento= " leerActualizarNoDocJDE:  documento domestico a utilizar diferencial cambiario(I) ["+sdf.format(new Date())+"] << -- >>" ;
-														
-														//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-														
-														nombreEvento+= "(F) ["+sdf.format(new Date())+"]";
-//														LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + " "+nombreEvento);
-														
-														if (iNoDocumentoFor > 0) {
-															bDomGenerado = true;
-														} else {
-															// No se pudo encontrar el No. de documento
+															// No se pudo encontrar el No.  de documento
 															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															lblMensajeValidacion.setValue(strMensajeValidacion);	
 															bContabilizado = false;
 															throw new Exception(strMensajeValidacion);
 														}
 													}
-												}else{
-													dMonto1 = metPago.getMonto();
-													dMonto2 = metPago.getEquivalente();
-												}
-												
-												iContadorFor++;
-												//partir el monto en pago neto y dif cambiario
-																								
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],hFac.getMoneda(),d.pasarAenteroLong(dMonto2),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																/*new BigDecimal(d.roundDouble4(dTasaCalculada))*/ hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
-												if (bContabilizado) {
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],hFac.getMoneda(),d.pasarAenteroLong(dMonto1),
-																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
-													if (bContabilizado) {
-														// asiento de diario para cuenta de venta de contado
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha,  hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																		sCuentaVenta[5],valoresJdeIns[2],hFac.getMoneda(),-1*(d.pasarAenteroLong(dMonto2)), sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																		hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
-														if (bContabilizado) {
-															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																				sCuentaVenta[5],valoresJdeIns[5],hFac.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"",
-																				"Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4] , (-1*(d.pasarAenteroLong(dMonto2))) );
-															
-															
-															iContadorFor++;
-//															LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(F) partir el monto en pago neto y dif cambiario" );
-															
-															//validar si hay diferencial cambiario
-															if(bHayDiferencial){
-																//buscar cuenta para el dif cambiario
-																if(sCuentaDC==null){
-																	sCuentaDC = d.obtenerCuentaDifCambiario(iCaid, hFac.getCodcomp(), hFac.getCodunineg(), s, tx, null, null);
-																}
-																if(sCuentaDC!=null){
 
-																	
-																	iContadorFor++;
-																	
-//																	LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) aplicar diferencial cambiario " );
-																	
-																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha,  hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],sMonedaBase,d.pasarAenteroLong(dMontoDif),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
-																	
-																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(), valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaDC[0],sCuentaDC[1],sCuentaDC[3],sCuentaDC[4],
-																			sCuentaDC[5],valoresJdeIns[5],sMonedaBase,(-1)* (d.pasarAenteroLong(dMontoDif)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"",
-																			"Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaDC[2],"","",sMonedaBase,sCuentaDC[2],valoresJdeIns[7], 0 );
-																	
-																	//iContadorDom++;
-																	iContadorFor++;
-																	
-//																	LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) aplicar diferencial cambiario" );
-																	
-																}else{
-																	bContabilizado = false;																	
-																	strMensajeValidacion = "cuenta de diferencial cambiario  " + d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-																	throw new Exception(strMensajeValidacion);
-																}
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
+													
+													//validar si hay diferencial cambiario
+
+													if(metPago.getTasa().doubleValue()!=dTasaCalculada){
+														bHayDiferencial = true;
+														//partir el monto
+
+														dMonto1 = d.roundDouble4(hFac.getDpendiente() * dTasaCalculada);
+														dMonto2 = hFac.getDpendiente();
+														dMontoDif = d.roundDouble4((hFac.getDpendiente()*(metPago.getTasa().doubleValue())) -  dMonto1);
+
+														if (!bDomGenerado) {
+															
+															iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+															
+															if (iNoDocumentoFor > 0) {
+																bDomGenerado = true;
+															} else {
+																// No se pudo encontrar el No. de documento
+																lblMensajeValidacion.setValue("No se encontró No. de Documento para Asiento Domestico!!!");
+																strMensajeValidacion ="Asiento Domestico!!! " + d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+																
+																bContabilizado = false;
+																throw new Exception(strMensajeValidacion);
 															}
-															//m.put("iContadorDom",iContadorDom);
-															m.put("iContadorFor",iContadorFor);
+														}
+													}else{
+														dMonto1 = hFac.getCpendiente();
+														dMonto2 = hFac.getDpendiente();
+													}
+													
+													iContadorFor++;
+													//partir el monto en pago neto y dif cambiario
+													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2], hFac.getMoneda(), d.pasarAenteroLong(dMonto2),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																	hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
+													if (bContabilizado) {
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],hFac.getMoneda(),d.pasarAenteroLong(dMonto1),
+																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
+														if (bContabilizado) {
+															// asiento de diario para cuenta de venta de contado
+															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha,  hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																			sCuentaVenta[5],valoresJdeIns[2],hFac.getMoneda(), -1*( d.pasarAenteroLong(dMonto2) ), sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																			hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0);
+															if (bContabilizado) {
+																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																					sCuentaVenta[5],valoresJdeIns[5],hFac.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"",
+																					"Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																					sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4] , (-1*( d.pasarAenteroLong(dMonto2) ) ) );
+																iContadorFor++;
+																
+																//validar si hay diferencial cambiario
+																if(bHayDiferencial){
+																	
+																	//buscar cuenta para el dif cambiario
+																	if(sCuentaDC==null){
+
+																		sCuentaDC = d.obtenerCuentaDifCambiario(iCaid, hFac.getCodcomp(), hFac.getCodunineg(), s, tx, null, null);
+																	}
+																	if(sCuentaDC!=null){
+																		iContadorFor++;
+																		
+																		bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																				sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],sMonedaBase,d.pasarAenteroLong(dMontoDif),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7],0 );
+																		
+																		bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha,  hFac.getCodsuc(), valoresJdeIns[1], iNoDocumentoFor,(iContadorFor /*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaDC[0],sCuentaDC[1],sCuentaDC[3],sCuentaDC[4],
+																				sCuentaDC[5],valoresJdeIns[5],sMonedaBase,(-1)* (d.pasarAenteroLong(dMontoDif)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"",
+																				"Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaDC[2],"","",sMonedaBase,sCuentaDC[2],valoresJdeIns[7], 0);
+																		
+																		iContadorFor++;
+																		
+																	}else{
+																		bContabilizado = false;
+																		strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();																			
+																		throw new Exception(strMensajeValidacion);
+																	}
+																}
+
+																m.put("iContadorFor",iContadorFor);
+																
+															} else {
+																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();																																	
+																throw new Exception(strMensajeValidacion);
+															}
 														} else {
 															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 															throw new Exception(strMensajeValidacion);
@@ -4203,286 +4040,379 @@ public class FacContadoDAO {
 														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 														throw new Exception(strMensajeValidacion);
 													}
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													throw new Exception(strMensajeValidacion);
-												}
-												if (!bContabilizado) {
-													throw new Exception("No se pudo contabilizar el registro!!");
-												}
-												//poner en cero el monto de factura y el monto a aplicar
-												metPago.setMonto(0);
-												metPago.setEquivalente(0);
-												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												
-											}else{// el pago es menor al monto de la factura
-												if (!bForGenerado) {
-													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario								
-													
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();										
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													if (iNoDocumentoFor > 0) {												
-														bForGenerado = true;												
-													} else {
-														// No se pudo encontrar el No.  de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
+													if (!bContabilizado) {
+														throw new Exception("No se pudo contabilizar!!");
 													}
-												}
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
+													//poner en cero el monto de factura y restar el monto a aplicar
+													metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getCpendiente()));
+													metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getDpendiente()));
+													hFac.setCpendiente(0);hFac.setDpendiente(0);
+													
+												}else if(d.roundDouble4(metPago.getEquivalente()) == d.roundDouble4(hFac.getDpendiente())){// el pago es igual al monto de la factura
+													if (!bForGenerado) {
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
 
-												//validar si hay diferencial cambiario										
-//												if(metPago.getTasa().doubleValue()!=hFac.getTasa().doubleValue()){
-												if(metPago.getTasa().doubleValue()!=dTasaCalculada){
-													bHayDiferencial = true;
-													//partir el monto
-//													dMonto1 = d.roundDouble4(metPago.getEquivalente() * hFac.getTasa().doubleValue());
-													dMonto1 = d.roundDouble4(metPago.getEquivalente() * dTasaCalculada);
-													dMonto2 = metPago.getEquivalente();
-													dMontoDif = metPago.getMonto() -  dMonto1;
-													// leer el numero de documento domestico a utilizar para el asiento de diario
-													if (!bDomGenerado) {	
-														
-														
-														nombreEvento= " leerActualizarNoDocJDE:(I) ["+sdf.format(new Date())+"] << -- >>" ;
-														
-														//iNoDocumentoFor = d.leerActualizarNoDocJDE();
 														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-														
-														nombreEvento+= "(F) ["+sdf.format(new Date())+"]";
-//														LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + " "+nombreEvento);
-														
-														if (iNoDocumentoFor > 0) {
-															bDomGenerado = true;
+
+														if (iNoDocumentoFor > 0) {												
+															bForGenerado = true;												
 														} else {
-															// No se pudo encontrar el No. de documento
-															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-															
+															// No se pudo encontrar el No.  de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();	
 															bContabilizado = false;
 															throw new Exception(strMensajeValidacion);
 														}
 													}
-												}else{
-													dMonto1 = metPago.getMonto();
-													dMonto2 = metPago.getEquivalente();
-												}
-												
-												iContadorFor++;
-												//partir el monto en pago neto y dif cambiario
-												
-//												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) partir el monto en pago neto y dif cambiario" );
-												
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],hFac.getMoneda(),d.pasarAenteroLong(dMonto2),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
-												if (bContabilizado) {
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],hFac.getMoneda(),d.pasarAenteroLong(dMonto1),
-																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
-													if (bContabilizado) {
-														// asiento de diario para cuenta de venta de contado
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																		sCuentaVenta[5],valoresJdeIns[2],hFac.getMoneda(),-1*(d.pasarAenteroLong(dMonto2)), sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																		hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
-														if (bContabilizado) {
-															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																				sCuentaVenta[5],valoresJdeIns[5],hFac.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"",
-																				"Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4] , ((-1)* (d.pasarAenteroLong(dMonto2))) );
-															iContadorFor++;
-															
-//															LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(F) partir el monto en pago neto y dif cambiario" );
+													
 
-															
-															
-															//validar si hay diferencial cambiario
-															if(bHayDiferencial){
-																//buscar cuenta para el dif cambiario
-																if(sCuentaDC==null){
-																	sCuentaDC = d.obtenerCuentaDifCambiario(iCaid, hFac.getCodcomp(), hFac.getCodunineg(), s, tx, null, null);
-																}
-																if(sCuentaDC!=null){
-																	
-																	iContadorFor++;
-																	//iContadorDom++;
-																	
-																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],sMonedaBase,d.pasarAenteroLong(dMontoDif),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
-																	
-																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(), valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaDC[0],sCuentaDC[1],sCuentaDC[3],sCuentaDC[4],
-																			sCuentaDC[5],valoresJdeIns[5],sMonedaBase,(-1)* (d.pasarAenteroLong(dMontoDif)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"",
-																			"Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaDC[2],"","",sMonedaBase,sCuentaDC[2],valoresJdeIns[7], 0);
-																	
-																	//iContadorDom++;
-																	iContadorFor++;
-																	
-																}else{
-																	bContabilizado = false;
-																	strMensajeValidacion = "Diferencial Cambiario " + d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-																																		
-																	throw new Exception(strMensajeValidacion);
-																}
-															}
-															//m.put("iContadorDom",iContadorDom);
-															m.put("iContadorFor",iContadorFor);
-														} else {
-															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-															throw new Exception(strMensajeValidacion);
-														}
-													} else {
-														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-														throw new Exception(strMensajeValidacion);
-													}
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													throw new Exception(strMensajeValidacion);
-												}
-												if (!bContabilizado) {
-													throw new Exception("No se pudo contabilizar!!");
-												}
-												//poner en cero el monto de pagos y poner el monto pendiente
-												hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - dMonto1));hFac.setDpendiente(d.roundDouble4(hFac.getDpendiente() - dMonto2));
-												metPago.setMonto(0);
-												metPago.setEquivalente(0);
-												
-											
-											}
-										
-										}else{// F:USD P:USD el pago es en la misma moneda de la factura
-											
-											if(d.roundDouble4(metPago.getMonto()) > d.roundDouble4(hFac.getDpendiente())){
-												
-												// comprobar si generar el no. de documento
-												if (!bForGenerado) {
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
 													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario
-													
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													if (iNoDocumentoFor > 0) {												
-														bForGenerado = true;											
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+													if(metPago.getTasa().doubleValue()!=dTasaCalculada){
+														bHayDiferencial = true;
+														//partir el monto
+
+														dMonto1 = d.roundDouble4(metPago.getEquivalente() * dTasaCalculada);
+														dMonto2 = metPago.getEquivalente();
+														dMontoDif = metPago.getMonto() -  dMonto1;
 														
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
+														// leer el numero de documento domestico a utilizar para el asiento de diario
+														
+														if (!bDomGenerado) {
+															iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+
+															if (iNoDocumentoFor > 0) {
+																bDomGenerado = true;
+															} else {
+																// No se pudo encontrar el No. de documento
+																strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+																bContabilizado = false;
+																throw new Exception(strMensajeValidacion);
+															}
+														}
+													}else{
+														dMonto1 = metPago.getMonto();
+														dMonto2 = metPago.getEquivalente();
 													}
-												}
-												//
-												//iContadorDom = Integer.parseInt(m.get("iContadorDom").toString());
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												iContadorFor++;
-												dMonto1 = d.roundDouble4(hFac.getDpendiente());
-												dMonto2 = d.roundDouble4(hFac.getCpendiente());
-												
-//												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) asiento de diario para cuenta de venta de contado Factura Dolares pago dolares" );
-												
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
-																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+													
+													iContadorFor++;
+													//partir el monto en pago neto y dif cambiario
+																									
+													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],hFac.getMoneda(),d.pasarAenteroLong(dMonto2),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																	/*new BigDecimal(d.roundDouble4(dTasaCalculada))*/ hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
 																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
-												if (bContabilizado) {
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
-																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto1) );
 													if (bContabilizado) {
-														// asiento de diario para cuenta de venta de contado
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],hFac.getMoneda(),d.pasarAenteroLong(dMonto1),
 																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
 														if (bContabilizado) {
-															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
+															// asiento de diario para cuenta de venta de contado
+															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha,  hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																			sCuentaVenta[5],valoresJdeIns[2],hFac.getMoneda(),-1*(d.pasarAenteroLong(dMonto2)), sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																			hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+															if (bContabilizado) {
+																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																					sCuentaVenta[5],valoresJdeIns[5],hFac.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"",
+																					"Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																					sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4] , (-1*(d.pasarAenteroLong(dMonto2))) );
+																
+																
+																iContadorFor++;
+																
+																//validar si hay diferencial cambiario
+																if(bHayDiferencial){
+																	//buscar cuenta para el dif cambiario
+																	if(sCuentaDC==null){
+																		sCuentaDC = d.obtenerCuentaDifCambiario(iCaid, hFac.getCodcomp(), hFac.getCodunineg(), s, tx, null, null);
+																	}
+																	if(sCuentaDC!=null){
+
+																		
+																		iContadorFor++;
+
+																		bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha,  hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																				sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],sMonedaBase,d.pasarAenteroLong(dMontoDif),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
+																		
+																		bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(), valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaDC[0],sCuentaDC[1],sCuentaDC[3],sCuentaDC[4],
+																				sCuentaDC[5],valoresJdeIns[5],sMonedaBase,(-1)* (d.pasarAenteroLong(dMontoDif)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"",
+																				"Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaDC[2],"","",sMonedaBase,sCuentaDC[2],valoresJdeIns[7], 0 );
+																		
+																		iContadorFor++;
+																		
+																	}else{
+																		bContabilizado = false;																	
+																		strMensajeValidacion = "cuenta de diferencial cambiario  " + d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+																		throw new Exception(strMensajeValidacion);
+																	}
+																}
+																
+																m.put("iContadorFor",iContadorFor);
+															} else {
+																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																throw new Exception(strMensajeValidacion);
+															}
+														} else {
+															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+															throw new Exception(strMensajeValidacion);
+														}
+													} else {
+														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+														throw new Exception(strMensajeValidacion);
+													}
+													if (!bContabilizado) {
+														throw new Exception("No se pudo contabilizar el registro!!");
+													}
+													//poner en cero el monto de factura y el monto a aplicar
+													metPago.setMonto(0);
+													metPago.setEquivalente(0);
+													hFac.setCpendiente(0);hFac.setDpendiente(0);
+													
+												}else{// el pago es menor al monto de la factura
+													if (!bForGenerado) {
+														
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
+					
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {												
+															bForGenerado = true;												
+														} else {
+															// No se pudo encontrar el No.  de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+														}
+													}
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
+
+													//validar si hay diferencial cambiario										
+													if(metPago.getTasa().doubleValue()!=dTasaCalculada){
+														bHayDiferencial = true;
+														//partir el monto
+														dMonto1 = d.roundDouble4(metPago.getEquivalente() * dTasaCalculada);
+														dMonto2 = metPago.getEquivalente();
+														dMontoDif = metPago.getMonto() -  dMonto1;
+														// leer el numero de documento domestico a utilizar para el asiento de diario
+														if (!bDomGenerado) {
+															iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+
+															if (iNoDocumentoFor > 0) {
+																bDomGenerado = true;
+															} else {
+																// No se pudo encontrar el No. de documento
+																strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+																
+																bContabilizado = false;
+																throw new Exception(strMensajeValidacion);
+															}
+														}
+													}else{
+														dMonto1 = metPago.getMonto();
+														dMonto2 = metPago.getEquivalente();
+													}
+													
+													iContadorFor++;
+													//partir el monto en pago neto y dif cambiario													
+													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],hFac.getMoneda(),d.pasarAenteroLong(dMonto2),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																	hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
+													if (bContabilizado) {
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],hFac.getMoneda(),d.pasarAenteroLong(dMonto1),
 																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto1))) );
-															iContadorFor++;
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
+														if (bContabilizado) {
+															// asiento de diario para cuenta de venta de contado
+															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																			sCuentaVenta[5],valoresJdeIns[2],hFac.getMoneda(),-1*(d.pasarAenteroLong(dMonto2)), sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																			hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+															if (bContabilizado) {
+																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																					sCuentaVenta[5],valoresJdeIns[5],hFac.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"",
+																					"Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																					sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4] , ((-1)* (d.pasarAenteroLong(dMonto2))) );
+																iContadorFor++;
+																
+																//validar si hay diferencial cambiario
+																if(bHayDiferencial){
+																	//buscar cuenta para el dif cambiario
+																	if(sCuentaDC==null){
+																		sCuentaDC = d.obtenerCuentaDifCambiario(iCaid, hFac.getCodcomp(), hFac.getCodunineg(), s, tx, null, null);
+																	}
+																	if(sCuentaDC!=null){
+																		
+																		iContadorFor++;
+																		
+																		bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																				sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],sMonedaBase,d.pasarAenteroLong(dMontoDif),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
+																		
+																		bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(), valoresJdeIns[1], iNoDocumentoFor,(iContadorFor/*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaDC[0],sCuentaDC[1],sCuentaDC[3],sCuentaDC[4],
+																				sCuentaDC[5],valoresJdeIns[5],sMonedaBase,(-1)* (d.pasarAenteroLong(dMontoDif)),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"",
+																				"Dif/Camb Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaDC[2],"","",sMonedaBase,sCuentaDC[2],valoresJdeIns[7], 0);
+																		
+																		iContadorFor++;
+																		
+																	}else{
+																		bContabilizado = false;
+																		strMensajeValidacion = "Diferencial Cambiario " + d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+																																			
+																		throw new Exception(strMensajeValidacion);
+																	}
+																}
+
+																m.put("iContadorFor",iContadorFor);
+															} else {
+																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																throw new Exception(strMensajeValidacion);
+															}
+														} else {
+															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+															throw new Exception(strMensajeValidacion);
+														}
+													} else {
+														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+														throw new Exception(strMensajeValidacion);
+													}
+													if (!bContabilizado) {
+														throw new Exception("No se pudo contabilizar!!");
+													}
+													//poner en cero el monto de pagos y poner el monto pendiente
+													hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - dMonto1));hFac.setDpendiente(d.roundDouble4(hFac.getDpendiente() - dMonto2));
+													metPago.setMonto(0);
+													metPago.setEquivalente(0);
+													
+												
+												}
+											
+											}else{// F:USD P:USD el pago es en la misma moneda de la factura
+												
+												if(d.roundDouble4(metPago.getMonto()) > d.roundDouble4(hFac.getDpendiente())){
+													
+													// comprobar si generar el no. de documento
+													if (!bForGenerado) {
+														
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {												
+															bForGenerado = true;											
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
 															
-															//m.put("iContadorDom",iContadorDom);
-															m.put("iContadorFor",iContadorFor);
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+														}
+													}
+													//
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
+													iContadorFor++;
+													dMonto1 = d.roundDouble4(hFac.getDpendiente());
+													dMonto2 = d.roundDouble4(hFac.getCpendiente());
+
+													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
+																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																		sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
+													if (bContabilizado) {
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
+																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto1) );
+														if (bContabilizado) {
+															// asiento de diario para cuenta de venta de contado
+															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+															if (bContabilizado) {
+																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto1))) );
+																iContadorFor++;
+																
+																m.put("iContadorFor",iContadorFor);
+															} else {														
+																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																throw new Exception(strMensajeValidacion);
+															}
 														} else {														
 															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 															throw new Exception(strMensajeValidacion);
 														}
-													} else {														
+													} else {
 														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 														throw new Exception(strMensajeValidacion);
 													}
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													throw new Exception(strMensajeValidacion);
-												}
-		
-												//poner en cero el monto de factura y restar el monto a aplicar
-												metPago.setMonto(d.roundDouble4(metPago.getMonto() - dMonto1));
-												metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - dMonto1));
-												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												
-											}else if(d.roundDouble4(metPago.getMonto()) == d.roundDouble4(hFac.getDpendiente())){// el pago es igual al monto de la factura
-												// comprobar si generar el no. de documento
-												if (!bForGenerado) {
+			
+													//poner en cero el monto de factura y restar el monto a aplicar
+													metPago.setMonto(d.roundDouble4(metPago.getMonto() - dMonto1));
+													metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - dMonto1));
+													hFac.setCpendiente(0);hFac.setDpendiente(0);
 													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario
-													
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													if (iNoDocumentoFor > 0) {												
-														bForGenerado = true;											
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+												}else if(d.roundDouble4(metPago.getMonto()) == d.roundDouble4(hFac.getDpendiente())){// el pago es igual al monto de la factura
+													// comprobar si generar el no. de documento
+													if (!bForGenerado) {
 														
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {												
+															bForGenerado = true;											
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+														}
 													}
-												}
-												//
-												//iContadorDom = Integer.parseInt(m.get("iContadorDom").toString());
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												iContadorFor++;
-												
-												//&& ====== 20112014: el monto del pago es igual al de la factura, utilizar los montos de la factura en vez de calcular de nuevo
-												dMonto1 = hFac.getDpendiente() ; // dMonto1 = d.roundDouble4(metPago.getMonto());
-												dMonto2 = hFac.getCpendiente() ; //  d.roundDouble4(metPago.getMonto()* hFac.getTasa().doubleValue());
-												
-//												LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) asiento de diario para cuenta de venta de contado el pago es igual al monto de la factura" );
-												
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
-																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
-												if (bContabilizado) {
+
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
+													iContadorFor++;
+													
+													//&& ====== 20112014: el monto del pago es igual al de la factura, utilizar los montos de la factura en vez de calcular de nuevo
+													dMonto1 = hFac.getDpendiente() ; // dMonto1 = d.roundDouble4(metPago.getMonto());
+													dMonto2 = hFac.getCpendiente() ; //  d.roundDouble4(metPago.getMonto()* hFac.getTasa().doubleValue());
+													
 													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
+																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
 																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto1) );
+																		sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
 													if (bContabilizado) {
-														// asiento de diario para cuenta de venta de contado
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
 																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto1) );
 														if (bContabilizado) {
+															// asiento de diario para cuenta de venta de contado
 															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4],  ( (-1)* (d.pasarAenteroLong(dMonto1))) );
-															iContadorFor++;
-															//m.put("iContadorDom",iContadorDom);
-															m.put("iContadorFor",iContadorFor);
+																				sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+															if (bContabilizado) {
+																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4],  ( (-1)* (d.pasarAenteroLong(dMonto1))) );
+																iContadorFor++;
+
+																m.put("iContadorFor",iContadorFor);
+															} else {
+																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																throw new Exception(strMensajeValidacion);
+															}
 														} else {
 															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 															throw new Exception(strMensajeValidacion);
@@ -4491,138 +4421,60 @@ public class FacContadoDAO {
 														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 														throw new Exception(strMensajeValidacion);
 													}
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													throw new Exception(strMensajeValidacion);
-												}
-												
-												//poner en cero el monto de factura y restar el monto a aplicar
-												metPago.setMonto(0);
-												metPago.setEquivalente(0);
-												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												
-											}else{// el pago es menor al monto de la factura
-												// comprobar si generar el no. de documento
-												if (!bForGenerado) {
 													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario
+													//poner en cero el monto de factura y restar el monto a aplicar
+													metPago.setMonto(0);
+													metPago.setEquivalente(0);
+													hFac.setCpendiente(0);hFac.setDpendiente(0);
 													
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													if (iNoDocumentoFor > 0) {												
-														bForGenerado = true;											
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+												}else{// el pago es menor al monto de la factura
+													// comprobar si generar el no. de documento
+													if (!bForGenerado) {
 														
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
+
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {												
+															bForGenerado = true;											
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+														}
 													}
-												}
-												//
-												//iContadorDom = Integer.parseInt(m.get("iContadorDom").toString());
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												iContadorFor++;
-												dMonto1 = d.roundDouble4(metPago.getMonto());
-												dMonto2 = d.roundDouble4(metPago.getMonto()* hFac.getTasa().doubleValue());
-												
-										
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
-																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
-												if (bContabilizado) {
+													//
+
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
+													iContadorFor++;
+													dMonto1 = d.roundDouble4(metPago.getMonto());
+													dMonto2 = d.roundDouble4(metPago.getMonto()* hFac.getTasa().doubleValue());
+													
+											
 													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
+																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
 																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], (d.pasarAenteroLong(dMonto1)) );
+																		sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
 													if (bContabilizado) {
-														// asiento de diario para cuenta de venta de contado
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
 																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0);
-														if (bContabilizado) {
-															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto1))) );
-															iContadorFor++;
-															//m.put("iContadorDom",iContadorDom);
-															m.put("iContadorFor",iContadorFor);
-														} else {
-															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-															throw new Exception(strMensajeValidacion);
-														}
-													} else {
-														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-														throw new Exception(strMensajeValidacion);
-													}
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													throw new Exception(strMensajeValidacion);
-												}
-												
-												//poner en cero el monto de pagos y poner el monto pendiente
-												hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - dMonto2));hFac.setDpendiente(d.roundDouble4(hFac.getDpendiente() - dMonto1));
-												metPago.setMonto(0);
-												metPago.setEquivalente(0);
-												
-													
-												}
-										}
-									} else {// factura en cordobas
-										if (!metPago.getMoneda().equals(sMonedaBase)) {//F:COR P:USD activar compra venta pago dolares
-											
-											if(d.roundDouble(metPago.getEquivalente()) > d.roundDouble(hFac.getCpendiente())){//el pago es mayor al monto de la factura
-												if (!bForGenerado) {
-													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario
-													
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													if (iNoDocumentoFor > 0) {													
-														bForGenerado = true;													
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-														lblMensajeValidacion.setValue(strMensajeValidacion);	;
-														bContabilizado = false;
-															return false;
-														}
-													}	
-												dMonto1 = hFac.getCpendiente();
-												dMonto2 = hFac.getDpendiente();
-												if(bContabilizado){
-													iContadorFor++;
-													
-//													LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) asiento de diario para cuenta de venta de contado el pago es mayor al monto de la factura" );
-													
-													
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
-																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo() +" f:"+hFac.getNofactura(),
-																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
-													if (bContabilizado) {
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
-																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], (d.pasarAenteroLong(dMonto1)) );
 														if (bContabilizado) {
 															// asiento de diario para cuenta de venta de contado
 															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+																				sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0);
 															if (bContabilizado) {
 																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto2))) );
+																				sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),hFac.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto1))) );
 																iContadorFor++;
-																//m.put("iContadorDom",iContadorDom);
+
 																m.put("iContadorFor",iContadorFor);
 															} else {
 																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
@@ -4636,323 +4488,394 @@ public class FacContadoDAO {
 														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 														throw new Exception(strMensajeValidacion);
 													}
-												}
-											
-												
-												//iContadorDom = Integer.parseInt(m.get("iContadorDom").toString());
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												
-
-												//poner en cero el monto de factura y restar el monto a aplicar
-												metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getDpendiente()));
-												metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getCpendiente()));
-												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												
-											}else if (d.roundDouble(metPago.getEquivalente()) == d.roundDouble(hFac.getCpendiente())){
-												
-												if (!bForGenerado) {
 													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+													//poner en cero el monto de pagos y poner el monto pendiente
+													hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - dMonto2));hFac.setDpendiente(d.roundDouble4(hFac.getDpendiente() - dMonto1));
+													metPago.setMonto(0);
+													metPago.setEquivalente(0);
 													
-													if (iNoDocumentoFor > 0) {													
-														bForGenerado = true;													
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
 														
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
-														}
-													}	
-												dMonto1 = hFac.getCpendiente();
-												dMonto2 = hFac.getDpendiente();
-												if(bContabilizado){
-													iContadorFor++;
-													
-													
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
-																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo() +" f:"+hFac.getNofactura(),
-																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
-													if (bContabilizado) {
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
-																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2)  );
-														if (bContabilizado) {
-															// asiento de diario para cuenta de venta de contado
-															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
-															if (bContabilizado) {
-																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto2)) )  );
-																iContadorFor++;
-																//m.put("iContadorDom",iContadorDom);
-																m.put("iContadorFor",iContadorFor);
-															} else {
-																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-																throw new Exception(strMensajeValidacion);
-															}
-														} else {
-															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-															throw new Exception(strMensajeValidacion);
-														}
-													} else {
-														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-														throw new Exception(strMensajeValidacion);
 													}
-												}
-
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												
-
-												//poner en cero el monto de factura y restar el monto a aplicar
-												metPago.setMonto(0);
-												metPago.setEquivalente(0);
-												hFac.setCpendiente(0);hFac.setDpendiente(0);
-												
-											}else{//el pago es menor al monto de la factura
-												if (!bForGenerado) {
-													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													if (iNoDocumentoFor > 0) {													
-														bForGenerado = true;													
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-														lblMensajeValidacion.setValue(strMensajeValidacion);
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
-														}
-													}	
-												dMonto1 = metPago.getEquivalente();
-												dMonto2 = metPago.getMonto();
-												if(bContabilizado){
-													iContadorFor++;
-													
-//													LogCrtl.sendLogInfo("-------"+sdf.format(new Date())+ "Paso "+(++posicionProceso) + dtaLog + "(I) asiento de diario para cuenta de venta de contado el pago es menor al monto de la factura" );
-													
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																	sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
-																	sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo() +" f:"+hFac.getNofactura(),
-																	sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
-													if (bContabilizado) {
-														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
-																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
-																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
-														if (bContabilizado) {
-															// asiento de diario para cuenta de venta de contado
-															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
-															if (bContabilizado) {
-																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
-																			sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto2))) );
-																iContadorFor++;
-																//m.put("iContadorDom",iContadorDom);
-																m.put("iContadorFor",iContadorFor);
-															} else {
-																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-																throw new Exception(strMensajeValidacion);
-															}
-														} else {
-															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-															throw new Exception(strMensajeValidacion);
-														}
-													} else {
-														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-														throw new Exception(strMensajeValidacion);
-													}
-												}
-												
-
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												
-
-												//poner en cero el monto de factura y restar el monto a aplicar
-												hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - dMonto1));hFac.setDpendiente(d.roundDouble4(hFac.getDpendiente() - dMonto2));
-												metPago.setMonto(0);
-												metPago.setEquivalente(0);											
-											
 											}
-										}else{//F:COR P:COR pago en la moneda de la factura
-											if(d.roundDouble4(metPago.getMonto()) > d.roundDouble4(hFac.getCpendiente())){//el pago es mayor al monto de la factura
-												// comprobar si generar el no. de documento
-												if (!bDomGenerado) {
-													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario
-													//iNoDocumentoFor = d.leerActualizarNoDocJDE();
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													if (iNoDocumentoFor > 0) {
-														bDomGenerado = true;										
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-														lblMensajeValidacion.setValue(strMensajeValidacion);
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
-													}
-												}
-												dMonto1 = hFac.getCpendiente();												
-												 
-												//iContadorDom = Integer.parseInt(m.get("iContadorDom").toString());
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												 
-												//iContadorDom++;
-												iContadorFor++;												
+										} else {// factura en cordobas
+											if (!metPago.getMoneda().equals(sMonedaBase)) {//F:COR P:USD activar compra venta pago dolares
+												
+												if(d.roundDouble(metPago.getEquivalente()) > d.roundDouble(hFac.getCpendiente())){//el pago es mayor al monto de la factura
+													if (!bForGenerado) {
+														
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
 
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,( iContadorFor /*iContadorDom*/) * 1.0,iNoBatch,
-																	sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),
-																	d.pasarAenteroLong(dMonto1),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																	BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																	sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
-												if (bContabilizado) {
-													// asiento de diario para cuenta de venta de contado
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,( iContadorFor /*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],
-																			sCuentaVenta[3],sCuentaVenta[4],sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[7], 0);
-													
-													iContadorFor++;
-													
-													m.put("iContadorFor", iContadorFor);
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													throw new Exception(strMensajeValidacion);
-												}	
-												
-												//poner en cero el monto de factura y restar el monto a aplicar
-												metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getCpendiente()));
-												metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getDpendiente()));
-												hFac.setCpendiente(0);hFac.setDpendiente(0);												
-												
-											}else if(d.roundDouble4(metPago.getMonto()) == d.roundDouble4(hFac.getCpendiente())){//El pago es igual al monto de la factura
-												// comprobar si generar el no. de documento
-												if (!bDomGenerado) {
-													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario
-													
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
-													
-													if (iNoDocumentoFor > 0) {
-														bDomGenerado = true;										
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-														lblMensajeValidacion.setValue(strMensajeValidacion);	
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {													
+															bForGenerado = true;													
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															lblMensajeValidacion.setValue(strMensajeValidacion);	;
+															bContabilizado = false;
+																return false;
+															}
+														}	
+													dMonto1 = hFac.getCpendiente();
+													dMonto2 = hFac.getDpendiente();
+													if(bContabilizado){
+														iContadorFor++;
+
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
+																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo() +" f:"+hFac.getNofactura(),
+																		sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
+														if (bContabilizado) {
+															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
+																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
+															if (bContabilizado) {
+																// asiento de diario para cuenta de venta de contado
+																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+																if (bContabilizado) {
+																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto2))) );
+																	iContadorFor++;
+
+																	m.put("iContadorFor",iContadorFor);
+																} else {
+																	strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																	throw new Exception(strMensajeValidacion);
+																}
+															} else {
+																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																throw new Exception(strMensajeValidacion);
+															}
+														} else {
+															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+															throw new Exception(strMensajeValidacion);
+														}
 													}
-												}
-												dMonto1 = hFac.getCpendiente();					
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-											 
-												//iContadorDom++;
-												iContadorFor ++ ;
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,( iContadorFor/*iContadorDom*/) * 1.0,iNoBatch,
-																	sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),
-																	d.pasarAenteroLong(dMonto1),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																	BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																	sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
-												if (bContabilizado) {
-													// asiento de diario para cuenta de venta de contado
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,( iContadorFor /*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],
-																			sCuentaVenta[3],sCuentaVenta[4],sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[7], 0);
-													iContadorFor++;
-													m.put("iContadorFor", iContadorFor);
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													throw new Exception(strMensajeValidacion);
-												}	
-												//poner en cero el monto de factura y restar el monto a aplicar
-												metPago.setMonto(0);
-												metPago.setEquivalente(0);
-												hFac.setCpendiente(0);hFac.setDpendiente(0);												
-												
-											}else{//el pago es menor al monto de la factura
-												// comprobar si generar el no. de documento
-												if (!bDomGenerado) {
+
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());													
+
+													//poner en cero el monto de factura y restar el monto a aplicar
+													metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getDpendiente()));
+													metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getCpendiente()));
+													hFac.setCpendiente(0);hFac.setDpendiente(0);
 													
-													// leer el numero de documento foraneo a utilizar para el asiento de diario									
-													iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+												}else if (d.roundDouble(metPago.getEquivalente()) == d.roundDouble(hFac.getCpendiente())){
 													
-													if (iNoDocumentoFor > 0) {
-														bDomGenerado = true;										
-													} else {
-														// No se pudo encontrar el No. de documento
-														strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
-														lblMensajeValidacion.setValue(strMensajeValidacion);	
-														bContabilizado = false;
-														throw new Exception(strMensajeValidacion);
+													if (!bForGenerado) {
+														
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
+
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {													
+															bForGenerado = true;													
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+															}
+														}	
+													dMonto1 = hFac.getCpendiente();
+													dMonto2 = hFac.getDpendiente();
+													if(bContabilizado){
+														iContadorFor++;
+														
+														
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
+																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo() +" f:"+hFac.getNofactura(),
+																		sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0);
+														if (bContabilizado) {
+															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
+																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2)  );
+															if (bContabilizado) {
+																// asiento de diario para cuenta de venta de contado
+																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+																if (bContabilizado) {
+																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto2)) )  );
+																	iContadorFor++;
+
+																	m.put("iContadorFor",iContadorFor);
+																} else {
+																	strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																	throw new Exception(strMensajeValidacion);
+																}
+															} else {
+																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																throw new Exception(strMensajeValidacion);
+															}
+														} else {
+															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+															throw new Exception(strMensajeValidacion);
+														}
 													}
-												}
-												dMonto1 = metPago.getMonto();												
-												 
-												//iContadorDom = Integer.parseInt(m.get("iContadorDom").toString());
-												iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
-												 
-												//iContadorDom++;
-												iContadorFor ++;
-												
-	
-												bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,( iContadorFor /*iContadorDom*/) * 1.0,iNoBatch,
-																	sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),
-																	d.pasarAenteroLong(dMonto1),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
-																	BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																	sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
-												if (bContabilizado) {
+
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
 													
-													// asiento de diario para cuenta de venta de contado
-													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso), dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,( iContadorFor /*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],
-																			sCuentaVenta[3],sCuentaVenta[4],sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
-																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
-																			sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[7], 0);
+
+													//poner en cero el monto de factura y restar el monto a aplicar
+													metPago.setMonto(0);
+													metPago.setEquivalente(0);
+													hFac.setCpendiente(0);hFac.setDpendiente(0);
+													
+												}else{//el pago es menor al monto de la factura
+													if (!bForGenerado) {
+														
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
+
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {													
+															bForGenerado = true;													
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															lblMensajeValidacion.setValue(strMensajeValidacion);
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+															}
+														}	
+													dMonto1 = metPago.getEquivalente();
+													dMonto2 = metPago.getMonto();
+													if(bContabilizado){
+														iContadorFor++;
+
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																		sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[2],metPago.getMoneda(),d.pasarAenteroLong(dMonto2),
+																		sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo() +" f:"+hFac.getNofactura(),
+																		sCuentaCaja[2],"","",valoresJdeIns[3],sCuentaCaja[2],valoresJdeIns[4], 0 );
+														if (bContabilizado) {
+															bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor) * 1.0,iNoBatch,sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],
+																			sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),d.pasarAenteroLong(dMonto1),
+																			sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																			sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[4], d.pasarAenteroLong(dMonto2) );
+															if (bContabilizado) {
+																// asiento de diario para cuenta de venta de contado
+																bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[2],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto2)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",valoresJdeIns[3],sCuentaVenta[2],valoresJdeIns[4], 0 );
+																if (bContabilizado) {
+																	bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,(iContadorFor + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],sCuentaVenta[3],sCuentaVenta[4],
+																				sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),metPago.getTasa(),"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[4], ((-1)* (d.pasarAenteroLong(dMonto2))) );
+																	iContadorFor++;
+																	//m.put("iContadorDom",iContadorDom);
+																	m.put("iContadorFor",iContadorFor);
+																} else {
+																	strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																	throw new Exception(strMensajeValidacion);
+																}
+															} else {
+																strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+																throw new Exception(strMensajeValidacion);
+															}
+														} else {
+															strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+															throw new Exception(strMensajeValidacion);
+														}
+													}												
+
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
+
+													//poner en cero el monto de factura y restar el monto a aplicar
+													hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - dMonto1));hFac.setDpendiente(d.roundDouble4(hFac.getDpendiente() - dMonto2));
+													metPago.setMonto(0);
+													metPago.setEquivalente(0);											
+												
+												}
+											}else{//F:COR P:COR pago en la moneda de la factura
+												if(d.roundDouble4(metPago.getMonto()) > d.roundDouble4(hFac.getCpendiente())){//el pago es mayor al monto de la factura
+													// comprobar si generar el no. de documento
+													if (!bDomGenerado) {
+														
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
+
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {
+															bDomGenerado = true;										
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															lblMensajeValidacion.setValue(strMensajeValidacion);
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+														}
+													}
+													dMonto1 = hFac.getCpendiente();	
+
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
+
+													iContadorFor++;												
+
+													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,( iContadorFor /*iContadorDom*/) * 1.0,iNoBatch,
+																		sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),
+																		d.pasarAenteroLong(dMonto1),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																		BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
+													if (bContabilizado) {
+														// asiento de diario para cuenta de venta de contado
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,( iContadorFor /*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],
+																				sCuentaVenta[3],sCuentaVenta[4],sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[7], 0);
+														
+														iContadorFor++;
+														
+														m.put("iContadorFor", iContadorFor);
+													} else {
+														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+														throw new Exception(strMensajeValidacion);
+													}	
+													
+													//poner en cero el monto de factura y restar el monto a aplicar
+													metPago.setMonto(d.roundDouble4(metPago.getMonto() - hFac.getCpendiente()));
+													metPago.setEquivalente(d.roundDouble4(metPago.getEquivalente() - hFac.getDpendiente()));
+													hFac.setCpendiente(0);hFac.setDpendiente(0);												
+													
+												}else if(d.roundDouble4(metPago.getMonto()) == d.roundDouble4(hFac.getCpendiente())){//El pago es igual al monto de la factura
+													// comprobar si generar el no. de documento
+													if (!bDomGenerado) {
+														
+														// leer el numero de documento foraneo a utilizar para el asiento de diario
+														
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {
+															bDomGenerado = true;										
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															lblMensajeValidacion.setValue(strMensajeValidacion);	
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+														}
+													}
+													dMonto1 = hFac.getCpendiente();					
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
 
 													iContadorFor ++ ;
+													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,( iContadorFor/*iContadorDom*/) * 1.0,iNoBatch,
+																		sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),
+																		d.pasarAenteroLong(dMonto1),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																		BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
+													if (bContabilizado) {
+														// asiento de diario para cuenta de venta de contado
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,( iContadorFor /*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],
+																				sCuentaVenta[3],sCuentaVenta[4],sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[7], 0);
+														iContadorFor++;
+														m.put("iContadorFor", iContadorFor);
+													} else {
+														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+														throw new Exception(strMensajeValidacion);
+													}	
+													//poner en cero el monto de factura y restar el monto a aplicar
+													metPago.setMonto(0);
+													metPago.setEquivalente(0);
+													hFac.setCpendiente(0);hFac.setDpendiente(0);												
+													
+												}else{//el pago es menor al monto de la factura
+													// comprobar si generar el no. de documento
+													if (!bDomGenerado) {
+														
+														// leer el numero de documento foraneo a utilizar para el asiento de diario									
+														iNoDocumentoFor = Divisas.numeroSiguienteJdeE1Custom(valoresJdeNumeracion[8],valoresJdeNumeracion[9] );
+														
+														if (iNoDocumentoFor > 0) {
+															bDomGenerado = true;										
+														} else {
+															// No se pudo encontrar el No. de documento
+															strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
+															lblMensajeValidacion.setValue(strMensajeValidacion);	
+															bContabilizado = false;
+															throw new Exception(strMensajeValidacion);
+														}
+													}
+													dMonto1 = metPago.getMonto();	
 
-													m.put("iContadorFor", iContadorFor);
-												} else {
-													strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
-													lblMensajeValidacion.setValue(strMensajeValidacion);
-													throw new Exception(strMensajeValidacion);
-												}	
+													iContadorFor = Integer.parseInt(m.get("iContadorFor").toString());
 
-												//poner en cero el monto de factura y restar el monto a aplicar
-												hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - metPago.getMonto()));
-												metPago.setMonto(0);
-												metPago.setEquivalente(0);											
-											
-											}//Fin del pago es menos al monto de la factura																				
-										}//Fin de pago F:COR P:COR
-									}// fin de factura en cordobas
-								} else {
-			 
-									strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();
+													iContadorFor ++;
+													
+		
+													bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso),dtFecha, hFac.getCodsuc(),valoresJdeIns[1],iNoDocumentoFor,( iContadorFor /*iContadorDom*/) * 1.0,iNoBatch,
+																		sCuentaCaja[0],sCuentaCaja[1],sCuentaCaja[3],sCuentaCaja[4],sCuentaCaja[5],valoresJdeIns[5],metPago.getMoneda(),
+																		d.pasarAenteroLong(dMonto1),sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),
+																		BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																		sCuentaCaja[2],"","",sMonedaBase,sCuentaCaja[2],valoresJdeIns[7], 0);
+													if (bContabilizado) {
+														
+														// asiento de diario para cuenta de venta de contado
+														bContabilizado = recCtrl.registrarAsientoDiarioLogs( s,  (dtaLog+" Proceso:"+posicionProceso), dtFecha, hFac.getCodsuc(),valoresJdeIns[1], iNoDocumentoFor,( iContadorFor /*iContadorDom*/ + 1) * 1.0,iNoBatch,sCuentaVenta[0],sCuentaVenta[1],
+																				sCuentaVenta[3],sCuentaVenta[4],sCuentaVenta[5],valoresJdeIns[5],metPago.getMoneda(),(-1)* (d.pasarAenteroLong(dMonto1)),
+																				sConcepto,vaut[0].getId().getLogin(),vaut[0].getId().getCodapp(),BigDecimal.ZERO,"","Met: " + metPago.getMetodo()+" f:"+hFac.getNofactura(),
+																				sCuentaVenta[2],"","",sMonedaBase,sCuentaVenta[2],valoresJdeIns[7], 0);
+
+														iContadorFor ++ ;
+
+														m.put("iContadorFor", iContadorFor);
+													} else {
+														strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
+														lblMensajeValidacion.setValue(strMensajeValidacion);
+														throw new Exception(strMensajeValidacion);
+													}	
+
+													//poner en cero el monto de factura y restar el monto a aplicar
+													hFac.setCpendiente(d.roundDouble4(hFac.getCpendiente() - metPago.getMonto()));
+													metPago.setMonto(0);
+													metPago.setEquivalente(0);											
+												
+												}//Fin del pago es menos al monto de la factura																				
+											}//Fin de pago F:COR P:COR
+										}// fin de factura en cordobas
+									} else {
+				 
+										strMensajeValidacion = d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();
+										
+										if (lblMensajeValidacion != null) 
+										    lblMensajeValidacion.setValue(strMensajeValidacion);	
+										bContabilizado = false;
+										throw new Exception(strMensajeValidacion);
+									}
 									
-									if (lblMensajeValidacion != null) 
-									    lblMensajeValidacion.setValue(strMensajeValidacion);	
-									bContabilizado = false;
-									throw new Exception(strMensajeValidacion);
-								}
+									// j++;
+
+									// Reiniciar variable que controla la generacion del nuevo documento
+									if (metPago.getMonto() == 0) {
+										bForGenerado = false;
+										bDomGenerado = false;
+									}
+									
+									// Cuando ya se pago el monto de la factura pero aun queda pendiente saldo en el metodo de pago
+									if (metPago.getMonto() > 0 && (hFac.getCpendiente() == 0 && hFac.getDpendiente() == 0)) {
+										break;
+									}
+								} // End If
 								
-								j++;
-							}
+								j++;	
+							} // End While
 							
 						} else {
 
@@ -4977,44 +4900,24 @@ public class FacContadoDAO {
 					strMensajeValidacion = "No se pudo actualizar el No. de batch!!! " + d.getError() + " <BR/> DETALLE: " + d.getErrorDetalle();		
 					lblMensajeValidacion.setValue(strMensajeValidacion);
 					throw new Exception(strMensajeValidacion);
-				}
+				}				
 				
-				
-				if (bContabilizado && (bDomGenerado || bForGenerado ) ) {
+				if (bContabilizado) { // bContabilizado && (bDomGenerado || bForGenerado ) 
 					iCantDocs++;
 					
-					nombreEvento= " recCtrl.fillEnlaceMcajaJde:(I) ["+sdf.format(new Date())+"] << -- >>" ;
-					
-
 					bContabilizado = recCtrl.fillEnlaceMcajaJde(s, tx, iNumrec, sCodComp,iNoDocumentoFor, iNoBatch, iCajaId, f55ca01.getId().getCaco(), "A", valoresJdeIns[0]);
-					
-					nombreEvento+= "(F) ["+sdf.format(new Date())+"]";
-
-					
+										
 					if (!bContabilizado) {
 						strMensajeValidacion = recCtrl.getError() + " <BR/> DETALLE: " + recCtrl.getErrorDetalle();		
 						lblMensajeValidacion.setValue(strMensajeValidacion);
 						throw new Exception(strMensajeValidacion);
 					}
 				}
-				
-				
-				
-				
-				
+
 				// Grabar Batch
 				if (bContabilizado) {
-					
-					
-					nombreEvento= " registrarBatchA92:(I) ["+sdf.format(new Date())+"] << -- >>" ;
-					
-					
-					bContabilizado = recCtrl.registrarBatchA92Custom(s, dtFecha, valoresJdeIns[8], iNoBatch, iTotalTransaccion, vaut[0].getId().getLogin(), iCantDocs, "RCONTADO", valoresJdeIns[9] );
-					 
-					
-					
-					nombreEvento+= "(F) ["+sdf.format(new Date())+"]";
 
+					bContabilizado = recCtrl.registrarBatchA92Custom(s, dtFecha, valoresJdeIns[8], iNoBatch, iTotalTransaccion, vaut[0].getId().getLogin(), iCantDocs, "RCONTADO", valoresJdeIns[9] );
 					
 					if(!bContabilizado){
 						strMensajeValidacion = "Asiento de diario no " +
@@ -5028,8 +4931,6 @@ public class FacContadoDAO {
 					String[] sCuentaCajaDom = d.obtenerCuentaCaja(f55ca01.getId().getCaid(),hFac.getCodcomp(), MetodosPagoCtrl.EFECTIVO,sMonedaBase,s,tx,null,null);
 					sCuentaCaja = d.obtenerCuentaCaja(f55ca01.getId().getCaid(),hFac.getCodcomp(), MetodosPagoCtrl.EFECTIVO,"USD",s,tx,null,null);
 					int iNoficha = Integer.parseInt(m.get("iNoFicha").toString());
-					
-					nombreEvento= " generarAsientosFichaCV:(I) ["+sdf.format(new Date())+"] << -- >>" ;
 
 					bContabilizado = generarAsientosFichaCV(s,
 											tx, lstPagoFicha,
@@ -5038,10 +4939,7 @@ public class FacContadoDAO {
 											sCuentaCajaDom, 
 											iNoficha,
 											iNumrec, new Date());
-					
-					nombreEvento+= "(F) ["+sdf.format(new Date())+"]";
-					
-					
+
 					if(!bContabilizado){
 						strMensajeValidacion = "Recibo no aplicado, no se " +
 								"pudo ingresar el registro de compra venta" +
