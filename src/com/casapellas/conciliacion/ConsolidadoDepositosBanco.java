@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -1786,13 +1787,24 @@ public class ConsolidadoDepositosBanco {
 			strTotalCoincidenciaEnConflicto.setValue("0");
 			msgValidaResultadoComparacion.setValue("");
 			
-			strRsmRangoFechasBanco.setValue( 
-				" Desde " +  FechasUtil.formatDatetoString( lstDepositosBanco.get(0).getFechadeposito(), "dd/MM/yyyy") + 
-				" Hasta " + FechasUtil.formatDatetoString( lstDepositosBanco.get(lstDepositosBanco.size()-1).getFechadeposito() , "dd/MM/yyyy")  ) ;
+			String fiDep=FechasUtil.formatDatetoString(  lstDepositosBanco.stream().map(PcdConsolidadoDepositosBanco::getFechadeposito)
+					.min(Date::compareTo).get(), "dd/MM/yyyy");
 			
+			String ffDep=FechasUtil.formatDatetoString(  lstDepositosBanco.stream().map(PcdConsolidadoDepositosBanco::getFechadeposito)
+					.max(Date::compareTo).get(), "dd/MM/yyyy");
+			
+			strRsmRangoFechasBanco.setValue( 
+				" Desde " +  fiDep + 
+				" Hasta " + ffDep ) ;
+			
+			String fiDepCaja=FechasUtil.formatDatetoString(  lstDepositosCaja.stream().map(Deposito_Report::getFecha)
+					.min(Date::compareTo).get(), "dd/MM/yyyy");
+			
+			String ffDepCaja=FechasUtil.formatDatetoString(  lstDepositosCaja.stream().map(Deposito_Report::getFecha)
+					.max(Date::compareTo).get(), "dd/MM/yyyy");
 			strRsmRangoFechasCaja.setValue(
-				" Desde " + FechasUtil.formatDatetoString( lstDepositosCaja.get(0).getFecha(), "dd/MM/yyyy") + 
-				" Hasta " + FechasUtil.formatDatetoString( lstDepositosCaja.get(lstDepositosCaja.size()-1).getFecha() , "dd/MM/yyyy") ) ;
+				" Desde " + fiDepCaja + 
+				" Hasta " + ffDepCaja ) ;
 			 
 			lnkValidarConflictos.setStyle("display:none;");
 			
