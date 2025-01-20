@@ -1201,7 +1201,7 @@ public class solicitarSalida {
 		List lstCajas = null;
 		try {
 			restablecerEstilosDS();
-			setCamposTipoOperación( MetodosPagoCtrl.EFECTIVO );
+			setCamposTipoOperacion( MetodosPagoCtrl.EFECTIVO );
 			
 			lblCodigoSearch.setValue("");
 			lblNombreSearch.setValue("");
@@ -1252,7 +1252,7 @@ public class solicitarSalida {
 
 /*******************************************************************************/
 /**	Establecer los campos de entrada para el tipo de operación seleccionado	  **/	
-	public void setCamposTipoOperación(String sTo){
+	public void setCamposTipoOperacion(String sTo){
 		try {
 			ddlBanco.setStyleClass("frmInput2");
 			txtReferencia1.setStyleClass("frmInput2");
@@ -1309,7 +1309,7 @@ public class solicitarSalida {
 		try {
 			
 			sTo = ddlTipoOperacion.getValue().toString();
-			setCamposTipoOperación(sTo);
+			setCamposTipoOperacion(sTo);
 			
 		} catch (Exception error) {
 			error.printStackTrace();
