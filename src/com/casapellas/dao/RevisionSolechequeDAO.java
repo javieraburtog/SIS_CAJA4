@@ -330,11 +330,11 @@ public class RevisionSolechequeDAO {
 			sNotarjeta     = txtCartaDigitosTarjeta.getValue().toString().trim();
 			sAutoriz	   = txtCartaCodAutoriz.getValue().toString().trim();
 			
-			if(!dv.validarCadenaAlfaNumérica(sNombreDestino) && sNombreDestino.length()>150 ){
+			if(!dv.validarCadenaAlfaNumerica(sNombreDestino) && sNombreDestino.length()>150 ){
 				txtDestinoCarta.setStyleClass("frmInput2Error");
 				bValido = false;
 			}
-			if(!dv.validarCadenaAlfaNumérica(sNombreOrigen) && sNombreOrigen.length()>150){
+			if(!dv.validarCadenaAlfaNumerica(sNombreOrigen) && sNombreOrigen.length()>150){
 				txtOrigenCarta.setStyleClass("frmInput2Error");
 				bValido = false;
 			}
@@ -1471,7 +1471,7 @@ public class RevisionSolechequeDAO {
 		dwDetalleSolicitud.setWindowState("hidden");
 		m.remove("rsc_lstDetalleDevolucion");
 	}
-	public void cancelarAprobación(ActionEvent ev){
+	public void cancelarAprobacion(ActionEvent ev){
 		dwConfirmaAprobarSchk.setWindowState("hidden");
 		m.remove("rsc_solicitudSeleccionada");
 	}
