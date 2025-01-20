@@ -782,7 +782,7 @@ public class Divisas {
  *	Fecha:  10/06/2010
  *  Nombre: Carlos Manuel Hernández Morrison.
  */
-	public boolean validarCadenaAlfaNumérica(String sCadena){
+	public boolean validarCadenaAlfaNumerica(String sCadena){
 		boolean bValido = true;
 		Pattern pAlfa = null;
 		try {
