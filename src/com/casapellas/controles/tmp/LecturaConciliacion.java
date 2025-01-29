@@ -1178,7 +1178,7 @@ public class LecturaConciliacion {
 				" IFNULL( (SELECT lower( trim(banco) ) FROM  @ESQUEMA.F55CA022 WHERE CODB  = a.idbanco), CAST(a.idbanco AS VARCHAR(10)))," +
 				" @SQL_FOR_CODCOMP, d.idarchivo, " +
 				" IFNULL( (SELECT  LOWER(DRDL01)  FROM " + ConfigConnection.SChemaJDECTL + ".F0005 CO WHERE CO.DRSY = '00' " +
-							"AND CO.DRRT = '01' AND CO.DRDL02 = 'F' AND trim(drky) = ( @SQL_FOR_CODCOMP ) ) ,'E00') " +
+							"AND CO.DRRT = '09' AND trim(drky) = ( @SQL_FOR_CODCOMP ) ) ,'00') " +
 				
 			" from @ESQUEMA.depbancodet d inner join  @ESQUEMA.archivo a on a.idarchivo = d.idarchivo " +
 			
