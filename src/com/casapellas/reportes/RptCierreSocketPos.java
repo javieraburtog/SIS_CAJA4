@@ -7,13 +7,19 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+
 import com.casapellas.entidades.Transactsp;
+import com.casapellas.hibernate.util.HibernateUtilPruebaCn;
 import com.casapellas.socketpos.TransaccionTerminal;
 import com.casapellas.util.NumeroEnLetras;
+import com.casapellas.util.PropertiesSystem;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -139,7 +145,44 @@ public class RptCierreSocketPos {
 			
 			
 			int separador = 0;
-			for (Transactsp ts : transacciones_sp) {
+			try{				
+				Session sesion = HibernateUtilPruebaCn.currentSession();
+
+				@SuppressWarnings("unchecked")
+				ArrayList<Transactsp>transactspAPlicadas = (ArrayList<Transactsp>)
+										sesion.createCriteria(Transactsp.class)
+										.add(Restrictions.eq("transdate",  new Date() ))										
+										.add(Restrictions.eq("acqnumber", terminal_data.getNombreterminal() ))
+										.add(Restrictions.eq("status", "APL")).list();
+				
+				for (Transactsp ts : transactspAPlicadas) {
+					
+					encabezado = new String[] {
+							ts.getSystraceno(), ts.getReferencenumber(),
+							"****** "+ts.getCardnumber(), ts.getAuthorizationid(),
+							new DecimalFormat("#,##0.00").format(ts.getAmount()),
+							ts.getStatus().toLowerCase()+" "+ts.getResponsecode().trim(),
+							new SimpleDateFormat("dd/MM/yyyy").format(ts
+									.getTransdate()) + " "+ 
+								new SimpleDateFormat("HH:mm:ss").format(ts.getTranstime()), 
+							ts.getClientname().toLowerCase()
+							};
+					
+					if ((++separador % 10) == 0)
+						encabezado = new String[] { "", "", "", "", "", "", "","" };
+					
+					for (int i = 0; i < encabezado.length; i++) {
+						pc = new PdfPCell(new Phrase(encabezado[i], fntHelvetNormalBlack09 ));
+						pc.setHorizontalAlignment(alineado[i]);
+						pc.setBorder(Rectangle.NO_BORDER);
+						tabla.addCell(pc);
+					}
+				}
+					
+			}catch(Exception e) {}
+			
+			//--Metodo que pierde datos al momento de generar el reporte
+			/*for (Transactsp ts : transacciones_sp) {
 				
 				encabezado = new String[] {
 						ts.getSystraceno(), ts.getReferencenumber(),
@@ -161,7 +204,7 @@ public class RptCierreSocketPos {
 					pc.setBorder(Rectangle.NO_BORDER);
 					tabla.addCell(pc);
 				}
-			}
+			}*/
 			rptCierreTerminal.add(tabla);
 			rptCierreTerminal.add(new Chunk(ls));
 			rptCierreTerminal.add(Chunk.NEWLINE);
