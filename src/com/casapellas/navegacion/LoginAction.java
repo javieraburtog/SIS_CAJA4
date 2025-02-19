@@ -38,6 +38,7 @@ import com.casapellas.entidades.ens.Vautoriz;
 import com.casapellas.util.AllConectionMngt;
 import com.casapellas.util.CodeUtil;
 import com.casapellas.util.DocumuentosTransaccionales;
+import com.casapellas.util.JsfUtil;
 import com.casapellas.util.PropertiesSystem;
 import com.casapellas.util.ens.ConnectionDb2;
 import com.casapellas.util.ens.ENSUtilValidation;
@@ -185,6 +186,10 @@ public class LoginAction {
 				fcLogin.getExternalContext().redirect( "/" + PropertiesSystem.CONTEXT_NAME + "/login.faces");
 			}
 			
+
+			
+			
+			
 			 //&& ================ configuraciones para preconciliacion, perfiles y cuentas por usuario
 			if (
 				vAut[0].getId().getCodper().compareTo(DocumuentosTransaccionales.ENSCONCILIADORSUPERVISOR()) == 0  ||
@@ -214,9 +219,13 @@ public class LoginAction {
 				m.put("sCajaId", String.valueOf(caja.getId().getCaid()));
 				m.put("sNombreSucursal",caja.getId().getCaconom());
 				m.put("lstCajas",lstCajas);
+				
+				
 				fcLogin.getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME+"/main.faces");
+			
 				return;
 			}
+			
 			
 			//&& ================ buscar si el perfil tiene rol de rotativo
 			String codigogrupo = CtrlCajas.codigoGrupoCajaPorPerfil( vAut[0].getId().getCodper() );
@@ -443,7 +452,7 @@ public class LoginAction {
 			}
 				
 			if(sMensaje.equals("The application server rejected the connection. (Password is expired.)")){
-				String urlAdd = "http://192.168.1.3:2060/webaccess/iWAChgPwd?user=" + uiUsuario.getValue().toString() + "&expired=true&referer-uri=%2fwebaccess%2fiWAHome";
+				String urlAdd = "http://"+PropertiesSystem.IPSERVERDB2+":2060/webaccess/iWAChgPwd?user=" + uiUsuario.getValue().toString() + "&expired=true&referer-uri=%2fwebaccess%2fiWAHome";
 				
 				FacesContext context = FacesContext.getCurrentInstance();   
 	        	HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();  
@@ -549,6 +558,7 @@ public class LoginAction {
 			m.remove("lstComboCajas");
 			m.remove("sqlState");
 
+
 		
 			boolean bloqueada= 	CtrlCajas.bloquearCaja(caja.getId().getCaid());
 			if(bloqueada) {					
@@ -560,6 +570,24 @@ public class LoginAction {
 			caja = (Vf55ca01)lstCajas.get(0);
 			caja.getId().getCaprnt().trim();
 					
+			/*Mandar a  la cookie los valores para Angular*/
+			try {
+				
+				//List lstCajas = (List) JsfUtil.getObjectFromSessionMap("lstCajas");
+				Vf55ca01 lstCajasCustom = caja;
+				
+				String nCaja = lstCajasCustom.getId().getCaid()+ "-" +lstCajasCustom.getId().getCaname();
+				String nSucursal= lstCajasCustom.getId().getCaconom();
+				
+				
+				
+				
+				FacesContext.getCurrentInstance().getExternalContext().addResponseCookie("NombreCaja", nCaja,null);
+				FacesContext.getCurrentInstance().getExternalContext().addResponseCookie("NombreSucursal",  nSucursal,null);
+				FacesContext.getCurrentInstance().getExternalContext().addResponseCookie("Cajero",  CodeUtil.capitalize( vAut[0].getId().getEmpnombre().trim() ),null);
+			
+			}catch(Exception e5) {}
+			
 				HttpServletResponse response = (HttpServletResponse) 
 							fcLogin.getExternalContext().getResponse();
 				response.setContentType("text/html; charset=UTF-8");
@@ -568,6 +596,8 @@ public class LoginAction {
 				response.setHeader("Cache-Control", "must-revalidate");
 				response.setHeader("Pragma", "no-cache");
 				response.setDateHeader("Expires", 0);
+				
+				
 				fcLogin.getExternalContext().redirect("/"+PropertiesSystem.CONTEXT_NAME+"/main.faces");
 			
 		}catch(Exception ex){
