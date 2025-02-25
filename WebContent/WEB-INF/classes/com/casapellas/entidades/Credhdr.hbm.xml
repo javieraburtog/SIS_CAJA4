@@ -166,7 +166,10 @@
 			<key-property name="gainAccountId" type="string">
 				<column name="gainAccountId" length="8" />
 			</key-property>
-
+			
+			<key-property name="rprmk" type="string">
+				<column name="rprmk" length="30" />
+			</key-property>
 		</composite-id>
 	</class>
 </hibernate-mapping>

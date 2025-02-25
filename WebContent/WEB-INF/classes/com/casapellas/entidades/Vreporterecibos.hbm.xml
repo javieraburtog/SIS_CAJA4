@@ -134,7 +134,11 @@
 		</property>
 		<property name="cuentacontablebanco" type="string">
 			<column name="cuentacontablebanco" length="32" />
+		</property>	
+		<property name="numerosolicitud" type="int">
+			<column name="numerosolicitud" precision="8" scale="0" />
 		</property>
+		
 
 	</class>
 </hibernate-mapping>

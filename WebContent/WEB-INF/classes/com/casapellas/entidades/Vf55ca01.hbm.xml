@@ -82,6 +82,14 @@
              <key-property name="casktpos" type="char">
                 <column name="CASKTPOS" length="1" />
             </key-property>
+            
+            <key-property name="casucur" type="string">
+                <column name="CASUCUR" length="5" />
+            </key-property>
+            
+            <key-property name="casucurname" type="string">
+                <column name="CASUCURNAME" length="30" />
+            </key-property>
         </composite-id>
     </class>
 </hibernate-mapping>
