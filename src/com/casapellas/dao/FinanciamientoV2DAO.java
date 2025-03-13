@@ -35,7 +35,8 @@ import org.apache.commons.collections.Closure;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.mail.MultiPartEmail;
-import org.apache.xalan.transformer.CountersTable;
+
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -228,7 +229,7 @@ public class FinanciamientoV2DAO {
 
 				String va =x[0].toString();
 				String concep= x[1].toString();
-				String aa="Búsqueda por "+x[1].toString();
+				String aa="Bï¿½squeda por "+x[1].toString();
 				lstTipoReciboPago.add(new SelectItem(va,concep,aa));
 
 			}
@@ -383,7 +384,7 @@ public class FinanciamientoV2DAO {
 	//realizar abono a principal
 	private HtmlCheckBox chkPrincipal;
 	
-	//------ Pago con tarjeta de crédito con voucher manuales.
+	//------ Pago con tarjeta de crï¿½dito con voucher manuales.
 	private HtmlCheckBox chkVoucherManual;
 	private HtmlOutputText lbletVouchermanual;
 	private List<Credhdr> lstComponentes;
@@ -431,9 +432,9 @@ public class FinanciamientoV2DAO {
 	}
 	
 
-	/** Método: Anular recibo de caja por mala aplicacion de socket pos
+	/** Mï¿½todo: Anular recibo de caja por mala aplicacion de socket pos
 	 *	Fecha:  16/0622011
-	 *  Nombre: Carlos Manuel Hernández Morrison.
+	 *  Nombre: Carlos Manuel Hernï¿½ndez Morrison.
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean anularRecibo(int iNumrec,int iCaid, String sCodsuc, String sCodcomp,
@@ -834,7 +835,7 @@ public class FinanciamientoV2DAO {
 			} else if (monto > dMontoAplicar) {
 					validado = false;
 					txtMonto.setStyleClass("frmInput2Error");
-					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El monto ingresado para este método de pago debe ser menor o igual al monto a aplicar<br>";
+					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El monto ingresado para este mï¿½todo de pago debe ser menor o igual al monto a aplicar<br>";
 					dwMensajeError.setWindowState("normal");
 					y = y + 7;
 			}
@@ -848,18 +849,18 @@ public class FinanciamientoV2DAO {
 			}else if (ref1.equals("")) {//valida identificacion del cliente
 					validado = false;
 					txtReferencia1.setStyleClass("frmInput2Error");
-					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> Identificación requerida<br>";
+					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> Identificaciï¿½n requerida<br>";
 					dwMensajeError.setWindowState("normal");
 					y = y + 5;
 			} else if (!matAlfa1.matches()) {
 					validado = false;
-					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El campo <b>Identificación<b/> contiene caracteres invalidos<br>";
+					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El campo <b>Identificaciï¿½n<b/> contiene caracteres invalidos<br>";
 					txtReferencia1.setStyleClass("frmInput2Error");
 					dwMensajeError.setWindowState("normal");
 					y = y + 7;
 			} else if (ref1.length() > 150) {
 					validado = false;
-					sMensajeError = sMensajeError+ "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La cantidad de caracteres del campo <b>Identificación<b/> es muy alta (lim. 150)<br>";
+					sMensajeError = sMensajeError+ "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La cantidad de caracteres del campo <b>Identificaciï¿½n<b/> es muy alta (lim. 150)<br>";
 					txtReferencia1.setStyleClass("frmInput2Error");
 					dwMensajeError.setWindowState("normal");
 					y = y + 15;
@@ -891,7 +892,7 @@ public class FinanciamientoV2DAO {
 			if (monto > dMontoAplicar) {
 				validado = false;
 				txtMonto.setStyleClass("frmInput2Error");
-				sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El monto ingresado para este método de pago debe ser menor o igual al monto a aplicar<br>";
+				sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El monto ingresado para este mï¿½todo de pago debe ser menor o igual al monto a aplicar<br>";
 				dwMensajeError.setWindowState("normal");
 				y = y + 7;
 			}
@@ -916,24 +917,24 @@ public class FinanciamientoV2DAO {
 				if(sTrack.equals("")){//validar q pase la tarjeta en el lector
 						validado = false;
 						track.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> No se detectó la información de la tarjeta; Debe deslizar primero la tarjeta por el lector<br>";
+						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> No se detectï¿½ la informaciï¿½n de la tarjeta; Debe deslizar primero la tarjeta por el lector<br>";
 						dwMensajeError.setWindowState("normal");
 				}else{//validar que la lectura fue correcta
 					lstDatosTrack = d.obtenerDatosTrack(sTrack);
 					if(lstDatosTrack.size()<6){
 						validado = false;
 						track.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> No se leyó correctamente la información de la tarjeta!!!<br>";
+						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> No se leyï¿½ correctamente la informaciï¿½n de la tarjeta!!!<br>";
 						dwMensajeError.setWindowState("normal");
 					}else if (lstDatosTrack.get(1) == null){
 						validado = false;
 						track.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/CRPMCAJA/theme/icons/redCircle.jpg\" border=\"0\" /> No se leyó correctamente el numero de tarjeta!!!<br>";
+						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/CRPMCAJA/theme/icons/redCircle.jpg\" border=\"0\" /> No se leyï¿½ correctamente el numero de tarjeta!!!<br>";
 						dwMensajeError.setWindowState("normal");
 					}else if(lstDatosTrack.get(4) == null){
 						validado = false;
 						track.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/CRPMCAJA/theme/icons/redCircle.jpg\" border=\"0\" /> No se leyó correctamente la fecha de vencimiento de la tarjeta!!!<br>";
+						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/CRPMCAJA/theme/icons/redCircle.jpg\" border=\"0\" /> No se leyï¿½ correctamente la fecha de vencimiento de la tarjeta!!!<br>";
 						dwMensajeError.setWindowState("normal");
 					}
 				}
@@ -946,7 +947,7 @@ public class FinanciamientoV2DAO {
 				if (ref2.equals("")) {//numero de tarjeta
 					validado = false;
 					txtNoTarjeta.setStyleClass("frmInput2Error");
-					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> Número de Tarjeta requerido<br>";
+					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> Nï¿½mero de Tarjeta requerido<br>";
 					dwMensajeError.setWindowState("normal");
 					y = y + 5;
 				}else if(ref2.length() > 16){
@@ -958,7 +959,7 @@ public class FinanciamientoV2DAO {
 				}else if(!matAlfa2.matches()){
 					validado = false;
 					txtNoTarjeta.setStyleClass("frmInput2Error");
-					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" />El Número de tarjeta contiene caracteres invalidos<br>";
+					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" />El Nï¿½mero de tarjeta contiene caracteres invalidos<br>";
 					dwMensajeError.setWindowState("normal");
 					y = y + 5;
 				}else if(ref3.equals("")){
@@ -976,7 +977,7 @@ public class FinanciamientoV2DAO {
 				}else if(!matNumero.matches()){
 					validado = false;
 					txtFechaVenceT.setStyleClass("frmInput2Error");
-					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La fecha debe tener el formato MMYY (mes y año)<br>";
+					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La fecha debe tener el formato MMYY (mes y aï¿½o)<br>";
 					dwMensajeError.setWindowState("normal");
 					y = y + 5;
 				}
@@ -1465,7 +1466,7 @@ public class FinanciamientoV2DAO {
 				if(dDif > 1){
 					bValido = false;
 					lblMensajeError.setValue("El monto a aplicar de las cuotas es menor al monto a aplicar del recibo" +
-												" Revisar saldo de cuota en modulo de financiamiento y JDE en crédito y cobranzas");
+												" Revisar saldo de cuota en modulo de financiamiento y JDE en crï¿½dito y cobranzas");
 				}else{
 					bValido = true;
 				}
@@ -1798,7 +1799,7 @@ public class FinanciamientoV2DAO {
 			
 			if(numerosRecibosJde.isEmpty()) {
 				aplicado = false;
-				msgProceso = "Error al generar consecutivo número de documento para el recibo";
+				msgProceso = "Error al generar consecutivo nï¿½mero de documento para el recibo";
 				throw new Exception(msgProceso);
 			}
 			
@@ -1807,12 +1808,12 @@ public class FinanciamientoV2DAO {
 			
 			if(numeroBatchJde == 0) {
 				 aplicado = false;
-				 msgProceso = "Error al generar consecutivo número de batchs para el recibo";
+				 msgProceso = "Error al generar consecutivo nï¿½mero de batchs para el recibo";
 					throw new Exception(msgProceso);
 			}
 			if (numeroReciboJde == 0) {
 				aplicado = false;
-				msgProceso = "Error al generar consecutivo número de documento para el recibo";
+				msgProceso = "Error al generar consecutivo nï¿½mero de documento para el recibo";
 				throw new Exception(msgProceso);
 			}
 			
@@ -2349,7 +2350,7 @@ public class FinanciamientoV2DAO {
 						m.put("lstCreditosFinan",lstCreditosFinan);
 						m.put("lstCuotasV2",new ArrayList());
 						
-						lblMensajeError.setValue("Operación realizada con éxito!!!");
+						lblMensajeError.setValue("Operaciï¿½n realizada con ï¿½xito!!!");
 						dwMensajeError.setWindowState("normal");
 						dwMensajeError.setStyle("width:390px;height:145px");
 						gvCuotas.dataBind();
@@ -2412,7 +2413,7 @@ public class FinanciamientoV2DAO {
 			dwReciboV2.setWindowState("hidden");
 			dwMensajeError.setWindowState("normal");
 			dwProcesaRecibo.setWindowState("hidden");
-			lblMensajeError.setValue("Error no se pudo relizar la operación!!! " + ex);
+			lblMensajeError.setValue("Error no se pudo relizar la operaciï¿½n!!! " + ex);
 			dwMensajeError.setStyle("width:390px;height:145px");
 			ex.printStackTrace();
 		}finally{			
@@ -2502,8 +2503,8 @@ public BigDecimal obtenerTasaOficial(){
 			
 			
 			if (iNumrec == 0) {
-				String msg="No se encontro número de recibo " +
-						"configurado para la compañia: " 
+				String msg="No se encontro nï¿½mero de recibo " +
+						"configurado para la compaï¿½ia: " 
 						+ codCompania;
 				lblMensajeError.setValue(msg ) ; 
 			throw new Exception(msg);
@@ -2916,13 +2917,13 @@ public BigDecimal obtenerTasaOficial(){
 				// validar el numero de recibo
 				if (txtNumrec.getValue() == null
 						|| (txtNumrec.getValue().toString().trim()).equals("")) {
-					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> Número de recibo manual es requerido<br>";
+					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> Nï¿½mero de recibo manual es requerido<br>";
 					txtNumrec.setStyleClass("frmInput2Error");
 					validado = false;
 					y = y + 14;
 				}
 				if (matNumero == null || !matNumero.matches()) {
-					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> Número de recibo no es valido<br>";
+					sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> Nï¿½mero de recibo no es valido<br>";
 					txtNumrec.setStyleClass("frmInput2Error");
 					validado = false;
 					y = y + 14;
@@ -2938,7 +2939,7 @@ public BigDecimal obtenerTasaOficial(){
 					if (rpCtrl.verificarNumeroRecibo(
 							vf55ca01.getId().getCaid(), hfac.getId().getCodcomp(),
 							iNumRecm, vf55ca01.getId().getCaco().trim())) {
-						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El número de recibo manual ya existe!<br>";
+						sMensajeError = sMensajeError + "<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> El nï¿½mero de recibo manual ya existe!<br>";
 						txtNumrec.setStyleClass("frmInput2Error");
 						validado = false;
 						y = y + 14;
@@ -3440,7 +3441,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			bdMontoAplicado = d.roundBigDecimal(bdMontoAplicado);
 			
 			if(bdMontoPendiente.subtract(bdMontoAplicado).doubleValue() != 0){
-				lblMensajeError.setValue("No puede agregar más cuotas al recibo; Primero debe cancelar el monto de las cuotas actuales");
+				lblMensajeError.setValue("No puede agregar mï¿½s cuotas al recibo; Primero debe cancelar el monto de las cuotas actuales");
 				dwMensajeError.setStyle("width:320px;height:160px");
 				dwMensajeError.setWindowState("normal");
 				return;
@@ -3484,7 +3485,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
  
 				
 				if( f == null ){
-					lblMensajeError.setValue(" Ya no hay más cuotas disponibles " );
+					lblMensajeError.setValue(" Ya no hay mï¿½s cuotas disponibles " );
 					dwMensajeError.setStyle("width:320px;height:160px");
 					dwMensajeError.setWindowState("normal");
 					return;
@@ -3785,7 +3786,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			}
 			
 			
-			//-------------- obtener los métodos de pago y verificar que no se repita el registro
+			//-------------- obtener los mï¿½todos de pago y verificar que no se repita el registro
 			if(lstPagos != null) {
 				for(int i=0;i < lstPagos.size();i++){
 					
@@ -3938,7 +3939,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			
 			String sSucursal = caja.getId().getCaconom().trim();
 			String sCajero	 = m.get("sNombreEmpleado").toString();
-			String sSubject	 = caja.getId().getCaname().trim() + ": Solicitud de Autorización de ingresos a caja";
+			String sSubject	 = caja.getId().getCaname().trim() + ": Solicitud de Autorizaciï¿½n de ingresos a caja";
 			String sMontoAutorizado =  d.formatDouble(Double.parseDouble(m.get("fin_monto").toString()));
 			sToAutoriz = sAutorizador[0];
 			
@@ -3959,7 +3960,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			txtNoTarjeta.setValue("");	
 			txtFechaVenceT.setValue("");	
 			
-			//------------ Limpiar objetos de ventana autorización.
+			//------------ Limpiar objetos de ventana autorizaciï¿½n.
 			txtFecha.setValue("");
 			txtReferencia.setValue("");
 			txtObs.setValue("");
@@ -4027,17 +4028,17 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 				}
 				//validar observacion
 				else if (txtObs.getValue() == null || txtObs.getValue().toString().trim().equals("")) {		
-					lblMensajeAutorizacion.setValue("La Observación es requerida");
+					lblMensajeAutorizacion.setValue("La Observaciï¿½n es requerida");
 					txtObs.setStyleClass("frmInput2Error");
 					validado = false;
 				}else if(!matObs.matches()){
-					lblMensajeAutorizacion.setValue("El campo Observación contiene caracteres invalidos");
+					lblMensajeAutorizacion.setValue("El campo Observaciï¿½n contiene caracteres invalidos");
 					txtObs.setStyleClass("frmInput2Error");
 					validado = false;
 				}
 				else if(txtObs.getValue().toString().length() > 250){
 					validado = false;
-					lblMensajeAutorizacion.setValue("La cantidad de caracteres en el campo Observación es muy alta (lim. 250)");
+					lblMensajeAutorizacion.setValue("La cantidad de caracteres en el campo Observaciï¿½n es muy alta (lim. 250)");
 					txtObs.setStyleClass("frmInput2Error");
 				}
 				else if(matFecha == null || !matFecha.matches()){
@@ -4047,7 +4048,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 				}
 				//validar correo
 				else if(matCorreo == null || !matCorreo.matches()){
-					lblMensajeAutorizacion.setValue("El autorizador seleccionado no tiene correo electrónico configurado");
+					lblMensajeAutorizacion.setValue("El autorizador seleccionado no tiene correo electrï¿½nico configurado");
 					cmbAutoriza.setStyleClass("frmInput2Error2");
 					validado = false;
 				}
@@ -4244,7 +4245,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 						
 			String strMonto = txtMonto.getValue().toString().trim() ;
 			if ( !strMonto.trim().matches(PropertiesSystem.REGEXP_AMOUNT) ) {
-				lblMensajeError.setValue(" Monto inválido ");
+				lblMensajeError.setValue(" Monto invï¿½lido ");
 				dwMensajeError.setWindowState("normal") ;
 				SmartRefreshManager.getCurrentInstance().addSmartRefreshId(
 						dwMensajeError.getClientId(FacesContext.getCurrentInstance()));
@@ -4278,7 +4279,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			//=========================================================================================
 			
 			
-			//&& ======== validar datos de los métodos de pago.
+			//&& ======== validar datos de los mï¿½todos de pago.
 		/*	valido = validarMpagos(metodo, strMonto ,
 						codcomp, moneda, ref1, ref2, ref3, ref4, 
 						lstFacturasSelected, usaSocketPos, 
@@ -4386,7 +4387,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			
 			if(!metodo.equals(MetodosPagoCtrl.EFECTIVO) && !donaciontotal ){
 				if( equiv > bdMtoAplicar.doubleValue()){
-					sMensaje = "El Monto del método de pago por: "+equiv+" excede el monto aplicado: "+bdMtoAplicar.toString();
+					sMensaje = "El Monto del mï¿½todo de pago por: "+equiv+" excede el monto aplicado: "+bdMtoAplicar.toString();
 					bValido=false;
 				}
 			}
@@ -4420,7 +4421,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 						dwMensajeError.getClientId(FacesContext.getCurrentInstance()));
 				return;
 			}
-			//--- Determinar si el pago es con voucher manual y agregar el método
+			//--- Determinar si el pago es con voucher manual y agregar el mï¿½todo
 			sVoucherManual = (voucherManual) ? "1" : "0";
 			
 			String codigomarcatarjeta = "";
@@ -4688,7 +4689,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 		}
 	}
 /***********************************************************************************************************/
-	/********** 	validación de los valores para los métodos de pago ingresados	***********/
+	/********** 	validaciï¿½n de los valores para los mï¿½todos de pago ingresados	***********/
 	public boolean validarMpagos(String metodo, String sMonto, String sCodcomp,
 			String sMoneda, String ref1, String ref2, String ref3, String ref4,
 			List<Credhdr> lstFacturasSelected, boolean usaSckPos,
@@ -4758,12 +4759,12 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 										(monto / tasaspara.doubleValue());
 				equiv = divisas.roundDouble(equiv);
 					
-				//-------------------- método: cheques Q.
+				//-------------------- mï¿½todo: cheques Q.
 				if(metodo.equals(MetodosPagoCtrl.CHEQUE)){
 					if(!ref1.matches("^[0-9]{1,8}$")){
 						validado = false;
 						y = y + 7;
-						sMensajeError = sMensajeError + sEstiloMserror+ "1 a 8 Dígitos para número de cheque es requerido<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+ "1 a 8 Dï¿½gitos para nï¿½mero de cheque es requerido<br>";
 						txtReferencia1.setStyleClass("frmInput2Error");
 					}
 					if(ref2.equals("")){
@@ -4774,7 +4775,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 					}else if(!matAlfa2.matches()){
 						validado = false;
 						y = y + 7;
-						sMensajeError = sMensajeError + sEstiloMserror+ "El campo <b>Emisor<b/> contiene caracteres inválidos<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+ "El campo <b>Emisor<b/> contiene caracteres invï¿½lidos<br>";
 					}else if(ref2.length() > 150){
 						validado = false;
 						y = y + 15;
@@ -4789,7 +4790,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 					}else if(!matAlfa3.matches()){
 						validado = false;
 						y = y + 7;
-						sMensajeError = sMensajeError + sEstiloMserror+ "El campo <b>Portador<b/> contiene caracteres inválidos<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+ "El campo <b>Portador<b/> contiene caracteres invï¿½lidos<br>";
 						txtReferencia3.setStyleClass("frmInput2Error");
 					}
 					else if(ref3.length() > 150){
@@ -4799,7 +4800,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 						y = y + 15;
 					}
 				}
-				//------------------------ método de pago tarjeta de crédito H				
+				//------------------------ mï¿½todo de pago tarjeta de crï¿½dito H				
 				else if(metodo.equals(MetodosPagoCtrl.TARJETA)){
 					
 					if(ddlAfiliado.getValue().toString().equals("01")){
@@ -4841,45 +4842,45 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 					else if(ref1.equals("")) {						
 						validado = false;
 						txtReferencia1.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + sEstiloMserror+ "Número de identificación requerido<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+ "Nï¿½mero de identificaciï¿½n requerido<br>";
 						y = y + 5;
 					}else if(!matAlfa1.matches()){
 						validado = false;
 						y = y + 7;
 						txtReferencia1.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + sEstiloMserror+ "El campo <b>Número de identificación<b/> contiene caracteres inválidos<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+ "El campo <b>Nï¿½mero de identificaciï¿½n<b/> contiene caracteres invï¿½lidos<br>";
 					}else if(ref1.length() > 150){
 						validado = false;
 						y = y + 7;
-						sMensajeError = sMensajeError + sEstiloMserror+  "<La cantidad de caracteres del campo <b>Identificación<b/> es muy alta (lim. 150)<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+  "<La cantidad de caracteres del campo <b>Identificaciï¿½n<b/> es muy alta (lim. 150)<br>";
 						txtReferencia1.setStyleClass("frmInput2Error");
 					}
 					else if(ref2.equals("")){
 						validado = false;
 						txtReferencia2.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + sEstiloMserror+ "Número de voucher requerido<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+ "Nï¿½mero de voucher requerido<br>";
 						y = y + 5;
 					}
 					else if(!pNumero.matcher(ref2).matches()){
 						validado = false;
 						y = y + 7;
 						txtReferencia2.setStyleClass("frmInput2Error");
-						sMensajeError = sMensajeError + sEstiloMserror+ "El campo <b>Número de voucher<b/> contiene caracteres inválidos<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+ "El campo <b>Nï¿½mero de voucher<b/> contiene caracteres invï¿½lidos<br>";
 					}else if(ref1.length() > 150){
 						validado = false;
 						y = y + 7;
-						sMensajeError = sMensajeError + sEstiloMserror+  "<La cantidad de caracteres del campo <b>Número de voucher<b/> es muy alta (lim. 150)<br>";
+						sMensajeError = sMensajeError + sEstiloMserror+  "<La cantidad de caracteres del campo <b>Nï¿½mero de voucher<b/> es muy alta (lim. 150)<br>";
 						txtReferencia2.setStyleClass("frmInput2Error");
 					}
 				}
-				//Método de pago: Transferencias.
+				//Mï¿½todo de pago: Transferencias.
 			else if (metodo.equals(MetodosPagoCtrl.TRANSFERENCIA)) {
 				
 				if(polCtrl.validarReferenciaBancaria(Integer.parseInt(sCajaId), ddlBanco.getValue().toString().split("@")[1], ref2,"T"))
 				{
 					y = y + 7;
 					txtReferencia2.setStyleClass("frmInput2Error");
-					sMensajeError = "La referencia ya ha sido utilizada, favor verificar e ingresar una referencia válida";
+					sMensajeError = "La referencia ya ha sido utilizada, favor verificar e ingresar una referencia vï¿½lida";
 					return validado = false;			
 				}
 				
@@ -4887,7 +4888,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 					validado = false;
 					txtReferencia1.setStyleClass("frmInput2Error");
 					sMensajeError = sMensajeError + sEstiloMserror
-							+ "Número de identificación requerido<br>";
+							+ "Nï¿½mero de identificaciï¿½n requerido<br>";
 					y = y + 5;
 				} else if (!matAlfa1.matches()) {
 					validado = false;
@@ -4895,20 +4896,20 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 					txtReferencia1.setStyleClass("frmInput2Error");
 					sMensajeError = sMensajeError
 							+ sEstiloMserror
-							+ "El campo <b>Número de identificación<b/> contiene caracteres inválidos<br>";
+							+ "El campo <b>Nï¿½mero de identificaciï¿½n<b/> contiene caracteres invï¿½lidos<br>";
 				} else if (ref1.length() > 150) {
 					validado = false;
 					y = y + 7;
 					sMensajeError = sMensajeError
 							+ sEstiloMserror
-							+ "<La cantidad de caracteres del campo <b>Número de identificación<b/> es muy alta (lim. 150)<br>";
+							+ "<La cantidad de caracteres del campo <b>Nï¿½mero de identificaciï¿½n<b/> es muy alta (lim. 150)<br>";
 					txtReferencia1.setStyleClass("frmInput2Error");
 				}
 
 				if (!ref2.matches(PropertiesSystem.REGEXP_8DIGTS)) {
 					y = y + 7;
 					txtReferencia2.setStyleClass("frmInput2Error");
-					sMensajeError = "El valor de la referencia debe contener entre 1 y 8 dígitos unicamente ";
+					sMensajeError = "El valor de la referencia debe contener entre 1 y 8 dï¿½gitos unicamente ";
 					return validado = false;
 				}
 
@@ -4919,14 +4920,14 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 				{
 					y = y + 7;
 					txtReferencia2.setStyleClass("frmInput2Error");
-					sMensajeError = "La referencia ya ha sido utilizada, favor verificar e ingresar una referencia válida";
+					sMensajeError = "La referencia ya ha sido utilizada, favor verificar e ingresar una referencia vï¿½lida";
 					return validado = false;			
 				}
 				
 				if (!ref2.matches(PropertiesSystem.REGEXP_8DIGTS)) {
 					y = y + 7;
 					txtReferencia2.setStyleClass("frmInput2Error");
-					sMensajeError = "El valor de la referencia debe contener entre 1 y 8 dígitos unicamente ";
+					sMensajeError = "El valor de la referencia debe contener entre 1 y 8 dï¿½gitos unicamente ";
 					return validado = false;
 				}
 
@@ -4961,7 +4962,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 						if(bDuplicado && !polCtrl.validarMonto(iCaid, sCodcomp, sMoneda, metodo, monto)){
 							validado = false;
 							bErrorPoliticas=true;
-							lblMensajeAutorizacion.setValue("El consolidado de los montos del método de pago no cumple con las politicas de caja");
+							lblMensajeAutorizacion.setValue("El consolidado de los montos del mï¿½todo de pago no cumple con las politicas de caja");
 							dwSolicitud.setWindowState("normal");
 							Date dFechaActual = new Date();
 							txtFecha.setValue(dFechaActual);
@@ -4977,7 +4978,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			
 			error.printStackTrace(); 
 			validado = false;
-			sMensajeError = "Datos de pago no válidos, intente nuevamente" ; 
+			sMensajeError = "Datos de pago no vï¿½lidos, intente nuevamente" ; 
 
 		} finally {
 
@@ -5025,7 +5026,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 						bValido = false;
 					}
 					else if(!f1.getId().getCodcomp().equals(f2.getId().getCodcomp())){
-						lblMensajeError.setValue("<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La compañia debe ser la misma<br>");
+						lblMensajeError.setValue("<img width=\"7\" src=\"/"+PropertiesSystem.CONTEXT_NAME+"/theme/icons/redCircle.jpg\" border=\"0\" /> La compaï¿½ia debe ser la misma<br>");
 						bValido = false;
 					}
 					else if(!f1.getId().getMoneda().equals(f2.getId().getMoneda())){
@@ -5046,8 +5047,8 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 		}
 	}
 	/***************************************************************************/
-	/** Método: Cargar los afiliados para la caja, por moneda y compañía.
-	 *  Hecho:  Carlos Manuel Hernández Morrison.
+	/** Mï¿½todo: Cargar los afiliados para la caja, por moneda y compaï¿½ï¿½a.
+	 *  Hecho:  Carlos Manuel Hernï¿½ndez Morrison.
 	 *  Fecha:  05/10/2010
 	 ***************************************************************************/
 	public List getLstAfiliados(int iCaid,String sCodcomp, String sLinea, String sMoneda){
@@ -5454,7 +5455,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 				 
 					fechaDet = prestamo.getFechaApertura();
 					codigoMoneda= prestamo.getCodigoMoneda();
-					codcliDet = prestamo.getCodigoCliente() + " (Código)";
+					codcliDet = prestamo.getCodigoCliente() + " (Cï¿½digo)";
 					nomcliDet = prestamo.getNombreCliente() + " (Nombre)";
 					
 					noSolDet = prestamo.getNumeroPrestamo() + "";
@@ -5573,7 +5574,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			if (sCodMetodo.equals(MetodosPagoCtrl.TARJETA)) {
 				// Set to blank
 				lblAfiliado.setValue("Afiliado:");
-				lblReferencia1.setValue("Identificación:");
+				lblReferencia1.setValue("Identificaciï¿½n:");
 				lblReferencia2.setValue("Voucher:");
 				lblReferencia3.setValue("");
 				lblBanco.setValue("");
@@ -5689,7 +5690,7 @@ public void mostrarAgregarCuotas(ActionEvent ev){
 			else if (sCodMetodo.equals(MetodosPagoCtrl.TRANSFERENCIA)) {
 				// Set to blank
 				lblAfiliado.setValue("");
-				lblReferencia1.setValue("Identificación:");
+				lblReferencia1.setValue("Identificaciï¿½n:");
 				lblReferencia2.setValue("Referencia:");
 				lblReferencia3.setValue("");
 				lblBanco.setValue("Banco:");
@@ -6052,7 +6053,7 @@ public void setDwDetalleSolicitud(HtmlDialogWindow dwDetalleSolicitud) {
 				//String[] o = (String[]) x;
 				String va =x[0].toString();
 				String concep= x[1].toString();
-				String aa="Búsqueda por "+x[1].toString();
+				String aa="Bï¿½squeda por "+x[1].toString();
 				lstTiposBusqueda.add(new SelectItem(va,concep,aa));
 		
 			}
@@ -6093,7 +6094,7 @@ public void setDwDetalleSolicitud(HtmlDialogWindow dwDetalleSolicitud) {
 			List lstCajas = (List)m.get("lstCajas");
 			List<SelectItem>lstComp = new ArrayList<SelectItem>();
 			
-			lstFiltroCompanias.add(new SelectItem("01","Todas","Todas las Compañias"));
+			lstFiltroCompanias.add(new SelectItem("01","Todas","Todas las Compaï¿½ias"));
 			
 			F55ca014[] f55ca014  = new CompaniaCtrl()
 										.obtenerCompaniasxCaja(((Vf55ca01)lstCajas.get(0)).getId().getCaid());
@@ -6102,7 +6103,7 @@ public void setDwDetalleSolicitud(HtmlDialogWindow dwDetalleSolicitud) {
 					SelectItem si = new SelectItem();
 					si.setValue(f14.getId().getC4rp01().trim());
 					si.setLabel(f14.getId().getC4rp01d1().trim());
-					si.setDescription("Compañía: "+f14.getId().getC4rp01().trim()+" "+f14.getId().getC4rp01d1().trim());
+					si.setDescription("Compaï¿½ï¿½a: "+f14.getId().getC4rp01().trim()+" "+f14.getId().getC4rp01d1().trim());
 					lstComp.add(si);
 				}
 			}
