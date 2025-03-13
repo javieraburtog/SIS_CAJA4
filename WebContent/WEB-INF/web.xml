@@ -246,7 +246,11 @@ Default is false. This parameter is not available in JSF 1.0.</description>
         <servlet-name>svltExcepcionConfirmacion</servlet-name>
         <servlet-class>com.casapellas.conciliacion.servlet.svltExcepcionConfirmacion</servlet-class>
     </servlet>
- 
+    <servlet>
+        <display-name>svltProcesarAjuste</display-name>
+        <servlet-name>svltProcesarAjuste</servlet-name>
+        <servlet-class>com.casapellas.conciliacion.servlet.svltProcesarAjuste</servlet-class>
+    </servlet>
     <servlet>
         <display-name>svltConfiguracionAjuste</display-name>
         <servlet-name>svltConfiguracionAjuste</servlet-name>
@@ -362,7 +366,10 @@ Default is false. This parameter is not available in JSF 1.0.</description>
         <servlet-name>svltExcepcionConfirmacion</servlet-name>
         <url-pattern>/svltECMI</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>svltProcesarAjuste</servlet-name>
+        <url-pattern>/svltPA</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>svltConfiguracionAjuste</servlet-name>
         <url-pattern>/svltCA</url-pattern>
