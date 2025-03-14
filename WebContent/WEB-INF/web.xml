@@ -17,7 +17,7 @@
         <param-value>1</param-value>
     </context-param>
     <context-param>
-        <description>The location where state information is saved.
+        <description>PRUEBA- MODIFICACION --- The location where state information is saved.
 			Valid values are 'server' (typically saved in HttpSession) and 'client' (typically
 			saved as a hidden field in the form.
 			Default is server.</description>
