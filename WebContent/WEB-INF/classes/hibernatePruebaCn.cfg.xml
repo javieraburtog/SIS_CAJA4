@@ -23,8 +23,8 @@
         <property name="hibernate.default_schema">e2gcpmcaja</property>
         <property name="hibernate.default_catalog">SYSTEMIP</property>
         
-        <property name="hibernate.connection.username">pruebae2py</property>
-        <property name="hibernate.connection.password">password</property>
+        <property name="hibernate.connection.username">appcp</property>
+        <property name="hibernate.connection.password">appcp1810</property>
         
         <property name="hibernate.connection.url">jdbc:as400:172.29.9.150/e2gcpmcaja; prompt=false;behavior override=1;</property>
         <property name="hibernate.connection.driver_class">com.ibm.as400.access.AS400JDBCDriver</property>  
